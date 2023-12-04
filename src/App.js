@@ -5,7 +5,7 @@ const App = () => {
   return (
     <div>
       {/* Otros componentes de tdddddu aplicación */}
-      <Login /> {/* Utiliza el componente de iniciosssss de sesión aquí */}
+      <Login /> {/* Utiliza el componente dputooooooooooooooooooooe iniciosssss de sesión aquí */}
     </div>
   );
 };
