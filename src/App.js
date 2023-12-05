@@ -1,4 +1,4 @@
-import React from 'react';
+import React , { useState }from 'react';
 import { BrowserRouter as Router, Route,  Routes } from 'react-router-dom';
 import Inicio from './components/Pages/Inicio';
 import AcercaDe from './components/Pages/AcercaDe';
@@ -13,15 +13,34 @@ import Permisos from './components/authentication/Permisos';
 import Clientes from './components/Pages/Clientes';
 import Tarea from './components/Pages/Tarea';
 import TipoTarea from './components/Pages/TipoTarea';
+
+import Login from './components/authentication/Login';
+
 const App = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+  };
+
+
   return (
     <Router>
       <div>
+      {!isLoggedIn ? (
+        <Login handleLogin={handleLogin} />
+      ):( 
+        <Navigationbar handleLogout={handleLogout} />
+      )}
         {/* Navegación con links */}
-        <Navigationbar />
+        
         <Routes>
             {/* Rutas */}
-          <Route path="/" element={<Inicio />} />
+          {/* <Route path="/" element={<Inicio />} /> */}
           <Route path="/about" element={<AcercaDe />} />
           <Route path="/changepassword" element={<changepassword />} /> 
           <Route path="/Usuarios" element={<Usuarios />} />

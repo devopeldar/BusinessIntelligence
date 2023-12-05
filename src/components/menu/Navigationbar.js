@@ -3,10 +3,20 @@ import { Link } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
 
-const Navigationbar = () => {
+const Menu = ({ handleLogout }) => {
+  return (
+    <div>
+      <h2>Menú Principal</h2>
+      <button onClick={handleLogout}>Cerrar sesión</button>
+      {/* Agrega aquí tu contenido del menú */}
+    </div>
+  );
+};
+
+const Navigationbar = ({ handleLogout }) => {
   return (
     <Navbar bg="light" expand="lg">
-      <Navbar.Brand href="#home">INICIO</Navbar.Brand>
+      
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
       <Nav className="me-auto">
@@ -40,6 +50,7 @@ const Navigationbar = () => {
             <NavDropdown.Item as={Link} to="/Roles">Roles</NavDropdown.Item>
             <NavDropdown.Item as={Link} to="/Permisos">Permisos</NavDropdown.Item>
             <NavDropdown.Item as={Link} to="/Auditoria">Auditoria</NavDropdown.Item>
+            <NavDropdown.Item onClick={ handleLogout } >Cerrar Sesion</NavDropdown.Item>
             {/* También puedes agregar más submenús aquí si es necesario */}
           </NavDropdown>
       </Nav>
