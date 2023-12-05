@@ -23,7 +23,7 @@ const App = () => {
             {/* Rutas */}
           <Route path="/" element={<Inicio />} />
           <Route path="/about" element={<AcercaDe />} />
-          <Route path="/changepassword" element={<changepassword />} />
+          <Route path="/changepassword" element={<changepassword />} /> 
           <Route path="/Usuarios" element={<Usuarios />} />
           <Route path="/Auditoria" element={<Auditoria />} />
           <Route path="/Roles" element={<Roles />} />
@@ -44,4 +44,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default App; 
