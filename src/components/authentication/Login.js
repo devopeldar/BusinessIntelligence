@@ -44,12 +44,7 @@ const Login = () => {
         </div>
         <div>
           
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={handlePasswordChange}
-          />
+        <a href="https://www.google.com" target="_blank" rel="noopener noreferrer">
         </div>
         <button type="submit">Iniciar sesión</button>
       </form>
