@@ -1,13 +1,8 @@
 import React, { useRef, useState } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha'; // Importar el componente ReCAPTCHA
 import 'bootstrap/dist/css/bootstrap.min.css'; // Importar estilos de Bootstrap
+import LSButton from '../controls/Button/LSButton';
 
-import { Link } from 'react-router-dom';
-import SoftBox from '../controls/SoftBox';
-import SoftTypography from '../controls/SoftTypography';
-import SoftButton from '../controls/SoftButton';
-import Button from "@mui/material/Button";
-import { styled } from "@mui/material/styles";
 const Login = ({ handleLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -81,7 +76,14 @@ const Login = ({ handleLogin }) => {
 
   };
 
-
+  const stylesDivButton = {
+    divContainer: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '200px', // Ajusta la altura según sea necesario
+    },
+  };
   return (
     <div className="container mt-5">
       <div className="row justify-content-center">
@@ -98,33 +100,16 @@ const Login = ({ handleLogin }) => {
                   <label htmlFor="password" className="form-label">Contraseña:</label>
                   <input type="password" className="form-control" id="password" value={password} onChange={handlePasswordChange} />
                 </div>
+
                 <ReCAPTCHA
                   ref={captcha}
                   sitekey="6LeUHycpAAAAAD5Kga3vKoQEWnyHx0YWNsjDeb2E"
                   onChange={handleCaptchaChange}
                 />
-                <button type="submit" className="btn btn-primary mt-3">Iniciar sesión</button>
+                <div style={stylesDivButton} className="mb-3">
+                  <LSButton type="submit" caption={"Iniciar Sesion"} onClick={handleSubmit} className="btn btn-primary mt-3"/>
+                </div>
                 {/* <Button >Registrarme</Button> */}
-                <SoftBox mt={4} mb={1}>
-                  {/* <SoftButton variant="gradient" color="info" fullWidth>
-                    sign in
-                  </SoftButton> */}
-                </SoftBox>
-                {/* <SoftBox mt={3} textAlign="center">
-                  <SoftTypography variant="button" color="text" fontWeight="regular">
-                    Don&apos;t have an account?{" "}
-                    <SoftTypography
-                      component={Link}
-                      to="/authentication/sign-up"
-                      variant="button"
-                      color="info"
-                      fontWeight="medium"
-                      textGradient
-                    >
-                      Sign up
-                    </SoftTypography>
-                  </SoftTypography>
-                </SoftBox> */}
               </form>
             </div>
           </div>
