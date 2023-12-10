@@ -15,7 +15,10 @@ import Tarea from './components/Pages/Tarea';
 import TipoTarea from './components/Pages/TipoTarea';
 
 import Login from './components/authentication/Login';
-
+import Perfil from './components/authentication/Perfil/Perfil';
+import Perfiles from './components/authentication/Perfil/Perfiles';
+import PerfilEditar from './components/authentication/Perfil/PerfilEditar';
+import { Switch } from '@mui/material';
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -49,15 +52,25 @@ const App = () => {
           <Route path="/Permisos" element={<Permisos />} />
           <Route path="/Registrarme" element={<Registrarme />} />
           <Route path="/RecuperarPass" element={<RecuperarPass />} />
-
+          <Route path="/Perfil/Perfil" element={<Perfil />} />
+          <Route path="/Perfil/Perfiles" element={<Perfiles />} />
           <Route path="/Clientes" element={<Clientes />} />
-          
-          
+                 
           <Route path="/Tarea" element={<Tarea />} />
           <Route path="/TipoTarea" element={<TipoTarea />} />
 
         </Routes>
       
+
+          <Switch>
+            <Route exact path="/">
+              <Perfiles />
+            </Route>
+            <Route path="/editar/:id">
+              <PerfilEditar />
+            </Route>
+          </Switch>
+
       </div>
     </Router>
   );

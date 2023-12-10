@@ -8,16 +8,16 @@ import { ListCheck } from 'react-bootstrap-icons';
 import { PeopleFill } from 'react-bootstrap-icons';
 import { PersonLinesFill } from 'react-bootstrap-icons';
 import { PersonFillLock } from 'react-bootstrap-icons';
-import { Journal } from 'react-bootstrap-icons';
-const Menu = ({ handleLogout }) => {
-  return (
-    <div>
-      <h2>Menú Principal</h2>
-      <button onClick={handleLogout}>Cerrar sesión</button>
-      {/* Agrega aquí tu contenido del menú */}
-    </div>
-  );
-};
+
+// const Menu = ({ handleLogout }) => {
+//   return (
+//     <div>
+//       <h2>Menú Principal</h2>
+//       <button onClick={handleLogout}>Cerrar sesión</button>
+//       {/* Agrega aquí tu contenido del menú */}
+//     </div>
+//   );
+// };
 
 
 const Navigationbar = ({ handleLogout }) => {
@@ -70,6 +70,11 @@ const Navigationbar = ({ handleLogout }) => {
             <NavDropdown.Item as={Link} to="/Roles">
               <PersonLinesFill size={15} color="cornflowerblue" style={{ marginRight: '10px' }} />
               Roles</NavDropdown.Item>
+              
+              <NavDropdown.Item as={Link} to="/Perfil/Perfiles">
+              <JournalCheck size={15} color="cornflowerblue" style={{ marginRight: '10px' }} />
+              Perfiles</NavDropdown.Item>
+
             <NavDropdown.Item as={Link} to="/Permisos">
             
             <PersonFillLock size={15} color="cornflowerblue" style={{ marginRight: '10px' }} />
