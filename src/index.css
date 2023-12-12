@@ -12,3 +12,36 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.modalconf-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.2); /* Color semitransparente para el fondo */
+  z-index: 999; /* Asegúrate de que esté por encima de otros elementos */
+}
+
+.modalconf {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  z-index: 1000; /* Asegúrate de que esté por encima de modal-overlay */
+  border-radius: 20px;
+}
+
+.buttonnodal {
+  padding: 5px 10px; /* Aplica padding de 5px arriba y abajo, y 10px a los lados */
+  margin-right: 5px;
+  margin-top: 15px;
+
+}
+.containernodal {
+
+  display: flex;
+  justify-content: center;
+}

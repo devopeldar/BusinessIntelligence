@@ -2,6 +2,8 @@ import React, { useRef, useState } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha'; // Importar el componente ReCAPTCHA
 import 'bootstrap/dist/css/bootstrap.min.css'; // Importar estilos de Bootstrap
 import LSButton from '../controls/Button/LSButton';
+import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const Login = ({ handleLogin }) => {
   const [username, setUsername] = useState('');
@@ -10,6 +12,8 @@ const Login = ({ handleLogin }) => {
   const [captchaValue, setCaptchaValue] = useState('');
   const [erroriniciosesion, setErrorInicioSesion] = useState('');
   const captcha = useRef(null);
+
+  const history = useNavigate();
 
   const handleUsernameChange = (e) => {
     setUsername(e.target.value);
@@ -26,6 +30,9 @@ const Login = ({ handleLogin }) => {
     }
   };
 
+  const handleRegister = () => {
+    
+  };
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -107,9 +114,15 @@ const Login = ({ handleLogin }) => {
                   onChange={handleCaptchaChange}
                 />
                 <div style={stylesDivButton} className="mb-3">
-                  <LSButton type="submit" caption={"Iniciar Sesion"} onClick={handleSubmit} className="btn btn-primary mt-3"/>
+                  <LSButton type="submit" caption={"Iniciar Sesion"} onClick={handleSubmit} className="btn btn-primary mt-3" />
                 </div>
-                {/* <Button >Registrarme</Button> */}
+                <div>
+                  {/* Tu formulario de inicio de sesión */}
+                  {/* ... */}
+
+                  {/* Enlace para redirigir a la página de registro */}
+                  <p>¿No tienes una cuenta? Regístrate <Link to="/Registrarme" onClick={handleRegister}>aquí</Link></p>
+                </div>
               </form>
             </div>
           </div>

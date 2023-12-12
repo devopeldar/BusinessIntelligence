@@ -2,53 +2,104 @@ import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css'; // Importa el archivo CSS de Bootstrap
 import { Link } from 'react-router-dom';
 import API_URL from '../../../config';
+import axios from 'axios';
+import LSButton from '../../controls/Button/LSButton';
 
 const Perfiles = () => {
   const [perfiles, setPerfiles] = useState([]);
+  const [data, setData] = useState([]);
+  const [error, setError] = useState(null);
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [idperfil, setidperfil] = useState(null);
+  const [nombreperfil, setnombreperfil] = useState('');
+
+  const handleDeleteClick = (id, nombre) => {
+    // Mostrar el modal de confirmación
+
+    setidperfil(id);
+    setnombreperfil(nombre);
+    setShowConfirmation(true);
+    document.body.style.overflow = 'hidden'; // Bloquear el scroll del body
+
+  };
+  const handleCancel = () => {
+    // Cancelar la eliminación y ocultar el modal de confirmación
+    setShowConfirmation(false);
+    setidperfil(null);
+    document.body.style.overflow = 'auto'; // Habilitar el scroll del body nuevamente
+  };
+
+
 
   useEffect(() => {
-    // Aquí realizas la llamada a tu API para obtener los perfiles
-    const GetPerfiles = async () => {
+    const fetchData = async () => {
       try {
-        // Realiza la solicitud a tu API para obtener los perfiles
-        console.log(API_URL);
-        // const response = await fetch(API_URL + `/PefilesGet`);
-        // if (!response.ok) {
-        //   throw new Error('Error al obtener los perfiles');
-        // }
-        const response = await fetch(API_URL + '/PefilesGet', {
-          method: 'GET',
-          // Otros parámetros de la solicitud, como headers, body, etc., si es necesario
+        const response = await axios.get(API_URL + '/PerfilesGet', {
+          headers: {
+            'accept': 'application/json'
+          }
         });
+        setPerfiles(response.data);
 
-        const data = await response.json();
-        setPerfiles(data); // Actualiza el estado con los perfiles obtenidos
+
       } catch (error) {
-        console.error('Error:', error);
+        setError(error);
+
+        console.log(error);
+
       }
     };
 
-    GetPerfiles();
+    fetchData();
   }, []);
 
-  const eliminarPerfil = async (id) => {
+
+
+  // const handleConfirmDelete = async () => {
+  //   try {
+  //     // Realizar la solicitud DELETE al confirmar
+  //     await axios.delete(API_URL + '/PerfilesDelete/6'); // Cambia el ID por el correspondiente
+  //     // Aquí puedes manejar la actualización de la lista de perfiles o hacer otras acciones después de eliminar
+
+  //     // Ocultar el modal de confirmación después de la eliminación exitosa
+  //     setShowConfirmation(false);
+  //   } catch (error) {
+  //     // Manejar errores en caso de que la eliminación falle
+  //     console.error('Error al eliminar:', error);
+  //   }
+  // };
+
+
+  const handleConfirmDelete = async () => {
     try {
-      // Lógica para eliminar el perfil con el ID proporcionado
-      await fetch(API_URL + `/${id}`, {
-        method: 'DELETE',
+      console.log(222);
+      const response = await fetch(API_URL + '/PerfilesDelete', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ "idperfil": `${idperfil}` })
       });
 
+      setShowConfirmation(false);
+      document.body.style.overflow = 'auto'; // Habilitar el scroll del body nuevamente
+
       // Actualiza la lista de perfiles en el estado después de eliminar el perfil
-      setPerfiles((prevPerfiles) => prevPerfiles.filter((perfil) => perfil.id !== id));
+      setPerfiles((prevPerfiles) => prevPerfiles.filter((perfil) => perfil.idPerfil !== idperfil));
     } catch (error) {
       console.error('Error al eliminar el perfil:', error);
     }
   };
 
+
+
   return (
     <div className="container mt-4">
       <h2>Lista de Perfiles</h2>
-      <button type="submit" as={Link} to="/Perfil" className="btn btn-success">Agregar Perfil</button>
+      {/* <button type="button" as={Link} to="/Perfil" className="btn btn-success">Agregar Perfil</button> */}
+      <Link to="/Perfil/PerfilAdd">
+        <LSButton type="button" as={Link} to="/Perfil" className="btn btn-success" caption={'Agregar Perfil'}></LSButton>
+      </Link>
       <table className="table">
         <thead>
           <tr>
@@ -60,43 +111,46 @@ const Perfiles = () => {
         </thead>
         <tbody>
           {perfiles.map((perfil) => (
-            <tr key={perfil.id}>
-              <td>{perfil.id}</td>
+            <tr key={perfil.idPerfil}>
+              <td>{perfil.idPerfil}</td>
               <td>{perfil.nombre}</td>
-              <td>{perfil.activo ? 'Activo' : 'Inactivo'}</td>
-              {/* <td>
-                <button
-                  className="btn btn-primary me-2"
-                  onClick={() => {
-                    // Lógica para modificar el perfil con el ID proporcionado
-                    // Por ejemplo, redirigir a una página de edición o abrir un modal
-                    console.log(`Modificar perfil con ID: ${perfil.id}`);
-                  }}
-                >
-                  Modificar
-                </button>
-                <button
-                  className="btn btn-danger"
-                  onClick={() => eliminarPerfil(perfil.id)}
-                >
-                  Eliminar
-                </button>
-              </td> */}
-               <td>
-                <Link to={`/editar/${perfil.id}`} className="btn btn-primary me-2">
+              <td>
+                <input type="checkbox" checked={perfil.activo} readOnly />
+              </td>
+
+              <td>
+                <Link to={`../../Perfil/PerfilEdit/${perfil.idPerfil}`} className="btn btn-primary me-2">
                   Modificar
                 </Link>
                 <button
                   className="btn btn-danger"
-                  onClick={() => eliminarPerfil(perfil.id)}
+                  onClick={() => handleDeleteClick(perfil.idPerfil, perfil.nombre)}
                 >
                   Eliminar
                 </button>
               </td>
+
             </tr>
           ))}
         </tbody>
       </table>
+      {/* Modal de confirmación */}
+      {showConfirmation && (
+
+        // <div className="modal-overlay" style={{display: 'block', width: '600px', height: '200px', marginTop: '400px',marginLeft: '300px',}}>
+        //   <div className="modal-content" >
+        //   <div className="modal-header">
+        <div className="modalconf-overlay">
+          <div className="modalconf">
+            <p className="modal-title">¿Estás seguro de que deseas eliminar el perfil <b>{nombreperfil}</b>?</p>
+            <div className='containernodal'>
+
+              <LSButton caption={'Eliminar'} type={'button'} className="buttonnodal btn btn-danger" onClick={handleConfirmDelete}></LSButton>
+              <LSButton caption={'Cancelar'} type={'button'} className="buttonnodal btn btn-success" onClick={handleCancel}></LSButton>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
