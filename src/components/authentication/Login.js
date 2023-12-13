@@ -5,15 +5,13 @@ import LSButton from '../controls/Button/LSButton';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
-const Login = ({ handleLogin }) => {
+const Login = ({ handleLogin, handleRegister }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [captchaValue, setCaptchaValue] = useState('');
   const [erroriniciosesion, setErrorInicioSesion] = useState('');
   const captcha = useRef(null);
-
-  const history = useNavigate();
 
   const handleUsernameChange = (e) => {
     setUsername(e.target.value);
@@ -30,9 +28,6 @@ const Login = ({ handleLogin }) => {
     }
   };
 
-  const handleRegister = () => {
-    
-  };
   const handleSubmit = (e) => {
     e.preventDefault();
 

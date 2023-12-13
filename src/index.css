@@ -45,3 +45,11 @@ code {
   display: flex;
   justify-content: center;
 }
+
+.registerpage{
+
+  margin-top: 150px;
+    /* width: 30%; 
+    display: flex;*/
+    justify-content: center;
+}

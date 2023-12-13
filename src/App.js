@@ -18,7 +18,8 @@ import Login from './components/authentication/Login';
 import PerfilAdd from './components/authentication/Perfil/PerfilAdd';
 import Perfiles from './components/authentication/Perfil/Perfiles';
 import PerfilEdit from './components/authentication/Perfil/PerfilEdit';
-import { Switch } from '@mui/material';
+import Confirmacion from './components/authentication/Confirmacion';
+
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [IsRegister, setIsRegister] = useState(false);
@@ -32,7 +33,7 @@ const App = () => {
   };
   const handleRegister = () => {
     // Lógica para registro exitoso
-    setIsLoggedIn(true);
+    setIsLoggedIn(false);
     setIsRegister(true);
   };
 
@@ -40,7 +41,7 @@ const App = () => {
     <Router>
       <div>
         {!isLoggedIn && !IsRegister ? (
-          <Login handleLogin={handleLogin} />
+          <Login handleLogin={handleLogin} handleRegister={handleRegister} />
         ) :
         IsRegister ?(
           <Registrarme />
@@ -58,7 +59,8 @@ const App = () => {
           <Route path="/Auditoria" element={<Auditoria />} />
           <Route path="/Roles" element={<Roles />} />
           <Route path="/Permisos" element={<Permisos />} />
-          <Route path="/Registrarme" element={<Registrarme />} />
+          <Route path="/Confirmacion/:email" element={<Confirmacion />} />
+          {/* <Route path="/Registrarme" element={<Registrarme />} /> */}
 
           {/* <Route exact path="/Registrarme"  onRegister={() => setIsLoggedIn(true)} element={<Registrarme />}/> */}
 

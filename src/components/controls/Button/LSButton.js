@@ -8,4 +8,5 @@ const LSButton = ({ onClick, caption, type, className }) => {
   );
 };
 
+
 export default LSButton;
