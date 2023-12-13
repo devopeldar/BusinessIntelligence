@@ -20,7 +20,7 @@ import { PersonFillLock } from 'react-bootstrap-icons';
 // };
 
 
-const Navigationbar = ({ handleLogout }) => {
+const Navigationbar = ({ handleClosesesion }) => {
   return (
     <Navbar bg="light" expand="lg">
 
@@ -82,7 +82,8 @@ const Navigationbar = ({ handleLogout }) => {
             <NavDropdown.Item as={Link} to="/Auditoria">
             <JournalCheck size={15} color="red" style={{ marginRight: '10px' }} />
             Auditoria</NavDropdown.Item>
-            <NavDropdown.Item onClick={handleLogout} >
+            
+            <NavDropdown.Item  onClick={handleClosesesion} >
               
             <PersonFillSlash size={15} color="red" style={{ marginRight: '10px' }} />
             Cerrar Sesion</NavDropdown.Item>

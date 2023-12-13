@@ -1,4 +1,5 @@
 @import '~bootstrap/dist/css/bootstrap.min.css';
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -19,8 +20,10 @@ code {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.2); /* Color semitransparente para el fondo */
-  z-index: 999; /* Asegúrate de que esté por encima de otros elementos */
+  background-color: rgba(0, 0, 0, 0.2);
+  /* Color semitransparente para el fondo */
+  z-index: 999;
+  /* Asegúrate de que esté por encima de otros elementos */
 }
 
 .modalconf {
@@ -30,26 +33,42 @@ code {
   transform: translate(-50%, -50%);
   background-color: white;
   padding: 20px;
-  z-index: 1000; /* Asegúrate de que esté por encima de modal-overlay */
+  z-index: 1000;
+  /* Asegúrate de que esté por encima de modal-overlay */
   border-radius: 20px;
 }
 
 .buttonnodal {
-  padding: 5px 10px; /* Aplica padding de 5px arriba y abajo, y 10px a los lados */
+  padding: 5px 10px;
+  /* Aplica padding de 5px arriba y abajo, y 10px a los lados */
   margin-right: 5px;
   margin-top: 15px;
 
 }
+
 .containernodal {
 
   display: flex;
   justify-content: center;
 }
 
-.registerpage{
+.registerpage {
 
   margin-top: 150px;
-    /* width: 30%; 
+  /* width: 30%; 
     display: flex;*/
-    justify-content: center;
+  justify-content: center;
+}
+
+.mensajeregister {
+  font-family: cursive;
+  font-size: larger;
+}
+
+.titulomensajeregister {
+  font-family: cursive;
+  font-size: larger;
+}
+.divconfregistro{
+text-align: center;
 }
