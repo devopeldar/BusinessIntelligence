@@ -72,3 +72,10 @@ code {
 .divconfregistro{
 text-align: center;
 }
+
+.my-custom-navbar .nav-link:hover {
+  background-color: #ccc; /* Cambia el color al pasar el mouse por encima */
+  color: black; /* Cambia el color del texto para que sea visible */
+  border-radius: 7px;
+}
+

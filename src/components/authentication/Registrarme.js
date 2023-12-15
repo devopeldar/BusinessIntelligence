@@ -6,7 +6,7 @@ import LSButtonRegister from "../controls/Button/LSButtonRegister";
 import API_URL from "../../config";
 import { css } from '@emotion/react';
 import { BarLoader } from 'react-spinners';
-
+import './../../index.css';
 const Registrarme = ({ handleLogin }) => {
   const validationSchema = yup.object().shape({
     Nombre: yup.string().required("El campo Nombre es requerido"),

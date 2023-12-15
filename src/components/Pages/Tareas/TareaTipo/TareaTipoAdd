@@ -1,0 +1,115 @@
+import React from 'react';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
+
+const TareaTipoAdd = ({ onSubmit }) => {
+    const initialValues = {
+        Nombre: '',
+        Codigo: '',
+        // Otros campos si es necesario
+    };
+
+    const validationSchema = Yup.object().shape({
+        Nombre: Yup.string().required('El nombre es obligatorio'),
+        Codigo: Yup.string().required('El código es obligatorio'),
+        VencimientoDias: Yup.string().required('El Vencimiento en Dias es obligatorio'),
+        VencimientoLegal: Yup.string().required('El Vencimiento Legal es obligatorio'),
+        // Validación de otros campos
+    });
+
+    const handleSubmit = (values, { resetForm }) => {
+        onSubmit(values);
+        resetForm(); // Reinicia el formulario después de enviar los datos
+    };
+
+    return (
+        <div>
+            <h2>Agregar Nuevo Tipo de Tarea</h2>
+            <Formik
+                initialValues={initialValues}
+                validationSchema={validationSchema}
+                onSubmit={handleSubmit}
+            >
+                <Form autoComplete="off" onSubmit={formik.handleSubmit}>
+                    <Form.Group controlId="Nombre">
+                        <Form.Label>Nombre:</Form.Label>
+                        <Form.Control
+                            type="text"
+                            name="Nombre"
+                            autoComplete="off"
+                            value={formik.values.Nombre}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            isInvalid={formik.touched.Nombre && !!formik.errors.Nombre}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                            {formik.errors.Nombre}
+                        </Form.Control.Feedback>
+                    </Form.Group>
+
+                    <Form.Group controlId="Codigo">
+                        <Form.Label>Codigo:</Form.Label>
+                        <Form.Control
+                            type="text"
+                            name="Codigo"
+                            autoComplete="off"
+                            value={formik.values.Codigo}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            isInvalid={formik.touched.Codigo && !!formik.errors.Codigo}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                            {formik.errors.Codigo}
+                        </Form.Control.Feedback>
+                    </Form.Group>
+                    <Form.Group controlId="VencimientoDias">
+                        <Form.Label>Vencimiento en Dias:</Form.Label>
+                        <Form.Control
+                            type="text"
+                            name="VencimientoDias"
+                            autoComplete="off"
+                            value={formik.values.VencimientoDias}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            isInvalid={formik.touched.VencimientoDias && !!formik.errors.VencimientoDias}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                            {formik.errors.VencimientoDias}
+                        </Form.Control.Feedback>
+                    </Form.Group>
+                    <Form.Group controlId="VencimientoLegal">
+                        <Form.Label>Vencimiento Legal:</Form.Label>
+                        <Form.Control
+                            type="text"
+                            name="VencimientoLegal"
+                            autoComplete="off"
+                            value={formik.values.VencimientoLegal}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            isInvalid={formik.touched.VencimientoLegal && !!formik.errors.VencimientoLegal}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                            {formik.errors.VencimientoLegal}
+                        </Form.Control.Feedback>
+                    </Form.Group>
+                    <Form.Group controlId="Activo">
+                        <Form.Check
+                            type="checkbox"
+                            label="Activo"
+                            name="Activo"
+                            checked={formik.values.Activo}
+                            onChange={formik.handleChange}
+                            isInvalid={formik.touched.Activo && !!formik.errors.Activo}
+                            feedback={formik.errors.Activo}
+                        />
+                    </Form.Group>
+                   
+                    {/* Agregar otros campos si es necesario */}
+                    <button type="submit">Agregar Tipo de Tarea</button>
+                </Form>
+            </Formik>
+        </div>
+    );
+};
+
+export default TareaTipoAdd;

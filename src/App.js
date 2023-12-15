@@ -12,15 +12,17 @@ import RecuperarPass from './components/authentication/RecuperarPass';
 import Permisos from './components/authentication/Permisos';
 import Clientes from './components/Pages/Clientes';
 import Tarea from './components/Pages/Tarea';
-import TipoTarea from './components/Pages/TipoTarea';
-
 import Login from './components/authentication/Login';
 import PerfilAdd from './components/authentication/Perfil/PerfilAdd';
 import Perfiles from './components/authentication/Perfil/Perfiles';
 import PerfilEdit from './components/authentication/Perfil/PerfilEdit';
 import Confirmacion from './components/authentication/Confirmacion';
 import ConfirmarCuentaxToken from './components/authentication/ConfirmarCuentaxToken';
-import { Switch } from '@mui/material';
+import { Menu, Switch } from '@mui/material';
+import TareaTipoList from './components/Pages/Tareas/TareaTipo/TareaTipoList';
+import TareaTipoAdd from './components/Pages/Tareas/TareaTipo/TareaTipoAdd';
+import MenuNew from './components/menu/MenuNew';
+import PrimarySearchAppBar from './components/menu/MenuNew';
 // componentDidMount(){
 //   const { match } = this.props;
 //   const { params } = match;
@@ -37,7 +39,7 @@ const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [IsRegister, setIsRegister] = useState(false);
   const [IsConfirmacionRegister, setIsConfirmacionRegister] = useState(false);
-  console.log(555555555555);
+
   const handleLogin = () => {
     setIsLoggedIn(true);
     console.log("handleLogin");
@@ -73,7 +75,8 @@ const App = () => {
             IsRegister ? (
               <Registrarme handleLogin={handleLogout} />
             ) : (
-              <Navigationbar handleClosesesion={handleClosesesion} />
+              <PrimarySearchAppBar />
+              // <Navigationbar handleClosesesion={handleClosesesion} />
             )}
         {/* Navegación con links */}
 
@@ -104,8 +107,9 @@ const App = () => {
           <Route path="/Clientes" element={<Clientes />} />
 
           <Route path="/Tarea" element={<Tarea />} />
-          <Route path="/TipoTarea" element={<TipoTarea />} />
-
+          <Route path="/TareaTipo" element={<TareaTipoList />} />
+          <Route path="/TareaTipo/TareaTipoAdd" element={<TareaTipoAdd />} />
+          {/* <Route path="/TareaTipo/TareaTipoEdit/:id" element={<TareaTipoAdd />} /> */}
         </Routes>
 
         {/* 

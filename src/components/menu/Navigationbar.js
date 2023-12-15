@@ -8,7 +8,7 @@ import { ListCheck } from 'react-bootstrap-icons';
 import { PeopleFill } from 'react-bootstrap-icons';
 import { PersonLinesFill } from 'react-bootstrap-icons';
 import { PersonFillLock } from 'react-bootstrap-icons';
-
+import '../../index.css';
 // const Menu = ({ handleLogout }) => {
 //   return (
 //     <div>
@@ -22,7 +22,7 @@ import { PersonFillLock } from 'react-bootstrap-icons';
 
 const Navigationbar = ({ handleClosesesion }) => {
   return (
-    <Navbar bg="light" expand="lg">
+    <Navbar bg="light" expand="lg" className="my-custom-navbar">
 
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
@@ -34,7 +34,7 @@ const Navigationbar = ({ handleClosesesion }) => {
               {/* <img src={sampleImage} alt="Icono" style={{ marginRight: '8px', width: '20px', height: '20px' }} /> */}
               <ListTask size={15} color="cornflowerblue" style={{ marginRight: '10px' }} />
               Mantenimiento Tareas</NavDropdown.Item>
-            <NavDropdown.Item as={Link} to="/TipoTarea">
+            <NavDropdown.Item as={Link} to="/TareaTipo">
               <ListCheck size={15} color="green" style={{ marginRight: '10px' }} />
               Tipos de Tarea</NavDropdown.Item>
 
