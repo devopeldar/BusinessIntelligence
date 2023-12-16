@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Route, Routes, useParams } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useParams, useLocation } from 'react-router-dom';
 import Inicio from './components/Pages/Inicio';
 import AcercaDe from './components/Pages/AcercaDe';
 import Navigationbar from './components/menu/Navigationbar';
@@ -23,6 +23,10 @@ import TareaTipoList from './components/Pages/Tareas/TareaTipo/TareaTipoList';
 import TareaTipoAdd from './components/Pages/Tareas/TareaTipo/TareaTipoAdd';
 import MenuNew from './components/menu/MenuNew';
 import PrimarySearchAppBar from './components/menu/MenuNew';
+
+import routes from './routes';
+import SideNav from './components/menu/SideNav';
+// import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "context";
 // componentDidMount(){
 //   const { match } = this.props;
 //   const { params } = match;
@@ -35,11 +39,22 @@ import PrimarySearchAppBar from './components/menu/MenuNew';
 const App = () => {
 
  
-
+  // const [controller, dispatch] = useMaterialUIController();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [IsRegister, setIsRegister] = useState(false);
+  const [onMouseEnter, setOnMouseEnter] = useState(false);
+  const [rtlCache, setRtlCache] = useState(null);
   const [IsConfirmacionRegister, setIsConfirmacionRegister] = useState(false);
-
+  // const {
+  //   miniSidenav,
+  //   direction,
+  //   layout,
+  //   openConfigurator,
+  //   sidenavColor,
+  //   transparentSidenav,
+  //   whiteSidenav,
+  //   darkMode,
+  // } = controller;
   const handleLogin = () => {
     setIsLoggedIn(true);
     console.log("handleLogin");
@@ -64,7 +79,21 @@ const App = () => {
     console.log("handleLogin88888");
   };
 
+// Open sidenav when mouse enter on mini sidenav
+// const handleOnMouseEnter = () => {
+//   if (miniSidenav && !onMouseEnter) {
+//     setMiniSidenav(dispatch, false);
+//     setOnMouseEnter(true);
+//   }
+// };
 
+// // Close sidenav when mouse leave mini sidenav
+// const handleOnMouseLeave = () => {
+//   if (onMouseEnter) {
+//     setMiniSidenav(dispatch, true);
+//     setOnMouseEnter(false);
+//   }
+// };
   return (
     <Router>
       <div>
@@ -75,7 +104,15 @@ const App = () => {
             IsRegister ? (
               <Registrarme handleLogin={handleLogout} />
             ) : (
-              <PrimarySearchAppBar />
+            //   <Sidenav
+            //   // color={sidenavColor}
+            //   // brand={(transparentSidenav && !darkMode) || whiteSidenav ? whiteSidenav : darkMode}
+            //   brandName="Task Manager"
+            //   routes={routes}
+            //   // onMouseEnter={handleOnMouseEnter}
+            //   // onMouseLeave={handleOnMouseLeave}
+            // />
+            <SideNav routes={routes} />
               // <Navigationbar handleClosesesion={handleClosesesion} />
             )}
         {/* Navegación con links */}
