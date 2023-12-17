@@ -1,58 +1,150 @@
-import React, { useState, useEffect } from 'react';
-import { Button, Table } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-import LSButton from '../../../controls/Button/LSButton';
+import React, { useState, useEffect } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { Link } from "react-router-dom";
+import axios from "axios";
+import API_URL from "../../../../config";
+import { makeStyles } from "@material-ui/core/styles";
+import Paper from "@material-ui/core/Paper";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
 
-const TareaTipoList = ({ handleEditar, handleEliminar }) => {
-  const [tareasTipos, setTareasTipos] = useState([]);
+const TareaTipoList = () => {
+  const [tareaTipos, setTareaTipos] = useState([]);
+  const [error, setError] = useState(null);
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [idTareaTipo, setIdTareaTipo] = useState(null);
+  const [nombreTareaTipo, setNombreTareaTipo] = useState("");
 
-  // Simulación de carga inicial de datos (puedes reemplazar esto con llamadas a tu API)
   useEffect(() => {
-    // Aquí debes realizar la llamada al backend para obtener los datos de los tipos de tareas
-    // Por ahora, usaré datos simulados
-    const datosSimulados = [
-      { IDTareaTipo: 1, Nombre: 'Tarea 1', Codigo: 'COD001', VencimientoDias: 5, VencimientoLegal: 10, Puntacion: 20 },
-      // ... más datos simulados aquí si es necesario
-    ];
-    setTareasTipos(datosSimulados);
+    const fetchData = async () => {
+      try {
+        const response = await axios.post(API_URL + "/TareaTipoListar", {
+          headers: {
+            accept: "application/json",
+          },
+        });
+        setTareaTipos(response.data);
+      } catch (error) {
+        setError(error);
+        console.log(error);
+      }
+    };
+
+    fetchData();
   }, []);
 
-  return (
-    <div>
-      <h2>Listado de Tipos de Tareas</h2>
-      <Link to="/TareaTipo/TareaTipoAdd">
-        <LSButton type="button" className="btn btn-success" caption={'Agregar Tipo Tarea'}></LSButton>
-      </Link>
+  // const handleDeleteClick = (id, nombre) => {
+  //   setIdTareaTipo(id);
+  //   setNombreTareaTipo(nombre);
+  //   setShowConfirmation(true);
+  //   document.body.style.overflow = 'hidden';
+  // };
 
-      <Table striped bordered hover>
+  const handleCancel = () => {
+    setShowConfirmation(false);
+    setIdTareaTipo(null);
+    document.body.style.overflow = "auto";
+  };
+
+  const handleConfirmDelete = async () => {
+    try {
+      // Lógica para eliminar el TareaTipo
+      // ...
+
+      setShowConfirmation(false);
+      document.body.style.overflow = "auto";
+
+      // Actualiza la lista de TareaTipos en el estado después de eliminar
+      setTareaTipos((prevTareaTipos) =>
+        prevTareaTipos.filter((tipo) => tipo.idTareaTipo !== idTareaTipo)
+      );
+    } catch (error) {
+      console.error("Error al eliminar el TareaTipo:", error);
+    }
+  };
+
+  return (
+    <div className="container mt-4">
+      {/* Agregar enlace para agregar nuevo TareaTipo */}
+      <Link to="/TareaTipoAdd" className="btn btn-success">
+        Agregar Tipo de Tarea
+      </Link>
+      <table className="table">
         <thead>
           <tr>
             <th>ID</th>
             <th>Nombre</th>
-            <th>Código</th>
-            <th>Vencimiento en días</th>
-            <th>Vencimiento legal</th>
-            <th>Puntuación</th>
             <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
-          {tareasTipos.map((tareaTipo) => (
-            <tr key={tareaTipo.IDTareaTipo}>
-              <td>{tareaTipo.IDTareaTipo}</td>
-              <td>{tareaTipo.Nombre}</td>
-              <td>{tareaTipo.Codigo}</td>
-              <td>{tareaTipo.VencimientoDias}</td>
-              <td>{tareaTipo.VencimientoLegal}</td>
-              <td>{tareaTipo.Puntacion}</td>
+          {tareaTipos.map((tipo) => (
+            <tr key={tipo.idTareaTipo}>
+              <td>{tipo.idTareaTipo}</td>
+              <td>{tipo.nombre}</td>
               <td>
-                <Button variant="info" onClick={() => handleEditar(tareaTipo.IDTareaTipo)}>Editar</Button>{' '}
-                <Button variant="danger" onClick={() => handleEliminar(tareaTipo.IDTareaTipo)}>Eliminar</Button>
+                {/* Enlaces para editar y eliminar */}
+                <Link
+                  to={`/TareaTipoEdit/${tipo.idTareaTipo}`}
+                  className="btn btn-primary me-2"
+                >
+                  Modificar
+                </Link>
+                {/* <button className="btn btn-danger" onClick={() => handleDeleteClick(tipo.idTareaTipo, tipo.nombre)}>Eliminar</button> */}
               </td>
             </tr>
           ))}
         </tbody>
-      </Table>
+      </table>
+      {/* <TableContainer component={Paper}>
+        <Table aria-label="caption table">
+          <caption>A basic table example with a caption</caption>
+          <TableHead>
+            <TableRow>
+              <TableCell>idTareaTipo</TableCell>
+              <TableCell align="right">Nombre</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {tareaTipos.map((row) => (
+              <TableRow key={row.idTareaTipo}>
+                <TableCell component="th" scope="row">
+                  {row.idTareaTipo}
+                </TableCell>
+                <TableCell align="right">{row.nombre}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer> */}
+      {showConfirmation && (
+        <div className="modalconf-overlay">
+          <div className="modalconf">
+            <p className="modal-title">
+              ¿Estás seguro de que deseas eliminar el tipo de tarea{" "}
+              <b>{nombreTareaTipo}</b>?
+            </p>
+            <div className="containernodal">
+              <button
+                className="buttonnodal btn btn-danger"
+                onClick={handleConfirmDelete}
+              >
+                Eliminar
+              </button>
+              <button
+                className="buttonnodal btn btn-success"
+                onClick={handleCancel}
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

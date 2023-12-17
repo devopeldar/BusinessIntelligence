@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Route, Routes, useParams, useLocation } from 'react-router-dom';
-import Inicio from './components/Pages/Inicio';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import AcercaDe from './components/Pages/AcercaDe';
-import Navigationbar from './components/menu/Navigationbar';
 import Auditoria from './components/authentication/Auditoria';
-import changepassword from './components/authentication/changepassword';
 import Usuarios from './components/authentication/Usuarios';
 import Roles from './components/authentication/Roles';
 import Registrarme from './components/authentication/Registrarme';
@@ -17,15 +14,15 @@ import PerfilAdd from './components/authentication/Perfil/PerfilAdd';
 import Perfiles from './components/authentication/Perfil/Perfiles';
 import PerfilEdit from './components/authentication/Perfil/PerfilEdit';
 import Confirmacion from './components/authentication/Confirmacion';
-import ConfirmarCuentaxToken from './components/authentication/ConfirmarCuentaxToken';
-import { Menu, Switch } from '@mui/material';
+
 import TareaTipoList from './components/Pages/Tareas/TareaTipo/TareaTipoList';
 import TareaTipoAdd from './components/Pages/Tareas/TareaTipo/TareaTipoAdd';
-import MenuNew from './components/menu/MenuNew';
-import PrimarySearchAppBar from './components/menu/MenuNew';
 
 import routes from './routes';
 import SideNav from './components/menu/SideNav';
+import TareaEstadoList from './components/Pages/TareasEstado/TareasEstadoList';
+import DepartamentoList from './components/Pages/Departamentos/DepartamentoList';
+import TipoEventoList from './components/Pages/TipoEvento/TipoEventoListar';
 // import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "context";
 // componentDidMount(){
 //   const { match } = this.props;
@@ -42,9 +39,7 @@ const App = () => {
   // const [controller, dispatch] = useMaterialUIController();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [IsRegister, setIsRegister] = useState(false);
-  const [onMouseEnter, setOnMouseEnter] = useState(false);
-  const [rtlCache, setRtlCache] = useState(null);
-  const [IsConfirmacionRegister, setIsConfirmacionRegister] = useState(false);
+
   // const {
   //   miniSidenav,
   //   direction,
@@ -68,10 +63,7 @@ const App = () => {
 
   };
 
-  const handleClosesesion = () => {
-    setIsLoggedIn(false);
-    console.log("handleLoginwwwwww");
-  };
+
   const handleRegister = () => {
     // Lógica para registro exitoso
     setIsLoggedIn(false);
@@ -146,6 +138,12 @@ const App = () => {
           <Route path="/Tarea" element={<Tarea />} />
           <Route path="/TareaTipo" element={<TareaTipoList />} />
           <Route path="/TareaTipo/TareaTipoAdd" element={<TareaTipoAdd />} />
+
+          <Route path="/TareaEstado" element={<TareaEstadoList />} />
+
+          <Route path="/Departamento" element={<DepartamentoList />} />
+
+          <Route path="/TipoEvento" element={<TipoEventoList />} />
           {/* <Route path="/TareaTipo/TareaTipoEdit/:id" element={<TareaTipoAdd />} /> */}
         </Routes>
 

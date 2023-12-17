@@ -10,18 +10,12 @@ import {
   ListItemIcon,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import ExpandLess from "@mui/icons-material/ExpandLess";
-import ExpandMore from "@mui/icons-material/ExpandMore";
-import AddBoxIcon from '@mui/icons-material/AddBox';
-import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+
 import DragHandleIcon from '@mui/icons-material/DragHandle';
 import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import PlaylistAddCheckIcon from "@mui/icons-material/PlaylistAddCheck";
@@ -124,6 +118,28 @@ const SideNav = () => {
                   <ListItemText primary="Tipos de Tarea" />
                 </Link>
               </ListItem>
+              <ListItem button sx={{ pl: 4, color: "black" }}>
+                <ListItemIcon>
+                  <PlaylistAddCheckIcon color="info" />
+                </ListItemIcon>
+                <Link
+                  to="/TareaEstado"
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  <ListItemText primary="Estados de Tarea" />
+                </Link>
+              </ListItem>
+              <ListItem button sx={{ pl: 4, color: "black" }}>
+                <ListItemIcon>
+                  <PlaylistAddCheckIcon color="info" />
+                </ListItemIcon>
+                <Link
+                  to="/TipoEvento"
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  <ListItemText primary="Tipos de Eventos" />
+                </Link>
+              </ListItem>
             </List>
           </Collapse>
           <ListItemButton
@@ -149,10 +165,21 @@ const SideNav = () => {
                   <RecentActorsIcon color="info" />
                 </ListItemIcon>
                 <Link
-                  to="/Tarea"
+                  to="/"
                   style={{ textDecoration: "none", color: "inherit" }}
                 >
                   <ListItemText primary="Mantenimiento Clientes" />
+                </Link>
+              </ListItem>
+              <ListItem button sx={{ pl: 4, color: "black" }}>
+                <ListItemIcon>
+                  <RecentActorsIcon color="info" />
+                </ListItemIcon>
+                <Link
+                  to="/Departamento"
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  <ListItemText primary="Departamentos" />
                 </Link>
               </ListItem>
             </List>
