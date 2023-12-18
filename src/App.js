@@ -1,199 +1,166 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.2.0
-=========================================================
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import AcercaDe from './components/Pages/AcercaDe';
+import Auditoria from './components/authentication/Auditoria';
+import Usuarios from './components/authentication/Usuarios';
+import Roles from './components/authentication/Roles';
+import Registrarme from './components/authentication/Registrarme';
+import RecuperarPass from './components/authentication/RecuperarPass';
+import Permisos from './components/authentication/Permisos';
+import Clientes from './components/Pages/Clientes';
+import Tarea from './components/Pages/Tarea';
+import Login from './components/authentication/Login';
+import PerfilAdd from './components/authentication/Perfil/PerfilAdd';
+import Perfiles from './components/authentication/Perfil/Perfiles';
+import PerfilEdit from './components/authentication/Perfil/PerfilEdit';
+import Confirmacion from './components/authentication/Confirmacion';
 
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
+import TareaTipoList from './components/Pages/Tareas/TareaTipo/TareaTipoList';
+//import TareaTipoAdd from './components/Pages/Tareas/TareaTipo/TareaTipoAdd';
 
-Coded by www.creative-tim.com
+import routes from './routes';
+import SideNav from './components/menu/SideNav';
+import TareaEstadoList from './components/Pages/TareasEstado/TareasEstadoList';
+import DepartamentoList from './components/Pages/Departamentos/DepartamentoList';
+import TipoEventoList from './components/Pages/TipoEvento/TipoEventoListar';
+// import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "context";
+// componentDidMount(){
+//   const { match } = this.props;
+//   const { params } = match;
+//   const { token } = params;
 
- =========================================================
+//   console.log('Token capturado:', token);
+//   // Puedes hacer lo que necesites con el token aquí
+// }
 
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
+const App = () => {
 
-import { useState, useEffect, useMemo } from "react";
+ 
+  // const [controller, dispatch] = useMaterialUIController();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [IsRegister, setIsRegister] = useState(false);
 
-// react-router components
-import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+  // const {
+  //   miniSidenav,
+  //   direction,
+  //   layout,
+  //   openConfigurator,
+  //   sidenavColor,
+  //   transparentSidenav,
+  //   whiteSidenav,
+  //   darkMode,
+  // } = controller;
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+    console.log("handleLogin");
 
-// @mui material components
-import { ThemeProvider } from "@mui/material/styles";
-import CssBaseline from "@mui/material/CssBaseline";
-import Icon from "@mui/material/Icon";
-
-// Material Dashboard 2 React components
-import MDBox from "../src/components/controls/MDBox";
-
-// Material Dashboard 2 React example components
-import Sidenav from "../src/components/menu/SideNav";
-import Configurator from "../src/components/layauots/Configurator";
-
-// Material Dashboard 2 React themes
-import theme from "../src/assets/theme/theme-rtl";
-import themeRTL from "../src/assets/theme/theme-rtl";
-
-// Material Dashboard 2 React Dark Mode themes
-import themeDark from "../src/assets/theme-dark";
-import themeDarkRTL from "../src/assets/theme-dark/theme-rtl";
-
-// RTL plugins
-//import rtlPlugin from "stylis-plugin-rtl";
-import { CacheProvider } from "@emotion/react";
-import createCache from "@emotion/cache";
-
-// Material Dashboard 2 React routes
-import routes from "../src/routes";
-
-// Material Dashboard 2 React contexts
-import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "../src/context";
-
-// Images
-import brandWhite from "../src/assets/images/logo-ct-dark.png";
-import brandDark from "../src/assets/images/logo-ct-dark.png";
-
-export default function App() {
-  const [controller, dispatch] = useMaterialUIController();
-  const {
-    miniSidenav,
-    direction,
-    layout,
-    openConfigurator,
-    sidenavColor,
-    transparentSidenav,
-    whiteSidenav,
-    darkMode,
-  } = controller;
-  const [onMouseEnter, setOnMouseEnter] = useState(false);
-  const [rtlCache, setRtlCache] = useState(null);
-  //const { pathname } = useLocation();
-
-  // Cache for the rtl
-  useMemo(() => {
-    const cacheRtl = createCache({
-      key: "rtl"
-
-    });
-    //stylisPlugins: [rtlPlugin],
-    setRtlCache(cacheRtl);
-  }, []);
-
-  // Open sidenav when mouse enter on mini sidenav
-  const handleOnMouseEnter = () => {
-    if (miniSidenav && !onMouseEnter) {
-      setMiniSidenav(dispatch, false);
-      setOnMouseEnter(true);
-    }
   };
 
-  // Close sidenav when mouse leave mini sidenav
-  const handleOnMouseLeave = () => {
-    if (onMouseEnter) {
-      setMiniSidenav(dispatch, true);
-      setOnMouseEnter(false);
-    }
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setIsRegister(false);
+    console.log("handleLoginaaa");
+
   };
 
-  // Change the openConfigurator state
-  const handleConfiguratorOpen = () => setOpenConfigurator(dispatch, !openConfigurator);
 
-  // Setting the dir attribute for the body element
-  useEffect(() => {
-    document.body.setAttribute("dir", direction);
-  }, [direction]);
+  const handleRegister = () => {
+    // Lógica para registro exitoso
+    setIsLoggedIn(false);
+    setIsRegister(true);
+    console.log("handleLogin88888");
+  };
 
-  // Setting page scroll to 0 when changing the route
-  useEffect(() => {
-    document.documentElement.scrollTop = 0;
-    document.scrollingElement.scrollTop = 0;
-  }, [""]);
+// Open sidenav when mouse enter on mini sidenav
+// const handleOnMouseEnter = () => {
+//   if (miniSidenav && !onMouseEnter) {
+//     setMiniSidenav(dispatch, false);
+//     setOnMouseEnter(true);
+//   }
+// };
 
-  const getRoutes = (allRoutes) =>
-    allRoutes.map((route) => {
-      if (route.collapse) {
-        return getRoutes(route.collapse);
-      }
+// // Close sidenav when mouse leave mini sidenav
+// const handleOnMouseLeave = () => {
+//   if (onMouseEnter) {
+//     setMiniSidenav(dispatch, true);
+//     setOnMouseEnter(false);
+//   }
+// };
+  return (
+    <div>ssssssssssssss</div>
+    // <Router>
+    //   <div>
+    //     {
+    //       !isLoggedIn && !IsRegister ? (
+    //         <Login handleLogin={handleLogin} handleRegister={handleRegister} />
+    //       ) :
+    //         IsRegister ? (
+    //           <Registrarme handleLogin={handleLogout} />
+    //         ) : (
+    //         //   <Sidenav
+    //         //   // color={sidenavColor}
+    //         //   // brand={(transparentSidenav && !darkMode) || whiteSidenav ? whiteSidenav : darkMode}
+    //         //   brandName="Task Manager"
+    //         //   routes={routes}
+    //         //   // onMouseEnter={handleOnMouseEnter}
+    //         //   // onMouseLeave={handleOnMouseLeave}
+    //         // />
+    //         <SideNav routes={routes} />
+    //           // <Navigationbar handleClosesesion={handleClosesesion} />
+    //         )}
+    //     {/* Navegación con links */}
 
-      if (route.route) {
-        return <Route exact path={route.route} element={route.component} key={route.key} />;
-      }
+    //     <Routes>
+    //       {/* <Switch>
+          
+    //         <Route path="/ConfirmarCuentaxToken/:token" component={<ConfirmarCuentaxToken />} />
+          
+    //       </Switch> */}
+    //       {/* Rutas */}
+    //       {/* <Route path="/" element={<Login />} /> */}
+    //       <Route path="/Login" element={<Login />} />
+    //       <Route path="/about" element={<AcercaDe />} />
+    //       <Route path="/changepassword" element={<changepassword />} />
+    //       <Route path="/Usuarios" element={<Usuarios />} />
+    //       <Route path="/Auditoria" element={<Auditoria />} />
+    //       <Route path="/Roles" element={<Roles />} />
+    //       <Route path="/Permisos" element={<Permisos />} />
+    //       <Route path="/Confirmacion/:email" element={<Confirmacion />} />
+    //       <Route path="/Registrarme" element={<Registrarme />} />
+    //       <Route path="/ConfirmarCuentaxToken/:token" component={<Roles />} />
+    //       {/* <Route exact path="/Registrarme"  onRegister={() => setIsLoggedIn(true)} element={<Registrarme />}/> */}
 
-      return null;
-    });
+    //       <Route path="/RecuperarPass" element={<RecuperarPass />} />
+    //       <Route path="/Perfil/PerfilAdd" element={<PerfilAdd />} />
+    //       <Route path="/Perfil/PerfilEdit/:id" element={<PerfilEdit />} />
+    //       <Route path="/Perfil/Perfiles" element={<Perfiles />} />
+    //       <Route path="/Clientes" element={<Clientes />} />
 
-  const configsButton = (
-    <MDBox
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      width="3.25rem"
-      height="3.25rem"
-      bgColor="white"
-      shadow="sm"
-      borderRadius="50%"
-      position="fixed"
-      right="2rem"
-      bottom="2rem"
-      zIndex={99}
-      color="dark"
-      sx={{ cursor: "pointer" }}
-      onClick={handleConfiguratorOpen}
-    >
-      <Icon fontSize="small" color="inherit">
-        settings
-      </Icon>
-    </MDBox>
+    //       <Route path="/Tarea" element={<Tarea />} />
+    //       <Route path="/TareaTipo" element={<TareaTipoList />} />
+    //       {/* <Route path="/TareaTipo/TareaTipoAdd" element={<TareaTipoAdd />} /> */}
+
+    //       <Route path="/TareaEstado" element={<TareaEstadoList />} />
+
+    //       <Route path="/Departamento" element={<DepartamentoList />} />
+
+    //       <Route path="/TipoEvento" element={<TipoEventoList />} />
+    //       {/* <Route path="/TareaTipo/TareaTipoEdit/:id" element={<TareaTipoAdd />} /> */}
+    //     </Routes>
+
+    //     {/* 
+    //       <Switch>
+    //         <Route exact path="/">
+    //           <Perfiles />
+    //         </Route>
+    //         <Route path="/editar/:id">
+    //           <PerfilEdit />
+    //         </Route>
+    //       </Switch> */}
+
+    //   </div>
+    // </Router>
   );
+};
 
-  return direction === "rtl" ? (
-    <CacheProvider value={rtlCache}>
-      <ThemeProvider theme={darkMode ? themeDarkRTL : themeRTL}>
-        <CssBaseline />
-        {layout === "dashboard" && (
-          <>
-            <Sidenav
-              color={sidenavColor}
-              brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
-              brandName="Material Dashboard 2"
-              routes={routes}
-              onMouseEnter={handleOnMouseEnter}
-              onMouseLeave={handleOnMouseLeave}
-            />
-            <Configurator />
-            {configsButton}
-          </>
-        )}
-        {layout === "vr" && <Configurator />}
-        <Routes>
-          {getRoutes(routes)}
-          <Route path="*" element={<Navigate to="/dashboard" />} />
-        </Routes>
-      </ThemeProvider>
-    </CacheProvider>
-  ) : (
-    <ThemeProvider theme={darkMode ? themeDark : theme}>
-      <CssBaseline />
-      {layout === "dashboard" && (
-        <>
-          <Sidenav
-            color={sidenavColor}
-            brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
-            brandName="Material Dashboard 2"
-            routes={routes}
-            onMouseEnter={handleOnMouseEnter}
-            onMouseLeave={handleOnMouseLeave}
-          />
-          <Configurator />
-          {configsButton}
-        </>
-      )}
-      {layout === "vr" && <Configurator />}
-      <Routes>
-
-        {getRoutes(routes)}
-        <Route path="*" element={<Navigate to="/dashboard" />} />
-      </Routes>
-    </ThemeProvider>
-  );
-}
+export default App; 

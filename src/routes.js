@@ -36,6 +36,7 @@ import Icon from "@mui/material/Icon";
 import Clientes from "./components/Pages/Clientes";
 import Tarea from "./components/Pages/Tarea";
 import Seguridad from "./components/Pages/Seguridad";
+import Registrarme from "./components/authentication/Registrarme";
 
 const routes = [
   {
@@ -61,6 +62,14 @@ const routes = [
     icon: <Icon fontSize="small">Seguridad</Icon>,
     route: "/components/Pages/Seguridad",
     component: <Seguridad />,
+  },
+  {
+    type: "collapse",
+    name: "Registrarme",
+    key: "registrarme",
+    icon: <Icon fontSize="small">Seguridad</Icon>,
+    route: "/components/Pages/Registrarme",
+    component: <Registrarme />,
   },
 ];
 

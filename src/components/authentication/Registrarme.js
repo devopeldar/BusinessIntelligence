@@ -1,110 +1,177 @@
 import React, { useState } from "react";
-import { Form } from "react-bootstrap";
+
 import * as yup from "yup";
 import { useFormik } from "formik";
+import { css } from "@emotion/react";
 import LSButtonRegister from "../controls/Button/LSButtonRegister";
+import { BarLoader } from "react-spinners";
+import { Form } from "react-bootstrap";
 import API_URL from "../../config";
-import { css } from '@emotion/react';
-import { BarLoader } from 'react-spinners';
-import './../../index.css';
+
+import "./../../index.css";
 import { Card } from "@mui/material";
 import MDTypography from "../controls/MDTypography";
 import MDBox from "../controls/MDBox";
 import BasicLayout from "../layauots/BasicLayout";
 
-
+import Register from "@mui/icons-material/ListAlt";
 import bgImage from "../../assets/images/bg-sign-up-cover.jpeg";
 import { Link } from "react-router-dom";
 import MDInput from "../controls/MDInput";
 //import MDButton from  "../controls/MDButton";
 import { CheckBox } from "@mui/icons-material";
+import MDButton from "../controls/MDButton";
+import MDAlert from "../controls/MDAlert";
 
 const Registrarme = ({ handleLogin }) => {
   const validationSchema = yup.object().shape({
-    Nombre: yup.string().required("El campo Nombre es requerido"),
-    Telefono: yup.string().required("El campo Telefono es requerido"),
-    Email: yup
+    nombre: yup.string().required("El campo Nombre es requerido"),
+    telefono: yup.string().required("El campo Telefono es requerido"),
+    email: yup
       .string()
       .email("Ingrese un correo electrónico válido")
       .required("El correo electrónico es requerido"),
-    Pass: yup
+    pass: yup
       .string()
       .matches(
         /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/,
         "La contraseña debe tener al menos 8 caracteres, una letra mayúscula y un número"
       )
       .required("La contraseña es requerida"),
-    Passreply: yup
+    passreply: yup
       .string()
-      .oneOf([yup.ref("Pass")], "Las contraseñas deben coincidir")
+      .oneOf([yup.ref("pass")], "Las contraseñas deben coincidir")
       .required("La confirmación de contraseña es requerida"),
   });
 
-  const [grabando, setGrabando] = useState(false);
-  const [mensaje, setMensaje] = useState('');
+  const [grabando, setGrabando] = useState(true);
+  const [mensaje, setMensaje] = useState("");
+  const [exito, setExito] = useState(false);
+
   const [progress, setProgress] = useState(0);
-  const [emailuser, setEmailuser] = useState('');
+  const [emailuser, setEmailuser] = useState("");
   const [showForm, setShowForm] = useState(true);
   const [loading, setLoading] = useState(false);
   // const handleRedirectToLogin = () => {
   //   handleLogin();
   // };
 
-  const formik = useFormik({
-    initialValues: {
-      Nombre: "",
-      Email: "",
-      Telefono: "",
-      Pass: "",
-      Passreply: "",
-    },
-    validationSchema,
-
-    onSubmit: async (values) => {
-      try {
-        setLoading(true);
-        setGrabando(true); // Inicia la grabación
-
-        const response = await fetch(API_URL + "/UsuarioAlta", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(values),
-        });
-
-        const res = await response.json();
-
-
-        // Manejar la lógica después de actualizar el perfil
-        if (res.rdoAccion) {
-          // Manejar respuesta exitosa
-          setMensaje("¡Usuario Registrado exitosamente!");
-          // const newWindow = window.open(`/confirmacion/${values.Email}`);
-          // if (newWindow) {
-          //   history(`/confirmacion/${values.Email}`);
-          // }
-          setShowForm(false);
-
-        } else {
-          // Manejar errores si la respuesta no es exitosa
-          setMensaje(res.rdoAccionDesc);
-          setGrabando(true); // Inicia la grabación
-
-        }
-      } catch (error) {
-        setMensaje("Error en la solicitud el usuario no pudo ser registrado");
-        setGrabando(true); // Inicia la grabación
-        console.log("Error en la solicitud:" + error);
-      }
-      finally{
-        setLoading(false);
-
-      }
-    },
+  const [formData, setFormData] = useState({
+    // Inicializa los campos del formulario
+    nombre: "",
+    email: "",
+    telefono: "",
+    pass: "",
+    passreply: "",
+    // ... otros campos
   });
+
+  const handleInputChange = (event) => {
+    // Maneja los cambios en los campos del formulario
+
+    const { name, value } = event.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = (event) => {
+    //event.preventDefault();
+    // Llama a un método o función y pasa formData para su procesamiento
+    //validationSchema();
+    procesarFormulario(formData);
+  };
+
+  const procesarFormulario = async (data) => {
+    // Realiza acciones con los datos del formulario (por ejemplo, envío a un servidor, validaciones, etc.)
+    console.log("Datos del formulario:", data);
+
+    validationSchema
+      .validate(data)
+      .then((validatedData) => {
+        console.log("validatedData:",validatedData);
+        console.log(222222);
+        console.log("Datos válidos:", validatedData);
+        // Realiza acciones con los datos validados si la validación es exitosa
+        setExito(true);
+        setMensaje('');
+        
+      })
+      .catch((error) => {
+        console.log(33333333333);
+        console.log("Errores de validación:", error);
+        console.log(999999999);
+        setExito(false);
+        setMensaje(error.message);
+        console.log(mensaje);
+        if (error.inner) {
+          error.inner.forEach(err => {
+            console.error(err.message); // Muestra cada mensaje de error individual
+          });
+        
+        }
+        // Maneja los errores de validación aquí
+      });
+      console.log(4444444);
+      if(exito)
+      {
+        console.log(54555555);
+        try {
+          setLoading(true);
+          setGrabando(true); // Inicia la grabación
+    
+          const response = await fetch(API_URL + "/UsuarioAlta", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          });
+    
+          const res = await response.json();
+          setExito(res.rdoAccion);
+          // Manejar la lógica después de actualizar el perfil
+          if (res.rdoAccion) {
+            // Manejar respuesta exitosa
+    
+            setMensaje("¡Usuario Registrado exitosamente!");
+            // const newWindow = window.open(`/confirmacion/${values.Email}`);
+            // if (newWindow) {
+            //   history(`/confirmacion/${values.Email}`);
+            // }
+            setShowForm(false);
+          } else {
+            // Manejar errores si la respuesta no es exitosa
+            setMensaje(res.rdoAccionDesc);
+            setGrabando(true);
+          }
+        } catch (error) {
+          setMensaje("Error en la solicitud el usuario no pudo ser registrado");
+          setGrabando(true); // Inicia la grabación
+          console.log("Error en la solicitud:" + error);
+        } finally {
+          setLoading(false);
+        }
+      }
+    // try{
+
+    //   await validationSchema.validate(adjustedData, { abortEarly: false });
+    // }
+    // catch (validationErrors) {
+    //   // Si hay errores de validación, actualiza el estado de errores para mostrarlos en el formulario
+    //   const errors = {};
+    //   validationErrors.inner.forEach((error) => {
+    //     errors[error.path] = error.message;
+    //   });
+
+    // }
+    
+
+    //};
+  };
   return (
-<BasicLayout image={bgImage}>
+    <BasicLayout image={bgImage}>
       <Card>
         <MDBox
           variant="gradient"
@@ -118,187 +185,145 @@ const Registrarme = ({ handleLogin }) => {
           textAlign="center"
         >
           <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-            Join us today
+            Bienvenido!!
           </MDTypography>
           <MDTypography display="block" variant="button" color="white" my={1}>
-            Enter your email and password to register
+            Complete los datos solicitados para dar de alta su cuenta
           </MDTypography>
         </MDBox>
         <MDBox pt={4} pb={3} px={3}>
           <MDBox component="form" role="form">
             <MDBox mb={2}>
-              <MDInput type="text" label="Name" variant="standard" fullWidth />
+              <MDInput
+                type="text"
+                name="nombre"
+                label="Nombre"
+                variant="standard"
+                value={formData.nombre}
+                onChange={handleInputChange}
+                fullWidth
+              />
             </MDBox>
             <MDBox mb={2}>
-              <MDInput type="email" label="Email" variant="standard" fullWidth />
+              <MDInput
+                type="text"
+                name="telefono"
+                label="Telefono"
+                variant="standard"
+                value={formData.telefono}
+                onChange={handleInputChange}
+                fullWidth
+              />
             </MDBox>
             <MDBox mb={2}>
-              <MDInput type="password" label="Password" variant="standard" fullWidth />
+              <MDInput
+                type="email"
+                name="email"
+                label="Email"
+                variant="standard"
+                value={formData.email}
+                onChange={handleInputChange}
+                fullWidth
+              />
             </MDBox>
-            <MDBox display="flex" alignItems="center" ml={-1}>
-              <CheckBox />
-              <MDTypography
-                variant="button"
-                fontWeight="regular"
-                color="text"
-                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
-              >
-                &nbsp;&nbsp;I agree the&nbsp;
-              </MDTypography>
-              <MDTypography
-                component="a"
-                href="#"
-                variant="button"
-                fontWeight="bold"
-                color="info"
-                textGradient
-              >
-                Terms and Conditions
-              </MDTypography>W
+            <MDBox mb={2}>
+              <MDInput
+                type="password"
+                name="pass"
+                label="Contraseña"
+                variant="standard"
+                value={formData.pass}
+                onChange={handleInputChange}
+                fullWidth
+              />
+            </MDBox>
+            <MDBox mb={2}>
+              <MDInput
+                type="password"
+                name="passreply"
+                label="Repetir Contraseña"
+                variant="standard"
+                value={formData.passreply}
+                onChange={handleInputChange}
+                fullWidth
+              />
             </MDBox>
             <MDBox mt={4} mb={1}>
-              {/* <MDButton variant="gradient" color="info" fullWidth>
-                sign in
-              </MDButton> */}
+              <MDButton
+                onClick={() => {
+                  handleSubmit();
+                }}
+                variant="gradient"
+                color="info"
+                endIcon={<Register />}
+                disabled={!grabando}
+                fullWidth
+              >
+                Registrarse
+              </MDButton>
             </MDBox>
             <MDBox mt={3} mb={1} textAlign="center">
               <MDTypography variant="button" color="text">
-                Already have an account?{" "}
+                Ya tienen una cuenta?{" "}
                 <MDTypography
                   component={Link}
-                  to="/authentication/sign-in"
+                  to="/authentication/Login"
                   variant="button"
                   color="info"
                   fontWeight="medium"
                   textGradient
                 >
-                  Sign In
+                  Ir al Inicio
                 </MDTypography>
               </MDTypography>
             </MDBox>
           </MDBox>
+          <MDBox pt={2} px={2}>
+            {mensaje && exito ? (
+              <MDAlert color="success" dismissible>
+                <MDTypography variant="body2" color="white">
+                  {mensaje}
+                </MDTypography>
+              </MDAlert>
+            ) : (
+              mensaje && (
+                <MDAlert color="primary" dismissible>
+                  <MDTypography variant="body2" color="white">
+                    {mensaje}
+                  </MDTypography>
+                </MDAlert>
+              )
+            )}
+          </MDBox>
         </MDBox>
       </Card>
     </BasicLayout>
-  // return (
-  //   <div id="divRegistro" className="container registerpage">
-  //     {showForm && (
 
-  //       <div><h2>Registro de Usuario</h2>
-  //         <Form autoComplete="off" onSubmit={formik.handleSubmit}>
-  //           <Form.Group controlId="Nombre">
-  //             <Form.Label>Nombre:</Form.Label>
-  //             <Form.Control
-  //               type="text"
-  //               name="Nombre"
-  //               autoComplete="off"
-  //               value={formik.values.Nombre}
-  //               onChange={formik.handleChange}
-  //               onBlur={formik.handleBlur}
-  //               isInvalid={formik.touched.Nombre && !!formik.errors.Nombre}
-  //             />
-  //             <Form.Control.Feedback type="invalid">
-  //               {formik.errors.Nombre}
-  //             </Form.Control.Feedback>
-  //           </Form.Group>
+    //         {loading && <BarLoader color={'#36D7B7'} loading={loading} />}
 
-  //           <Form.Group controlId="Email">
-  //             <Form.Label>Email:</Form.Label>
-  //             <Form.Control
-  //               type="text"
-  //               name="Email"
-  //               autoComplete="off"
-  //               value={formik.values.Email}
-  //               onChange={formik.handleChange}
-  //               onBlur={formik.handleBlur}
-  //               isInvalid={formik.touched.Email && !!formik.errors.Email}
-  //             />
-  //             <Form.Control.Feedback type="invalid">
-  //               {formik.errors.Email}
-  //             </Form.Control.Feedback>
-  //           </Form.Group>
+    //         {mensaje && (
+    //           <div className="alert alert-success mt-3" role="alert">
+    //             {mensaje}
+    //           </div>
+    //         )}
+    //       </div>
+    //     )}
 
-  //           <Form.Group controlId="Telefono">
-  //             <Form.Label>Teléfono:</Form.Label>
-  //             <Form.Control
-  //               type="text"
-  //               name="Telefono"
-  //               autoComplete="off"
-  //               value={formik.values.Telefono}
-  //               onChange={formik.handleChange}
-  //               onBlur={formik.handleBlur}
-  //               isInvalid={formik.touched.Telefono && !!formik.errors.Telefono}
-  //             />
-  //             <Form.Control.Feedback type="invalid">
-  //               {formik.errors.Telefono}
-  //             </Form.Control.Feedback>
-  //           </Form.Group>
+    //     {!showForm && (
+    //       <div className="divconfregistro">
+    //         <h2 className='titulomensajeregister'>¡Registro exitoso!</h2>
+    //         <p className='mensajeregister'>Felicitaciones <b>{formik.values.Email}</b> por registrarte con éxito. En minutos mas recibiras un correo con instrucciones de como activar tu usuario</p>
+    //         <p className='mensajeregister'>Recuerda revisar tu casilla de correo no deseado, si al pasar 10 minutos aun no has recibido</p>
+    //         {/* Agrega más contenido según lo necesites */}
 
-  //           <Form.Group controlId="Pass">
-  //             <Form.Label>Contraseña:</Form.Label>
-  //             <Form.Control
-  //               type="password"
-  //               name="Pass"
-  //               autoComplete="off"
-  //               value={formik.values.Pass}
-  //               onChange={formik.handleChange}
-  //               onBlur={formik.handleBlur}
-  //               isInvalid={formik.touched.Pass && !!formik.errors.Pass}
-  //             />
-  //             <Form.Control.Feedback type="invalid">
-  //               {formik.errors.Pass}
-  //             </Form.Control.Feedback>
-  //           </Form.Group>
+    //         <button className="buttonnodal btn btn-primary" onClick={handleLogin} >Comenzar</button>
 
-  //           <Form.Group controlId="Passreply">
-  //             <Form.Label>Repetir Contraseña:</Form.Label>
-  //             <Form.Control
-  //               type="password"
-  //               name="Passreply"
-  //               autoComplete="off"
-  //               value={formik.values.Passreply}
-  //               onChange={formik.handleChange}
-  //               onBlur={formik.handleBlur}
-  //               isInvalid={formik.touched.Passreply && !!formik.errors.Passreply}
-  //             />
-  //             <Form.Control.Feedback type="invalid">
-  //               {formik.errors.Passreply}
-  //             </Form.Control.Feedback>
-  //           </Form.Group>
+    //       </div>
 
-  //           <LSButtonRegister
-  //             caption={"Registrarse"}
-  //             disabled={grabando}
-  //             className="buttonnodal btn btn-primary"
+    //     )}
 
-  //           />
-  //         </Form>
-  //         {loading && <BarLoader color={'#36D7B7'} loading={loading} />}
-
-  //         {mensaje && (
-  //           <div className="alert alert-success mt-3" role="alert">
-  //             {mensaje}
-  //           </div>
-  //         )}
-  //       </div>
-  //     )}
-
-  //     {!showForm && (
-  //       <div className="divconfregistro">
-  //         <h2 className='titulomensajeregister'>¡Registro exitoso!</h2>
-  //         <p className='mensajeregister'>Felicitaciones <b>{formik.values.Email}</b> por registrarte con éxito. En minutos mas recibiras un correo con instrucciones de como activar tu usuario</p>
-  //         <p className='mensajeregister'>Recuerda revisar tu casilla de correo no deseado, si al pasar 10 minutos aun no has recibido</p>
-  //         {/* Agrega más contenido según lo necesites */}
-
-  //         <button className="buttonnodal btn btn-primary" onClick={handleLogin} >Comenzar</button>
-
-
-  //       </div>
-
-  //     )}
-
-  //   </div>
-   );
+    //   </div>
+  );
 };
 
 export default Registrarme;
