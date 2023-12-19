@@ -53,6 +53,7 @@ import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "..
 import brandWhite from "../src/assets/images/logo-ct-dark.png";
 import brandDark from "../src/assets/images/logo-ct-dark.png";
 import Login from "./components/authentication/Login";
+import { LayerBackward } from "react-bootstrap-icons";
 
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
@@ -69,6 +70,8 @@ export default function App() {
   const [onMouseEnter, setOnMouseEnter] = useState(false);
   const [rtlCache, setRtlCache] = useState(null);
   const { pathname } = useLocation();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [IsRegister, setIsRegister] = useState(false);
 
   // Cache for the rtl
   useMemo(() => {
@@ -95,6 +98,28 @@ export default function App() {
       setOnMouseEnter(false);
     }
   };
+
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+    console.log("handleLogin");
+    console.log(layout);
+    console.log(direction);
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setIsRegister(false);
+    console.log("handleLoginaaa");
+
+  };
+
+  const handleRegister = () => {
+    // Lógica para registro exitoso
+    setIsLoggedIn(false);
+    setIsRegister(true);
+    console.log("handleLogin88888");
+  };
+
 
   // Change the openConfigurator state
   const handleConfiguratorOpen = () => setOpenConfigurator(dispatch, !openConfigurator);
@@ -148,15 +173,16 @@ export default function App() {
   );
 
   return direction === "rtl" ? (
-
+    
     <CacheProvider value={rtlCache}>
-      <Router>
+      {/* <Router>
         <Routes>
-          <Route path="*" element={<Navigate to="/dashboard" />} />
+          <Route path="*" element={<Navigate to="/Login" />} />
           <Route path="/Confirmacion" element={<Navigate to="/Confirmacion" />} />
           <Route path="/Login" Component={<Login />} key={"login"} />
         </Routes>
-      </Router>
+      </Router> */}
+
       <ThemeProvider theme={darkMode ? themeDarkRTL : themeRTL}>
         <CssBaseline />
         {layout === "dashboard" && (
@@ -173,14 +199,22 @@ export default function App() {
             {configsButton}
           </>
         )}
-        {layout === "vr" && <Configurator />}
         <Routes>
-          {getRoutes(routes)}
 
+          {getRoutes(routes)}
+          <Route path="*" element={<Navigate to="/Login" />} />
+          <Route path="/Confirmacion" element={<Navigate to="/Confirmacion" />} />
+          <Route path="/Login" element={<Navigate to="/Login" />} />
         </Routes>
+        {
+          !isLoggedIn && (
+            <Login handleLogin={handleLogin} handleRegister={handleRegister} />
+          )
+        };
       </ThemeProvider>
     </CacheProvider>
   ) : (
+
     <ThemeProvider theme={darkMode ? themeDark : theme}>
       <CssBaseline />
       {layout === "dashboard" && (
@@ -201,10 +235,17 @@ export default function App() {
       <Routes>
 
         {getRoutes(routes)}
-        <Route path="*" element={<Navigate to="/dashboard" />} />
+        <Route path="*" element={<Navigate to="/Login" />} />
         <Route path="/Confirmacion" element={<Navigate to="/Confirmacion" />} />
         <Route path="/Login" element={<Navigate to="/Login" />} />
       </Routes>
+      {
+        !isLoggedIn && (
+          <Login handleLogin={handleLogin} handleRegister={handleRegister} />
+        )
+      };
     </ThemeProvider>
+
   );
+
 }

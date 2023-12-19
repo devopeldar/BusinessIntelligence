@@ -22,6 +22,9 @@ import { createContext, useContext, useReducer, useMemo } from "react";
 
 // prop-types is a library for typechecking of props
 import PropTypes from "prop-types";
+import { Route, Router, Routes } from "react-router-dom";
+import Login from "../components/authentication/Login";
+import Confirmacion from "../components/authentication/Confirmacion";
 
 // Material Dashboard 2 React main context
 const MaterialUI = createContext();
@@ -119,6 +122,14 @@ const setOpenConfigurator = (dispatch, value) => dispatch({ type: "OPEN_CONFIGUR
 const setDirection = (dispatch, value) => dispatch({ type: "DIRECTION", value });
 const setLayout = (dispatch, value) => dispatch({ type: "LAYOUT", value });
 const setDarkMode = (dispatch, value) => dispatch({ type: "DARKMODE", value });
+
+<Router>
+  <Routes>
+    {/* <Route path="*" element={<Navigate to="/Login" />} /> */}
+    <Route path="/Confirmacion" Component={<Confirmacion />} />
+    <Route path="/Login" Component={<Login />} />
+  </Routes>
+</Router>
 
 export {
   MaterialUIControllerProvider,

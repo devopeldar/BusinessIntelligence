@@ -259,10 +259,10 @@ const Registrarme = ({ handleLogin }) => {
             </MDBox>
             <MDBox mt={3} mb={1} textAlign="center">
               <MDTypography variant="button" color="text">
-                Ya tienen una cuenta?{" "}
+                Ya tienes una cuenta?{" "}
                 <MDTypography
                   component={Link}
-                  to="/authentication/Login"
+                  to="/Login"
                   variant="button"
                   color="info"
                   fontWeight="medium"
