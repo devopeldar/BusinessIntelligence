@@ -1,21 +1,62 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import BasicLayout from '../layauots/BasicLayout';
+import { Card } from '@mui/material';
+import MDBox from '../controls/MDBox';
+import MDTypography from '../controls/MDTypography';
+import MDButton from '../controls/MDButton';
+import People from "@mui/icons-material/People";
+import { Link, useNavigate } from 'react-router-dom';
+import bgImage from "../../assets/images/bg-sign-up-cover.jpeg";
+const Confirmacion = () => {
+  const navigate = useNavigate();
+  const handleLogin = () => {
+    navigate("/Login");
+  };
 
-
-const Confirmacion = (handleLogin) => {
-    const { email } = useParams();
   return (
-    <div>
-      <h2 className='mensajeregister'>¡Registro exitoso!</h2>
-      <p className='mensajeregister' > Felicitaciones <b>{email}</b> por registrarte con éxito. En minutos mas recibiras un correo con instrucciones de como activar tu usuario</p>
-      <p className='mensajeregister' >Recuerda revisar tu casilla de correo no deseado, si al pasar 10 minutos aun no has recibido</p>
-      {/* Agrega más contenido según lo necesites */}
+    <BasicLayout image={bgImage}>
+      <Card>
+        <MDBox
+          variant="gradient"
+          bgColor="info"
+          borderRadius="lg"
+          coloredShadow="success"
+          mx={2}
+          mt={-3}
+          p={3}
+          mb={1}
+          textAlign="center"
+        >
+          <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
+            ¡Registro exitoso!
+          </MDTypography>
+          <MDTypography display="block" variant="button" color="white" my={1}>
+            Revisa tu casilla de correo electrónico
+          </MDTypography>
 
-      <button handleLogin={handleLogin}>Comenzar</button>
+        </MDBox>
+        <MDBox pt={4} pb={3} px={3}>
+          <MDBox component="form" role="form">
 
-
-    </div>
-    
+            <MDTypography coloredshadow="success"
+              textAlign="center" fontWeight="regular" color="dark">
+              Felicitaciones por registrarte con éxito. En minutos mas recibiras un correo con instrucciones de como activar tu usuario
+            </MDTypography>
+          </MDBox>
+        </MDBox>
+        <MDBox height="150px" textAlign="center">
+          <MDButton href="/Login" 
+            variant="gradient"
+            color="success"
+            endIcon={<People />}
+          >
+            Comenzar
+          </MDButton>
+          <MDButton component={Link} to="/Login" variant="contained" color="primary"> sssss</MDButton>
+        </MDBox>
+      </Card>
+    </BasicLayout >
+   
   );
 };
 

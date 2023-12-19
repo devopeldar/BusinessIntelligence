@@ -138,9 +138,9 @@ function Configurator() {
         px={3}
       >
         <MDBox>
-          <MDTypography variant="h5">Material UI Configurator</MDTypography>
+          <MDTypography variant="h5">Configurar su Entorno</MDTypography>
           <MDTypography variant="body2" color="text">
-            See our dashboard options.
+            Elija entre las opciones que mas comodas le queden a su visualizacion.
           </MDTypography>
         </MDBox>
 

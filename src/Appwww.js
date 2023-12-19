@@ -16,7 +16,7 @@ Coded by www.creative-tim.com
 import { useState, useEffect, useMemo } from "react";
 
 // react-router components
-import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation, Router } from "react-router-dom";
 
 // @mui material components
 import { ThemeProvider } from "@mui/material/styles";
@@ -52,6 +52,7 @@ import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "..
 // Images
 import brandWhite from "../src/assets/images/logo-ct-dark.png";
 import brandDark from "../src/assets/images/logo-ct-dark.png";
+import Login from "./components/authentication/Login";
 
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
@@ -110,17 +111,17 @@ export default function App() {
   }, [pathname]);
 
   const getRoutes = (allRoutes) =>
-  allRoutes.map((route) => {
-    // if (route.collapse) {
-    //   return getRoutes(route.collapse);
-    // }
+    allRoutes.map((route) => {
+      if (route.collapse) {
+        return getRoutes(route.collapse);
+      }
 
-    if (route.route) {
-      return <Route exact path={route.route} element={route.component} key={route.key} />;
-    }
+      if (route.route) {
+        return <Route exact path={route.route} element={route.component} key={route.key} />;
+      }
 
-    return null;
-  });
+      return null;
+    });
 
   const configsButton = (
     <MDBox
@@ -147,7 +148,15 @@ export default function App() {
   );
 
   return direction === "rtl" ? (
+
     <CacheProvider value={rtlCache}>
+      <Router>
+        <Routes>
+          <Route path="*" element={<Navigate to="/dashboard" />} />
+          <Route path="/Confirmacion" element={<Navigate to="/Confirmacion" />} />
+          <Route path="/Login" Component={<Login />} key={"login"} />
+        </Routes>
+      </Router>
       <ThemeProvider theme={darkMode ? themeDarkRTL : themeRTL}>
         <CssBaseline />
         {layout === "dashboard" && (
@@ -155,7 +164,7 @@ export default function App() {
             <Sidenav
               color={sidenavColor}
               brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
-              brandName="Material Dashboard 2"
+              brandName="Task Manager 1.0"
               routes={routes}
               onMouseEnter={handleOnMouseEnter}
               onMouseLeave={handleOnMouseLeave}
@@ -167,7 +176,7 @@ export default function App() {
         {layout === "vr" && <Configurator />}
         <Routes>
           {getRoutes(routes)}
-          <Route path="*" element={<Navigate to="/dashboard" />} />
+
         </Routes>
       </ThemeProvider>
     </CacheProvider>
@@ -179,7 +188,7 @@ export default function App() {
           <Sidenav
             color={sidenavColor}
             brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
-            brandName="Material Dashboard 2"
+            brandName="Task Manager"
             routes={routes}
             onMouseEnter={handleOnMouseEnter}
             onMouseLeave={handleOnMouseLeave}
@@ -193,6 +202,8 @@ export default function App() {
 
         {getRoutes(routes)}
         <Route path="*" element={<Navigate to="/dashboard" />} />
+        <Route path="/Confirmacion" element={<Navigate to="/Confirmacion" />} />
+        <Route path="/Login" element={<Navigate to="/Login" />} />
       </Routes>
     </ThemeProvider>
   );

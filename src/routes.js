@@ -37,6 +37,7 @@ import Clientes from "./components/Pages/Clientes";
 import Tarea from "./components/Pages/Tarea";
 import Seguridad from "./components/Pages/Seguridad";
 import Registrarme from "./components/authentication/Registrarme";
+import Confirmacion from "./components/authentication/Confirmacion";
 
 const routes = [
   {
@@ -70,6 +71,14 @@ const routes = [
     icon: <Icon fontSize="small">Seguridad</Icon>,
     route: "/components/Pages/Registrarme",
     component: <Registrarme />,
+  },
+  {
+    type: "collapse",
+    name: "Confirmacion",
+    key: "confirmacion",
+    icon: <Icon fontSize="small">Confirmacion</Icon>,
+    route: "/components/Pages/Confirmacion",
+    component: <Confirmacion />,
   },
 ];
 

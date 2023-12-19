@@ -1,15 +1,10 @@
 import React, { useState } from "react";
 
 import * as yup from "yup";
-import { useFormik } from "formik";
-import { css } from "@emotion/react";
-import LSButtonRegister from "../controls/Button/LSButtonRegister";
-import { BarLoader } from "react-spinners";
-import { Form } from "react-bootstrap";
 import API_URL from "../../config";
 
 import "./../../index.css";
-import { Card } from "@mui/material";
+import { Alert, AlertTitle, Card, LinearProgress } from "@mui/material";
 import MDTypography from "../controls/MDTypography";
 import MDBox from "../controls/MDBox";
 import BasicLayout from "../layauots/BasicLayout";
@@ -18,10 +13,9 @@ import Register from "@mui/icons-material/ListAlt";
 import bgImage from "../../assets/images/bg-sign-up-cover.jpeg";
 import { Link } from "react-router-dom";
 import MDInput from "../controls/MDInput";
-//import MDButton from  "../controls/MDButton";
-import { CheckBox } from "@mui/icons-material";
 import MDButton from "../controls/MDButton";
-import MDAlert from "../controls/MDAlert";
+import MDProgress from "../controls/MDProgress";
+import { useNavigate } from 'react-router-dom';
 
 const Registrarme = ({ handleLogin }) => {
   const validationSchema = yup.object().shape({
@@ -44,18 +38,24 @@ const Registrarme = ({ handleLogin }) => {
       .required("La confirmación de contraseña es requerida"),
   });
 
-  const [grabando, setGrabando] = useState(true);
+  const [grabando, setGrabando] = useState(false);
   const [mensaje, setMensaje] = useState("");
   const [exito, setExito] = useState(false);
 
   const [progress, setProgress] = useState(0);
   const [emailuser, setEmailuser] = useState("");
-  const [showForm, setShowForm] = useState(true);
+  const [showprogrees, setShowprogrees] = React.useState(0);
   const [loading, setLoading] = useState(false);
-  // const handleRedirectToLogin = () => {
-  //   handleLogin();
-  // };
 
+ 
+  const [dismissible, setDismissible] = useState(true);
+
+  const navigate = useNavigate();
+
+  // En el bloque donde manejas el cierre del MDAlert
+  const handleAlertClose = () => {
+    setDismissible(false);
+  };
   const [formData, setFormData] = useState({
     // Inicializa los campos del formulario
     nombre: "",
@@ -68,7 +68,7 @@ const Registrarme = ({ handleLogin }) => {
 
   const handleInputChange = (event) => {
     // Maneja los cambios en los campos del formulario
-
+    setShowprogrees(1);
     const { name, value } = event.target;
     setFormData({
       ...formData,
@@ -77,98 +77,93 @@ const Registrarme = ({ handleLogin }) => {
   };
 
   const handleSubmit = (event) => {
-    //event.preventDefault();
-    // Llama a un método o función y pasa formData para su procesamiento
-    //validationSchema();
+    setGrabando(false); // Inicia la grabación
+    const timer = setInterval(() => {
+    
+      setProgress((oldProgress) => {
+        if (oldProgress === 100) {
+
+          clearInterval(timer);
+          return 0;
+        }
+        if (showprogrees === 0) {
+
+          clearInterval(timer);
+          return 0;
+        }
+
+        const diff = Math.floor(Math.random() * 10);
+        return Math.min(oldProgress + diff, 100);
+      });
+    }, 1000);
     procesarFormulario(formData);
   };
 
+
   const procesarFormulario = async (data) => {
-    // Realiza acciones con los datos del formulario (por ejemplo, envío a un servidor, validaciones, etc.)
-    console.log("Datos del formulario:", data);
+    try {
+      setLoading(true);
+      validationSchema.validate(data)
+        .then(async (validatedData) => {
 
-    validationSchema
-      .validate(data)
-      .then((validatedData) => {
-        console.log("validatedData:",validatedData);
-        console.log(222222);
-        console.log("Datos válidos:", validatedData);
-        // Realiza acciones con los datos validados si la validación es exitosa
-        setExito(true);
-        setMensaje('');
-        
-      })
-      .catch((error) => {
-        console.log(33333333333);
-        console.log("Errores de validación:", error);
-        console.log(999999999);
-        setExito(false);
-        setMensaje(error.message);
-        console.log(mensaje);
-        if (error.inner) {
-          error.inner.forEach(err => {
-            console.error(err.message); // Muestra cada mensaje de error individual
-          });
-        
-        }
-        // Maneja los errores de validación aquí
-      });
-      console.log(4444444);
-      if(exito)
-      {
-        console.log(54555555);
-        try {
-          setLoading(true);
-          setGrabando(true); // Inicia la grabación
-    
-          const response = await fetch(API_URL + "/UsuarioAlta", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
-          });
-    
-          const res = await response.json();
-          setExito(res.rdoAccion);
-          // Manejar la lógica después de actualizar el perfil
-          if (res.rdoAccion) {
-            // Manejar respuesta exitosa
-    
-            setMensaje("¡Usuario Registrado exitosamente!");
-            // const newWindow = window.open(`/confirmacion/${values.Email}`);
-            // if (newWindow) {
-            //   history(`/confirmacion/${values.Email}`);
-            // }
-            setShowForm(false);
-          } else {
-            // Manejar errores si la respuesta no es exitosa
-            setMensaje(res.rdoAccionDesc);
-            setGrabando(true);
+          setExito(true);
+          setMensaje('');
+
+          try {
+            const response = await fetch(API_URL + "/UsuarioAlta", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(validatedData),
+            });
+
+            const res = await response.json();
+
+            if (res.rdoAccion) {
+              // Manejar respuesta exitosa
+              setMensaje("¡Usuario Registrado exitosamente!");
+              setGrabando(true);
+              setTimeout(() => {
+                navigate('/Confirmacion'); // Redirige a la ruta deseada
+              }, 3000); // 3000 milisegundos = 3 segundos
+
+
+            } else {
+              // Manejar errores si la respuesta no es exitosa
+              setMensaje(res.rdoAccionDesc);
+              setExito(false);
+              setGrabando(false);
+            }
+          } catch (error) {
+            setMensaje("Error en la solicitud: el usuario no pudo ser registrado");
+            console.log("Error en la solicitud:", error);
+            setShowprogrees(0);
+            setExito(false);
+            setGrabando(false);
+          } finally {
+            setLoading(false);
+            setShowprogrees(0);
           }
-        } catch (error) {
-          setMensaje("Error en la solicitud el usuario no pudo ser registrado");
-          setGrabando(true); // Inicia la grabación
-          console.log("Error en la solicitud:" + error);
-        } finally {
-          setLoading(false);
-        }
-      }
-    // try{
-
-    //   await validationSchema.validate(adjustedData, { abortEarly: false });
-    // }
-    // catch (validationErrors) {
-    //   // Si hay errores de validación, actualiza el estado de errores para mostrarlos en el formulario
-    //   const errors = {};
-    //   validationErrors.inner.forEach((error) => {
-    //     errors[error.path] = error.message;
-    //   });
-
-    // }
-    
-
-    //};
+        })
+        .catch((error) => {
+          console.log("Errores de validación:", error.message);
+          setExito(false);
+          setMensaje(error.message);
+          setShowprogrees(0);
+          setGrabando(false);
+        });
+    } catch (error) {
+      setMensaje("Error en la solicitud: el usuario no pudo ser registrado");
+      console.log("Error en la solicitud:", error);
+      setExito(false);
+      setGrabando(false);
+      setShowprogrees(0);
+    } finally {
+      setLoading(false);
+      setShowprogrees(0);
+      setProgress(100);
+    }
   };
   return (
     <BasicLayout image={bgImage}>
@@ -256,7 +251,7 @@ const Registrarme = ({ handleLogin }) => {
                 variant="gradient"
                 color="info"
                 endIcon={<Register />}
-                disabled={!grabando}
+                disabled={grabando}
                 fullWidth
               >
                 Registrarse
@@ -278,23 +273,25 @@ const Registrarme = ({ handleLogin }) => {
               </MDTypography>
             </MDBox>
           </MDBox>
-          <MDBox pt={2} px={2}>
-            {mensaje && exito ? (
-              <MDAlert color="success" dismissible>
-                <MDTypography variant="body2" color="white">
-                  {mensaje}
-                </MDTypography>
-              </MDAlert>
-            ) : (
-              mensaje && (
-                <MDAlert color="primary" dismissible>
-                  <MDTypography variant="body2" color="white">
-                    {mensaje}
-                  </MDTypography>
-                </MDAlert>
-              )
-            )}
+          <MDBox mt={4} mb={1}>
+            <MDProgress color="success"
+              loading="true"
+              label={true}
+              value={showprogrees === 0 ? progress : 0}
+              display={loading && exito ? 'true' : 'false'}
+              variant="contained"></MDProgress>
+
           </MDBox>
+          
+          {mensaje !== '' && (
+            <Alert severity={exito ? "success" : "error"}>
+              <AlertTitle>{exito ? "Felicitaciones" : "Error"}</AlertTitle>
+              {mensaje}
+            </Alert>
+          )}
+
+
+
         </MDBox>
       </Card>
     </BasicLayout>

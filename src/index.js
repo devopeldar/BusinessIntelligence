@@ -24,19 +24,25 @@
 
 import React from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, Route, Router } from "react-router-dom";
 import App from "./Appwww";
 
 // Material Dashboard 2 React Context Provider
 import { MaterialUIControllerProvider } from "./context";
+import Confirmacion from "./components/authentication/Confirmacion";
+import { Switch } from "@mui/material";
+import Login from "./components/authentication/Login";
 
 const container = document.getElementById("root");
 const root = createRoot(container);
 
 root.render(
-  <BrowserRouter>
-    <MaterialUIControllerProvider>
-      <App />
-    </MaterialUIControllerProvider>
-  </BrowserRouter>
+  
+    <BrowserRouter>
+      <MaterialUIControllerProvider>
+        <App />
+      </MaterialUIControllerProvider>
+      {/* <Route path="" component={ <Confirmacion />} /> */}
+    </BrowserRouter>
+   
 );
