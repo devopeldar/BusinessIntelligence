@@ -38,6 +38,8 @@ import Tarea from "./components/Pages/Tarea";
 import Seguridad from "./components/Pages/Seguridad";
 import Registrarme from "./components/authentication/Registrarme";
 import Confirmacion from "./components/authentication/Confirmacion";
+import { Key } from "react-bootstrap-icons";
+import CambiarContrasenia from "./components/authentication/CambiarContrasenia";
 
 const routes = [
   {
@@ -79,6 +81,14 @@ const routes = [
     icon: <Icon fontSize="small">Confirmacion</Icon>,
     route: "/components/Pages/Confirmacion",
     component: <Confirmacion />,
+  },
+  {
+    type: "collapse",
+    name: "ChangePassword",
+    key: "changepassword",
+    icon: <Icon fontSize="small">Seguridad</Icon>,
+    route: "/CambiarContrasenia",
+    component: <CambiarContrasenia />,
   },
 ];
 

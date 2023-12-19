@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha'; // Importar el componente ReCAPTCHA
 import 'bootstrap/dist/css/bootstrap.min.css'; // Importar estilos de Bootstrap
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import BasicLayout from '../layauots/BasicLayout';
 import { Alert, AlertTitle, Card } from '@mui/material';
 import MDBox from '../controls/MDBox';
@@ -10,18 +10,19 @@ import bgImage from "../../assets/images/bg-sign-up-cover.jpeg";
 import MDInput from '../controls/MDInput';
 import { People } from 'react-bootstrap-icons';
 import MDButton from '../controls/MDButton';
-import MDProgress from '../controls/MDProgress';
 import API_URL from '../../config';
 
 const Login = ({ handleLogin, handleRegister }) => {
-  const [email, setemail] = useState('');
-  const [password, setPassword] = useState('');
+
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [captchaValue, setCaptchaValue] = useState('');
   const captcha = useRef(null);
   const [mensaje, setMensaje] = useState("");
-  const [showprogrees, setShowprogrees] = React.useState(0);
-  const [exito, setExito] = useState(false);
+
+
+  localStorage.clear();
+
+
   const [formData, setFormData] = useState({
     
     // Inicializa los campos del formulario
@@ -32,7 +33,7 @@ const Login = ({ handleLogin, handleRegister }) => {
 
   const handleInputChange = (event) => {
     // Maneja los cambios en los campos del formulario
-    setShowprogrees(1);
+
     const { name, value } = event.target;
     setFormData({
       ...formData,
@@ -69,6 +70,7 @@ const Login = ({ handleLogin, handleRegister }) => {
       setCaptchaValue(false);
       setIsLoggedIn(false);
       setMensaje("Por favor acepta el captcha.");
+      return;
     }
 
     //Primero voy a la base si el login es correcto vuelvo y ejecuto esa funcion que actualizara un estado en App.js
@@ -87,35 +89,35 @@ const Login = ({ handleLogin, handleRegister }) => {
       if (res.rdoAccion) {
         // Manejar respuesta exitosa
         setMensaje("¡Usuario Logueado exitosamente!");
+        const user = {
+          id: res.IDUsuario,
+          email: res.email
+        };
+
+        localStorage.setItem('UsuarioLogueado', JSON.stringify(user));
+
         setIsLoggedIn(true);
       } else {
         // Manejar errores si la respuesta no es exitosa
         setMensaje(res.rdoAccionDesc);
-        setExito(false);
+    
         setIsLoggedIn(false);
       }
     }
     catch (error) {
       setMensaje("Error en la solicitud: el usuario no pudo ser identificado");
-      setExito(false);
+
       setIsLoggedIn(false);
     }
 
     if (isLoggedIn) {
-
+      const userLoginres = JSON.parse(sessionStorage.getItem('UsuarioLogueado'));
+      console.log("userLogin " + userLoginres);
       // Llamar a la función de inicio de sesión. 
       handleLogin();
     }
   };
 
-  const stylesDivButton = {
-    divContainer: {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      height: '200px', // Ajusta la altura según sea necesario
-    },
-  };
   return (
     <BasicLayout image={bgImage}>
       <Card>

@@ -47,7 +47,7 @@ import createCache from "@emotion/cache";
 import routes from "../src/routes";
 
 // Material Dashboard 2 React contexts
-import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "../src/context";
+import { useMaterialUIController, setMiniSidenav, setOpenConfigurator, setLayout } from "../src/context";
 
 // Images
 import brandWhite from "../src/assets/images/logo-ct-dark.png";
@@ -102,8 +102,11 @@ export default function App() {
   const handleLogin = () => {
     setIsLoggedIn(true);
     console.log("handleLogin");
-    console.log(layout);
-    console.log(direction);
+    console.log("layout " + layout);
+    const userLogin = JSON.parse(sessionStorage.getItem('UsuarioLogueado'));
+    console.log("userLogin " + userLogin);
+    setLayout("dashboard");
+    console.log("layout " + layout);
   };
 
   const handleLogout = () => {
@@ -120,6 +123,8 @@ export default function App() {
     console.log("handleLogin88888");
   };
 
+  
+ 
 
   // Change the openConfigurator state
   const handleConfiguratorOpen = () => setOpenConfigurator(dispatch, !openConfigurator);
