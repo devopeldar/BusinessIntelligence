@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha'; // Importar el componente ReCAPTCHA
 import 'bootstrap/dist/css/bootstrap.min.css'; // Importar estilos de Bootstrap
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import BasicLayout from '../layauots/BasicLayout';
 import { Alert, AlertTitle, Card } from '@mui/material';
 import MDBox from '../controls/MDBox';
@@ -13,7 +13,7 @@ import MDButton from '../controls/MDButton';
 import API_URL from '../../config';
 
 const Login = ({ handleLogin }) => {
-
+  const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [captchaValue, setCaptchaValue] = useState('');
   const captcha = useRef(null);
@@ -103,7 +103,10 @@ const Login = ({ handleLogin }) => {
         
         localStorage.setItem('userlogueado', res.email);
         //Aca ANALIZAR SI LoginCambiarClave = true  DEBO IR A LA PAGINA DE CAMBIAR CONTRASEÑA
-
+        if(res.loginCambiarClave)
+        {
+          navigate("/CambiarContraseña");
+        }
         // Manejar respuesta exitosa
         setMensaje("¡Usuario Logueado exitosamente!");
         
@@ -208,7 +211,7 @@ const Login = ({ handleLogin }) => {
             </MDBox>
             <MDBox mt={3} mb={1} textAlign="center">
               <MDTypography variant="button" color="text">
-                ¿Olvide mi contraseña? 
+                
                 <MDTypography
                   component={Link}
                   to="/RecuperarPass"
@@ -220,6 +223,7 @@ const Login = ({ handleLogin }) => {
                     handleChangePassword();
                   }}
                 >
+                  ¿Olvide mi contraseña? {" "}
                 </MDTypography>
               </MDTypography>
             </MDBox>
@@ -243,43 +247,7 @@ const Login = ({ handleLogin }) => {
         </MDBox>
       </Card>
     </BasicLayout>
-    // <div className="container mt-5">
-    //   <div className="row justify-content-center">
-    //     <div className="col-md-6">
-    //       <div className="card">
-    //         <div className="card-body">
-    //           <h2 className="card-title">Iniciar sesión</h2>
-    //           <form onSubmit={handleSubmit}>
-    //             <div className="mb-3">
-    //               <label htmlFor="username" className="form-label">Usuario:</label>
-    //               <input type="text" className="form-control" id="username" value={username} onChange={handleUsernameChange} />
-    //             </div>
-    //             <div className="mb-3">
-    //               <label htmlFor="password" className="form-label">Contraseña:</label>
-    //               <input type="password" className="form-control" id="password" value={password} onChange={handlePasswordChange} />
-    //             </div>
-
-    //             <ReCAPTCHA
-    //               ref={captcha}
-    //               sitekey="6LeUHycpAAAAAD5Kga3vKoQEWnyHx0YWNsjDeb2E"
-    //               onChange={handleCaptchaChange}
-    //             />
-    //             <div style={stylesDivButton} className="mb-3">
-    //               <LSButton type="submit" caption={"Iniciar Sesion"} onClick={handleSubmit} className="btn btn-primary mt-3" />
-    //             </div>
-    //             <div>
-    //               {/* Tu formulario de inicio de sesión */}
-    //               {/* ... */}
-
-    //               {/* Enlace para redirigir a la página de registro */}
-    //               <p>¿No tienes una cuenta? Regístrate <Link to="/Registrarme" onClick={handleRegister}>aquí</Link></p>
-    //             </div>
-    //           </form>
-    //         </div>
-    //       </div>
-    //     </div>
-    //   </div>
-    // </div>
+   
   );
 };
 

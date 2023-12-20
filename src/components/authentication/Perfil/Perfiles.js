@@ -47,20 +47,6 @@ const Perfiles = () => {
     fetchData();
   }, []);
 
-  // const handleConfirmDelete = async () => {
-  //   try {
-  //     // Realizar la solicitud DELETE al confirmar
-  //     await axios.delete(API_URL + '/PerfilesDelete/6'); // Cambia el ID por el correspondiente
-  //     // Aquí puedes manejar la actualización de la lista de perfiles o hacer otras acciones después de eliminar
-
-  //     // Ocultar el modal de confirmación después de la eliminación exitosa
-  //     setShowConfirmation(false);
-  //   } catch (error) {
-  //     // Manejar errores en caso de que la eliminación falle
-  //     console.error('Error al eliminar:', error);
-  //   }
-  // };
-
   const handleConfirmDelete = async () => {
     try {
       await fetch(API_URL + "/PerfilesDelete", {

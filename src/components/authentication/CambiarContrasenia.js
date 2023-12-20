@@ -11,8 +11,9 @@ import { Key } from "react-bootstrap-icons";
 import bgImage from "../../assets/images/bg-sign-up-cover.jpeg";
 import MDProgress from "../controls/MDProgress";
 import API_URL from "../../config";
+import { useNavigate } from "react-router-dom";
 const CambiarContrasenia = () => {
-
+  const navigate = useNavigate();
   const [grabando, setGrabando] = useState(false);
   const [mensaje, setMensaje] = useState("");
   const [exito, setExito] = useState(false);
@@ -21,7 +22,7 @@ const CambiarContrasenia = () => {
   
 
   const validationSchema = yup.object().shape({
-   
+    
     pass: yup
       .string()
       .required("la Contraseña actual es requerida"),
@@ -111,6 +112,12 @@ const CambiarContrasenia = () => {
               // Manejar respuesta exitosa
               setMensaje("Contraseña cambiada exitosamente!");
               setGrabando(true);
+       
+              setTimeout(() => {
+                navigate('/Login'); // Redirige a la ruta deseada
+              }, 3000); // 3000 milisegundos = 3 segundos
+
+              
        
             } else {
               // Manejar errores si la respuesta no es exitosa
