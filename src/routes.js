@@ -66,14 +66,14 @@ const routes = [
     route: "/components/Pages/Seguridad",
     component: <Seguridad />,
   },
-  {
-    type: "collapse",
-    name: "Registrarme",
-    key: "registrarme",
-    icon: <Icon fontSize="small">Seguridad</Icon>,
-    route: "/components/Pages/Registrarme",
-    component: <Registrarme />,
-  },
+  // {
+  //   type: "collapse",
+  //   name: "Registrarme",
+  //   key: "registrarme",
+  //   icon: <Icon fontSize="small">Seguridad</Icon>,
+  //   route: "/components/Pages/Registrarme",
+  //   component: <Registrarme />,
+  // },
   {
     type: "collapse",
     name: "Confirmacion",

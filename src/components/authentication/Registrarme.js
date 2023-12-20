@@ -69,6 +69,11 @@ const Registrarme = ({ handleLogin }) => {
     });
   };
 
+  const handleRegistrarme = () => {
+    localStorage.setItem('isRegister', 'false');
+  };
+  
+
   const handleSubmit = (event) => {
     setGrabando(false); // Inicia la grabación
     const timer = setInterval(() => {
@@ -117,6 +122,9 @@ const Registrarme = ({ handleLogin }) => {
               // Manejar respuesta exitosa
               setMensaje("¡Usuario Registrado exitosamente!");
               setGrabando(true);
+            
+              handleRegistrarme();
+            
               setTimeout(() => {
                 navigate('/Confirmacion'); // Redirige a la ruta deseada
               }, 3000); // 3000 milisegundos = 3 segundos
@@ -263,6 +271,9 @@ const Registrarme = ({ handleLogin }) => {
                   color="info"
                   fontWeight="medium"
                   textGradient
+                  onClick={() => {
+                    handleRegistrarme();
+                  }}
                 >
                   Ir al Inicio
                 </MDTypography>

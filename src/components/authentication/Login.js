@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha'; // Importar el componente ReCAPTCHA
 import 'bootstrap/dist/css/bootstrap.min.css'; // Importar estilos de Bootstrap
 import { Link } from 'react-router-dom';
@@ -12,16 +12,20 @@ import { People } from 'react-bootstrap-icons';
 import MDButton from '../controls/MDButton';
 import API_URL from '../../config';
 
-const Login = ({ handleLogin, handleRegister }) => {
+const Login = ({ handleLogin }) => {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [captchaValue, setCaptchaValue] = useState('');
   const captcha = useRef(null);
   const [mensaje, setMensaje] = useState("");
 
+  localStorage.setItem('isLoggedIn', 'false');
 
-  localStorage.clear();
-
+  // useEffect(() => {
+  //   // Establece el valor de 'isLoggedIn' en false al cargar la página de inicio
+    
+  //   console.log('wwwwwwwwwwwwwww');
+  // }, []);
 
   const [formData, setFormData] = useState({
     
@@ -41,14 +45,23 @@ const Login = ({ handleLogin, handleRegister }) => {
     });
   };
 
-
+  
+  const handleChangePassword = (value) => {
+    if (captcha.current.getValue()) {
+      console.log('El usuario no es un robot');
+      setCaptchaValue(true);
+    }
+  };
   const handleCaptchaChange = (value) => {
     if (captcha.current.getValue()) {
       console.log('El usuario no es un robot');
       setCaptchaValue(true);
     }
   };
-
+  const handleRegistrarme = () => {
+    localStorage.setItem('isRegister', 'true');
+  };
+  
   const handleSubmit = async (data) => {
     //e.preventDefault();
 
@@ -87,16 +100,14 @@ const Login = ({ handleLogin, handleRegister }) => {
       const res = await response.json();
 
       if (res.rdoAccion) {
+        
+        localStorage.setItem('userlogueado', res.email);
+        //Aca ANALIZAR SI LoginCambiarClave = true  DEBO IR A LA PAGINA DE CAMBIAR CONTRASEÑA
+
         // Manejar respuesta exitosa
         setMensaje("¡Usuario Logueado exitosamente!");
-        const user = {
-          id: res.IDUsuario,
-          email: res.email
-        };
-
-        localStorage.setItem('UsuarioLogueado', JSON.stringify(user));
-
-        setIsLoggedIn(true);
+        
+       handleLogin();
       } else {
         // Manejar errores si la respuesta no es exitosa
         setMensaje(res.rdoAccionDesc);
@@ -110,12 +121,6 @@ const Login = ({ handleLogin, handleRegister }) => {
       setIsLoggedIn(false);
     }
 
-    if (isLoggedIn) {
-      const userLoginres = JSON.parse(sessionStorage.getItem('UsuarioLogueado'));
-      console.log("userLogin " + userLoginres);
-      // Llamar a la función de inicio de sesión. 
-      handleLogin();
-    }
   };
 
   return (
@@ -193,8 +198,28 @@ const Login = ({ handleLogin, handleRegister }) => {
                   color="info"
                   fontWeight="medium"
                   textGradient
+                  onClick={() => {
+                    handleRegistrarme();
+                  }}
                 >
                   aquí
+                </MDTypography>
+              </MDTypography>
+            </MDBox>
+            <MDBox mt={3} mb={1} textAlign="center">
+              <MDTypography variant="button" color="text">
+                ¿Olvide mi contraseña? 
+                <MDTypography
+                  component={Link}
+                  to="/RecuperarPass"
+                  variant="button"
+                  color="secondary"
+                  fontWeight="medium"
+                  textGradient
+                  onClick={() => {
+                    handleChangePassword();
+                  }}
+                >
                 </MDTypography>
               </MDTypography>
             </MDBox>

@@ -18,13 +18,14 @@ const CambiarContrasenia = () => {
   const [exito, setExito] = useState(false);
   const [showprogrees, setShowprogrees] = useState(0);
   const [progress, setProgress] = useState(0);
+  
 
   const validationSchema = yup.object().shape({
    
-    passactual: yup
+    pass: yup
       .string()
       .required("la Contraseña actual es requerida"),
-      newpass: yup
+      passnueva: yup
       .string()
       .matches(
         /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/,
@@ -33,7 +34,7 @@ const CambiarContrasenia = () => {
       .required("La contraseña es requerida"),
     passreply: yup
       .string()
-      .oneOf([yup.ref("newpass")], "Las contraseñas deben coincidir")
+      .oneOf([yup.ref("passnueva")], "Las contraseñas deben coincidir")
       .required("La confirmación de contraseña es requerida"),
   });
 
@@ -42,8 +43,8 @@ const CambiarContrasenia = () => {
 
   const [formData, setFormData] = useState({
     // Inicializa los campos del formulario
-    passactual: "",
-    newpass: "",
+    pass: "",
+    passnueva: "",
     passreply: "",
   });
 
@@ -59,24 +60,24 @@ const CambiarContrasenia = () => {
 
   const handleSubmit = (event) => {
     setGrabando(false); // Inicia la grabación
-    const timer = setInterval(() => {
+    // const timer = setInterval(() => {
     
-      setProgress((oldProgress) => {
-        if (oldProgress === 100) {
+    //   setProgress((oldProgress) => {
+    //     if (oldProgress === 100) {
 
-          clearInterval(timer);
-          return 0;
-        }
-        if (showprogrees === 0) {
+    //       clearInterval(timer);
+    //       return 0;
+    //     }
+    //     if (showprogrees === 0) {
 
-          clearInterval(timer);
-          return 0;
-        }
+    //       clearInterval(timer);
+    //       return 0;
+    //     }
 
-        const diff = Math.floor(Math.random() * 10);
-        return Math.min(oldProgress + diff, 100);
-      });
-    }, 1000);
+    //     const diff = Math.floor(Math.random() * 10);
+    //     return Math.min(oldProgress + diff, 100);
+    //   });
+    // }, 1000);
     procesarFormulario(formData);
   };
   const procesarFormulario = async (data) => {
@@ -89,9 +90,12 @@ const CambiarContrasenia = () => {
           setMensaje('');
 
           try {
-            const userLogin = JSON.parse(sessionStorage.getItem('UsuarioLogueado'));
+            console.log("1111111");
+            const userLogin = localStorage.getItem('userlogueado');
+            console.log("userLogin", userLogin);
 
-            validatedData.IDUsuario = userLogin.id;
+            validatedData.email = userLogin;
+            console.log("validatedData", validatedData);
 
             const response = await fetch(API_URL + "/UsuarioCambioClave", {
               method: "POST",
@@ -102,19 +106,21 @@ const CambiarContrasenia = () => {
             });
 
             const res = await response.json();
-
+          
             if (res.rdoAccion) {
               // Manejar respuesta exitosa
               setMensaje("Contraseña cambiada exitosamente!");
               setGrabando(true);
-             
+       
             } else {
               // Manejar errores si la respuesta no es exitosa
               setMensaje(res.rdoAccionDesc);
               setExito(false);
               setGrabando(false);
+          
             }
           } catch (error) {
+         
             setMensaje("Error en la solicitud: la Contraseña no pudo ser cambiada");
             console.log("Error en la solicitud:", error);
             setShowprogrees(0);
@@ -125,6 +131,7 @@ const CambiarContrasenia = () => {
           }
         })
         .catch((error) => {
+
           console.log("Errores de validación:", error.message);
           setExito(false);
           setMensaje(error.message);
@@ -169,7 +176,7 @@ const CambiarContrasenia = () => {
             <MDBox mb={2}>
               <MDInput
                 type="password"
-                name="passactual"
+                name="pass"
                 label="Contraseña Actual"
                 variant="standard"
                 value={formData.email}
@@ -180,10 +187,10 @@ const CambiarContrasenia = () => {
             <MDBox mb={2}>
               <MDInput
                 type="password"
-                name="newpass"
+                name="passnueva"
                 label="Nueva Contraseña"
                 variant="standard"
-                value={formData.newpass}
+                value={formData.passnueva}
                 onChange={handleInputChange}
                 fullWidth
               />
@@ -209,8 +216,9 @@ const CambiarContrasenia = () => {
                 color="info"
                 endIcon={<Key />}
                 fullWidth
+                disabled={grabando}
               >
-                Iniciar
+                Cambiar Clave
               </MDButton>
             </MDBox>
 

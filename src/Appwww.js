@@ -16,7 +16,7 @@ Coded by www.creative-tim.com
 import { useState, useEffect, useMemo } from "react";
 
 // react-router components
-import { Routes, Route, Navigate, useLocation, Router } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation, Router, useNavigate } from "react-router-dom";
 
 // @mui material components
 import { ThemeProvider } from "@mui/material/styles";
@@ -54,6 +54,10 @@ import brandWhite from "../src/assets/images/logo-ct-dark.png";
 import brandDark from "../src/assets/images/logo-ct-dark.png";
 import Login from "./components/authentication/Login";
 import { LayerBackward } from "react-bootstrap-icons";
+import Registrarme from "./components/authentication/Registrarme";
+import Confirmacion from "./components/authentication/Confirmacion";
+import ConfirmacionIngreso from "./components/authentication/ConfirmacionIngreso";
+import RecuperarPass from "./components/authentication/RecuperarPass";
 
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
@@ -70,9 +74,15 @@ export default function App() {
   const [onMouseEnter, setOnMouseEnter] = useState(false);
   const [rtlCache, setRtlCache] = useState(null);
   const { pathname } = useLocation();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [IsRegister, setIsRegister] = useState(false);
 
+  const initialAuthState = localStorage.getItem('isLoggedIn') === 'true';
+
+  const isRegistrar = localStorage.getItem('isRegister') === 'true';
+  
+  const [isLoggedIn, setIsLoggedIn] = useState(initialAuthState);
+  const [isRegistrandome, setIsRegistrandome] = useState(isRegistrar);
+  const navigate = useNavigate();
   // Cache for the rtl
   useMemo(() => {
     const cacheRtl = createCache({
@@ -103,11 +113,20 @@ export default function App() {
     setIsLoggedIn(true);
     console.log("handleLogin");
     console.log("layout " + layout);
-    const userLogin = JSON.parse(sessionStorage.getItem('UsuarioLogueado'));
-    console.log("userLogin " + userLogin);
-    setLayout("dashboard");
-    console.log("layout " + layout);
+
+    navigate('/ConfirmacionIngreso');
+    //const userLogin = JSON.parse(sessionStorage.getItem('UsuarioLogueado'));
+    //console.log("userLogin " + userLogin);
+    // setLayout("dashboard");
+    // console.log("layout " + layout);
   };
+
+  // Almacena el estado de autenticación en localStorage cuando cambie
+  useEffect(() => {
+    localStorage.setItem('isLoggedIn', isLoggedIn);
+    console.log(8888);
+    console.log(isLoggedIn);
+  }, [isLoggedIn]);
 
   const handleLogout = () => {
     setIsLoggedIn(false);
@@ -123,8 +142,8 @@ export default function App() {
     console.log("handleLogin88888");
   };
 
-  
- 
+
+
 
   // Change the openConfigurator state
   const handleConfiguratorOpen = () => setOpenConfigurator(dispatch, !openConfigurator);
@@ -178,77 +197,113 @@ export default function App() {
   );
 
   return direction === "rtl" ? (
-    
-    <CacheProvider value={rtlCache}>
-      {/* <Router>
-        <Routes>
-          <Route path="*" element={<Navigate to="/Login" />} />
-          <Route path="/Confirmacion" element={<Navigate to="/Confirmacion" />} />
-          <Route path="/Login" Component={<Login />} key={"login"} />
-        </Routes>
-      </Router> */}
 
+    <CacheProvider value={rtlCache}>
+
+      {console.log(5555)}
+      {console.log(isLoggedIn)}
       <ThemeProvider theme={darkMode ? themeDarkRTL : themeRTL}>
         <CssBaseline />
-        {layout === "dashboard" && (
+        {isLoggedIn || isRegistrar ? (
           <>
-            <Sidenav
-              color={sidenavColor}
-              brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
-              brandName="Task Manager 1.0"
-              routes={routes}
-              onMouseEnter={handleOnMouseEnter}
-              onMouseLeave={handleOnMouseLeave}
-            />
-            <Configurator />
-            {configsButton}
+            {layout === "page" && (
+              <>
+                <Sidenav
+                  color={sidenavColor}
+                  brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
+                  brandName="Task Manager"
+                  routes={routes}
+                  onMouseEnter={handleOnMouseEnter}
+                  onMouseLeave={handleOnMouseLeave}
+                />
+                <Configurator />
+                {configsButton}
+              </>
+            )}
+            {layout === "vr" && <Configurator />}
+            <Routes>
+              {getRoutes(routes)}
+              <Route path="/ConfirmacionIngreso" element={<ConfirmacionIngreso />} />
+              <Route path="/Confirmacion" element={<Confirmacion />} />
+              <Route path="/" element={<Login handleLogin={handleLogin} />} />
+              <Route path="*" element={<Login handleLogin={handleLogin} />} />
+              <Route path="/Registrarme" element={<Registrarme />} />
+              <Route path="/RecuperarPass" element={<RecuperarPass />} />
+            </Routes>
           </>
+        ) : (
+          // Renderiza el componente de inicio de sesión solo si el usuario no está autenticado
+          <Login handleLogin={handleLogin} />
         )}
-        <Routes>
-
-          {getRoutes(routes)}
-          <Route path="*" element={<Navigate to="/Login" />} />
-          <Route path="/Confirmacion" element={<Navigate to="/Confirmacion" />} />
-          <Route path="/Login" element={<Navigate to="/Login" />} />
-        </Routes>
-        {
-          !isLoggedIn && (
-            <Login handleLogin={handleLogin} handleRegister={handleRegister} />
-          )
-        };
       </ThemeProvider>
     </CacheProvider>
   ) : (
 
+
     <ThemeProvider theme={darkMode ? themeDark : theme}>
       <CssBaseline />
-      {layout === "dashboard" && (
-        <>
-          <Sidenav
-            color={sidenavColor}
-            brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
-            brandName="Task Manager"
-            routes={routes}
-            onMouseEnter={handleOnMouseEnter}
-            onMouseLeave={handleOnMouseLeave}
-          />
-          <Configurator />
-          {configsButton}
-        </>
-      )}
-      {layout === "vr" && <Configurator />}
+      
       <Routes>
-
         {getRoutes(routes)}
-        <Route path="*" element={<Navigate to="/Login" />} />
-        <Route path="/Confirmacion" element={<Navigate to="/Confirmacion" />} />
-        <Route path="/Login" element={<Navigate to="/Login" />} />
+        <Route path="/ConfirmacionIngreso" element={<ConfirmacionIngreso />} />
+        <Route path="/Confirmacion" element={<Confirmacion />} />
+        <Route path="/" element={<Login handleLogin={handleLogin} />} />
+        <Route path="*" element={<Login handleLogin={handleLogin} />} />
+        <Route path="/Registrarme" element={<Registrarme />} />
+        <Route path="/RecuperarPass" element={<RecuperarPass />} />
       </Routes>
-      {
-        !isLoggedIn && (
-          <Login handleLogin={handleLogin} handleRegister={handleRegister} />
-        )
-      };
+
+      {console.log(444)}
+      {console.log(isLoggedIn)}
+      {console.log(isRegistrar)}
+      {!isLoggedIn && !isRegistrar ?
+        (
+          <Login handleLogin={handleLogin} />
+        ) : (
+          isRegistrar ? (
+            <Registrarme  />
+          ) : (
+
+            <>
+             {console.log(666666)}
+              <Sidenav
+                color={sidenavColor}
+                brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
+                brandName="Task Manager"
+                routes={routes}
+                onMouseEnter={handleOnMouseEnter}
+                onMouseLeave={handleOnMouseLeave}
+              />
+              <Configurator />
+              {configsButton}
+              {layout === "vr" && <Configurator />}
+            </>
+
+          )
+        )}
+      {/* {isLoggedIn || isRegistrar? (
+        <>
+          {layout === "page" && (
+            <>
+              <Sidenav
+                color={sidenavColor}
+                brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
+                brandName="Task Manager"
+                routes={routes}
+                onMouseEnter={handleOnMouseEnter}
+                onMouseLeave={handleOnMouseLeave}
+              />
+              <Configurator />
+              {configsButton}
+            </>
+          )}
+          {layout === "vr" && <Configurator />}
+         
+        </>
+      ) : (
+        // Renderiza el componente de inicio de sesión solo si el usuario no está autenticado
+        <Login handleLogin={handleLogin} />
+      )} */}
     </ThemeProvider>
 
   );
