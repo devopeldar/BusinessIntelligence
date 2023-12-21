@@ -40,6 +40,7 @@ import Registrarme from "./components/authentication/Registrarme";
 import Confirmacion from "./components/authentication/Confirmacion";
 import { Key } from "react-bootstrap-icons";
 import CambiarContrasenia from "./components/authentication/CambiarContrasenia";
+import Perfiles from "./components/authentication/Perfil/Perfiles";
 
 const routes = [
   {
@@ -59,13 +60,22 @@ const routes = [
     component: <Clientes />,
   },
   {
-    type: "collapse",
+    type: "title",
     name: "Seguridad",
     key: "seguridad",
+    title: "Seguridad",
     icon: <Icon fontSize="small">Seguridad</Icon>,
-    route: "/components/Pages/Seguridad",
-    component: <Seguridad />,
   },
+      {
+        type: "collapse",
+        name: "Perfiles",
+        key: "perfiles",
+        title: "Perfiles",
+        icon: <Icon fontSize="small">Opción 1</Icon>,
+        route: "/components/authentication/Perfil",
+        component: <Perfiles />,
+      },
+   
   // {
   //   type: "collapse",
   //   name: "Registrarme",
