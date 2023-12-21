@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import API_URL from '../../../config';
+import API_URL from '../../../../config';
 
 const TareaEstado = () => {
   const [tareaEstados, setTareaEstados] = useState([]);

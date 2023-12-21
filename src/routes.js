@@ -35,27 +35,60 @@
 import Icon from "@mui/material/Icon";
 import Clientes from "./components/Pages/Clientes";
 import Tarea from "./components/Pages/Tarea";
+
 import Seguridad from "./components/Pages/Seguridad";
 import Registrarme from "./components/authentication/Registrarme";
 import Confirmacion from "./components/authentication/Confirmacion";
-import { Key } from "react-bootstrap-icons";
+import { Key, KeyFill, People, Person } from "react-bootstrap-icons";
 import CambiarContrasenia from "./components/authentication/CambiarContrasenia";
 import Perfiles from "./components/authentication/Perfil/Perfiles";
+import { Event, Task, TaskAlt } from "@mui/icons-material";
+import TareaTipoList from "./components/Pages/Tareas/TareaTipo/TareaTipoList";
+import TareaEstado from "./components/Pages/Tareas/TareasEstado/TareasEstadoList";
 
 const routes = [
   {
+    type: "title",
+    name: "Tareas",
+    title: "Tareas",
+    key: "tareas",
+    icon: <People />,
+  },
+  {
     type: "collapse",
     name: "Tareas",
-    key: "tareas",
-    icon: <Icon fontSize="small">Tareas</Icon>,
+    key: "mantenimientotareas",
+    icon: <Task />,
     route: "components/Pages/Tarea",
     component: <Tarea />,
   },
   {
     type: "collapse",
+    name: "Tipo de Tareas",
+    key: "tipotareas",
+    icon: <TaskAlt />,
+    route: "/TipoTareas",
+    component: <TareaTipoList />,
+  },
+  {
+    type: "collapse",
+    name: "Eventos de Tareas",
+    key: "eventotareas",
+    icon: <Event />,
+    route: "/EventoTareas",
+    component: <TareaEstado />,
+  },
+  {
+    type: "title",
     name: "Clientes",
     key: "clientes",
-    icon: <Icon fontSize="small">Clientes</Icon>,
+    title: "Clientes"
+  },
+  {
+    type: "collapse",
+    name: "Mantenimiento Clientes",
+    key: "mantenimientoclientes",
+    icon: <People />,
     route: "components/Pages/Clientes",
     component: <Clientes />,
   },
@@ -64,42 +97,26 @@ const routes = [
     name: "Seguridad",
     key: "seguridad",
     title: "Seguridad",
-    icon: <Icon fontSize="small">Seguridad</Icon>,
+    icon: <KeyFill />,
   },
-      {
-        type: "collapse",
-        name: "Perfiles",
-        key: "perfiles",
-        title: "Perfiles",
-        icon: <Icon fontSize="small">Opción 1</Icon>,
-        route: "/components/authentication/Perfil",
-        component: <Perfiles />,
-      },
-   
-  // {
-  //   type: "collapse",
-  //   name: "Registrarme",
-  //   key: "registrarme",
-  //   icon: <Icon fontSize="small">Seguridad</Icon>,
-  //   route: "/components/Pages/Registrarme",
-  //   component: <Registrarme />,
-  // },
   {
     type: "collapse",
-    name: "Confirmacion",
-    key: "confirmacion",
-    icon: <Icon fontSize="small">Confirmacion</Icon>,
-    route: "/components/Pages/Confirmacion",
-    component: <Confirmacion />,
+    name: "Perfiles",
+    key: "perfiles",
+    title: "Perfiles",
+    icon: <Person />,
+    route: "/components/authentication/Perfil",
+    component: <Perfiles />,
   },
   {
     type: "collapse",
     name: "ChangePassword",
     key: "changepassword",
-    icon: <Icon fontSize="small">Seguridad</Icon>,
+    icon: <KeyFill />,
     route: "/CambiarContrasenia",
     component: <CambiarContrasenia />,
   },
+  
 ];
 
 export default routes;

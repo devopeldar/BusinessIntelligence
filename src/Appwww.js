@@ -74,7 +74,9 @@ import ConfirmacionRecuperoPass from "./components/authentication/ConfirmacionRe
 import PerfilAdd from "./components/authentication/Perfil/PerfilAdd";
 import PerfilEdit from "./components/authentication/Perfil/PerfilEdit";
 import Perfiles from "./components/authentication/Perfil/Perfiles";
-
+import TareaTipoList from "./components/Pages/Tareas/TareaTipo/TareaTipoList";
+import TareaEstadoList from "./components/Pages/Tareas/TareasEstado/TareasEstadoList";
+import TareaEstado from "./components/Pages/Tareas/TareasEstado/TareasEstadoList";
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
   const {
@@ -221,7 +223,7 @@ export default function App() {
       {console.log(isLoggedIn)}
       <ThemeProvider theme={darkMode ? themeDarkRTL : themeRTL}>
         <CssBaseline />
-        {isLoggedIn || isRegistrar ? (
+        {isLoggedIn && isRegistrar ? (
           <>
             {layout === "page" && (
               <>
@@ -287,6 +289,14 @@ export default function App() {
         <Route path="/Perfil/PerfilAdd" element={<PerfilAdd />} />
         <Route path="/Perfil/PerfilEdit/:id" element={<PerfilEdit />} />
         <Route path="/Perfil/Perfiles" element={<Perfiles />} />
+
+        <Route path="/TareaEstado/TareaEstadoEdit/:id" element={<TareaEstadoList />} />
+        <Route path="/TareaEstado/TareaEstadoAdd" element={<TareaEstadoList />} />
+        <Route path="/TareaTipoAdd" element={<TareaTipoList />} />
+        <Route path="/TareaTipoEdit/:id" element={<TareaTipoList />} />
+{/* 
+        <Route path="/TipoTareas" element={<TareaTipoList />} />
+        <Route path="/EstadoTareas" element={<TareaEstadoList />} /> */}
       </Routes>
 
       {console.log(444)}
@@ -316,29 +326,7 @@ export default function App() {
           {layout === "vr" && <Configurator />}
         </>
       )}
-      {/* {isLoggedIn || isRegistrar? (
-        <>
-          {layout === "page" && (
-            <>
-              <Sidenav
-                color={sidenavColor}
-                brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
-                brandName="Task Manager"
-                routes={routes}
-                onMouseEnter={handleOnMouseEnter}
-                onMouseLeave={handleOnMouseLeave}
-              />
-              <Configurator />
-              {configsButton}
-            </>
-          )}
-          {layout === "vr" && <Configurator />}
-         
-        </>
-      ) : (
-        // Renderiza el componente de inicio de sesión solo si el usuario no está autenticado
-        <Login handleLogin={handleLogin} />
-      )} */}
+     
     </ThemeProvider>
   );
 }
