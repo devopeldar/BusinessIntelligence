@@ -1,34 +1,35 @@
-import axios from 'axios';
-import React, { useState, useEffect } from 'react';
-import API_URL from '../../../config';
-import MDTypography from '../../controls/MDTypography';
-import MDBox from '../../controls/MDBox';
-import MDBadge from '../../controls/MDBadge';
-import { DarkMode, Edit } from '@mui/icons-material';
-import MDButton from '../../controls/MDButton';
-import { PencilSquare } from 'react-bootstrap-icons';
+import { useEffect, useState } from "react";
+import API_URL from "../../../../config";
+import MDTypography from "../../../controls/MDTypography";
+import MDBox from "../../../controls/MDBox";
+import MDBadge from "../../../controls/MDBadge";
+import MDButton from "../../../controls/MDButton";
+import { Edit } from "@mui/icons-material";
+import { PencilSquare } from "react-bootstrap-icons";
+import axios from "axios";
 
-
-export default function PerfilesGet() {
-    const [perfiles, setPerfiles] = useState([]);
+export default function TareasTipoGet() {
+    const [perfiles, setTareasTipo] = useState([]);
     const [rows, setRows] = useState([]);
     const [error, setError] = useState([]);
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.post(API_URL + "/PerfilListar", {
+                const response = await axios.post(API_URL + "/TareaTipoListar", {
                     headers: {
                         accept: "application/json",
                     },
                 });
                 console.log("response " + response.json);
-                setPerfiles(response.data);
-                const data = response.data.map((perfil) => ({
+                setTareasTipo(response.data);
+                const data = response.data.map((tareatipo) => ({
 
-                    idPerfil: perfil.idPerfil, // Reemplaza 'id' por el nombre de la propiedad correspondiente en tus datos
-                    nombre: perfil.nombre, // Reemplaza 'nombre' por el nombre de la propiedad correspondiente en tus datos
-                    activo: perfil.activo, // Reemplaza 'activo' por el nombre de la propiedad correspondiente en tus datos
-                    cantusuarios: perfil.cantUsuarios,
+                    idTareatipo: tareatipo.idTareaTipo, 
+                    nombre: tareatipo.nombre, 
+                    codigo: tareatipo.codigo, 
+                    activo: tareatipo.activo, 
+                    vencimientosdias: tareatipo.vencimientoDias,
+                    vencimientoslegal: tareatipo.vencimientoLegal,
                 }));
 
                 setRows(data);
@@ -52,25 +53,38 @@ export default function PerfilesGet() {
             <MDTypography variant="caption" color="warning" fontWeight="light">{description} </MDTypography>
         </MDBox>
     );
-
-
+    const Vencimientos = ({ title, description }) => (
+        <MDBox lineHeight={1} textAlign="left">
+            <MDTypography display="block" variant="caption" color="dark" fontWeight="bold">
+                {title}
+            </MDTypography>
+            <MDTypography display="block" variant="caption" color="dark" fontWeight="bold">
+                {description}
+            </MDTypography>
+        </MDBox>
+    );
     return {
         columns: [
-            { Header: 'IDPerfil', accessor: 'idPerfil', align: 'left' },
+            { Header: 'ID Tipo Tarea', accessor: 'idtareatipo', align: 'left' },
             { Header: 'Nombre', accessor: 'nombre', width: '45%', align: 'left' },
+            { Header: 'Vencimientos', accessor: 'vencimientos', align: 'center' },
             { Header: 'Activo', accessor: 'activo', align: 'center' },
             { Header: "Acciones", accessor: "action", align: "center" },
         ],
-        rows: rows.map((perfil) => ({
-            idPerfil: (
+        rows: rows.map((tareatipo) => ({
+            idtareatipo: (
                 <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
-                    {perfil.idPerfil}
+                    {tareatipo.idTareatipo}
                 </MDTypography>
             ), // Reemplaza <TuComponenteControl1 /> por el componente que desees en esta celda
-            nombre: <Nombre title={perfil.nombre} description={"cantidad usuarios afectados: " + perfil.cantusuarios} />,
+            nombre: <Nombre title={tareatipo.nombre} description={"Codigo: " + tareatipo.codigo} />,
+
+            vencimientos:
+                <Vencimientos title={"Vencimiento Dias: " + tareatipo.vencimientosdias} description={"Vencimiento Legal: " + tareatipo.vencimientoslegal} />,
+
             activo: (
                 <MDBox ml={-1}>
-                    {perfil.activo ? (
+                    {tareatipo.activo ? (
                         <MDBadge badgeContent="activo" color="success" variant="gradient" size="sm" />
                     ) : (
                         <MDBadge badgeContent="desactivado" color="error" variant="gradient" size="sm" />
@@ -79,14 +93,15 @@ export default function PerfilesGet() {
                 </MDBox>
             ),
 
+
             action: (
                 <MDTypography variant="caption" color="text" fontWeight="medium">
                     <MDButton variant="text" color="dark">
-                    <PencilSquare color="blue" />
+                        <PencilSquare color="blue" />
                     </MDButton>
 
 
-                  
+
                 </MDTypography>
             ),
 

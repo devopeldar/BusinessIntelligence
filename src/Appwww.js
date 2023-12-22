@@ -77,6 +77,7 @@ import Perfiles from "./components/authentication/Perfil/Perfiles";
 import TareaTipoList from "./components/Pages/Tareas/TareaTipo/TareaTipoList";
 import TareaEstadoList from "./components/Pages/Tareas/TareasEstado/TareasEstadoList";
 import TareaEstado from "./components/Pages/Tareas/TareasEstado/TareasEstadoList";
+import { Settings } from "@mui/icons-material";
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
   const {
@@ -211,9 +212,10 @@ export default function App() {
       sx={{ cursor: "pointer" }}
       onClick={handleConfiguratorOpen}
     >
-      <Icon fontSize="small" color="inherit">
+      {/* <Icon fontSize="small" color="inherit">
         settings
-      </Icon>
+      </Icon> */}
+      <Settings/>
     </MDBox>
   );
 

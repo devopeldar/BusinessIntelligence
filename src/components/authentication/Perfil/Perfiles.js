@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css"; // Importa el archivo CSS de Bootstrap
-import { Link } from "react-router-dom";
-import API_URL from "../../../config";
-import axios from "axios";
-import LSButton from "../../controls/Button/LSButton";
+
 import MDBox from "../../controls/MDBox";
 import MDTypography from "../../controls/MDTypography";
 import { Grid } from "@mui/material";
@@ -11,14 +8,27 @@ import { Card } from "react-bootstrap";
 import PerfilesGet from "./PerfilesGet";
 import DashboardLayout from "../../controls/DashboardLayout";
 import DashboardNavbar from "../../controls/DashboardNavbar";
+import DataTable from "../../controls/Tables/DataTable";
+
+import MDButton from "../../controls/MDButton";
+import { useNavigate } from 'react-router-dom';
+import { PersonFillAdd } from "react-bootstrap-icons";
+
+
 
 function Perfiles() {
   const { columns, rows } = PerfilesGet();
- 
+  const history = useNavigate();
+  const handleAdd = () => {
+    history('/Perfil/PerfilAdd'); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
+  };
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
       <MDBox pt={6} pb={3}>
+
+
         <Grid container spacing={6}>
           <Grid item xs={12}>
             <Card>
@@ -33,26 +43,42 @@ function Perfiles() {
                 coloredShadow="info"
               >
                 <MDTypography variant="h6" color="white">
-                  Authors Table
+                  Perfiles
+                 
                 </MDTypography>
               </MDBox>
-              <MDBox pt={3}>
+              <MDBox pt={3}  py={3}
+                px={2}>
+              <MDButton
+                    onClick={() => {
+                      handleAdd();
+                    }}
+                    variant="gradient"
+                    color="success"
+                    endIcon={<PersonFillAdd />}
+                    text="contained"
+                  >
+                    Agregar
+                  </MDButton>
                 <DataTable
                   table={{ columns, rows }}
                   isSorted={false}
-                  entriesPerPage={false}
-                  showTotalEntries={false}
+                  entriesPerPage={true}
+                  showTotalEntries={true}
+                  canSearch={false}
                   noEndBorder
+                  pagination={{color:"success", variant:"gradient"}}
+                  
                 />
               </MDBox>
             </Card>
           </Grid>
-          
+
         </Grid>
       </MDBox>
-      <Footer />
+      {/* <Footer /> */}
     </DashboardLayout>
   );
 }
 
-export default Tables;
+export default Perfiles;

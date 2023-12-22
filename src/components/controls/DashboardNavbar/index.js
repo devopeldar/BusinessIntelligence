@@ -38,6 +38,10 @@ import {
   setMiniSidenav,
   setOpenConfigurator,
 } from "../../../context";
+import People from "@mui/icons-material/People";
+import { CollectionFill, PeopleFill } from "react-bootstrap-icons";
+import { Home, Settings } from "@mui/icons-material";
+import MDTypography from "../MDTypography";
 
 function DashboardNavbar({ absolute, light, isMini }) {
   const [navbarType, setNavbarType] = useState();
@@ -90,9 +94,9 @@ function DashboardNavbar({ absolute, light, isMini }) {
       onClose={handleCloseMenu}
       sx={{ mt: 2 }}
     >
-      <NotificationItem icon={<Icon>email</Icon>} title="Check new messages" />
+      {/* <NotificationItem icon={<Icon>email</Icon>} title="Check new messages" />
       <NotificationItem icon={<Icon>podcasts</Icon>} title="Manage Podcast sessions" />
-      <NotificationItem icon={<Icon>shopping_cart</Icon>} title="Payment successfully completed" />
+      <NotificationItem icon={<Icon>shopping_cart</Icon>} title="Payment successfully completed" /> */}
     </Menu>
   );
 
@@ -116,30 +120,31 @@ function DashboardNavbar({ absolute, light, isMini }) {
       sx={(theme) => navbar(theme, { transparentNavbar, absolute, light, darkMode })}
     >
       <Toolbar sx={(theme) => navbarContainer(theme)}>
-        <MDBox color="inherit" mb={{ xs: 1, md: 0 }} sx={(theme) => navbarRow(theme, { isMini })}>
+        {/* <MDBox color="inherit" mb={{ xs: 1, md: 0 }} sx={(theme) => navbarRow(theme, { isMini })}>
           <Breadcrumbs icon="home" title={route[route.length - 1]} route={route} light={light} />
-        </MDBox>
+        </MDBox> */}
         {isMini ? null : (
           <MDBox sx={(theme) => navbarRow(theme, { isMini })}>
-            <MDBox pr={1}>
-              <MDInput label="Search here" />
-            </MDBox>
-            <MDBox color={light ? "white" : "inherit"}>
-              <Link to="/authentication/sign-in/basic">
+            <MDBox color={light ? "warning" : "warning"}>
+           
+              <Link to="/Login">
                 <IconButton sx={navbarIconButton} size="small" disableRipple>
-                  <Icon sx={iconsStyle}>account_circle</Icon>
+                  {/* <Icon sx={iconsStyle}>account_circle</Icon> */}
+                  <Home/>
                 </IconButton>
               </Link>
+              
               <IconButton
                 size="small"
                 disableRipple
-                color="inherit"
+                color="warning"
                 sx={navbarMobileMenu}
                 onClick={handleMiniSidenav}
               >
-                <Icon sx={iconsStyle} fontSize="medium">
+                {/* <Icon sx={iconsStyle} fontSize="medium">
                   {miniSidenav ? "menu_open" : "menu"}
-                </Icon>
+                </Icon> */}
+                <Settings/>
               </IconButton>
               <IconButton
                 size="small"
@@ -148,9 +153,11 @@ function DashboardNavbar({ absolute, light, isMini }) {
                 sx={navbarIconButton}
                 onClick={handleConfiguratorOpen}
               >
-                <Icon sx={iconsStyle}>settings</Icon>
+                {/* <Icon sx={iconsStyle}>settings</Icon> */}
+                 <Settings/>
               </IconButton>
-              <IconButton
+             
+              {/* <IconButton
                 size="small"
                 disableRipple
                 color="inherit"
@@ -162,7 +169,10 @@ function DashboardNavbar({ absolute, light, isMini }) {
               >
                 <Icon sx={iconsStyle}>notifications</Icon>
               </IconButton>
-              {renderMenu()}
+              {renderMenu()} */}
+              <MDTypography display="block" variant="caption" color="text" fontWeight="light">
+                {localStorage.getItem('userlogueado')}
+              </MDTypography>
             </MDBox>
           </MDBox>
         )}
