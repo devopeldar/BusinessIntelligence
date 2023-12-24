@@ -78,6 +78,7 @@ import TareaTipoList from "./components/Pages/Tareas/TareaTipo/TareaTipoList";
 import TareaEstadoList from "./components/Pages/Tareas/TareasEstado/TareasEstadoList";
 import TareaEstado from "./components/Pages/Tareas/TareasEstado/TareasEstadoList";
 import { Settings } from "@mui/icons-material";
+import TareaTipoAdd from "./components/Pages/Tareas/TareaTipo/TareaTipoAdd";
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
   const {
@@ -294,7 +295,9 @@ export default function App() {
 
         <Route path="/TareaEstado/TareaEstadoEdit/:id" element={<TareaEstadoList />} />
         <Route path="/TareaEstado/TareaEstadoAdd" element={<TareaEstadoList />} />
-        <Route path="/TareaTipoAdd" element={<TareaTipoList />} />
+
+        <Route path="/TareaTipoVolver" element={<TareaTipoList />} />
+        <Route path="/TareaTipoAdd" element={<TareaTipoAdd />} />
         <Route path="/TareaTipoEdit/:id" element={<TareaTipoList />} />
 {/* 
         <Route path="/TipoTareas" element={<TareaTipoList />} />

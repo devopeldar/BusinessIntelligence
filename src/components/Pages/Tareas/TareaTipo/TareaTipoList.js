@@ -20,7 +20,7 @@ function TareaTipoList() {
   const { columns, rows } = TareasTipoGet();
   const history = useNavigate();
   const handleAdd = () => {
-    history('/TareaTipo/TareaTipoAdd'); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
+    history('/TareaTipoAdd'); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
   };
 
   return (
@@ -67,7 +67,7 @@ function TareaTipoList() {
                   showTotalEntries={true}
                   canSearch={false}
                   noEndBorder
-                  pagination={{color:"success", variant:"gradient"}}
+                  pagination={{color:"info", variant:"gradient"}}
                 />
               </MDBox>
             </Card>

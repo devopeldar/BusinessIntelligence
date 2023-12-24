@@ -161,7 +161,7 @@ const CambiarContrasenia = () => {
       <Card>
         <MDBox
           variant="gradient"
-          bgColor="info"
+          bgColor="warning"
           borderRadius="lg"
           coloredShadow="success"
           mx={2}
@@ -220,7 +220,7 @@ const CambiarContrasenia = () => {
                   handleSubmit();
                 }}
                 variant="gradient"
-                color="info"
+                color="warning"
                 endIcon={<Key />}
                 fullWidth
                 disabled={grabando}

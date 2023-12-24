@@ -38,9 +38,9 @@ function Perfiles() {
                 py={3}
                 px={2}
                 variant="gradient"
-                bgColor="info"
+                bgColor="warning"
                 borderRadius="lg"
-                coloredShadow="info"
+                coloredShadow="warning"
               >
                 <MDTypography variant="h6" color="white">
                   Perfiles
@@ -67,7 +67,7 @@ function Perfiles() {
                   showTotalEntries={true}
                   canSearch={false}
                   noEndBorder
-                  pagination={{color:"success", variant:"gradient"}}
+                  pagination={{color:"warning", variant:"gradient"}}
                   
                 />
               </MDBox>
