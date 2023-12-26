@@ -1,64 +1,67 @@
-// EditarPerfil.js
+// EditarTareaTipo.js
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
-import API_URL from "../../../config";
+import API_URL from "../../../../config";
 import { useNavigate } from "react-router-dom";
-import LSButton from "../../controls/Button/LSButton";
 import axios from "axios";
-import BasicLayout from "../../layauots/BasicLayout";
+import BasicLayout from "../../../layauots/BasicLayout";
 import { Card } from "react-bootstrap";
-import MDBox from "../../controls/MDBox";
-import MDTypography from "../../controls/MDTypography";
-import MDInput from "../../controls/MDInput";
+import MDBox from "../../../controls/MDBox";
+import MDTypography from "../../../controls/MDTypography";
+import MDInput from "../../../controls/MDInput";
 import { Save } from "react-bootstrap-icons";
 import { ExitToApp } from "@mui/icons-material";
-import MDButton from "../../controls/MDButton";
+import MDButton from "../../../controls/MDButton";
 import { Alert, AlertTitle, Checkbox } from "@mui/material";
-import bgImage from "../../../assets/images/bg-sign-up-cover.jpeg";
-import MDProgress from "../../controls/MDProgress";
+import bgImage from "../../../../assets/images/bg-sign-up-cover.jpeg";
 
-const PerfilEdit = () => {
-  const { id } = useParams(); // Obtener el parámetro de la URL (el ID del perfil a editar)
-  const [perfil, setPerfil] = useState(null);
-  const [idperfil, setidperfil] = useState("");
+const TareaTipoEdit = () => {
+  const { id } = useParams(); // Obtener el parámetro de la URL (el ID del TareaTipo a editar)
+  const [TareaTipo, setTareaTipo] = useState(null);
+  const [idTareaTipo, setidTareaTipo] = useState("");
   const [nombre, setNombre] = useState("");
   const [activo, setActivo] = useState(false);
+  const [codigo, setCodigo] = useState("");
+  const [vencimientoDias, setVencimientoDias] = useState(0);
+  const [vencimientoLegal, setVencimientoLegal] = useState(0);
+  const [descripcion, setDescripcion] = useState("");
   const [nombreboton, setnombreboton] = useState("Cancelar");
   const [mensaje, setMensaje] = useState("");
   const history = useNavigate();
   const [grabando, setGrabando] = useState(false);
 
   const handleVolver = () => {
-    history("/Perfil/Perfiles"); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
+    history("/TareaTipoVolver"); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
   };
 
   useEffect(() => {
-    setidperfil(id);
-    // Aquí realizas la llamada a tu API para obtener el perfil específico por su ID
-    const GetPerfil = async () => {
+    setidTareaTipo(id);
+    // Aquí realizas la llamada a tu API para obtener el TareaTipo específico por su ID
+    const GetTareaTipo = async () => {
       try {
-        const reqperfil = {
-          idperfil: id
+        const reqTareaTipo = {
+          idTareaTipo: id
         };
     
-        const response = await axios.post(API_URL + `/PerfilGetByID`, reqperfil, {
+        const response = await axios.post(API_URL + `/TareaTipoGetByID`, reqTareaTipo, {
           headers: {
             "Content-Type": "application/json"
           }
         });
-    
-        console.log("response", response);
-    
         const data = response.data;
-        setPerfil(data);
+        setTareaTipo(data);
         setNombre(data.nombre);
+        setCodigo(data.codigo);
+        setVencimientoDias(data.vencimientoDias);
+        setVencimientoLegal(data.vencimientoLegal);
+        setDescripcion(data.descripcion);
         setActivo(data.activo);
       } catch (error) {
         console.error("Error:", error);
       }
     };
-    GetPerfil();
+    GetTareaTipo();
   }, [id]);
 
   const handleSubmit = async (event) => {
@@ -67,18 +70,18 @@ const PerfilEdit = () => {
       setGrabando(true); // Inicia la grabación
       setnombreboton("Volver");
 
-      // Aquí realizas la llamada a tu API para actualizar el perfil con los nuevos datos
-      const response = await fetch(API_URL + `/PerfilModificacion`, {
+      // Aquí realizas la llamada a tu API para actualizar el TareaTipo con los nuevos datos
+      const response = await fetch(API_URL + `/TareaTipoModificacion`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ idperfil, nombre, activo }),
+        body: JSON.stringify({ idTareaTipo, nombre, activo }),
       });
       const res = await response.json();
 
       console.log(res.rdoAccion);
-      // Manejar la lógica después de actualizar el perfil
+      // Manejar la lógica después de actualizar el TareaTipo
       if (res.rdoAccion) {
         // Manejar respuesta exitosa
         setMensaje("¡Datos actualizados exitosamente!");
@@ -96,8 +99,8 @@ const PerfilEdit = () => {
     }
   };
 
-  if (!perfil) {
-    return <div>Cargando perfil...</div>;
+  if (!TareaTipo) {
+    return <div>Cargando Tipo de Tarea...</div>;
   }
 
   return (
@@ -115,10 +118,10 @@ const PerfilEdit = () => {
           textAlign="center"
         >
           <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-            Editar Perfil
+            Editar Tipo Tarea
           </MDTypography>
           <MDTypography display="block" variant="button" color="white" my={1}>
-            un perfil permite asignarle permisos de visualizacion o acciones a un usuario
+            un Tipo de Tarea permite asignarle especificaciones a una tarea
           </MDTypography>
         </MDBox>
         <MDBox pt={4} pb={3} px={3}>
@@ -136,6 +139,55 @@ const PerfilEdit = () => {
               />
             </MDBox>
             <MDBox mb={2}>
+              <MDInput
+                type="text"
+                name="codigo"
+                required
+                label="Codigo"
+                variant="standard"
+                value={codigo}
+             onChange={(e) => setCodigo(e.target.value)}
+                fullWidth
+              />
+            </MDBox>
+            <MDBox mb={2}>
+              <MDInput
+                type="text"
+                name="descripcion"
+                required
+                label="Observaciones"
+                variant="standard"
+                value={descripcion}
+             onChange={(e) => setDescripcion(e.target.value)}
+                fullWidth
+              />
+            </MDBox>
+            <MDBox mb={2}>
+              <MDInput
+                type="text"
+                name="vencimientoDias"
+                required
+                label="Vencimiento en Dias"
+                variant="standard"
+                value={vencimientoDias}
+             onChange={(e) => setVencimientoDias(e.target.value)}
+                fullWidth
+              />
+            </MDBox>
+            <MDBox mb={2}>
+              <MDInput
+                type="text"
+                name="vencimientoLegal"
+                required
+                label="Vencimiento Legal"
+                variant="standard"
+                value={vencimientoLegal}
+             onChange={(e) => setVencimientoLegal(e.target.value)}
+                fullWidth
+              />
+            </MDBox>
+           
+            <MDBox mb={2}>
             <MDTypography variant="h17" fontWeight="light" mt={1}>
               Activo
           
@@ -146,16 +198,7 @@ const PerfilEdit = () => {
               >
 
               </Checkbox> 
-             
-              {/* <MDInput
-                type="checkbox"
-                name="activo"
-                label="Activo"
-                variant="standard"
-                value={formData.activo}
-                onChange={handleInputChange}
-                fullWidth
-              /> */}
+     
                </MDTypography>
             </MDBox>
             <MDBox mt={4} mb={1}>
@@ -209,4 +252,4 @@ const PerfilEdit = () => {
   );
 };
 
-export default PerfilEdit;
+export default TareaTipoEdit;

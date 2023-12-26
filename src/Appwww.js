@@ -75,10 +75,18 @@ import PerfilAdd from "./components/authentication/Perfil/PerfilAdd";
 import PerfilEdit from "./components/authentication/Perfil/PerfilEdit";
 import Perfiles from "./components/authentication/Perfil/Perfiles";
 import TareaTipoList from "./components/Pages/Tareas/TareaTipo/TareaTipoList";
-import TareaEstadoList from "./components/Pages/Tareas/TareasEstado/TareasEstadoList";
-import TareaEstado from "./components/Pages/Tareas/TareasEstado/TareasEstadoList";
+import TareaEstadoList from "./components/Pages/Tareas/TareasEstado/TareaEstadoList";
+import TareaEstado from "./components/Pages/Tareas/TareasEstado/TareaEstadoList";
 import { Settings } from "@mui/icons-material";
 import TareaTipoAdd from "./components/Pages/Tareas/TareaTipo/TareaTipoAdd";
+import TareaTipoEdit from "./components/Pages/Tareas/TareaTipo/TareaTipoEdit";
+import TareaEstadoAdd from "./components/Pages/Tareas/TareasEstado/TareaEstadoAdd";
+import TareaEstadoEdit from "./components/Pages/Tareas/TareasEstado/TareaEstadoEdit";
+import DepartamentoGet from "./components/Pages/Departamentos/DepartamentoGet";
+import DepartamentoList from "./components/Pages/Departamentos/DepartamentoList";
+import DepartamentoAdd from "./components/Pages/Departamentos/DepartamentoAdd";
+import DepartamentoEdit from "./components/Pages/Departamentos/DepartamentoEdit";
+
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
   const {
@@ -222,8 +230,7 @@ export default function App() {
 
   return direction === "rtl" ? (
     <CacheProvider value={rtlCache}>
-      {console.log(5555)}
-      {console.log(isLoggedIn)}
+    
       <ThemeProvider theme={darkMode ? themeDarkRTL : themeRTL}>
         <CssBaseline />
         {isLoggedIn && isRegistrar ? (
@@ -293,12 +300,19 @@ export default function App() {
         <Route path="/Perfil/PerfilEdit/:id" element={<PerfilEdit />} />
         <Route path="/Perfil/Perfiles" element={<Perfiles />} />
 
-        <Route path="/TareaEstado/TareaEstadoEdit/:id" element={<TareaEstadoList />} />
-        <Route path="/TareaEstado/TareaEstadoAdd" element={<TareaEstadoList />} />
+        <Route path="/DepartamentoAdd" element={<DepartamentoAdd />} />
+        <Route path="/Departamento/DepartamentoEdit/:id" element={<DepartamentoEdit />} />
+        <Route path="/Departamentos" element={<DepartamentoList />} />
+        <Route path="/DepartamentoVolver" element={<DepartamentoList />} />
+
+        <Route path="/TareaEstado/TareaEstadoEdit/:id" element={<TareaEstadoEdit />} />
+        <Route path="/TareaEstadoAdd" element={<TareaEstadoAdd />} />
+        <Route path="/TareaEstado" element={<TareaEstadoList />} />
+        <Route path="/TareaEstadoVolver" element={<TareaEstadoList />} />
 
         <Route path="/TareaTipoVolver" element={<TareaTipoList />} />
         <Route path="/TareaTipoAdd" element={<TareaTipoAdd />} />
-        <Route path="/TareaTipoEdit/:id" element={<TareaTipoList />} />
+        <Route path="/TareaTipo/TareaTipoEdit/:id" element={<TareaTipoEdit />} />
 {/* 
         <Route path="/TipoTareas" element={<TareaTipoList />} />
         <Route path="/EstadoTareas" element={<TareaEstadoList />} /> */}

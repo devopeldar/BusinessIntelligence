@@ -1,22 +1,26 @@
-import React from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import DashboardLayout from '../../controls/DashboardLayout';
-import DashboardNavbar from '../../controls/DashboardNavbar';
-import MDBox from '../../controls/MDBox';
-import { Grid } from '@mui/material';
-import { Card } from 'react-bootstrap';
-import MDTypography from '../../controls/MDTypography';
-import MDButton from '../../controls/MDButton';
-import DataTable from '../../controls/Tables/DataTable';
-import { BuildingFillAdd } from 'react-bootstrap-icons';
-import DepartamentoGet from './DepartamentoGet';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import "bootstrap/dist/css/bootstrap.min.css"; // Importa el archivo CSS de Bootstrap
 
-function DepartamentoList() {
-  const { columns, rows } = DepartamentoGet();
+import MDBox from "../../../controls/MDBox";
+import MDTypography from "../../../controls/MDTypography";
+import { Grid } from "@mui/material";
+import { Card } from "react-bootstrap";
+import DashboardLayout from "../../../controls/DashboardLayout";
+import DashboardNavbar from "../../../controls/DashboardNavbar";
+import DataTable from "../../../controls/Tables/DataTable";
+
+import MDButton from "../../../controls/MDButton";
+import { useNavigate } from 'react-router-dom';
+import { BuildingFillAdd } from "react-bootstrap-icons";
+import TareaEstadoGet from "./TareaEstadoGet";
+
+
+
+function TareaEstadoList() {
+  const { columns, rows } = TareaEstadoGet();
   const history = useNavigate();
   const handleAdd = () => {
-    history('/DepartamentoAdd'); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
+    history('/TareaEstadoAdd'); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
   };
 
   return (
@@ -39,7 +43,7 @@ function DepartamentoList() {
                 coloredShadow="info"
               >
                 <MDTypography variant="h6" color="white">
-                  Departamentos
+                  Estados de Tarea
                  
                 </MDTypography>
               </MDBox>
@@ -63,7 +67,6 @@ function DepartamentoList() {
                   showTotalEntries={true}
                   canSearch={false}
                   noEndBorder
-                  
                   pagination={{color:"info", variant:"gradient"}}
                 />
               </MDBox>
@@ -77,5 +80,4 @@ function DepartamentoList() {
   );
 }
 
-
-export default DepartamentoList;
+export default TareaEstadoList;

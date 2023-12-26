@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import API_URL from "../../../../config";
 import "bootstrap/dist/css/bootstrap.min.css"; // Importa los es../tilos de Bootstrap
 import BasicLayout from "../../../layauots/BasicLayout";
-import { Alert, Card } from "react-bootstrap";
 import MDBox from "../../../controls/MDBox";
 import MDTypography from "../../../controls/MDTypography";
 import bgImage from "../../../../assets/images/bg-sign-up-cover.jpeg";
@@ -10,7 +9,7 @@ import MDInput from "../../../controls/MDInput";
 import * as yup from "yup";
 import { useNavigate } from 'react-router-dom';
 import MDProgress from "../../../controls/MDProgress";
-import { AlertTitle, Checkbox } from "@mui/material";
+import { Alert, Card, AlertTitle, Checkbox } from "@mui/material";
 import MDButton from "../../../controls/MDButton";
 import { Save } from "react-bootstrap-icons";
 import { ExitToApp } from "@mui/icons-material";
@@ -118,8 +117,9 @@ const TareaTipoAdd = () => {
 
       if (res.rdoAccion) {
         // Manejar respuesta exitosa
-        setMensaje("TareaTipo Registrado exitosamente!");
+        setMensaje("Tipo de Tarea Registrado exitosamente!");
         setGrabando(true);
+        setExito(true);
        
       } else {
         // Manejar errores si la respuesta no es exitosa

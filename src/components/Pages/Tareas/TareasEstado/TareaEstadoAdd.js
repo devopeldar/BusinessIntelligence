@@ -1,36 +1,37 @@
 import React, { useState } from "react";
-import API_URL from "../../../config";
+import API_URL from "../../../../config";
 import "bootstrap/dist/css/bootstrap.min.css"; // Importa los es../tilos de Bootstrap
-import BasicLayout from "../../layauots/BasicLayout";
+import BasicLayout from "../../../layauots/BasicLayout";
 import { Alert, Card } from "@mui/material";
-import MDBox from "../../controls/MDBox";
-import MDTypography from "../../controls/MDTypography";
-import bgImage from "../../../assets/images/bg-sign-up-cover.jpeg";
-import MDInput from "../../controls/MDInput";
+import MDBox from "../../../controls/MDBox";
+import MDTypography from "../../../controls/MDTypography";
+import bgImage from "../../../../assets/images/bg-sign-up-cover.jpeg";
+import MDInput from "../../../controls/MDInput";
 import * as yup from "yup";
 import { useNavigate } from 'react-router-dom';
-import MDProgress from "../../controls/MDProgress";
+import MDProgress from "../../../controls/MDProgress";
 import { AlertTitle, Checkbox } from "@mui/material";
-import MDButton from "../../controls/MDButton";
+import MDButton from "../../../controls/MDButton";
 import { Save } from "react-bootstrap-icons";
 import { ExitToApp } from "@mui/icons-material";
 
 
-const DepartamentoAdd = () => {
+const TareaEstadoAdd = () => {
   const navigate = useNavigate();
 
   // const [nombre, setNombre] = useState('');
   // const [activo, setActivo] = useState(false);
   const [formData, setFormData] = useState({
-    idDepartamento: 0,
-    nombre: "",
-    activo: true
+    idTareaEstado: 0,
+    descripcion: "",
+    activo: true,
+    esEstadoFinal: true
   });
 
 
 
   const validationSchema = yup.object().shape({
-    nombre: yup.string().required("El campo Nombre es requerido")
+    descripcion: yup.string().required("El campo Descripcion es requerido")
   });
 
   const [grabando, setGrabando] = useState(false);
@@ -77,7 +78,7 @@ const DepartamentoAdd = () => {
   };
 
   const handleVolver = () => {
-    navigate("/DepartamentoVolver"); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
+    navigate("/TareaEstadoVolver"); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
   };
 
   const procesarFormulario = async (data) => {
@@ -91,7 +92,7 @@ const DepartamentoAdd = () => {
           setExito(true);
           setMensaje('');
 
-          const response = await fetch(API_URL + "/DepartamentoAlta", {
+          const response = await fetch(API_URL + "/TareaEstadoAlta", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -103,7 +104,7 @@ const DepartamentoAdd = () => {
 
           if (res.rdoAccion) {
             // Manejar respuesta exitosa
-            setMensaje("Departamento Registrado exitosamente!");
+            setMensaje("Estado de Tarea Registrado exitosamente!");
             setGrabando(true);
             setExito(true);
           } else {
@@ -146,10 +147,10 @@ const DepartamentoAdd = () => {
           textAlign="center"
         >
           <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-            Agregar Departamento
+            Agregar Estado de Tarea
           </MDTypography>
           <MDTypography display="block" variant="button" color="white" my={1}>
-            Un Departamento especifica un area de la empresa que elabora una accion
+            Un Estado de Tarea permite identificar en que momento del proceso se encuentra la Tarea
           </MDTypography>
         </MDBox>
         <MDBox pt={4} pb={3} px={3}>
@@ -157,16 +158,32 @@ const DepartamentoAdd = () => {
             <MDBox mb={2}>
               <MDInput
                 type="text"
-                name="nombre"
+                name="descripcion"
                 required
-                label="Nombre"
+                label="Descripcion"
                 variant="standard"
-                value={formData.nombre}
+                value={formData.descripcion}
                 onChange={handleInputChange}
                 fullWidth
               />
             </MDBox>
 
+            <MDBox mb={2}>
+
+              <Checkbox name="esEstadoFinal"
+                onChange={handleInputChange}
+                checked={formData.esEstadoFinal || false}
+
+              />
+              <MDTypography
+                variant="button"
+                fontWeight="regular"
+                color="text"
+                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
+              >
+                Es Estado Final
+              </MDTypography>
+            </MDBox>
             <MDBox mb={2}>
 
               <Checkbox name="activo"
@@ -180,7 +197,7 @@ const DepartamentoAdd = () => {
                 color="text"
                 sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
               >
-                &nbsp;&nbsp;Activo
+                Activo
               </MDTypography>
             </MDBox>
             <MDBox mt={4} mb={1}>
@@ -236,4 +253,4 @@ const DepartamentoAdd = () => {
   );
 };
 
-export default DepartamentoAdd;
+export default TareaEstadoAdd;

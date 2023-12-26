@@ -1,61 +1,62 @@
-// EditarDepartamento.js
+// EditarTareaEstado.js
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
-import API_URL from "../../../config";
+import API_URL from "../../../../config";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import BasicLayout from "../../layauots/BasicLayout";
+import BasicLayout from "../../../layauots/BasicLayout";
 import { Card } from "react-bootstrap";
-import MDBox from "../../controls/MDBox";
-import MDTypography from "../../controls/MDTypography";
-import MDInput from "../../controls/MDInput";
+import MDBox from "../../../controls/MDBox";
+import MDTypography from "../../../controls/MDTypography";
+import MDInput from "../../../controls/MDInput";
 import { Save } from "react-bootstrap-icons";
 import { ExitToApp } from "@mui/icons-material";
-import MDButton from "../../controls/MDButton";
+import MDButton from "../../../controls/MDButton";
 import { Alert, AlertTitle, Checkbox } from "@mui/material";
-import bgImage from "../../../assets/images/bg-sign-up-cover.jpeg";
+import bgImage from "../../../../assets/images/bg-sign-up-cover.jpeg";
 import * as yup from "yup";
 
-const DepartamentoEdit = () => {
-    const { id } = useParams(); // Obtener el parámetro de la URL (el ID del Departamento a editar)
-    const [Departamento, setDepartamento] = useState(null);
-    const [idDepartamento, setidDepartamento] = useState("");
+const TareaEstadoEdit = () => {
+    const { id } = useParams(); // Obtener el parámetro de la URL (el ID del TareaEstado a editar)
+    const [TareaEstado, setTareaEstado] = useState(null);
+    const [idTareaEstado, setidTareaEstado] = useState("");
     const [activo, setActivo] = useState(false);
     const [esEstadoFinal, setEsEstadoFinal] = useState(false);
-    const [nombre, setNombre] = useState("");
+    const [descripcion, setDescripcion] = useState("");
     const [nombreboton, setnombreboton] = useState("Cancelar");
     const [mensaje, setMensaje] = useState("");
     const history = useNavigate();
     const [grabando, setGrabando] = useState(false);
     const [exito, setExito] = useState(false);
     const handleVolver = () => {
-        history("/DepartamentoVolver"); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
+        history("/TareaEstadoVolver"); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
     };
 
     useEffect(() => {
-        setidDepartamento(id);
-        // Aquí realizas la llamada a tu API para obtener el Departamento específico por su ID
-        const GetDepartamento = async () => {
+        setidTareaEstado(id);
+        // Aquí realizas la llamada a tu API para obtener el TareaEstado específico por su ID
+        const GetTareaEstado = async () => {
             try {
-                const reqDepartamento = {
-                    idDepartamento: id
+                const reqTareaEstado = {
+                    idTareaEstado: id
                 };
 
-                const response = await axios.post(API_URL + `/DepartamentoGetByID`, reqDepartamento, {
+                const response = await axios.post(API_URL + `/TareaEstadoGetByID`, reqTareaEstado, {
                     headers: {
                         "Content-Type": "application/json"
                     }
                 });
                 const data = response.data;
-                setDepartamento(data);
-                setNombre(data.nombre);
+                setTareaEstado(data);
+                setDescripcion(data.descripcion);
+                setEsEstadoFinal(data.esEstadoFinal);
                 setActivo(data.activo);
             } catch (error) {
                 console.error("Error:", error);
             }
         };
-        GetDepartamento();
+        GetTareaEstado();
     }, [id]);
 
 
@@ -63,8 +64,8 @@ const DepartamentoEdit = () => {
 
         try {
 
-            if (nombre === '') {
-                setMensaje("El campo nombre es obligatorio");
+            if (descripcion === '') {
+                setMensaje("El campo descripcion es obligatorio");
                 setExito(false);
                 return;
             }
@@ -72,13 +73,13 @@ const DepartamentoEdit = () => {
             setnombreboton("Volver");
             setExito(true);
             setMensaje('');
-            // Aquí realizas la llamada a tu API para actualizar el Departamento con los nuevos datos
-            const response = await fetch(API_URL + `/DepartamentoModificacion`, {
+            // Aquí realizas la llamada a tu API para actualizar el TareaEstado con los nuevos datos
+            const response = await fetch(API_URL + `/TareaEstadoModificacion`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ idDepartamento, nombre, activo }),
+                body: JSON.stringify({ idTareaEstado, descripcion, activo, esEstadoFinal }),
             });
             const res = await response.json();
 
@@ -101,7 +102,7 @@ const DepartamentoEdit = () => {
         }
     };
 
-    if (!Departamento) {
+    if (!TareaEstado) {
         return <div>Cargando Estado de Tarea...</div>;
     }
 
@@ -120,10 +121,10 @@ const DepartamentoEdit = () => {
                     textAlign="center"
                 >
                     <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-                        Editar Departamento
+                        Editar Tipo Tarea
                     </MDTypography>
                     <MDTypography display="block" variant="button" color="white" my={1}>
-                    Un Departamento especifica un area de la empresa que elabora una accion
+                        un Tipo de Tarea permite asignarle especificaciones a una tarea
                     </MDTypography>
                 </MDBox>
                 <MDBox pt={4} pb={3} px={3}>
@@ -132,16 +133,30 @@ const DepartamentoEdit = () => {
                         <MDBox mb={2}>
                             <MDInput
                                 type="text"
-                                name="nombre"
+                                name="descripcion"
                                 required
-                                label="Nombre"
+                                label="Descripcion"
                                 variant="standard"
-                                value={nombre}
-                                onChange={(e) => setNombre(e.target.value)}
+                                value={descripcion}
+                                onChange={(e) => setDescripcion(e.target.value)}
                                 fullWidth
                             />
                         </MDBox>
-                       
+                        <MDBox mb={2}>
+
+                            <Checkbox name="esEstadoFinal"
+                                onChange={(e) => setEsEstadoFinal(e.target.checked)}
+                                checked={esEstadoFinal}
+                            />
+                            <MDTypography
+                                variant="button"
+                                fontWeight="regular"
+                                color="text"
+                                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
+                            >
+                                Es Estado Final
+                            </MDTypography>
+                        </MDBox>
                         <MDBox mb={2}>
 
                             <Checkbox name="activo"
@@ -155,7 +170,7 @@ const DepartamentoEdit = () => {
                                 color="text"
                                 sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
                             >
-                                &nbsp;&nbsp;Activo
+                                Activo
                             </MDTypography>
                         </MDBox>
 
@@ -212,4 +227,4 @@ const DepartamentoEdit = () => {
     );
 };
 
-export default DepartamentoEdit;
+export default TareaEstadoEdit;
