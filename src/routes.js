@@ -8,6 +8,7 @@ import { Event, Task, TaskAlt } from "@mui/icons-material";
 import TareaTipoList from "./components/Pages/Tareas/TareaTipo/TareaTipoList";
 import TareaEstadoList from "./components/Pages/Tareas/TareasEstado/TareaEstadoList";
 import DepartamentoList from "./components/Pages/Departamentos/DepartamentoList";
+import TipoEventoList from "./components/Pages/TipoEvento/TipoEventoListar";
 
 const routes = [
   {
@@ -48,6 +49,20 @@ const routes = [
     icon: <Event />,
     route: "/EstadoTareas",
     component: <TareaEstadoList />,
+  },
+  {
+    type: "title",
+    name: "Eventos",
+    key: "eventos",
+    title: "Eventos"
+  },
+  {
+    type: "collapse",
+    name: "Tipos de Evento",
+    key: "tiposdeeventos",
+    icon: <People />,
+    route: "components/Pages/Clientes",
+    component: <TipoEventoList />,
   },
   {
     type: "title",

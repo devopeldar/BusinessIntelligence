@@ -1,110 +1,81 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Link } from 'react-router-dom';
-import axios from 'axios';
-import API_URL from '../../../config';
+import DashboardLayout from '../../controls/DashboardLayout';
+import DashboardNavbar from '../../controls/DashboardNavbar';
+import MDBox from '../../controls/MDBox';
+import { Grid } from '@mui/material';
+import { Card } from 'react-bootstrap';
+import MDTypography from '../../controls/MDTypography';
+import MDButton from '../../controls/MDButton';
+import DataTable from '../../controls/Tables/DataTable';
+import { BuildingFillAdd } from 'react-bootstrap-icons';
+import TipoEventoGet from './TipoEventoGet';
+import { useNavigate } from 'react-router-dom';
 
-const TipoEventoList = () => {
-  const [eventosTipo, setEventosTipo] = useState([]);
-  const [error, setError] = useState(null);
-  const [showConfirmation, setShowConfirmation] = useState(false);
-  const [idEventoTipo, setIdEventoTipo] = useState(null);
-  const [descripcionEventoTipo, setDescripcionEventoTipo] = useState('');
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.post(API_URL + '/EventoTipoListar', {
-          headers: {
-            accept: 'application/json',
-          },
-        });
-        setEventosTipo(response.data);
-      } catch (error) {
-        setError(error);
-        console.log(error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  const handleDeleteClick = (id, descripcion) => {
-    setIdEventoTipo(id);
-    setDescripcionEventoTipo(descripcion);
-    setShowConfirmation(true);
-    document.body.style.overflow = 'hidden';
-  };
-
-  const handleCancel = () => {
-    setShowConfirmation(false);
-    setIdEventoTipo(null);
-    document.body.style.overflow = 'auto';
-  };
-
-  const handleConfirmDelete = async () => {
-    try {
-      // Lógica para eliminar el EventoTipo
-      // ...
-
-      setShowConfirmation(false);
-      document.body.style.overflow = 'auto';
-
-      // Actualiza la lista de EventosTipo en el estado después de eliminar
-      setEventosTipo((prevEventosTipo) =>
-        prevEventosTipo.filter((evento) => evento.idEventoTipo !== idEventoTipo)
-      );
-    } catch (error) {
-      console.error('Error al eliminar el EventoTipo:', error);
-    }
+function TipoEventoList() {
+  const { columns, rows } = TipoEventoGet();
+  const history = useNavigate();
+  const handleAdd = () => {
+    history('/TipoEventoAdd'); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
   };
 
   return (
-    <div className="container mt-4">
-      <h2>Lista de Tipos de Evento</h2>
-      {/* Agregar enlace para agregar nuevo EventoTipo */}
-      <Link to="/EventoTipoAdd" className="btn btn-success">Agregar Tipo de Evento</Link>
-      <table className="table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Descripción</th>
-            <th>ID Tarea Estado</th>
-            <th>Activo</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {eventosTipo.map((evento) => (
-            <tr key={evento.idEventoTipo}>
-              <td>{evento.idEventoTipo}</td>
-              <td>{evento.descripcion}</td>
-              <td>{evento.idTareaEstado}</td>
-              <td>{evento.activo ? 'Sí' : 'No'}</td>
-              <td>
-                {/* Enlaces para editar y eliminar */}
-                <Link to={`/EventoTipoEdit/${evento.idEventoTipo}`} className="btn btn-primary me-2">Editar</Link>
-                <button className="btn btn-danger" onClick={() => handleDeleteClick(evento.idEventoTipo, evento.descripcion)}>Eliminar</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      {showConfirmation && (
-        <div className="modalconf-overlay">
-          <div className="modalconf">
-            <p className="modal-title">
-              ¿Estás seguro de que deseas eliminar el tipo de evento <b>{descripcionEventoTipo}</b>?
-            </p>
-            <div className="containernodal">
-              <button className="buttonnodal btn btn-danger" onClick={handleConfirmDelete}>Eliminar</button>
-              <button className="buttonnodal btn btn-success" onClick={handleCancel}>Cancelar</button>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
+    <DashboardLayout>
+      <DashboardNavbar />
+      <MDBox pt={6} pb={3}>
+
+
+        <Grid container spacing={6}>
+          <Grid item xs={12}>
+            <Card>
+              <MDBox
+                mx={2}
+                mt={-3}
+                py={3}
+                px={2}
+                variant="gradient"
+                bgColor="primary"
+                borderRadius="lg"
+                coloredShadow="primary"
+              >
+                <MDTypography variant="h6" color="white">
+                  Tipo de Eventos
+                 
+                </MDTypography>
+              </MDBox>
+              <MDBox pt={3}  py={3}
+                px={2}>
+              <MDButton
+                    onClick={() => {
+                      handleAdd();
+                    }}
+                    variant="gradient"
+                    color="success"
+                    endIcon={<BuildingFillAdd />}
+                    text="contained"
+                  >
+                    Agregar
+                  </MDButton>
+                <DataTable
+                  table={{ columns, rows }}
+                  isSorted={false}
+                  entriesPerPage={true}
+                  showTotalEntries={true}
+                  canSearch={false}
+                  noEndBorder
+                  
+                  pagination={{color:"info", variant:"gradient"}}
+                />
+              </MDBox>
+            </Card>
+          </Grid>
+
+        </Grid>
+      </MDBox>
+      {/* <Footer /> */}
+    </DashboardLayout>
   );
-};
+}
+
 
 export default TipoEventoList;
