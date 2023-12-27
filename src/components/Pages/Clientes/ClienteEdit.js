@@ -163,6 +163,8 @@ const ClienteEdit = () => {
         setSelectedValue(value);
         setTipoIva(value.valor);
     };
+
+    
     if (!Cliente) {
 
         return <BasicLayout image={bgImage}>
