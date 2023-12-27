@@ -89,6 +89,10 @@ import DepartamentoEdit from "./components/Pages/Departamentos/DepartamentoEdit"
 import TipoEventoGet from "./components/Pages/TipoEvento/TipoEventoGet";
 import TipoEventoList from "./components/Pages/TipoEvento/TipoEventoListar";
 import TipoEventoAdd from "./components/Pages/TipoEvento/TipoEventoAdd";
+import TipoEventoEdit from "./components/Pages/TipoEvento/TipoEventoEdit";
+import ClienteList from "./components/Pages/Clientes/ClienteList";
+import ClienteAdd from "./components/Pages/Clientes/ClienteAdd";
+import ClienteEdit from "./components/Pages/Clientes/ClienteEdit";
 
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
@@ -317,10 +321,15 @@ export default function App() {
         <Route path="/TareaTipoAdd" element={<TareaTipoAdd />} />
         <Route path="/TareaTipo/TareaTipoEdit/:id" element={<TareaTipoEdit />} />
 
-        <Route path="/TipoEventoEdit/:id" element={<TipoEventoList />} />
+        <Route path="/TipoEventoEdit/:id" element={<TipoEventoEdit />} />
         <Route path="/TipoEventoAdd" element={<TipoEventoAdd />} />
         <Route path="/TipoEvento" element={<TipoEventoList />} />
         <Route path="/TipoEventoVolver" element={<TipoEventoList />} />
+
+        <Route path="/ClienteEdit/:id" element={<ClienteEdit />} />
+        <Route path="/ClienteAdd" element={<ClienteAdd />} />
+        <Route path="/Cliente" element={<ClienteList />} />
+        <Route path="/ClienteVolver" element={<ClienteList />} />
 
 {/* 
 

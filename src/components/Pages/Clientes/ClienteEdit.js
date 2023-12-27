@@ -1,4 +1,4 @@
-// EditarTipoEvento.js
+// EditarCliente.js
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -11,103 +11,115 @@ import MDBox from "../../controls/MDBox";
 import MDTypography from "../../controls/MDTypography";
 import MDInput from "../../controls/MDInput";
 import { Save } from "react-bootstrap-icons";
-import { ExitToApp } from "@mui/icons-material";
+import { Email, ExitToApp } from "@mui/icons-material";
 import MDButton from "../../controls/MDButton";
 import { Alert, AlertTitle, Autocomplete, Checkbox, TextField } from "@mui/material";
 import bgImage from "../../../assets/images/bg-sign-up-cover.jpeg";
 import { date } from "yup";
+import SituacionImpositiva from "../../Utils/SituacionImpositiva";
 
-const TipoEventoEdit = () => {
-    const { id } = useParams(); // Obtener el parámetro de la URL (el ID del TipoEvento a editar)
-    const [TipoEvento, setTipoEvento] = useState(null);
-    const [idEventoTipo, setidEventoTipo] = useState("");
+const ClienteEdit = () => {
+    const { id } = useParams(); // Obtener el parámetro de la URL (el ID del Cliente a editar)
+    const [Cliente, setCliente] = useState(null);
+    const [idCliente, setidCliente] = useState("");
     const [activo, setActivo] = useState(false);
     const [elements, setElements] = useState(false);
-    const [descripcion, setDescripcion] = useState("");
+    const [observaciones, setObservaciones] = useState("");
+    const [tipoIVA, setTipoIva] = useState(0);
+    const [telefono, setTelefono] = useState("");
+    const [cuit, setCuit] = useState("");
+    const [nombre, setNombre] = useState("");
+    const [contacto, setContacto] = useState("");
+    const [email, setEmail] = useState("");
     const [nombreboton, setnombreboton] = useState("Cancelar");
     const [mensaje, setMensaje] = useState("");
     const history = useNavigate();
     const [grabando, setGrabando] = useState(false);
     const [exito, setExito] = useState(false);
     const [selectedValue, setSelectedValue] = useState('');
-    const [idTareaEstado, setIdTareaEstado] = useState(0);
+
     const [entityData, setEntityData] = useState(null);
     const handleVolver = () => {
-        history("/TipoEventoVolver"); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
+        history("/ClienteVolver"); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
     };
 
     useEffect(() => {
-        setidEventoTipo(id);
-        // Aquí realizas la llamada a tu API para obtener el TipoEvento específico por su ID
-        const GetTipoEvento = async () => {
+        setidCliente(id);
+        // Aquí realizas la llamada a tu API para obtener el Cliente específico por su ID
+        const GetCliente = async () => {
             try {
-                console.log("GetTipoEvento");
-                const reqTipoEvento = {
-                    idEventoTipo: id
+                console.log("GetCliente");
+                const reqCliente = {
+                    idCliente: id
                 };
 
-                const response = await axios.post(API_URL + `/EventoTipoGetByID`, reqTipoEvento, {
+                const response = await axios.post(API_URL + `/ClienteGetByID`, reqCliente, {
                     headers: {
                         "Content-Type": "application/json"
                     }
                 });
 
                 const data = response.data;
-                setTipoEvento(data);
-                setDescripcion(data.descripcion);
+                setCliente(data);
+                setCuit(data.cuit);
+                setNombre(data.nombre);
+                setTelefono(data.telefono);
+                setEmail(data.email);
+                setObservaciones(data.observaciones);
+                setTipoIva(data.tipoIVA);
                 setActivo(data.activo);
-                setIdTareaEstado(data.idTareaEstado);
+                setContacto(data.contacto);
 
 
             } catch (error) {
                 console.error("Error:", error);
             }
         };
-        GetTipoEvento();
+        GetCliente();
     }, [id]);
 
     useEffect(() => {
 
         const GetEstadosTareas = async () => {
-            if (TipoEvento) {
-                console.log("GetEstadosTareas");
-                const response = await axios.post(API_URL + "/TareaEstadoListar", {
-                    headers: {
-                        accept: "application/json",
-                    },
-                });
+            if (Cliente) {
+                const situacionesImpositivas = Object.values(SituacionImpositiva);
 
-                setElements(response.data);
+                setElements(situacionesImpositivas);
 
-                const defaultValueId = idTareaEstado; // ID del elemento que deseas seleccionar por defecto
-                const defaultValue = response.data.find(item => item.idTareaEstado === defaultValueId);
+                const defaultValueId = tipoIVA; // ID del elemento que deseas seleccionar por defecto
+                const defaultValue = situacionesImpositivas.find(item => item.valor === defaultValueId);
 
                 setSelectedValue(defaultValue);
 
-                // const comboOptions = entityData.map(item => ({
-                //     idTareaEstado: item.idTareaEstado,
-                //     descripcion: item.descripcion,
-                //   }));
-
-                //   // Actualizar el estado del combo con los datos obtenidos
-                //   setComboData(comboOptions);
-
-
-
             }
         }; GetEstadosTareas();
-    }, [TipoEvento]);
+    }, [Cliente]);
     const handleSubmit = async (event) => {
 
         try {
 
-            if (descripcion === '') {
-                setMensaje("El campo Descripcion es obligatorio");
+            if (nombre === '') {
+                setMensaje("El campo Nombre es obligatorio");
                 setExito(false);
                 return;
             }
-            if (idTareaEstado === 0) {
-                setMensaje("El campo Descripcion es obligatorio");
+            if (cuit === '') {
+                setMensaje("El campo Cuit es obligatorio");
+                setExito(false);
+                return;
+            }
+            if (telefono === '') {
+                setMensaje("El campo Telefono es obligatorio");
+                setExito(false);
+                return;
+            }
+            if (contacto === '') {
+                setMensaje("El campo Contacto es obligatorio");
+                setExito(false);
+                return;
+            }
+            if (tipoIVA === 0) {
+                setMensaje("El campo Tipo de Iva es obligatorio");
                 setExito(false);
                 return;
             }
@@ -115,20 +127,17 @@ const TipoEventoEdit = () => {
             setnombreboton("Volver");
             setExito(true);
             setMensaje('');
-            // Aquí realizas la llamada a tu API para actualizar el TipoEvento con los nuevos datos
-            console.log("idEventoTipo prop:" + idEventoTipo);
-            console.log("descripcion prop:" + descripcion);
-            console.log("idTareaEstado prop:" + idTareaEstado);
-            console.log("activo prop:" + activo);
-            console.log("TipoEvento prop:" + TipoEvento);
-            console.log("TipoEvento prop:" + TipoEvento.idEventoTipo);
-            const response = await fetch(API_URL + `/EventoTipoModificacion`, {
+            // Aquí realizas la llamada a tu API para actualizar el Cliente con los nuevos datos
+
+            const response = await fetch(API_URL + `/ClienteModificacion`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ idEventoTipo, descripcion, idTareaEstado, activo }),
+                body: JSON.stringify({ idCliente, nombre, contacto, telefono, email, cuit, tipoIVA, observaciones, activo }),
             });
+
+
             const res = await response.json();
 
             if (res.rdoAccion) {
@@ -150,19 +159,19 @@ const TipoEventoEdit = () => {
         }
     };
     const handleAutocompleteChange = (event, value) => {
+        console.log("tipoIVA " + value)
         setSelectedValue(value);
-        setIdTareaEstado(value.idTareaEstado);
+        setTipoIva(value.valor);
     };
-
-    if (!TipoEvento) {
+    if (!Cliente) {
 
         return <BasicLayout image={bgImage}>
             <Card>
                 <MDBox
                     variant="gradient"
-                    bgColor="info"
+                    bgColor="secondary"
                     borderRadius="lg"
-                    coloredShadow="success"
+                    coloredShadow="secondary"
                     mx={2}
                     mt={-3}
                     p={3}
@@ -183,9 +192,9 @@ const TipoEventoEdit = () => {
             <Card>
                 <MDBox
                     variant="gradient"
-                    bgColor="primary"
+                    bgColor="secondary"
                     borderRadius="lg"
-                    coloredShadow="primary"
+                    coloredShadow="secondary"
                     mx={2}
                     mt={-3}
                     p={3}
@@ -193,10 +202,10 @@ const TipoEventoEdit = () => {
                     textAlign="center"
                 >
                     <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-                        Editar Tipo de Evento
+                        Editar Cliente
                     </MDTypography>
                     <MDTypography display="block" variant="button" color="white" my={1}>
-                        Un Tipo de Evento especifica una accion o estado en que se encuentra la tarea
+                        Un Cliente es una entidad que origina el pedido de una tarea
                     </MDTypography>
                 </MDBox>
                 <MDBox pt={4} pb={3} px={3}>
@@ -205,12 +214,61 @@ const TipoEventoEdit = () => {
                         <MDBox mb={2}>
                             <MDInput
                                 type="text"
-                                name="descripcion"
+                                name="nombre"
                                 required
-                                label="Descripcion"
+                                label="Razon Social"
                                 variant="standard"
-                                value={descripcion}
-                                onChange={(e) => setDescripcion(e.target.value)}
+                                value={nombre}
+                                onChange={(e) => setNombre(e.target.value)}
+                                fullWidth
+                            />
+                        </MDBox>
+                        <MDBox mb={2}>
+                            <MDInput
+                                type="text"
+                                name="contacto"
+                                required
+                                label="Contacto"
+                                variant="standard"
+                                value={contacto}
+                                onChange={(e) => setContacto(e.target.value)}
+                                fullWidth
+                            />
+                        </MDBox>
+                        <MDBox mb={2}>
+                            <MDInput
+                                type="text"
+                                name="cuit"
+                                required
+                                label="Cuit"
+                                variant="standard"
+                                value={cuit}
+                                onChange={(e) => setCuit(e.target.value)}
+                                fullWidth
+                            />
+                        </MDBox>
+                        <MDBox mb={2}>
+                            <MDInput
+                                type="text"
+                                name="telefono"
+                                required
+                                label="Telefono"
+                                variant="standard"
+                                value={telefono}
+                                onChange={(e) => setTelefono(e.target.value)}
+                                fullWidth
+                            />
+                        </MDBox>
+                        <MDBox mb={2}>
+                            <MDInput
+                                type="text"
+                                name="email"
+                                required
+                                label="Email"
+                                variant="standard"
+                                value={email}
+                                endIcon={< Email />  }                             
+                                 onChange={(e) => setEmail(e.target.value)}
                                 fullWidth
                             />
                         </MDBox>
@@ -227,10 +285,23 @@ const TipoEventoEdit = () => {
                                 renderInput={(params) => (
                                     <TextField
                                         {...params}
-                                        label="Seleccione Estado de Tarea"
+                                        label="Seleccione Tipo de Iva"
                                         variant="outlined"
                                     />
                                 )}
+                            />
+                        </MDBox>
+                        <MDBox mb={2}>
+                            <MDInput
+                                type="text"
+                                name="observaciones"
+                                required
+                                label="Observaciones"
+                                variant="standard"
+                                value={observaciones}
+                                endIcon={< Email />  }                             
+                                 onChange={(e) => setObservaciones(e.target.value)}
+                                fullWidth
                             />
                         </MDBox>
                         <MDBox mb={2}>
@@ -257,7 +328,7 @@ const TipoEventoEdit = () => {
                                     handleSubmit();
                                 }}
                                 variant="gradient"
-                                color="primary"
+                                color="secondary"
                                 endIcon={<Save />}
                                 disabled={grabando}
                                 fullWidth
@@ -271,7 +342,7 @@ const TipoEventoEdit = () => {
                                     handleVolver();
                                 }}
                                 variant="gradient"
-                                color="primary"
+                                color="secondary"
                                 endIcon={<ExitToApp />}
 
                                 fullWidth
@@ -303,4 +374,5 @@ const TipoEventoEdit = () => {
     );
 };
 
-export default TipoEventoEdit;
+export default ClienteEdit;
+

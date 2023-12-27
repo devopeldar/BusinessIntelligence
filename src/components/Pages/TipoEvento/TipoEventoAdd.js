@@ -79,12 +79,7 @@ const TipoEventoAdd = () => {
 
   useEffect(() => {
     const GetEstadosTareas = async () => {
-    //   const options = [
-    //     { label: "Opción 1", idTareaEstado: "1", activo: true },
-    //     { label: "Opción 2", idTareaEstado: "2", activo: false },
-    //     { label: "Opción 3", idTareaEstado: "3", activo: true },
-    //     // Agrega más opciones según sea necesario
-    //   ];
+ 
     const response = await axios.post(API_URL + "/TareaEstadoListar", {
         headers: {
           accept: "application/json",
@@ -102,7 +97,6 @@ const TipoEventoAdd = () => {
 
   const handleAutocompleteChange = (event, value) => {
     setSelectedValue(value);
-    console.log(value); // Muestra el valor seleccionado actualmente
   };
 
 

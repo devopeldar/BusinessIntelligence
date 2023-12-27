@@ -1,14 +1,13 @@
-import Clientes from "./components/Pages/Clientes";
 import Tarea from "./components/Pages/Tarea";
-
 import { KeyFill, People, Person } from "react-bootstrap-icons";
 import CambiarContrasenia from "./components/authentication/CambiarContrasenia";
 import Perfiles from "./components/authentication/Perfil/Perfiles";
-import { Event, Task, TaskAlt } from "@mui/icons-material";
+import { Event, EventAvailable, EventBusy, EventSeat, Task, TaskAlt } from "@mui/icons-material";
 import TareaTipoList from "./components/Pages/Tareas/TareaTipo/TareaTipoList";
 import TareaEstadoList from "./components/Pages/Tareas/TareasEstado/TareaEstadoList";
 import DepartamentoList from "./components/Pages/Departamentos/DepartamentoList";
 import TipoEventoList from "./components/Pages/TipoEvento/TipoEventoListar";
+import ClienteList from "./components/Pages/Clientes/ClienteList";
 
 const routes = [
   {
@@ -60,8 +59,8 @@ const routes = [
     type: "collapse",
     name: "Tipos de Evento",
     key: "tiposdeeventos",
-    icon: <People />,
-    route: "components/Pages/Clientes",
+    icon: <EventAvailable/>,
+    route: "components/Pages/TipoEvento",
     component: <TipoEventoList />,
   },
   {
@@ -76,7 +75,7 @@ const routes = [
     key: "mantenimientoclientes",
     icon: <People />,
     route: "components/Pages/Clientes",
-    component: <Clientes />,
+    component: <ClienteList />,
   },
   {
     type: "title",
