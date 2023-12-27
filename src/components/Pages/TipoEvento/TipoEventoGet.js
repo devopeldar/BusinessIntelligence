@@ -29,7 +29,7 @@ export default function TipoEventoGet() {
                     descripcion: EventoTipo.descripcion,
                     activo: EventoTipo.activo,
                     idTareaEstado: EventoTipo.idTareaEstado,
-                    estadotareadescripcion: EventoTipo.estadotareadescripcion,
+                    estadotareadescripcion: EventoTipo.tareaEstado,
 
                 }));
 
@@ -50,7 +50,7 @@ export default function TipoEventoGet() {
             { Header: "Descripcion", accessor: "descripcion", width: "45%", align: "left" },
             { Header: "Estado Tarea", accessor: "estadotareadescripcion", align: "center" },
             { Header: "Activo", accessor: "activo", align: "center" },
-            { Header: "idTareaEstado", accessor: "idTareaEstado", align: "center" },
+            // { Header: "idTareaEstado", accessor: "idTareaEstado", align: "center"},
             { Header: "Acciones", accessor: "action", align: "center" },
         ],
         rows: rows.map((EventoTipo) => ({
@@ -88,9 +88,9 @@ export default function TipoEventoGet() {
                     {EventoTipo.estadotareadescripcion}
                 </MDTypography>
             ),
-            idTareaEstado: (
-                EventoTipo.idTareaEstado 
-            ),
+            // idTareaEstado: (
+            //     EventoTipo.idTareaEstado 
+            // ),
             activo: (
                 <MDBox ml={-1}>
                     {EventoTipo.activo ? (
@@ -112,7 +112,7 @@ export default function TipoEventoGet() {
             ),
             action: (
                 <MDTypography variant="caption" color="text" fontWeight="medium">
-                    <Link to={`../TipoEventoEdit/${EventoTipo.idTipoEvento}`}>
+                    <Link to={`../TipoEventoEdit/${EventoTipo.idEventoTipo}`}>
                         <MDButton variant="text" color="dark">
                             <PencilSquare color="blue" />
                         </MDButton>

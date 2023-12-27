@@ -86,6 +86,9 @@ import DepartamentoGet from "./components/Pages/Departamentos/DepartamentoGet";
 import DepartamentoList from "./components/Pages/Departamentos/DepartamentoList";
 import DepartamentoAdd from "./components/Pages/Departamentos/DepartamentoAdd";
 import DepartamentoEdit from "./components/Pages/Departamentos/DepartamentoEdit";
+import TipoEventoGet from "./components/Pages/TipoEvento/TipoEventoGet";
+import TipoEventoList from "./components/Pages/TipoEvento/TipoEventoListar";
+import TipoEventoAdd from "./components/Pages/TipoEvento/TipoEventoAdd";
 
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
@@ -313,7 +316,15 @@ export default function App() {
         <Route path="/TareaTipoVolver" element={<TareaTipoList />} />
         <Route path="/TareaTipoAdd" element={<TareaTipoAdd />} />
         <Route path="/TareaTipo/TareaTipoEdit/:id" element={<TareaTipoEdit />} />
+
+        <Route path="/TipoEventoEdit/:id" element={<TipoEventoList />} />
+        <Route path="/TipoEventoAdd" element={<TipoEventoAdd />} />
+        <Route path="/TipoEvento" element={<TipoEventoList />} />
+        <Route path="/TipoEventoVolver" element={<TipoEventoList />} />
+
 {/* 
+
+
         <Route path="/TipoTareas" element={<TareaTipoList />} />
         <Route path="/EstadoTareas" element={<TareaEstadoList />} /> */}
       </Routes>
