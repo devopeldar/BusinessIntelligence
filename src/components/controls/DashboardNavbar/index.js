@@ -12,15 +12,9 @@ import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
-import Icon from "@mui/material/Icon";
 
 // Material Dashboard 2 React components
 import MDBox from "../MDBox";
-import MDInput from "../MDInput";
-
-// Material Dashboard 2 React example components
-import Breadcrumbs from "../Breadcrumbs";
-import NotificationItem from "../Items/NotificationItem";
 
 // Custom styles for DashboardNavbar
 import {

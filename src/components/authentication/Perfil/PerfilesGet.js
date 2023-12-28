@@ -4,13 +4,11 @@ import API_URL from "../../../config";
 import MDTypography from "../../controls/MDTypography";
 import MDBox from "../../controls/MDBox";
 import MDBadge from "../../controls/MDBadge";
-import { DarkMode, Edit } from "@mui/icons-material";
 import MDButton from "../../controls/MDButton";
 import { PencilSquare } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
 
 export default function PerfilesGet() {
-  const [perfiles, setPerfiles] = useState([]);
   const [rows, setRows] = useState([]);
   const [error, setError] = useState([]);
   useEffect(() => {
@@ -21,8 +19,6 @@ export default function PerfilesGet() {
             accept: "application/json",
           },
         });
-        console.log("response " + response.json);
-        setPerfiles(response.data);
         const data = response.data.map((perfil) => ({
           idPerfil: perfil.idPerfil, // Reemplaza 'id' por el nombre de la propiedad correspondiente en tus datos
           nombre: perfil.nombre, // Reemplaza 'nombre' por el nombre de la propiedad correspondiente en tus datos
@@ -34,12 +30,12 @@ export default function PerfilesGet() {
       } catch (ex) {
         setError(ex);
 
-        console.log(ex);
+        console.log(error);
       }
     };
 
     fetchData();
-  }, []);
+  }, [error]);
 
   const Nombre = ({ title, description }) => (
     <MDBox lineHeight={1} textAlign="left">

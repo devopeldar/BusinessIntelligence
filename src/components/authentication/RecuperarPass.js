@@ -5,13 +5,12 @@ import { Alert, AlertTitle, Card } from "@mui/material";
 import MDBox from "../controls/MDBox";
 import MDTypography from "../controls/MDTypography";
 import MDButton from "../controls/MDButton";
-import People from "@mui/icons-material/People";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import bgImage from "../../assets/images/bg-sign-up-cover.jpeg";
 import { KeyFill } from "react-bootstrap-icons";
 import MDInput from "../controls/MDInput";
 import API_URL from "../../config";
-import * as yup from "yup";
+//import * as yup from "yup";
 const RecuperarPass = () => {
   const navigate = useNavigate();
 
@@ -31,13 +30,13 @@ const RecuperarPass = () => {
       [name]: value,
     });
   };
-  const validationSchema = yup.object().shape({
+  // const validationSchema = yup.object().shape({
    
-    email: yup
-      .string()
-      .email("Ingrese un correo electrónico válido")
-      .required("El correo electrónico es requerido"),
-  });
+  //   email: yup
+  //     .string()
+  //     .email("Ingrese un correo electrónico válido")
+  //     .required("El correo electrónico es requerido"),
+  // });
 
   const handleSubmit = async (data) => {
     // validationSchema
