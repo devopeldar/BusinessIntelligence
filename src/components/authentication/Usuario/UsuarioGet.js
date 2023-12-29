@@ -89,7 +89,7 @@ export default function UsuarioGet() {
         )}
       </MDTypography>
 
-      <MDTypography variant="caption" display="block" color="dark" fontWeight="bold">
+      <MDTypography variant="caption" display="block" color={tokenExpirado ? "error":"dark"} fontWeight="bold">
         Token Expirado:
         {tokenExpirado ? (
           <Cancel color="error" /> // Icono para intentos fallidos
@@ -98,12 +98,12 @@ export default function UsuarioGet() {
         )}
       </MDTypography>
 
-      <MDTypography variant="caption" display="block" color="dark" fontWeight="bold">
+      <MDTypography variant="caption" display="block" color={loginCambiarClave ? "error":"dark"} fontWeight="bold">
         Debe Cambiar Contraseña:
         {loginCambiarClave ? (
           <Cancel color="error" /> // Icono para intentos fallidos
         ) : (
-          <Check2All  fontWeight="bold" color="success" /> // Icono para sin intentos fallidos
+          <CheckCircle  fontWeight="bold" color="success" /> // Icono para sin intentos fallidos
         )}
       </MDTypography>
 
