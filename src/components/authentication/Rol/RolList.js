@@ -1,26 +1,22 @@
-import React from "react";
-import "bootstrap/dist/css/bootstrap.min.css"; // Importa el archivo CSS de Bootstrap
-
-import MDBox from "../../controls/MDBox";
-import MDTypography from "../../controls/MDTypography";
-import { Grid } from "@mui/material";
-import { Card } from "react-bootstrap";
-import PerfilesGet from "./PerfilesGet";
-import DashboardLayout from "../../controls/DashboardLayout";
-import DashboardNavbar from "../../controls/DashboardNavbar";
-import DataTable from "../../controls/Tables/DataTable";
-
-import MDButton from "../../controls/MDButton";
+import React from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import DashboardLayout from '../../controls/DashboardLayout';
+import DashboardNavbar from '../../controls/DashboardNavbar';
+import MDBox from '../../controls/MDBox';
+import { Grid } from '@mui/material';
+import { Card } from 'react-bootstrap';
+import MDTypography from '../../controls/MDTypography';
+import MDButton from '../../controls/MDButton';
+import DataTable from '../../controls/Tables/DataTable';
+import { BuildingFillAdd } from 'react-bootstrap-icons';
+import RolGet from './RolGet';
 import { useNavigate } from 'react-router-dom';
-import { PersonFillAdd } from "react-bootstrap-icons";
 
-
-
-function Perfiles() {
-  const { columns, rows } = PerfilesGet();
+function RolList() {
+  const { columns, rows } = RolGet();
   const history = useNavigate();
   const handleAdd = () => {
-    history('/Perfil/PerfilAdd'); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
+    history('/RolAdd'); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
   };
 
   return (
@@ -43,7 +39,7 @@ function Perfiles() {
                 coloredShadow="warning"
               >
                 <MDTypography variant="h6" color="white">
-                  Perfiles
+                  Roles
                  
                 </MDTypography>
               </MDBox>
@@ -55,7 +51,7 @@ function Perfiles() {
                     }}
                     variant="gradient"
                     color="success"
-                    endIcon={<PersonFillAdd />}
+                    endIcon={<BuildingFillAdd />}
                     text="contained"
                   >
                     Agregar
@@ -67,8 +63,8 @@ function Perfiles() {
                   showTotalEntries={true}
                   canSearch={false}
                   noEndBorder
-                  pagination={{color:"warning", variant:"gradient"}}
                   
+                  pagination={{color:"info", variant:"gradient"}}
                 />
               </MDBox>
             </Card>
@@ -81,4 +77,5 @@ function Perfiles() {
   );
 }
 
-export default Perfiles;
+
+export default RolList;

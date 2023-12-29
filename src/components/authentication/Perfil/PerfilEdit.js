@@ -4,7 +4,6 @@ import { useParams } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import API_URL from "../../../config";
 import { useNavigate } from "react-router-dom";
-import LSButton from "../../controls/Button/LSButton";
 import axios from "axios";
 import BasicLayout from "../../layauots/BasicLayout";
 import { Card } from "react-bootstrap";
@@ -16,7 +15,6 @@ import { ExitToApp } from "@mui/icons-material";
 import MDButton from "../../controls/MDButton";
 import { Alert, AlertTitle, Checkbox } from "@mui/material";
 import bgImage from "../../../assets/images/bg-sign-up-cover.jpeg";
-import MDProgress from "../../controls/MDProgress";
 
 const PerfilEdit = () => {
   const { id } = useParams(); // Obtener el parámetro de la URL (el ID del perfil a editar)

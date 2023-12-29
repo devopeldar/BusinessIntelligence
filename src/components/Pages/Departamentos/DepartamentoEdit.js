@@ -15,14 +15,13 @@ import { ExitToApp } from "@mui/icons-material";
 import MDButton from "../../controls/MDButton";
 import { Alert, AlertTitle, Checkbox } from "@mui/material";
 import bgImage from "../../../assets/images/bg-sign-up-cover.jpeg";
-import * as yup from "yup";
+
 
 const DepartamentoEdit = () => {
     const { id } = useParams(); // Obtener el parámetro de la URL (el ID del Departamento a editar)
     const [Departamento, setDepartamento] = useState(null);
     const [idDepartamento, setidDepartamento] = useState("");
     const [activo, setActivo] = useState(false);
-    const [esEstadoFinal, setEsEstadoFinal] = useState(false);
     const [nombre, setNombre] = useState("");
     const [nombreboton, setnombreboton] = useState("Cancelar");
     const [mensaje, setMensaje] = useState("");

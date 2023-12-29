@@ -11,7 +11,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 
 export default function ClienteGet() {
-  const [tareasestados, setCliente] = useState([]);
+
   const [rows, setRows] = useState([]);
   const [error, setError] = useState([]);
   useEffect(() => {
@@ -23,7 +23,7 @@ export default function ClienteGet() {
           },
         });
 
-        setCliente(response.data);
+     
         const data = response.data.map((Cliente) => ({
             idCliente: Cliente.idCliente,
             nombre: Cliente.nombre,
@@ -41,12 +41,12 @@ export default function ClienteGet() {
       } catch (ex) {
         setError(ex);
 
-        console.log(ex);
+        console.log(error);
       }
     };
 
     fetchData();
-  }, []);
+  }, [error]);
 
   const Nombre = ({ nombre, contacto, email, telefono }) => (
     <MDBox lineHeight={1} textAlign="left">

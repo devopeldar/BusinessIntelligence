@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha'; // Importar el componente ReCAPTCHA
 import 'bootstrap/dist/css/bootstrap.min.css'; // Importar estilos de Bootstrap
 import { Link, useNavigate } from 'react-router-dom';
@@ -63,16 +63,7 @@ const Login = ({ handleLogin }) => {
   };
   
   const handleSubmit = async (data) => {
-    //e.preventDefault();
-
-    // Verificar si el captcha está completado
-    //  if (!captchaValue) {
-    //   alert('Por favor, complete el captcha');
-    //   return;
-    // }
-
-    // Validamos los inputs del formulario
-    // Si son correctos ya podemos enviar el fomulario, actualizar la Interfaz, etc.
+   
     console.log("Datos " + JSON.stringify(formData));
     if (captcha.current.getValue()) {
       console.log('El usuario no es un robot');

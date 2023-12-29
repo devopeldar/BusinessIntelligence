@@ -32,8 +32,6 @@ import {
   setMiniSidenav,
   setOpenConfigurator,
 } from "../../../context";
-import People from "@mui/icons-material/People";
-import { CollectionFill, PeopleFill } from "react-bootstrap-icons";
 import { Home, Settings } from "@mui/icons-material";
 import MDTypography from "../MDTypography";
 
@@ -76,36 +74,36 @@ function DashboardNavbar({ absolute, light, isMini }) {
   const handleCloseMenu = () => setOpenMenu(false);
 
   // Render the notifications menu
-  const renderMenu = () => (
-    <Menu
-      anchorEl={openMenu}
-      anchorReference={null}
-      anchorOrigin={{
-        vertical: "bottom",
-        horizontal: "left",
-      }}
-      open={Boolean(openMenu)}
-      onClose={handleCloseMenu}
-      sx={{ mt: 2 }}
-    >
-      {/* <NotificationItem icon={<Icon>email</Icon>} title="Check new messages" />
-      <NotificationItem icon={<Icon>podcasts</Icon>} title="Manage Podcast sessions" />
-      <NotificationItem icon={<Icon>shopping_cart</Icon>} title="Payment successfully completed" /> */}
-    </Menu>
-  );
+  // const renderMenu = () => (
+  //   <Menu
+  //     anchorEl={openMenu}
+  //     anchorReference={null}
+  //     anchorOrigin={{
+  //       vertical: "bottom",
+  //       horizontal: "left",
+  //     }}
+  //     open={Boolean(openMenu)}
+  //     onClose={handleCloseMenu}
+  //     sx={{ mt: 2 }}
+  //   >
+  //     {/* <NotificationItem icon={<Icon>email</Icon>} title="Check new messages" />
+  //     <NotificationItem icon={<Icon>podcasts</Icon>} title="Manage Podcast sessions" />
+  //     <NotificationItem icon={<Icon>shopping_cart</Icon>} title="Payment successfully completed" /> */}
+  //   </Menu>
+  // );
 
   // Styles for the navbar icons
-  const iconsStyle = ({ palette: { dark, white, text }, functions: { rgba } }) => ({
-    color: () => {
-      let colorValue = light || darkMode ? white.main : dark.main;
+  // const iconsStyle = ({ palette: { dark, white, text }, functions: { rgba } }) => ({
+  //   color: () => {
+  //     let colorValue = light || darkMode ? white.main : dark.main;
 
-      if (transparentNavbar && !light) {
-        colorValue = darkMode ? rgba(text.main, 0.6) : text.main;
-      }
+  //     if (transparentNavbar && !light) {
+  //       colorValue = darkMode ? rgba(text.main, 0.6) : text.main;
+  //     }
 
-      return colorValue;
-    },
-  });
+  //     return colorValue;
+  //   },
+  // });
 
   return (
     <AppBar

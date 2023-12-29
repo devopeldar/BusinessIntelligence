@@ -15,7 +15,6 @@ import { Email, ExitToApp } from "@mui/icons-material";
 import MDButton from "../../controls/MDButton";
 import { Alert, AlertTitle, Autocomplete, Checkbox, TextField } from "@mui/material";
 import bgImage from "../../../assets/images/bg-sign-up-cover.jpeg";
-import { date } from "yup";
 import SituacionImpositiva from "../../Utils/SituacionImpositiva";
 
 const ClienteEdit = () => {
@@ -38,7 +37,6 @@ const ClienteEdit = () => {
     const [exito, setExito] = useState(false);
     const [selectedValue, setSelectedValue] = useState('');
 
-    const [entityData, setEntityData] = useState(null);
     const handleVolver = () => {
         history("/ClienteVolver"); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
     };
@@ -93,7 +91,7 @@ const ClienteEdit = () => {
 
             }
         }; GetEstadosTareas();
-    }, [Cliente]);
+    }, [Cliente, tipoIVA]);
     const handleSubmit = async (event) => {
 
         try {

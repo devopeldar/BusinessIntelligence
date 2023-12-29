@@ -10,20 +10,20 @@ import MDTypography from '../../controls/MDTypography';
 import MDButton from '../../controls/MDButton';
 import DataTable from '../../controls/Tables/DataTable';
 import { BuildingFillAdd, FileExcel, FilePdf } from 'react-bootstrap-icons';
-import ClienteGet from './ClienteGet';
+import TareaGet from './TareaGet';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import API_URL from '../../../config';
 import ExcelJS from 'exceljs';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
-function ClienteList() {
-    const { columns, rows } = ClienteGet();
+function TareaList() {
+    const { columns, rows } = TareaGet();
     const history = useNavigate();
-    const [Clientes, setClientes] = useState([]);
+    const [Tareas, setTareas] = useState([]);
     const [espdf, setEsPDF] = useState(false);
     const handleAdd = () => {
-        history('/ClienteAdd'); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
+        history('/TareaAdd'); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
     };
 
     const handlePDF = () => {
@@ -36,9 +36,9 @@ function ClienteList() {
     const generatePDF = (data) => {
         const doc = new jsPDF();
 
-        const columns = ['ID Cliente', 'Nombre', 'Contacto', 'Teléfono', 'Email']; // Ajusta las columnas según tus datos
+        const columns = ['ID Tarea', 'Nombre', 'Contacto', 'Teléfono', 'Email']; // Ajusta las columnas según tus datos
         const rows = data.map((item) => [
-            item.idCliente.toString(),
+            item.idTarea.toString(),
             item.nombre,
             item.contacto,
             item.telefono,
@@ -74,8 +74,8 @@ function ClienteList() {
 
 
     const generateAndDownloadPDF = () => {
-        const pdf = generatePDF(Clientes);
-        pdf.save('ListadoClientes-PDF.pdf'); // Descarga el archivo PDF
+        const pdf = generatePDF(Tareas);
+        pdf.save('ListadoTareas-PDF.pdf'); // Descarga el archivo PDF
     };
 
 
@@ -89,25 +89,14 @@ function ClienteList() {
 
     const fetchData = async () => {
         try {
-            const response = await axios.post(API_URL + "/ClienteListar", {
+            const response = await axios.post(API_URL + "/TareaListar", {
                 headers: {
                     accept: "application/json",
                 },
             });
 
-            setClientes(response.data);
-            // const data = response.data.map((Cliente) => ({
-            //     idCliente: Cliente.idCliente,
-            //     nombre: Cliente.nombre,
-            //     activo: Cliente.activo,
-            //     contacto: Cliente.contacto,
-            //     telefono: Cliente.telefono,
-            //     email: Cliente.email,
-            //     cuit: Cliente.cuit,
-            //     observaciones: Cliente.observaciones,
-            //     tipoIVA: Cliente.tipoIVA,
-            //     descripcionIVA: Cliente.descripcionIVA
-            // }));
+            setTareas(response.data);
+          
             if (espdf === true) {
                 exportToExcel(); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
 
@@ -139,9 +128,9 @@ function ClienteList() {
 
         // Agregar el encabezado a la hoja de cálculo
         worksheet.addRow(headers);
-        console.log("Clientes " + Clientes);
+        console.log("Tareas " + Tareas);
         // Agregar los datos al archivo Excel
-        Clientes.forEach((row) => {
+        Tareas.forEach((row) => {
             const rowData = [
                 row.nombre,
                 row.contacto,
@@ -163,7 +152,7 @@ function ClienteList() {
             // Crear un enlace de descarga para el archivo Excel y hacer clic automáticamente
             const link = document.createElement('a');
             link.href = url;
-            link.setAttribute('download', 'ListadoClientes.xlsx');
+            link.setAttribute('download', 'ListadoTareas.xlsx');
             document.body.appendChild(link);
             link.click();
 
@@ -188,12 +177,12 @@ function ClienteList() {
                                 py={3}
                                 px={2}
                                 variant="gradient"
-                                bgColor="secondary"
+                                bgColor="light"
                                 borderRadius="lg"
-                                coloredShadow="secondary"
+                                coloredShadow="light"
                             >
                                 <MDTypography variant="h6" color="white">
-                                    Clientes
+                                    Tareas
 
                                 </MDTypography>
                             </MDBox>
@@ -246,10 +235,10 @@ function ClienteList() {
                                     </Grid>
                                     <DataTable
                                         table={{ columns, rows }}
-                                        isSorted={true}
+                                        isSorted={false}
                                         entriesPerPage={true}
                                         showTotalEntries={true}
-                                        canSearch={true}
+                                        canSearch={false}
                                         noEndBorder
 
                                         pagination={{ color: "secondary", variant: "gradient" }}
@@ -267,4 +256,4 @@ function ClienteList() {
 }
 
 
-export default ClienteList;
+export default TareaList;

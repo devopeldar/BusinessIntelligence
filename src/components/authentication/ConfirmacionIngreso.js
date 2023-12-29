@@ -3,12 +3,8 @@ import BasicLayout from '../layauots/BasicLayout';
 import { Card } from '@mui/material';
 import MDBox from '../controls/MDBox';
 import MDTypography from '../controls/MDTypography';
-import MDButton from '../controls/MDButton';
-import People from "@mui/icons-material/People";
-import { Link, useNavigate } from 'react-router-dom';
 import bgImage from "../../assets/images/bg-sign-up-cover.jpeg";
 const ConfirmacionIngreso = () => {
-  const navigate = useNavigate();
 
   return (
     <BasicLayout image={bgImage}>

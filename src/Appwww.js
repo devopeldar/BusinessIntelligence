@@ -1,17 +1,3 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
 
 import { useState, useEffect, useMemo } from "react";
 
@@ -19,16 +5,13 @@ import { useState, useEffect, useMemo } from "react";
 import {
   Routes,
   Route,
-  Navigate,
   useLocation,
-  Router,
   useNavigate,
 } from "react-router-dom";
 
 // @mui material components
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-import Icon from "@mui/material/Icon";
 
 // Material Dashboard 2 React components
 import MDBox from "../src/components/controls/MDBox";
@@ -58,14 +41,12 @@ import {
   useMaterialUIController,
   setMiniSidenav,
   setOpenConfigurator,
-  setLayout,
 } from "../src/context";
 
 // Images
 import brandWhite from "../src/assets/images/logo-ct-dark.png";
 import brandDark from "../src/assets/images/logo-ct-dark.png";
 import Login from "./components/authentication/Login";
-import { LayerBackward } from "react-bootstrap-icons";
 import Registrarme from "./components/authentication/Registrarme";
 import Confirmacion from "./components/authentication/Confirmacion";
 import ConfirmacionIngreso from "./components/authentication/ConfirmacionIngreso";
@@ -76,23 +57,23 @@ import PerfilEdit from "./components/authentication/Perfil/PerfilEdit";
 import Perfiles from "./components/authentication/Perfil/Perfiles";
 import TareaTipoList from "./components/Pages/Tareas/TareaTipo/TareaTipoList";
 import TareaEstadoList from "./components/Pages/Tareas/TareasEstado/TareaEstadoList";
-import TareaEstado from "./components/Pages/Tareas/TareasEstado/TareaEstadoList";
 import { Settings } from "@mui/icons-material";
 import TareaTipoAdd from "./components/Pages/Tareas/TareaTipo/TareaTipoAdd";
 import TareaTipoEdit from "./components/Pages/Tareas/TareaTipo/TareaTipoEdit";
 import TareaEstadoAdd from "./components/Pages/Tareas/TareasEstado/TareaEstadoAdd";
 import TareaEstadoEdit from "./components/Pages/Tareas/TareasEstado/TareaEstadoEdit";
-import DepartamentoGet from "./components/Pages/Departamentos/DepartamentoGet";
 import DepartamentoList from "./components/Pages/Departamentos/DepartamentoList";
 import DepartamentoAdd from "./components/Pages/Departamentos/DepartamentoAdd";
 import DepartamentoEdit from "./components/Pages/Departamentos/DepartamentoEdit";
-import TipoEventoGet from "./components/Pages/TipoEvento/TipoEventoGet";
 import TipoEventoList from "./components/Pages/TipoEvento/TipoEventoListar";
 import TipoEventoAdd from "./components/Pages/TipoEvento/TipoEventoAdd";
 import TipoEventoEdit from "./components/Pages/TipoEvento/TipoEventoEdit";
 import ClienteList from "./components/Pages/Clientes/ClienteList";
 import ClienteAdd from "./components/Pages/Clientes/ClienteAdd";
 import ClienteEdit from "./components/Pages/Clientes/ClienteEdit";
+import TareaList from "./components/Pages/Tareas/TareaList";
+import SessionChecker from "./SessionChecker";
+import RolList from "./components/authentication/Rol/RolList";
 
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
@@ -109,14 +90,14 @@ export default function App() {
   const [onMouseEnter, setOnMouseEnter] = useState(false);
   const [rtlCache, setRtlCache] = useState(null);
   const { pathname } = useLocation();
-  const [IsRegister, setIsRegister] = useState(false);
+  // const [IsRegister, setIsRegister] = useState(false);
 
   const initialAuthState = localStorage.getItem("isLoggedIn") === "true";
 
   const isRegistrar = localStorage.getItem("isRegister") === "true";
 
   const [isLoggedIn, setIsLoggedIn] = useState(initialAuthState);
-  const [isRegistrandome, setIsRegistrandome] = useState(isRegistrar);
+  //const [isRegistrandome, setIsRegistrandome] = useState(isRegistrar);
   const navigate = useNavigate();
   // Cache for the rtl
   useMemo(() => {
@@ -143,6 +124,28 @@ export default function App() {
     }
   };
 
+  // useEffect(() => {
+  //   // Cierra todas las ventanas abiertas antes de redirigir al inicio de sesión
+  //   closeAllWindows();
+
+  //   // Redirige al usuario a la página de inicio de sesión después de 2 segundos (como ejemplo)
+  //   const timeout = setTimeout(() => {
+  //     navigate('/Login'); // Reemplaza '/login' con la ruta real de tu página de inicio de sesión
+  //   }, 2000);
+
+  //   return () => clearTimeout(timeout);
+  // }, [navigate]);
+
+  // // Función para cerrar todas las ventanas abiertas
+  // const closeAllWindows = () => {
+  //   const windows = Array.from(window.parent.frames);
+  //   windows.forEach((win) => {
+  //     if (win !== window && !win.closed) {
+  //       win.close();
+  //     }
+  //   });
+  // };
+
   const handleLogin = () => {
     setIsLoggedIn(true);
     console.log("handleLogin");
@@ -162,18 +165,18 @@ export default function App() {
     console.log(isLoggedIn);
   }, [isLoggedIn]);
 
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-    setIsRegister(false);
-    console.log("handleLoginaaa");
-  };
+  // const handleLogout = () => {
+  //   setIsLoggedIn(false);
+  //   setIsRegister(false);
+  //   console.log("handleLoginaaa");
+  // };
 
-  const handleRegister = () => {
-    // Lógica para registro exitoso
-    setIsLoggedIn(false);
-    setIsRegister(true);
-    console.log("handleLogin88888");
-  };
+  // const handleRegister = () => {
+  //   // Lógica para registro exitoso
+  //   setIsLoggedIn(false);
+  //   setIsRegister(true);
+  //   console.log("handleLogin88888");
+  // };
 
   // Change the openConfigurator state
   const handleConfiguratorOpen = () =>
@@ -231,68 +234,19 @@ export default function App() {
       {/* <Icon fontSize="small" color="inherit">
         settings
       </Icon> */}
-      <Settings/>
+      <Settings />
     </MDBox>
   );
 
-  return direction === "rtl" ? (
-    <CacheProvider value={rtlCache}>
-    
-      <ThemeProvider theme={darkMode ? themeDarkRTL : themeRTL}>
-        <CssBaseline />
-        {isLoggedIn && isRegistrar ? (
-          <>
-            {layout === "page" && (
-              <>
-                <Sidenav
-                  color={sidenavColor}
-                  brand={
-                    (transparentSidenav && !darkMode) || whiteSidenav
-                      ? brandDark
-                      : brandWhite
-                  }
-                  brandName="Task Manager"
-                  routes={routes}
-                  onMouseEnter={handleOnMouseEnter}
-                  onMouseLeave={handleOnMouseLeave}
-                />
-                <Configurator />
-                {configsButton}
-              </>
-            )}
-            {layout === "vr" && <Configurator />}
-            <Routes>
-              {getRoutes(routes)}
-              <Route
-                path="/ConfirmacionIngreso"
-                element={<ConfirmacionIngreso />}
-              />
-              <Route path="/Confirmacion" element={<Confirmacion />} />
-              <Route path="/" element={<Login handleLogin={handleLogin} />} />
-              <Route path="*" element={<Login handleLogin={handleLogin} />} />
-              <Route path="/Registrarme" element={<Registrarme />} />
-              <Route path="/RecuperarPass" element={<RecuperarPass />} />
-              <Route
-                path="/ConfirmacionRecuperoPass"
-                element={<ConfirmacionRecuperoPass />}
-              />
-              <Route path="/Perfil/PerfilAdd" element={<PerfilAdd />} />
-              <Route path="/Perfil/PerfilEdit/:id" element={<PerfilEdit />} />
-              <Route path="/Perfil/Perfiles" element={<Perfiles />} />
-            </Routes>
-          </>
-        ) : (
-          // Renderiza el componente de inicio de sesión solo si el usuario no está autenticado
-          <Login handleLogin={handleLogin} />
-        )}
-      </ThemeProvider>
-    </CacheProvider>
-  ) : (
+  return (
     <ThemeProvider theme={darkMode ? themeDark : theme}>
       <CssBaseline />
 
+      <SessionChecker />
+
       <Routes>
         {getRoutes(routes)}
+
         <Route path="/ConfirmacionIngreso" element={<ConfirmacionIngreso />} />
         <Route path="/Confirmacion" element={<Confirmacion />} />
         <Route path="/" element={<Login handleLogin={handleLogin} />} />
@@ -331,7 +285,16 @@ export default function App() {
         <Route path="/Cliente" element={<ClienteList />} />
         <Route path="/ClienteVolver" element={<ClienteList />} />
 
-{/* 
+        <Route path="/TareaEdit/:id" element={<TareaList />} />
+        <Route path="/TareaAdd" element={<TareaList />} />
+        <Route path="/Tarea" element={<TareaList />} />
+        <Route path="/TareaVolver" element={<TareaList />} />
+
+        <Route path="/RolEdit/:id" element={<RolList />} />
+        <Route path="/RolAdd" element={<RolList />} />
+        <Route path="/Rol" element={<RolList />} />
+        <Route path="/RolVolver" element={<RolList />} />
+        {/* 
 
 
         <Route path="/TipoTareas" element={<TareaTipoList />} />
@@ -343,29 +306,30 @@ export default function App() {
       {console.log(isRegistrar)}
       {!isLoggedIn && !isRegistrar ? (
         <Login handleLogin={handleLogin} />
-      ) : isRegistrar ? (
-        <Registrarme />
-      ) : (
-        <>
-          {console.log(666666)}
-          <Sidenav
-            color={sidenavColor}
-            brand={
-              (transparentSidenav && !darkMode) || whiteSidenav
-                ? brandDark
-                : brandWhite
-            }
-            brandName="Task Manager"
-            routes={routes}
-            onMouseEnter={handleOnMouseEnter}
-            onMouseLeave={handleOnMouseLeave}
-          />
-          <Configurator />
-          {configsButton}
-          {layout === "vr" && <Configurator />}
-        </>
-      )}
-     
+      ) :
+        isRegistrar ? (
+          <Registrarme />
+        ) : (
+          <>
+            {console.log(666666)}
+            <Sidenav
+              color={sidenavColor}
+              brand={
+                (transparentSidenav && !darkMode) || whiteSidenav
+                  ? brandDark
+                  : brandWhite
+              }
+              brandName="Task Manager"
+              routes={routes}
+              onMouseEnter={handleOnMouseEnter}
+              onMouseLeave={handleOnMouseLeave}
+            />
+            <Configurator />
+            {configsButton}
+            {layout === "vr" && <Configurator />}
+          </>
+        )}
+
     </ThemeProvider>
-  );
-}
+  )
+};

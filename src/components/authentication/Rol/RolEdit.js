@@ -1,4 +1,4 @@
-// EditarTipoEvento.js
+// EditarRol.js
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -13,100 +13,57 @@ import MDInput from "../../controls/MDInput";
 import { Save } from "react-bootstrap-icons";
 import { ExitToApp } from "@mui/icons-material";
 import MDButton from "../../controls/MDButton";
-import { Alert, AlertTitle, Autocomplete, Checkbox, TextField } from "@mui/material";
+import { Alert, AlertTitle, Checkbox } from "@mui/material";
 import bgImage from "../../../assets/images/bg-sign-up-cover.jpeg";
 
-const TipoEventoEdit = () => {
-    const { id } = useParams(); // Obtener el parámetro de la URL (el ID del TipoEvento a editar)
-    const [TipoEvento, setTipoEvento] = useState(null);
-    const [idEventoTipo, setidEventoTipo] = useState("");
+
+const RolEdit = () => {
+    const { id } = useParams(); // Obtener el parámetro de la URL (el ID del Rol a editar)
+    const [Rol, setRol] = useState(null);
+    const [idRol, setidRol] = useState("");
     const [activo, setActivo] = useState(false);
-    const [elements, setElements] = useState(false);
-    const [descripcion, setDescripcion] = useState("");
+    const [descripcion, setNombre] = useState("");
     const [nombreboton, setnombreboton] = useState("Cancelar");
     const [mensaje, setMensaje] = useState("");
     const history = useNavigate();
     const [grabando, setGrabando] = useState(false);
     const [exito, setExito] = useState(false);
-    const [selectedValue, setSelectedValue] = useState('');
-    const [idTareaEstado, setIdTareaEstado] = useState(0);
-
     const handleVolver = () => {
-        history("/TipoEventoVolver"); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
+        history("/RolVolver"); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
     };
 
     useEffect(() => {
-        setidEventoTipo(id);
-        // Aquí realizas la llamada a tu API para obtener el TipoEvento específico por su ID
-        const GetTipoEvento = async () => {
+        setidRol(id);
+        // Aquí realizas la llamada a tu API para obtener el Rol específico por su ID
+        const GetRol = async () => {
             try {
-                console.log("GetTipoEvento");
-                const reqTipoEvento = {
-                    idEventoTipo: id
+                const reqRol = {
+                    idRol: id
                 };
 
-                const response = await axios.post(API_URL + `/EventoTipoGetByID`, reqTipoEvento, {
+                const response = await axios.post(API_URL + `/RolGetByID`, reqRol, {
                     headers: {
                         "Content-Type": "application/json"
                     }
                 });
-
                 const data = response.data;
-                setTipoEvento(data);
-                setDescripcion(data.descripcion);
+                setRol(data);
+                setNombre(data.descripcion);
                 setActivo(data.activo);
-                setIdTareaEstado(data.idTareaEstado);
-
-
             } catch (error) {
                 console.error("Error:", error);
             }
         };
-        GetTipoEvento();
+        GetRol();
     }, [id]);
 
-    useEffect(() => {
 
-        const GetEstadosTareas = async () => {
-            if (TipoEvento) {
-                console.log("GetEstadosTareas");
-                const response = await axios.post(API_URL + "/TareaEstadoListar", {
-                    headers: {
-                        accept: "application/json",
-                    },
-                });
-
-                setElements(response.data);
-
-                const defaultValueId = idTareaEstado; // ID del elemento que deseas seleccionar por defecto
-                const defaultValue = response.data.find(item => item.idTareaEstado === defaultValueId);
-
-                setSelectedValue(defaultValue);
-
-                // const comboOptions = entityData.map(item => ({
-                //     idTareaEstado: item.idTareaEstado,
-                //     descripcion: item.descripcion,
-                //   }));
-
-                //   // Actualizar el estado del combo con los datos obtenidos
-                //   setComboData(comboOptions);
-
-
-
-            }
-        }; GetEstadosTareas();
-    }, [TipoEvento]);
     const handleSubmit = async (event) => {
 
         try {
 
             if (descripcion === '') {
-                setMensaje("El campo Descripcion es obligatorio");
-                setExito(false);
-                return;
-            }
-            if (idTareaEstado === 0) {
-                setMensaje("El campo Descripcion es obligatorio");
+                setMensaje("El campo descripcion es obligatorio");
                 setExito(false);
                 return;
             }
@@ -114,14 +71,13 @@ const TipoEventoEdit = () => {
             setnombreboton("Volver");
             setExito(true);
             setMensaje('');
-            // Aquí realizas la llamada a tu API para actualizar el TipoEvento con los nuevos datos
-
-            const response = await fetch(API_URL + `/EventoTipoModificacion`, {
+            // Aquí realizas la llamada a tu API para actualizar el Rol con los nuevos datos
+            const response = await fetch(API_URL + `/RolModificacion`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ idEventoTipo, descripcion, idTareaEstado, activo }),
+                body: JSON.stringify({ idRol, descripcion, activo }),
             });
             const res = await response.json();
 
@@ -143,33 +99,9 @@ const TipoEventoEdit = () => {
             console.log("Error en la solicitud:" + error);
         }
     };
-    const handleAutocompleteChange = (event, value) => {
-        setSelectedValue(value);
-        setIdTareaEstado(value.idTareaEstado);
-    };
 
-    if (!TipoEvento) {
-
-        return <BasicLayout image={bgImage}>
-            <Card>
-                <MDBox
-                    variant="gradient"
-                    bgColor="info"
-                    borderRadius="lg"
-                    coloredShadow="success"
-                    mx={2}
-                    mt={-3}
-                    p={3}
-                    mb={1}
-                    textAlign="center"
-                >
-                    <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-                        Cargando Tipos de eventos...
-                    </MDTypography>
-                </MDBox>
-
-            </Card>
-        </BasicLayout>
+    if (!Rol) {
+        return <div>Cargando Estado de Tarea...</div>;
     }
 
     return (
@@ -177,9 +109,9 @@ const TipoEventoEdit = () => {
             <Card>
                 <MDBox
                     variant="gradient"
-                    bgColor="primary"
+                    bgColor="warning"
                     borderRadius="lg"
-                    coloredShadow="primary"
+                    coloredShadow="warning"
                     mx={2}
                     mt={-3}
                     p={3}
@@ -187,10 +119,10 @@ const TipoEventoEdit = () => {
                     textAlign="center"
                 >
                     <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-                        Editar Tipo de Evento
+                        Editar Rol
                     </MDTypography>
                     <MDTypography display="block" variant="button" color="white" my={1}>
-                        Un Tipo de Evento especifica una accion o estado en que se encuentra la tarea
+                    Un Rol especifica el papel que tiene un usuario en la tarea que fue asignado
                     </MDTypography>
                 </MDBox>
                 <MDBox pt={4} pb={3} px={3}>
@@ -204,29 +136,11 @@ const TipoEventoEdit = () => {
                                 label="Descripcion"
                                 variant="standard"
                                 value={descripcion}
-                                onChange={(e) => setDescripcion(e.target.value)}
+                                onChange={(e) => setNombre(e.target.value)}
                                 fullWidth
                             />
                         </MDBox>
-                        <MDBox mb={2}>
-                            <Autocomplete
-                                onChange={handleAutocompleteChange}
-                                // onChange={(event, newValue) => {
-                                //     setSelectedValue(newValue);
-                                // }}
-                                options={elements}
-                                value={selectedValue}
-                                getOptionLabel={(option) => option.descripcion}
-                                getOptionDisabled={(option) => option.activo === false}
-                                renderInput={(params) => (
-                                    <TextField
-                                        {...params}
-                                        label="Seleccione Estado de Tarea"
-                                        variant="outlined"
-                                    />
-                                )}
-                            />
-                        </MDBox>
+                       
                         <MDBox mb={2}>
 
                             <Checkbox name="activo"
@@ -251,7 +165,7 @@ const TipoEventoEdit = () => {
                                     handleSubmit();
                                 }}
                                 variant="gradient"
-                                color="primary"
+                                color="warning"
                                 endIcon={<Save />}
                                 disabled={grabando}
                                 fullWidth
@@ -265,7 +179,7 @@ const TipoEventoEdit = () => {
                                     handleVolver();
                                 }}
                                 variant="gradient"
-                                color="primary"
+                                color="warning"
                                 endIcon={<ExitToApp />}
 
                                 fullWidth
@@ -297,4 +211,4 @@ const TipoEventoEdit = () => {
     );
 };
 
-export default TipoEventoEdit;
+export default RolEdit;

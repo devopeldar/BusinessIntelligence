@@ -1,17 +1,3 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
 
 import { useMemo, useEffect, useState } from "react";
 
@@ -37,7 +23,7 @@ import MDPagination from "../../MDPagination";
 // Material Dashboard 2 React example components
 import DataTableHeadCell from "./DataTableHeadCell";
 import DataTableBodyCell from "./DataTableBodyCell";
-import { ChevronBarLeft, ChevronBarRight, Search } from "react-bootstrap-icons";
+import { ChevronBarLeft, ChevronBarRight } from "react-bootstrap-icons";
 
 function DataTable({
   entriesPerPage,
@@ -51,7 +37,7 @@ function DataTable({
   const defaultValue = entriesPerPage.defaultValue ? entriesPerPage.defaultValue : 10;
   const entries = entriesPerPage.entries
     ? entriesPerPage.entries.map((el) => el.toString())
-    : ["5", "10", "15", "20", "25"];
+    : ["10", "20", "25", "50", "100"];
   const columns = useMemo(() => table.columns, [table]);
   const data = useMemo(() => table.rows, [table]);
 
@@ -81,8 +67,14 @@ function DataTable({
   } = tableInstance;
 
   // Set the default value for the entries per page when component mounts
-  useEffect(() => setPageSize(defaultValue || 10), [defaultValue]);
-
+  //useEffect(() => setPageSize(defaultValue || 50), [defaultValue, setPageSize]);
+  useEffect(() => {
+    if (defaultValue) {
+      setPageSize(defaultValue);
+    } else {
+      setPageSize(10); // Establecer 50 como valor predeterminado si no hay un valor por defecto
+    }
+  }, [defaultValue, setPageSize]);
   // Set the entries per page value based on the select value
   const setEntriesPerPage = (value) => setPageSize(value);
 
@@ -275,7 +267,7 @@ function DataTable({
 
 // Setting default values for the props of DataTable
 DataTable.defaultProps = {
-  entriesPerPage: { defaultValue: 10, entries: [5, 10, 15, 20, 25] },
+  entriesPerPage: { defaultValue: 10, entries: [10, 20, 25, 50, 100] },
   canSearch: false,
   showTotalEntries: true,
   pagination: { variant: "gradient", color: "info" },

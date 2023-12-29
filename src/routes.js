@@ -1,13 +1,15 @@
-import Tarea from "./components/Pages/Tarea";
 import { KeyFill, People, Person } from "react-bootstrap-icons";
 import CambiarContrasenia from "./components/authentication/CambiarContrasenia";
 import Perfiles from "./components/authentication/Perfil/Perfiles";
-import { Event, EventAvailable, Task, TaskAlt } from "@mui/icons-material";
+import { AccountBalance, Event, EventAvailable, ManageAccounts, PeopleRounded, PersonSearch, Task, TaskAlt } from "@mui/icons-material";
 import TareaTipoList from "./components/Pages/Tareas/TareaTipo/TareaTipoList";
 import TareaEstadoList from "./components/Pages/Tareas/TareasEstado/TareaEstadoList";
 import DepartamentoList from "./components/Pages/Departamentos/DepartamentoList";
 import TipoEventoList from "./components/Pages/TipoEvento/TipoEventoListar";
 import ClienteList from "./components/Pages/Clientes/ClienteList";
+import TareaList from "./components/Pages/Tareas/TareaList";
+import RolList from "./components/authentication/Rol/RolList";
+import UsuarioList from "./components/authentication/Usuario/UsuarioList";
 
 const routes = [
   {
@@ -23,7 +25,7 @@ const routes = [
     key: "mantenimientotareas",
     icon: <Task />,
     route: "components/Pages/Tarea",
-    component: <Tarea />,
+    component: <TareaList />,
   },
   {
     type: "collapse",
@@ -86,6 +88,15 @@ const routes = [
   },
   {
     type: "collapse",
+    name: "Usuarios",
+    key: "usuarios",
+    title: "Usuarios",
+    icon: <ManageAccounts />,
+    route: "/Usuarios",
+    component: <UsuarioList />,
+  },
+  {
+    type: "collapse",
     name: "Perfiles",
     key: "perfiles",
     title: "Perfiles",
@@ -95,12 +106,21 @@ const routes = [
   },
   {
     type: "collapse",
+    name: "Roles",
+    key: "roles",
+    icon: <PersonSearch />,
+    route: "/Roles",
+    component: <RolList />,
+  },
+  {
+    type: "collapse",
     name: "ChangePassword",
     key: "changepassword",
     icon: <KeyFill />,
     route: "/CambiarContrasenia",
     component: <CambiarContrasenia />,
   },
+ 
   
 ];
 
