@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useMemo } from "react";
 
 // react-router components
@@ -74,8 +73,11 @@ import ClienteEdit from "./components/Pages/Clientes/ClienteEdit";
 import TareaList from "./components/Pages/Tareas/TareaList";
 import SessionChecker from "./SessionChecker";
 import RolList from "./components/authentication/Rol/RolList";
+import ConfirmarCuentaxToken from "./components/authentication/ConfirmarCuentaxToken";
+import ConfirmacionActivacionCuenta from "./components/authentication/ConfirmacionActivacionCuenta";
 
 export default function App() {
+  
   const [controller, dispatch] = useMaterialUIController();
   const {
     miniSidenav,
@@ -93,10 +95,12 @@ export default function App() {
   // const [IsRegister, setIsRegister] = useState(false);
 
   const initialAuthState = localStorage.getItem("isLoggedIn") === "true";
-
+  console.log("initialAuthState " + initialAuthState);
   const isRegistrar = localStorage.getItem("isRegister") === "true";
 
   const [isLoggedIn, setIsLoggedIn] = useState(initialAuthState);
+
+  
   //const [isRegistrandome, setIsRegistrandome] = useState(isRegistrar);
   const navigate = useNavigate();
   // Cache for the rtl
@@ -124,33 +128,8 @@ export default function App() {
     }
   };
 
-  // useEffect(() => {
-  //   // Cierra todas las ventanas abiertas antes de redirigir al inicio de sesión
-  //   closeAllWindows();
-
-  //   // Redirige al usuario a la página de inicio de sesión después de 2 segundos (como ejemplo)
-  //   const timeout = setTimeout(() => {
-  //     navigate('/Login'); // Reemplaza '/login' con la ruta real de tu página de inicio de sesión
-  //   }, 2000);
-
-  //   return () => clearTimeout(timeout);
-  // }, [navigate]);
-
-  // // Función para cerrar todas las ventanas abiertas
-  // const closeAllWindows = () => {
-  //   const windows = Array.from(window.parent.frames);
-  //   windows.forEach((win) => {
-  //     if (win !== window && !win.closed) {
-  //       win.close();
-  //     }
-  //   });
-  // };
-
   const handleLogin = () => {
     setIsLoggedIn(true);
-    console.log("handleLogin");
-    console.log("layout " + layout);
-
     navigate("/ConfirmacionIngreso");
     //const userLogin = JSON.parse(sessionStorage.getItem('UsuarioLogueado'));
     //console.log("userLogin " + userLogin);
@@ -160,9 +139,10 @@ export default function App() {
 
   // Almacena el estado de autenticación en localStorage cuando cambie
   useEffect(() => {
-    localStorage.setItem("isLoggedIn", isLoggedIn);
-    console.log(8888);
-    console.log(isLoggedIn);
+
+      localStorage.setItem("isLoggedIn", isLoggedIn);
+      console.log(8888);
+      console.log(isLoggedIn);
   }, [isLoggedIn]);
 
   // const handleLogout = () => {
@@ -247,6 +227,9 @@ export default function App() {
       <Routes>
         {getRoutes(routes)}
 
+        
+        <Route path="/ConfirmacionActivacionCuenta" element={<ConfirmacionActivacionCuenta />} />
+        <Route path="/ConfirmarCuentaXToken" element={<ConfirmarCuentaxToken />} />
         <Route path="/ConfirmacionIngreso" element={<ConfirmacionIngreso />} />
         <Route path="/Confirmacion" element={<Confirmacion />} />
         <Route path="/" element={<Login handleLogin={handleLogin} />} />
@@ -262,18 +245,27 @@ export default function App() {
         <Route path="/Perfil/Perfiles" element={<Perfiles />} />
 
         <Route path="/DepartamentoAdd" element={<DepartamentoAdd />} />
-        <Route path="/Departamento/DepartamentoEdit/:id" element={<DepartamentoEdit />} />
+        <Route
+          path="/Departamento/DepartamentoEdit/:id"
+          element={<DepartamentoEdit />}
+        />
         <Route path="/Departamentos" element={<DepartamentoList />} />
         <Route path="/DepartamentoVolver" element={<DepartamentoList />} />
 
-        <Route path="/TareaEstado/TareaEstadoEdit/:id" element={<TareaEstadoEdit />} />
+        <Route
+          path="/TareaEstado/TareaEstadoEdit/:id"
+          element={<TareaEstadoEdit />}
+        />
         <Route path="/TareaEstadoAdd" element={<TareaEstadoAdd />} />
         <Route path="/TareaEstado" element={<TareaEstadoList />} />
         <Route path="/TareaEstadoVolver" element={<TareaEstadoList />} />
 
         <Route path="/TareaTipoVolver" element={<TareaTipoList />} />
         <Route path="/TareaTipoAdd" element={<TareaTipoAdd />} />
-        <Route path="/TareaTipo/TareaTipoEdit/:id" element={<TareaTipoEdit />} />
+        <Route
+          path="/TareaTipo/TareaTipoEdit/:id"
+          element={<TareaTipoEdit />}
+        />
 
         <Route path="/TipoEventoEdit/:id" element={<TipoEventoEdit />} />
         <Route path="/TipoEventoAdd" element={<TipoEventoAdd />} />
@@ -301,35 +293,30 @@ export default function App() {
         <Route path="/EstadoTareas" element={<TareaEstadoList />} /> */}
       </Routes>
 
-      {console.log(444)}
-      {console.log(isLoggedIn)}
-      {console.log(isRegistrar)}
       {!isLoggedIn && !isRegistrar ? (
         <Login handleLogin={handleLogin} />
-      ) :
-        isRegistrar ? (
-          <Registrarme />
-        ) : (
-          <>
-            {console.log(666666)}
-            <Sidenav
-              color={sidenavColor}
-              brand={
-                (transparentSidenav && !darkMode) || whiteSidenav
-                  ? brandDark
-                  : brandWhite
-              }
-              brandName="Task Manager"
-              routes={routes}
-              onMouseEnter={handleOnMouseEnter}
-              onMouseLeave={handleOnMouseLeave}
-            />
-            <Configurator />
-            {configsButton}
-            {layout === "vr" && <Configurator />}
-          </>
-        )}
-
+      ) : isRegistrar ? (
+        <Registrarme />
+      ) : (
+        <>
+          {console.log(666666)}
+          <Sidenav
+            color={sidenavColor}
+            brand={
+              (transparentSidenav && !darkMode) || whiteSidenav
+                ? brandDark
+                : brandWhite
+            }
+            brandName="Task Manager"
+            routes={routes}
+            onMouseEnter={handleOnMouseEnter}
+            onMouseLeave={handleOnMouseLeave}
+          />
+          <Configurator />
+          {configsButton}
+          {layout === "vr" && <Configurator />}
+        </>
+      )}
     </ThemeProvider>
-  )
-};
+  );
+}

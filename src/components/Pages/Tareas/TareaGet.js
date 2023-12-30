@@ -135,22 +135,30 @@ export default function TareaGet() {
                 color="dark"
                 fontWeight="bold"
             >
-                Fecha Creacion:  {fechaCreacion}
+                Fecha Creacion:  {formatDate(fechaCreacion)}
             </MDTypography>
-            <MDTypography display="block" variant="caption" color="warning" fontWeight="light">
-                Fecha Inicio:  {fechaInicio}{" "}
+            <MDTypography display="block" variant="caption" color="info" fontWeight="light">
+                Fecha Inicio:  {formatDate(fechaInicio)}{" "}
             </MDTypography>
-            <MDTypography variant="caption" display="block" color="warning" fontWeight="light">
-                Fecha Venc. :{fechaVencimiento}{" "}
-            </MDTypography>
-            <MDTypography variant="caption" display="block" color="warning" fontWeight="light">
-                Fecha Venc. Legal :{fechaVencimientoLegal}{" "}
+            <MDTypography variant="caption" display="block" color="error" fontWeight="light">
+                Fecha Venc. :{formatDate(fechaVencimiento)}{" "}
             </MDTypography>
             <MDTypography variant="caption" display="block" color="warning" fontWeight="light">
-                Fecha Finalizacion :{fechaFinalizacion}{" "}
+                Fecha Venc. Legal :{formatDate(fechaVencimientoLegal)}{" "}
+            </MDTypography>
+            <MDTypography variant="caption" display="block" color="warning" fontWeight="light">
+                Fecha Finalizacion :{formatDate(fechaFinalizacion)}{" "}
             </MDTypography>
         </MDBox>
     );
+
+    const formatDate = (date) => {
+        const formattedDate = new Date(date);
+        const day = formattedDate.getDate().toString().padStart(2, '0');
+        const month = (formattedDate.getMonth() + 1).toString().padStart(2, '0'); // El mes es devuelto de 0 a 11, por eso se le suma 1
+        const year = formattedDate.getFullYear();
+        return `${day}/${month}/${year}`;
+      };
 
     const renderRolesWithLineBreaks = (roles) => {
         console.log("aca")
@@ -173,7 +181,7 @@ export default function TareaGet() {
             { Header: "Descripcion", accessor: "descripcion", width: "25%", align: "left" },
             { Header: "Roles", accessor: "roles", align: "left" },
             { Header: "Fechas", accessor: "fecha", align: "left" },
-            { Header: "Porc. Transcurrido", accessor: "porctranscurrido",width: "55%", align: "left" },
+            { Header: "Porc. Transcurrido", accessor: "porctranscurrido", align: "left" },
             { Header: "Observaciones", accessor: "observaciones", align: "left" },
 
             { Header: "Acciones", accessor: "action", align: "center" },

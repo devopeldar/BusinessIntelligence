@@ -28,7 +28,6 @@ export default function UsuarioGet() {
           emailConfirmado: Usuario.emailConfirmado,
           telefono: Usuario.telefono,
           fechaCambioPass: Usuario.fechaCambioPass,
-          nombre: Usuario.nombre,
           intentosFallidos: Usuario.intentosFallidos,
           activo: Usuario.activo,
           tokenExpirado: Usuario.tokenExpirado,
@@ -98,12 +97,12 @@ export default function UsuarioGet() {
         )}
       </MDTypography>
 
-      <MDTypography variant="caption" display="block" color={loginCambiarClave ? "error":"dark"} fontWeight="bold">
+      <MDTypography variant="caption" display="block" color={loginCambiarClave===true ? "error":"dark"} fontWeight="bold">
         Debe Cambiar Contraseña:
-        {loginCambiarClave ? (
-          <Cancel color="error" /> // Icono para intentos fallidos
+        {loginCambiarClave ===true? (
+          <Cancel color="success" /> // Icono para intentos fallidos
         ) : (
-          <CheckCircle  fontWeight="bold" color="success" /> // Icono para sin intentos fallidos
+          <CheckCircle  fontWeight="bold" color="error" /> // Icono para sin intentos fallidos
         )}
       </MDTypography>
 

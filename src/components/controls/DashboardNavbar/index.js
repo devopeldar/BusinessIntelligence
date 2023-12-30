@@ -163,6 +163,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
               </IconButton>
               {renderMenu()} */}
               <MDTypography display="block" variant="caption" color="text" fontWeight="light">
+              {localStorage.getItem('nameuserlogueado')}<br />
                 {localStorage.getItem('userlogueado')}
               </MDTypography>
             </MDBox>

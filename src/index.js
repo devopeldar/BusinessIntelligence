@@ -24,7 +24,7 @@
 
 import React from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, Route } from "react-router-dom";
 import App from "./Appwww";
 
 // Material Dashboard 2 React Context Provider
@@ -38,6 +38,7 @@ root.render(
     <BrowserRouter>
       <MaterialUIControllerProvider>
         <App />
+      
       </MaterialUIControllerProvider>
       {/* <Route path="" component={ <Confirmacion />} /> */}
     </BrowserRouter>

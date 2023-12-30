@@ -89,10 +89,11 @@ const Login = ({ handleLogin }) => {
       });
 
       const res = await response.json();
-
       if (res.rdoAccion) {
         
         localStorage.setItem('userlogueado', res.email);
+        localStorage.setItem('nameuserlogueado', res.nombre);
+        localStorage.setItem('iduserlogueado', res.idUsuario);
         //Aca ANALIZAR SI LoginCambiarClave = true  DEBO IR A LA PAGINA DE CAMBIAR CONTRASEÑA
         if(res.loginCambiarClave)
         {
@@ -197,6 +198,24 @@ const Login = ({ handleLogin }) => {
                   }}
                 >
                   aquí
+                </MDTypography>
+              </MDTypography>
+            </MDBox>
+            <MDBox mt={3} mb={1} textAlign="center">
+              <MDTypography variant="button" color="text">
+                ¿Ya te Registraste y Necesitas activar tu cuenta?  {" "}
+                <MDTypography
+                  component={Link}
+                  to="/ConfirmarCuentaXToken"
+                  variant="button"
+                  color="info"
+                  fontWeight="medium"
+                  textGradient
+                  // onClick={() => {
+                  //   handleCuentaXToken();
+                  // }}
+                >
+                  Activa tu cuenta
                 </MDTypography>
               </MDTypography>
             </MDBox>

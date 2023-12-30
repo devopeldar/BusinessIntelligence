@@ -177,9 +177,9 @@ function TareaList() {
                                 py={3}
                                 px={2}
                                 variant="gradient"
-                                bgColor="light"
+                                bgColor="info"
                                 borderRadius="lg"
-                                coloredShadow="light"
+                                coloredShadow="info"
                             >
                                 <MDTypography variant="h6" color="white">
                                     Tareas
