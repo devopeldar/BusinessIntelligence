@@ -75,6 +75,9 @@ import SessionChecker from "./SessionChecker";
 import RolList from "./components/authentication/Rol/RolList";
 import ConfirmarCuentaxToken from "./components/authentication/ConfirmarCuentaxToken";
 import ConfirmacionActivacionCuenta from "./components/authentication/ConfirmacionActivacionCuenta";
+import RolAdd from "./components/authentication/Rol/RolAdd";
+import RolEdit from "./components/authentication/Rol/RolEdit";
+import Permisos from "./components/authentication/Permisos";
 
 export default function App() {
   
@@ -232,8 +235,8 @@ export default function App() {
         <Route path="/ConfirmarCuentaXToken" element={<ConfirmarCuentaxToken />} />
         <Route path="/ConfirmacionIngreso" element={<ConfirmacionIngreso />} />
         <Route path="/Confirmacion" element={<Confirmacion />} />
-        <Route path="/" element={<Login handleLogin={handleLogin} />} />
-        <Route path="*" element={<Login handleLogin={handleLogin} />} />
+        {/* <Route path="/" element={<Login handleLogin={handleLogin} />} />
+        <Route path="*" element={<Login handleLogin={handleLogin} />} /> */}
         <Route path="/Registrarme" element={<Registrarme />} />
         <Route path="/RecuperarPass" element={<RecuperarPass />} />
         <Route
@@ -282,10 +285,11 @@ export default function App() {
         <Route path="/Tarea" element={<TareaList />} />
         <Route path="/TareaVolver" element={<TareaList />} />
 
-        <Route path="/RolEdit/:id" element={<RolList />} />
-        <Route path="/RolAdd" element={<RolList />} />
+        <Route path="/RolEdit/:id" element={<RolEdit />} />
+        <Route path="/RolAdd" element={<RolAdd />} />
         <Route path="/Rol" element={<RolList />} />
         <Route path="/RolVolver" element={<RolList />} />
+        <Route path="/Permisos" element={<Permisos />} />
         {/* 
 
 

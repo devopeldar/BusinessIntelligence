@@ -195,6 +195,11 @@ export default function UsuarioGet() {
               <PersonSearch titleAccess="asignar rol a usuario" color="warning" />
             </MDButton>
           </Link>
+          <Link to={`../Usuario/UsuarioEdit/${Usuario.idUsuario}`}>
+            <MDButton  variant="text" color="dark">
+              <PersonSearch titleAccess="asignar perfil a usuario" color="success" />
+            </MDButton>
+          </Link>
         </MDTypography>
       ),
 
