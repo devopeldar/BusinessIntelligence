@@ -26,9 +26,9 @@ const Login = ({ handleLogin }) => {
     
   //   console.log('wwwwwwwwwwwwwww');
   // }, []);
-
+  const [userPermissions, setUserPermissions] = useState({}); // Datos de permisos del usuario
   const [formData, setFormData] = useState({
-    
+ 
     // Inicializa los campos del formulario
     email: "",
     pass: "",
@@ -94,6 +94,8 @@ const Login = ({ handleLogin }) => {
         localStorage.setItem('userlogueado', res.email);
         localStorage.setItem('nameuserlogueado', res.nombre);
         localStorage.setItem('iduserlogueado', res.idUsuario);
+        localStorage.setItem('idPerfil', res.idPerfil);
+        localStorage.setItem('nombrePerfil', res.perfilNombre);
         //Aca ANALIZAR SI LoginCambiarClave = true  DEBO IR A LA PAGINA DE CAMBIAR CONTRASEÑA
         if(res.loginCambiarClave)
         {
@@ -101,6 +103,17 @@ const Login = ({ handleLogin }) => {
         }
         // Manejar respuesta exitosa
         setMensaje("¡Usuario Logueado exitosamente!");
+        
+        const permissionsFromDB = {
+          TAREA: { valor: false },
+          USUARIOS: { valor: true },
+          // ...otros permisos obtenidos
+        };
+        //savePermissionsToLocalStorage(userPermissions);
+
+       // setUserPermissions(permissionsFromDB);
+        localStorage.setItem('perfilesfromDB' , JSON.stringify(permissionsFromDB));
+
         
        handleLogin();
       } else {

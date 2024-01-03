@@ -80,7 +80,7 @@ import RolEdit from "./components/authentication/Rol/RolEdit";
 import Permisos from "./components/authentication/Permisos";
 
 export default function App() {
-  
+
   const [controller, dispatch] = useMaterialUIController();
   const {
     miniSidenav,
@@ -103,7 +103,33 @@ export default function App() {
 
   const [isLoggedIn, setIsLoggedIn] = useState(initialAuthState);
 
-  
+  const rutasVisibles = routes.filter(route => route.visible === true);
+
+
+  // const getPermissionsFromLocalStorage = () => {
+  //   //const permissions = localStorage.getItem('perfilesfromDB');
+
+  //   const retrievedPermissions = routes;
+  //   // 2. Obtener los datos de localStorage
+  //   const localStorageData = JSON.parse(localStorage.getItem('perfilesfromDB'));
+  //   if (localStorageData != null) {
+  //     const filteredRoutes = retrievedPermissions.filter(route => route.visible === false)
+  //       .map(route => {
+  //         const routeName = route.name; // Nombre de la ruta o algún identificador único
+  //         const hasPermission = localStorageData && localStorageData.hasOwnProperty(routeName) && localStorageData[routeName].valor;
+  //         return { ...route, visible: hasPermission }; // Actualizar la propiedad visible con el valor de localStorage
+  //       });
+
+
+  //     return filteredRoutes ? JSON.parse(filteredRoutes) : null;
+  //   }
+  //   return [];
+  //   // 3. Filtrar las rutas con visible en false y verificar en los datos de localStorage
+
+  // };
+  // const rutasVisibles = getPermissionsFromLocalStorage();
+  // console.log("rutasVisibles " + rutasVisibles);
+
   //const [isRegistrandome, setIsRegistrandome] = useState(isRegistrar);
   const navigate = useNavigate();
   // Cache for the rtl
@@ -143,9 +169,9 @@ export default function App() {
   // Almacena el estado de autenticación en localStorage cuando cambie
   useEffect(() => {
 
-      localStorage.setItem("isLoggedIn", isLoggedIn);
-      console.log(8888);
-      console.log(isLoggedIn);
+    localStorage.setItem("isLoggedIn", isLoggedIn);
+    console.log(8888);
+    console.log(isLoggedIn);
   }, [isLoggedIn]);
 
   // const handleLogout = () => {
@@ -177,6 +203,9 @@ export default function App() {
   }, [pathname]);
 
   const getRoutes = (allRoutes) =>
+
+
+
     allRoutes.map((route) => {
       if (route.collapse) {
         return getRoutes(route.collapse);
@@ -184,6 +213,7 @@ export default function App() {
 
       if (route.route) {
         return (
+
           <Route
             exact
             path={route.route}
@@ -228,15 +258,15 @@ export default function App() {
       <SessionChecker />
 
       <Routes>
-        {getRoutes(routes)}
+        {getRoutes(rutasVisibles)}
 
-        
+
         <Route path="/ConfirmacionActivacionCuenta" element={<ConfirmacionActivacionCuenta />} />
         <Route path="/ConfirmarCuentaXToken" element={<ConfirmarCuentaxToken />} />
         <Route path="/ConfirmacionIngreso" element={<ConfirmacionIngreso />} />
         <Route path="/Confirmacion" element={<Confirmacion />} />
-        {/* <Route path="/" element={<Login handleLogin={handleLogin} />} />
-        <Route path="*" element={<Login handleLogin={handleLogin} />} /> */}
+       <Route path="/" element={<Login handleLogin={handleLogin} />} />
+         {/*<Route path="*" element={<Login handleLogin={handleLogin} />} /> */}
         <Route path="/Registrarme" element={<Registrarme />} />
         <Route path="/RecuperarPass" element={<RecuperarPass />} />
         <Route
@@ -289,7 +319,7 @@ export default function App() {
         <Route path="/RolAdd" element={<RolAdd />} />
         <Route path="/Rol" element={<RolList />} />
         <Route path="/RolVolver" element={<RolList />} />
-        <Route path="/Permisos" element={<Permisos />} />
+        <Route path="/Permisos/:id" element={<Permisos />} />
         {/* 
 
 
@@ -303,7 +333,6 @@ export default function App() {
         <Registrarme />
       ) : (
         <>
-          {console.log(666666)}
           <Sidenav
             color={sidenavColor}
             brand={
@@ -312,7 +341,7 @@ export default function App() {
                 : brandWhite
             }
             brandName="Task Manager"
-            routes={routes}
+            routes={rutasVisibles}
             onMouseEnter={handleOnMouseEnter}
             onMouseLeave={handleOnMouseLeave}
           />

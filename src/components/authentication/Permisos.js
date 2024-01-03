@@ -10,6 +10,7 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { HandIndex, Save2Fill } from 'react-bootstrap-icons';
 import MDButton from '../controls/MDButton';
+import itemsMenu from '../Utils/itemsMenu';
 
 
 const Permisos = () => {
@@ -32,9 +33,6 @@ const Permisos = () => {
   const [roles, setRol] = useState(false);
 
 
-
-
-
   useEffect(() => {
     setidPerfil(id);
     // Aquí realizas la llamada a tu API para obtener el Departamento específico por su ID
@@ -44,28 +42,53 @@ const Permisos = () => {
           idperfil: id
         };
 
-        const response = await axios.post(API_URL + `/PerfilXPermisoGetByID`, reqPermisosxPerfil, {
+        const response = await axios.post(API_URL + `/PerfilxPermisoListar`, reqPermisosxPerfil, {
           headers: {
             "Content-Type": "application/json"
           }
         });
         const data = response.data;
+        const TAREA = data.some(item => item.codigoPermiso === itemsMenu.TAREA.valor);
+        setTareas(TAREA);
+       
 
-        setMantenimientoTareas(data.mantenimientotareas);
-        setDepartamentos(data.departamentos);
-        setTareas(data.tareas);
-        setEstadoTarea(data.estadotarea);
-        setTipoDeTareas(data.nombre);
-        setDepartamentos(data.tipodetareas);
-        setMnuEventos(data.mnueventos);
-        setEventos(data.event);
-        setTipoEventos(data.tipoevento);
-        setMantenimientoClientes(data.mantenimientoclientes);
-        setMnuClientes(data.mnuclientes);
-        setMnuSeguridad(data.mnuseguridad);
-        setUsuarios(data.usuarios);
-        setPerfiles(data.perfiles);
-        setRol(data.roles);
+        const TAREAS = data.some(item => item.codigoPermiso === itemsMenu.TAREAS.valor);
+       
+        setMantenimientoTareas(TAREAS);
+        
+        const DEPARTAMENTOS = data.some(item => item.codigoPermiso === itemsMenu.DEPARTAMENTOS.valor);
+        setDepartamentos(DEPARTAMENTOS);
+
+       
+
+        const ESTADOSDETAREA = data.some(item => item.codigoPermiso === itemsMenu.ESTADOSDETAREA.valor);
+        setEstadoTarea(ESTADOSDETAREA);
+
+        const TIPOSDETAREAS = data.some(item => item.codigoPermiso === itemsMenu.TIPOSDETAREAS.valor);
+        setTipoDeTareas(TIPOSDETAREAS);
+
+        const EVENTOS = data.some(item => item.codigoPermiso === itemsMenu.EVENTOS.valor);
+        setMnuEventos(EVENTOS);
+
+        const EVENTO = data.some(item => item.codigoPermiso === itemsMenu.EVENTO.valor);
+        setEventos(EVENTO);
+
+        const TIPOSDEEVENTOS = data.some(item => item.codigoPermiso === itemsMenu.TIPOSDEEVENTOS.valor);
+        setTipoEventos(TIPOSDEEVENTOS);
+
+        const MANTENIMIENTOCLIENTES = data.some(item => item.codigoPermiso === itemsMenu.MANTENIMIENTOCLIENTES.valor);
+        setMantenimientoClientes(MANTENIMIENTOCLIENTES);
+        const CLIENTES = data.some(item => item.codigoPermiso === itemsMenu.CLIENTES.valor);
+        setMnuClientes(CLIENTES);
+        const SEGURIDAD = data.some(item => item.codigoPermiso === itemsMenu.SEGURIDAD.valor);
+        setMnuSeguridad(SEGURIDAD);
+        const USUARIOS = data.some(item => item.codigoPermiso === itemsMenu.USUARIOS.valor);
+        setUsuarios(USUARIOS);
+        const PERFILES = data.some(item => item.codigoPermiso === itemsMenu.PERFILES.valor);
+        setPerfiles(PERFILES);
+        const ROLES = data.some(item => item.codigoPermiso === itemsMenu.ROLES.valor);
+        setRol(ROLES);
+
       } catch (error) {
         console.error("Error:", error);
       }
@@ -73,7 +96,7 @@ const Permisos = () => {
     GetPermisos();
   }, [id]);
 
-  
+
   const handleSubmit = (event) => {
     console.log("handleSubmit " + tareas);
     console.log("handleSubmit " + departamentos);
@@ -99,17 +122,17 @@ const Permisos = () => {
 
   };
   const HandleMnuClientes = (event) => {
- 
+
     setMnuClientes(event.target.checked)
     setMantenimientoClientes(event.target.checked);
-    
+
   };
   const HandleMnuEvento = (event) => {
 
     setMnuEventos(event.target.checked)
     setTipoEventos(event.target.checked);
     setEventos(event.target.checked);
-    
+
   };
 
   // const handleInputChange = (event) => {
@@ -229,7 +252,7 @@ const Permisos = () => {
         <MDBox>
 
           <Checkbox name="mnueventos"
-             onChange={(e) => HandleMnuEvento(e)}
+            onChange={(e) => HandleMnuEvento(e)}
             checked={mnueventos || (evento || tipoevento)}
 
           />
@@ -316,7 +339,7 @@ const Permisos = () => {
         <MDBox>
 
           <Checkbox name="mnuseguridad"
-             onChange={(e) => HandleMnuSeguridad(e)}
+            onChange={(e) => HandleMnuSeguridad(e)}
             checked={mnuseguridad || (usuarios || perfiles || roles)}
 
           />

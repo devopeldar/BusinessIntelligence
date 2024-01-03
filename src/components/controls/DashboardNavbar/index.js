@@ -118,14 +118,14 @@ function DashboardNavbar({ absolute, light, isMini }) {
         {isMini ? null : (
           <MDBox sx={(theme) => navbarRow(theme, { isMini })}>
             <MDBox color={light ? "warning" : "warning"}>
-           
+
               <Link to="/Login">
                 <IconButton sx={navbarIconButton} size="small" disableRipple>
                   {/* <Icon sx={iconsStyle}>account_circle</Icon> */}
-                  <Home/>
+                  <Home />
                 </IconButton>
               </Link>
-              
+
               <IconButton
                 size="small"
                 disableRipple
@@ -136,7 +136,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
                 {/* <Icon sx={iconsStyle} fontSize="medium">
                   {miniSidenav ? "menu_open" : "menu"}
                 </Icon> */}
-                <Settings/>
+                <Settings />
               </IconButton>
               <IconButton
                 size="small"
@@ -146,9 +146,9 @@ function DashboardNavbar({ absolute, light, isMini }) {
                 onClick={handleConfiguratorOpen}
               >
                 {/* <Icon sx={iconsStyle}>settings</Icon> */}
-                 <Settings/>
+                <Settings />
               </IconButton>
-             
+
               {/* <IconButton
                 size="small"
                 disableRipple
@@ -162,15 +162,22 @@ function DashboardNavbar({ absolute, light, isMini }) {
                 <Icon sx={iconsStyle}>notifications</Icon>
               </IconButton>
               {renderMenu()} */}
+              <MDBox color={light ? "warning" : "warning"}>
               <MDTypography display="block" variant="caption" color="text" fontWeight="light">
-              {localStorage.getItem('nameuserlogueado')}<br />
+                {localStorage.getItem('nameuserlogueado')}<br />
                 {localStorage.getItem('userlogueado')}
+              </MDTypography>
+              </MDBox>
+              <MDBox color={light ? "info" : "info"}>
+              <MDTypography display="block" variant="caption" color="text" fontWeight="light">
+                {localStorage.getItem('nombrePerfil')}<br />
               </MDTypography>
             </MDBox>
           </MDBox>
+          </MDBox>
         )}
-      </Toolbar>
-    </AppBar>
+    </Toolbar>
+    </AppBar >
   );
 }
 
