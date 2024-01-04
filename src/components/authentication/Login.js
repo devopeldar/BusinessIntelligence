@@ -23,12 +23,12 @@ const Login = ({ handleLogin }) => {
 
   // useEffect(() => {
   //   // Establece el valor de 'isLoggedIn' en false al cargar la página de inicio
-    
+
   //   console.log('wwwwwwwwwwwwwww');
   // }, []);
   const [userPermissions, setUserPermissions] = useState({}); // Datos de permisos del usuario
   const [formData, setFormData] = useState({
- 
+
     // Inicializa los campos del formulario
     email: "",
     pass: "",
@@ -45,7 +45,7 @@ const Login = ({ handleLogin }) => {
     });
   };
 
-  
+
   const handleChangePassword = (value) => {
     if (captcha.current.getValue()) {
       console.log('El usuario no es un robot');
@@ -61,14 +61,14 @@ const Login = ({ handleLogin }) => {
   const handleRegistrarme = () => {
     localStorage.setItem('isRegister', 'true');
   };
-  
+
   const handleSubmit = async (data) => {
-   
+
     console.log("Datos " + JSON.stringify(formData));
     if (captcha.current.getValue()) {
       console.log('El usuario no es un robot');
       setCaptchaValue(true);
-     
+
     } else {
       console.log('Por favor acepta el captcha');
       setCaptchaValue(false);
@@ -90,36 +90,24 @@ const Login = ({ handleLogin }) => {
 
       const res = await response.json();
       if (res.rdoAccion) {
-        
+
         localStorage.setItem('userlogueado', res.email);
         localStorage.setItem('nameuserlogueado', res.nombre);
         localStorage.setItem('iduserlogueado', res.idUsuario);
         localStorage.setItem('idPerfil', res.idPerfil);
         localStorage.setItem('nombrePerfil', res.perfilNombre);
         //Aca ANALIZAR SI LoginCambiarClave = true  DEBO IR A LA PAGINA DE CAMBIAR CONTRASEÑA
-        if(res.loginCambiarClave)
-        {
+        if (res.loginCambiarClave) {
           navigate("/CambiarContraseña");
         }
         // Manejar respuesta exitosa
         setMensaje("¡Usuario Logueado exitosamente!");
-        
-        const permissionsFromDB = {
-          TAREA: { valor: false },
-          USUARIOS: { valor: true },
-          // ...otros permisos obtenidos
-        };
-        //savePermissionsToLocalStorage(userPermissions);
 
-       // setUserPermissions(permissionsFromDB);
-        localStorage.setItem('perfilesfromDB' , JSON.stringify(permissionsFromDB));
-
-        
-       handleLogin();
+        handleLogin();
       } else {
         // Manejar errores si la respuesta no es exitosa
         setMensaje(res.rdoAccionDesc);
-    
+
         setIsLoggedIn(false);
       }
     }
@@ -224,9 +212,9 @@ const Login = ({ handleLogin }) => {
                   color="info"
                   fontWeight="medium"
                   textGradient
-                  // onClick={() => {
-                  //   handleCuentaXToken();
-                  // }}
+                // onClick={() => {
+                //   handleCuentaXToken();
+                // }}
                 >
                   Activa tu cuenta
                 </MDTypography>
@@ -234,7 +222,7 @@ const Login = ({ handleLogin }) => {
             </MDBox>
             <MDBox mt={3} mb={1} textAlign="center">
               <MDTypography variant="button" color="text">
-                
+
                 <MDTypography
                   component={Link}
                   to="/RecuperarPass"
@@ -270,7 +258,7 @@ const Login = ({ handleLogin }) => {
         </MDBox>
       </Card>
     </BasicLayout>
-   
+
   );
 };
 

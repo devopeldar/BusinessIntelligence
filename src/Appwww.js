@@ -78,6 +78,7 @@ import ConfirmacionActivacionCuenta from "./components/authentication/Confirmaci
 import RolAdd from "./components/authentication/Rol/RolAdd";
 import RolEdit from "./components/authentication/Rol/RolEdit";
 import Permisos from "./components/authentication/Permisos";
+import routeNew from "../src/routes";
 
 export default function App() {
 
@@ -106,31 +107,6 @@ export default function App() {
   const rutasVisibles = routes.filter(route => route.visible === true);
 
 
-  // const getPermissionsFromLocalStorage = () => {
-  //   //const permissions = localStorage.getItem('perfilesfromDB');
-
-  //   const retrievedPermissions = routes;
-  //   // 2. Obtener los datos de localStorage
-  //   const localStorageData = JSON.parse(localStorage.getItem('perfilesfromDB'));
-  //   if (localStorageData != null) {
-  //     const filteredRoutes = retrievedPermissions.filter(route => route.visible === false)
-  //       .map(route => {
-  //         const routeName = route.name; // Nombre de la ruta o algún identificador único
-  //         const hasPermission = localStorageData && localStorageData.hasOwnProperty(routeName) && localStorageData[routeName].valor;
-  //         return { ...route, visible: hasPermission }; // Actualizar la propiedad visible con el valor de localStorage
-  //       });
-
-
-  //     return filteredRoutes ? JSON.parse(filteredRoutes) : null;
-  //   }
-  //   return [];
-  //   // 3. Filtrar las rutas con visible en false y verificar en los datos de localStorage
-
-  // };
-  // const rutasVisibles = getPermissionsFromLocalStorage();
-  // console.log("rutasVisibles " + rutasVisibles);
-
-  //const [isRegistrandome, setIsRegistrandome] = useState(isRegistrar);
   const navigate = useNavigate();
   // Cache for the rtl
   useMemo(() => {
@@ -170,24 +146,9 @@ export default function App() {
   useEffect(() => {
 
     localStorage.setItem("isLoggedIn", isLoggedIn);
-    console.log(8888);
-    console.log(isLoggedIn);
+
   }, [isLoggedIn]);
 
-  // const handleLogout = () => {
-  //   setIsLoggedIn(false);
-  //   setIsRegister(false);
-  //   console.log("handleLoginaaa");
-  // };
-
-  // const handleRegister = () => {
-  //   // Lógica para registro exitoso
-  //   setIsLoggedIn(false);
-  //   setIsRegister(true);
-  //   console.log("handleLogin88888");
-  // };
-
-  // Change the openConfigurator state
   const handleConfiguratorOpen = () =>
     setOpenConfigurator(dispatch, !openConfigurator);
 
@@ -265,8 +226,8 @@ export default function App() {
         <Route path="/ConfirmarCuentaXToken" element={<ConfirmarCuentaxToken />} />
         <Route path="/ConfirmacionIngreso" element={<ConfirmacionIngreso />} />
         <Route path="/Confirmacion" element={<Confirmacion />} />
-       <Route path="/" element={<Login handleLogin={handleLogin} />} />
-         {/*<Route path="*" element={<Login handleLogin={handleLogin} />} /> */}
+       {/*<Route path="/" element={<Login handleLogin={handleLogin} />} />
+         <Route path="*" element={<Login handleLogin={handleLogin} />} /> */}
         <Route path="/Registrarme" element={<Registrarme />} />
         <Route path="/RecuperarPass" element={<RecuperarPass />} />
         <Route

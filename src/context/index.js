@@ -127,7 +127,7 @@ const setDarkMode = (dispatch, value) => dispatch({ type: "DARKMODE", value });
   <Routes>
     {/* <Route path="*" element={<Navigate to="/Login" />} /> */}
     <Route path="/Confirmacion" Component={<Confirmacion />} />
-    <Route path="/Login" Component={<Login />} />
+     <Route path="/Login" Component={<Login />} /> 
   </Routes>
 </Router>
 
