@@ -3,9 +3,9 @@ import axios from 'axios';
 import API_URL from './config';
 
 const SessionChecker = () => {
-  console.log('Presione la Tecla ......')
+
   useEffect(() => {
-    console.log('Presione la Tecla ...............')
+
     const handleKeyPress = (event) => {
       console.log('Presione la Tecla ' + event.keyCode)
       if (event.keyCode === 116) { // Verifica si la tecla presionada es F5

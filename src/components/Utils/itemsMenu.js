@@ -13,6 +13,7 @@ const itemsMenu = {
     USUARIOS: { valor: 401, descripcion: "Usuarios"},
     PERFILES: { valor: 402, descripcion: "Perfiles"},
     ROLES: { valor: 403, descripcion: "Roles"},
+    CHANGEPASSWORD: { valor: 404, descripcion: "cambiarcontrasenia"},
   };
   
   export default itemsMenu;

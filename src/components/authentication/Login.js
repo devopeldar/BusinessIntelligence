@@ -98,7 +98,7 @@ const Login = ({ handleLogin }) => {
         localStorage.setItem('nombrePerfil', res.perfilNombre);
         //Aca ANALIZAR SI LoginCambiarClave = true  DEBO IR A LA PAGINA DE CAMBIAR CONTRASEÑA
         if (res.loginCambiarClave) {
-          navigate("/CambiarContraseña");
+          navigate("/CambiarContrasenia");
         }
         // Manejar respuesta exitosa
         setMensaje("¡Usuario Logueado exitosamente!");

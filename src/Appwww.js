@@ -79,6 +79,7 @@ import RolAdd from "./components/authentication/Rol/RolAdd";
 import RolEdit from "./components/authentication/Rol/RolEdit";
 import Permisos from "./components/authentication/Permisos";
 import routeNew from "../src/routes";
+import CloseSession from "./components/authentication/CloseSession";
 
 export default function App() {
 
@@ -103,9 +104,9 @@ export default function App() {
   const isRegistrar = localStorage.getItem("isRegister") === "true";
 
   const [isLoggedIn, setIsLoggedIn] = useState(initialAuthState);
-
-  const rutasVisibles = routes.filter(route => route.visible === true);
-
+  const [shouldReload, setShouldReload] = useState(false);
+  //const rutasVisibles = routes.filter(route => route.visible === true);
+  const [routesVisible, setRoutesVisible] = useState(routes);
 
   const navigate = useNavigate();
   // Cache for the rtl
@@ -135,19 +136,26 @@ export default function App() {
 
   const handleLogin = () => {
     setIsLoggedIn(true);
+    console.log("wwwwwww ");
+    localStorage.setItem("isLoggedIn", isLoggedIn);
+    setShouldReload(true); 
     navigate("/ConfirmacionIngreso");
-    //const userLogin = JSON.parse(sessionStorage.getItem('UsuarioLogueado'));
-    //console.log("userLogin " + userLogin);
-    // setLayout("dashboard");
-    // console.log("layout " + layout);
   };
 
   // Almacena el estado de autenticación en localStorage cuando cambie
   useEffect(() => {
-
+    console.log("isLoggedIn " + isLoggedIn);
     localStorage.setItem("isLoggedIn", isLoggedIn);
 
-  }, [isLoggedIn]);
+    // Lógica para reconstruir las rutas basadas en el estado de autenticación (isLoggedIn)
+    const updatedRoutes = routes.filter(route => route.visible === true);
+    console.log("updatedRoutes ", updatedRoutes);
+    setRoutesVisible(updatedRoutes);
+    if (shouldReload) {
+      window.location.reload();
+      setShouldReload(false); // Restablece shouldReload a false después de la recarga
+    }
+  }, [isLoggedIn, shouldReload]);
 
   const handleConfiguratorOpen = () =>
     setOpenConfigurator(dispatch, !openConfigurator);
@@ -213,104 +221,115 @@ export default function App() {
   );
 
   return (
-    <ThemeProvider theme={darkMode ? themeDark : theme}>
-      <CssBaseline />
+    <>
+      {isLoggedIn ? (
+        <ThemeProvider theme={darkMode ? themeDark : theme}>
+          <CssBaseline />
 
-      <SessionChecker />
+          <SessionChecker />
 
-      <Routes>
-        {getRoutes(rutasVisibles)}
+          <Routes>
+            {getRoutes(routesVisible)}
 
 
-        <Route path="/ConfirmacionActivacionCuenta" element={<ConfirmacionActivacionCuenta />} />
-        <Route path="/ConfirmarCuentaXToken" element={<ConfirmarCuentaxToken />} />
-        <Route path="/ConfirmacionIngreso" element={<ConfirmacionIngreso />} />
-        <Route path="/Confirmacion" element={<Confirmacion />} />
-       {/*<Route path="/" element={<Login handleLogin={handleLogin} />} />
-         <Route path="*" element={<Login handleLogin={handleLogin} />} /> */}
-        <Route path="/Registrarme" element={<Registrarme />} />
-        <Route path="/RecuperarPass" element={<RecuperarPass />} />
-        <Route
-          path="/ConfirmacionRecuperoPass"
-          element={<ConfirmacionRecuperoPass />}
-        />
-        <Route path="/Perfil/PerfilAdd" element={<PerfilAdd />} />
-        <Route path="/Perfil/PerfilEdit/:id" element={<PerfilEdit />} />
-        <Route path="/Perfil/Perfiles" element={<Perfiles />} />
+            <Route path="/ConfirmacionActivacionCuenta" element={<ConfirmacionActivacionCuenta />} />
+            <Route path="/ConfirmarCuentaXToken" element={<ConfirmarCuentaxToken />} />
+            <Route path="/ConfirmacionIngreso" element={<ConfirmacionIngreso />} />
+            <Route path="/Confirmacion" element={<Confirmacion />} />
+            <Route path="/Login" element={<Login handleLogin={handleLogin} />} />
+            {/* <Route path="*" element={<Login handleLogin={handleLogin} />} /> */}
+            <Route path="/Registrarme" element={<Registrarme />} />
+            <Route path="/RecuperarPass" element={<RecuperarPass />} />
+            <Route
+              path="/ConfirmacionRecuperoPass"
+              element={<ConfirmacionRecuperoPass />}
+            />
+            <Route path="/Perfil/PerfilAdd" element={<PerfilAdd />} />
+            <Route path="/Perfil/PerfilEdit/:id" element={<PerfilEdit />} />
+            <Route path="/Perfil/Perfiles" element={<Perfiles />} />
 
-        <Route path="/DepartamentoAdd" element={<DepartamentoAdd />} />
-        <Route
-          path="/Departamento/DepartamentoEdit/:id"
-          element={<DepartamentoEdit />}
-        />
-        <Route path="/Departamentos" element={<DepartamentoList />} />
-        <Route path="/DepartamentoVolver" element={<DepartamentoList />} />
+            <Route path="/DepartamentoAdd" element={<DepartamentoAdd />} />
+            <Route
+              path="/Departamento/DepartamentoEdit/:id"
+              element={<DepartamentoEdit />}
+            />
+            <Route path="/Departamentos" element={<DepartamentoList />} />
+            <Route path="/DepartamentoVolver" element={<DepartamentoList />} />
 
-        <Route
-          path="/TareaEstado/TareaEstadoEdit/:id"
-          element={<TareaEstadoEdit />}
-        />
-        <Route path="/TareaEstadoAdd" element={<TareaEstadoAdd />} />
-        <Route path="/TareaEstado" element={<TareaEstadoList />} />
-        <Route path="/TareaEstadoVolver" element={<TareaEstadoList />} />
+            <Route
+              path="/TareaEstado/TareaEstadoEdit/:id"
+              element={<TareaEstadoEdit />}
+            />
+            <Route path="/TareaEstadoAdd" element={<TareaEstadoAdd />} />
+            <Route path="/TareaEstado" element={<TareaEstadoList />} />
+            <Route path="/TareaEstadoVolver" element={<TareaEstadoList />} />
 
-        <Route path="/TareaTipoVolver" element={<TareaTipoList />} />
-        <Route path="/TareaTipoAdd" element={<TareaTipoAdd />} />
-        <Route
-          path="/TareaTipo/TareaTipoEdit/:id"
-          element={<TareaTipoEdit />}
-        />
+            <Route path="/TareaTipoVolver" element={<TareaTipoList />} />
+            <Route path="/TareaTipoAdd" element={<TareaTipoAdd />} />
+            <Route
+              path="/TareaTipo/TareaTipoEdit/:id"
+              element={<TareaTipoEdit />}
+            />
 
-        <Route path="/TipoEventoEdit/:id" element={<TipoEventoEdit />} />
-        <Route path="/TipoEventoAdd" element={<TipoEventoAdd />} />
-        <Route path="/TipoEvento" element={<TipoEventoList />} />
-        <Route path="/TipoEventoVolver" element={<TipoEventoList />} />
+            <Route path="/TipoEventoEdit/:id" element={<TipoEventoEdit />} />
+            <Route path="/TipoEventoAdd" element={<TipoEventoAdd />} />
+            <Route path="/TipoEvento" element={<TipoEventoList />} />
+            <Route path="/TipoEventoVolver" element={<TipoEventoList />} />
 
-        <Route path="/ClienteEdit/:id" element={<ClienteEdit />} />
-        <Route path="/ClienteAdd" element={<ClienteAdd />} />
-        <Route path="/Cliente" element={<ClienteList />} />
-        <Route path="/ClienteVolver" element={<ClienteList />} />
+            <Route path="/ClienteEdit/:id" element={<ClienteEdit />} />
+            <Route path="/ClienteAdd" element={<ClienteAdd />} />
+            <Route path="/Cliente" element={<ClienteList />} />
+            <Route path="/ClienteVolver" element={<ClienteList />} />
 
-        <Route path="/TareaEdit/:id" element={<TareaList />} />
-        <Route path="/TareaAdd" element={<TareaList />} />
-        <Route path="/Tarea" element={<TareaList />} />
-        <Route path="/TareaVolver" element={<TareaList />} />
+            <Route path="/TareaEdit/:id" element={<TareaList />} />
+            <Route path="/TareaAdd" element={<TareaList />} />
+            <Route path="/Tarea" element={<TareaList />} />
+            <Route path="/TareaVolver" element={<TareaList />} />
 
-        <Route path="/RolEdit/:id" element={<RolEdit />} />
-        <Route path="/RolAdd" element={<RolAdd />} />
-        <Route path="/Rol" element={<RolList />} />
-        <Route path="/RolVolver" element={<RolList />} />
-        <Route path="/Permisos/:id" element={<Permisos />} />
-        {/* 
+            <Route path="/RolEdit/:id" element={<RolEdit />} />
+            <Route path="/RolAdd" element={<RolAdd />} />
+            <Route path="/Rol" element={<RolList />} />
+            <Route path="/RolVolver" element={<RolList />} />
+            <Route path="/Permisos/:id" element={<Permisos />} />
+            <Route path="/CloseSession" element={<CloseSession />} />
+            {/* 
 
 
         <Route path="/TipoTareas" element={<TareaTipoList />} />
         <Route path="/EstadoTareas" element={<TareaEstadoList />} /> */}
-      </Routes>
+          </Routes>
 
-      {!isLoggedIn && !isRegistrar ? (
-        <Login handleLogin={handleLogin} />
-      ) : isRegistrar ? (
-        <Registrarme />
-      ) : (
-        <>
-          <Sidenav
-            color={sidenavColor}
-            brand={
-              (transparentSidenav && !darkMode) || whiteSidenav
-                ? brandDark
-                : brandWhite
-            }
-            brandName="Task Manager"
-            routes={rutasVisibles}
-            onMouseEnter={handleOnMouseEnter}
-            onMouseLeave={handleOnMouseLeave}
-          />
-          <Configurator />
-          {configsButton}
-          {layout === "vr" && <Configurator />}
-        </>
-      )}
-    </ThemeProvider>
+          {!isLoggedIn && !isRegistrar ? (
+            <Login handleLogin={handleLogin} />
+          ) : isRegistrar ? (
+            <Registrarme />
+          ) : (
+
+            <>
+              <Sidenav
+                color={sidenavColor}
+                brand={
+                  (transparentSidenav && !darkMode) || whiteSidenav
+                    ? brandDark
+                    : brandWhite
+                }
+                brandName="Task Manager"
+                routes={routesVisible}
+                onMouseEnter={handleOnMouseEnter}
+                onMouseLeave={handleOnMouseLeave}
+              />
+              <Configurator />
+              {configsButton}
+              {layout === "vr" && <Configurator />}
+
+
+            </>
+          )}
+        </ThemeProvider>
+
+      ) : (<><ThemeProvider theme={darkMode ? themeDark : theme}>
+        <CssBaseline />
+        <Login handleLogin={handleLogin} /></ThemeProvider> </>)}
+    </>
   );
 }
