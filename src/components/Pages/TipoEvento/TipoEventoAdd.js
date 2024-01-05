@@ -15,6 +15,7 @@ import MDButton from "../../controls/MDButton";
 import { Save } from "react-bootstrap-icons";
 import { ExitToApp } from "@mui/icons-material";
 import axios from "axios";
+import EstadosProgresoTarea from "../../Utils/estadosProgresoTarea";
 
 const TipoEventoAdd = () => {
   const navigate = useNavigate();
@@ -26,6 +27,8 @@ const TipoEventoAdd = () => {
     descripcion: "",
     activo: true,
     idTareaEstado: 0,
+    observacion: "",
+    estado:""
   });
 
   const validationSchema = yup.object().shape({
@@ -33,6 +36,7 @@ const TipoEventoAdd = () => {
     idTareaEstado: yup.string().required("El campo Estado es requerido"),
   });
 
+  const estados = Object.values(EstadosProgresoTarea);
   const [grabando, setGrabando] = useState(false);
   const [mensaje, setMensaje] = useState("");
   const [exito, setExito] = useState(false);
@@ -41,7 +45,8 @@ const TipoEventoAdd = () => {
   const [progress, setProgress] = useState(0);
   const [showprogrees, setShowprogrees] = React.useState(0);
   const [loading, setLoading] = useState(false);
-  const [selectedValue, setSelectedValue] = useState(elements[0]); 
+  const [selectedValue, setSelectedValue] = useState(elements[0]);
+  const [selectedValuEestado, setSelectedValueEstado] = useState(estados[0]);
   const [nombreboton, setnombreboton] = useState("Cancelar");
 
   const handleInputChange = (event) => {
@@ -79,8 +84,8 @@ const TipoEventoAdd = () => {
 
   useEffect(() => {
     const GetEstadosTareas = async () => {
- 
-    const response = await axios.post(API_URL + "/TareaEstadoListar", {
+
+      const response = await axios.post(API_URL + "/TareaEstadoListar", {
         headers: {
           accept: "application/json",
         },
@@ -99,13 +104,16 @@ const TipoEventoAdd = () => {
     setSelectedValue(value);
   };
 
+  const handleAutocompleteEstadoChange = (event, value) => {
+    setSelectedValueEstado(value);
+  };
 
   const procesarFormulario = async (data) => {
     try {
       setLoading(true);
-      
+
       data.idTareaEstado = selectedValue.idTareaEstado;
-      
+      data.estado = selectedValuEestado.valor;
       validationSchema
         .validate(data)
         .then(async (validatedData) => {
@@ -122,7 +130,7 @@ const TipoEventoAdd = () => {
               "Content-Type": "application/json",
             },
             body: JSON.stringify(formData),
-            
+
           });
 
           const res = await response.json();
@@ -196,7 +204,7 @@ const TipoEventoAdd = () => {
               <Autocomplete
                 onChange={handleAutocompleteChange}
                 options={elements}
-                
+
                 getOptionLabel={(option) => option.descripcion}
                 getOptionDisabled={(option) => option.activo === false}
                 renderInput={(params) => (
@@ -208,7 +216,31 @@ const TipoEventoAdd = () => {
                 )}
               />
             </MDBox>
+            <MDBox mb={2}>
+              <Autocomplete
+                options={estados}
+                getOptionLabel={(option) => option.descripcion}
+                value={selectedValuEestado}
+                onChange={handleAutocompleteEstadoChange}
+                renderInput={(params) => (
+                  <TextField {...params} label="Selecciona Estado de Progreso" variant="outlined" />
+                )}
+              />
 
+            </MDBox>
+
+            <MDBox mb={2}>
+              <MDInput
+                type="text"
+                name="observacion"
+                required
+                label="Observacion"
+                variant="standard"
+                value={formData.observacion}
+                onChange={handleInputChange}
+                fullWidth
+              />
+            </MDBox>
             <MDBox mb={2}>
               <Checkbox
                 name="activo"
