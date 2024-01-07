@@ -1,7 +1,7 @@
 import { KeyFill, People, Person } from "react-bootstrap-icons";
 import CambiarContrasenia from "./components/authentication/CambiarContrasenia";
 import Perfiles from "./components/authentication/Perfil/Perfiles";
-import { AccountBalance, Close, Event, EventAvailable, ManageAccounts, PeopleRounded, PersonSearch, Task, TaskAlt } from "@mui/icons-material";
+import { Close, Event, EventAvailable, ManageAccounts, PersonSearch, Task, TaskAlt } from "@mui/icons-material";
 import TareaTipoList from "./components/Pages/Tareas/TareaTipo/TareaTipoList";
 import TareaEstadoList from "./components/Pages/Tareas/TareasEstado/TareaEstadoList";
 import DepartamentoList from "./components/Pages/Departamentos/DepartamentoList";
@@ -10,9 +10,7 @@ import ClienteList from "./components/Pages/Clientes/ClienteList";
 import TareaList from "./components/Pages/Tareas/TareaList";
 import RolList from "./components/authentication/Rol/RolList";
 import UsuarioList from "./components/authentication/Usuario/UsuarioList";
-import { useEffect } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
 import API_URL from "./config";
 import CloseSession from "./components/authentication/CloseSession";
 
@@ -52,7 +50,7 @@ routesnew = [
     icon: <Task />,
     route: "components/Pages/Tarea",
     component: <TareaList />,
-    visible: false,
+    visible: true,
     codigoPermiso: 101
     //visible: retrievedPermissions.USUARIOS?.valor || false 
   },
@@ -63,7 +61,7 @@ routesnew = [
     icon: <TaskAlt />,
     route: "/TipoTareas",
     component: <TareaTipoList />,
-    visible: false,
+    visible: true,
     codigoPermiso: 102
   },
   {
@@ -73,7 +71,7 @@ routesnew = [
     icon: <Event />,
     route: "/Departamentos",
     component: <DepartamentoList />,
-    visible: false,
+    visible: true,
     codigoPermiso: 103
   },
   {
@@ -83,7 +81,7 @@ routesnew = [
     icon: <Event />,
     route: "/EstadoTareas",
     component: <TareaEstadoList />,
-    visible: false,
+    visible: true,
     codigoPermiso: 104
   },
   {
@@ -91,7 +89,7 @@ routesnew = [
     name: "Eventos",
     key: "eventos",
     title: "Eventos",
-    visible: false,
+    visible: true,
     codigoPermiso: 200
   },
   {
@@ -101,7 +99,7 @@ routesnew = [
     icon: <EventAvailable />,
     route: "components/Pages/TipoEvento",
     component: <TipoEventoList />,
-    visible: false,
+    visible: true,
     codigoPermiso: 201
   },
   {
@@ -109,7 +107,7 @@ routesnew = [
     name: "Clientes",
     key: "clientes",
     title: "Clientes",
-    visible: false,
+    visible: true,
     codigoPermiso: 300
   },
   {
@@ -119,7 +117,7 @@ routesnew = [
     icon: <People />,
     route: "components/Pages/Clientes",
     component: <ClienteList />,
-    visible: false,
+    visible: true,
     codigoPermiso: 301
   },
   {
@@ -128,7 +126,7 @@ routesnew = [
     key: "seguridad",
     title: "Seguridad",
     icon: <KeyFill />,
-    visible: false,
+    visible: true,
     codigoPermiso: 400
   },
   {
@@ -139,7 +137,7 @@ routesnew = [
     icon: <ManageAccounts />,
     route: "/Usuarios",
     component: <UsuarioList />,
-    visible: false,
+    visible: true,
     codigoPermiso: 401
   },
   {
@@ -150,7 +148,7 @@ routesnew = [
     icon: <Person />,
     route: "/components/authentication/Perfil",
     component: <Perfiles />,
-    visible: false,
+    visible: true,
     codigoPermiso: 402
   },
   {
@@ -160,7 +158,7 @@ routesnew = [
     icon: <PersonSearch />,
     route: "/Roles",
     component: <RolList />,
-    visible: false,
+    visible: true,
     codigoPermiso: 403
   },
   {
@@ -170,7 +168,7 @@ routesnew = [
     icon: <KeyFill />,
     route: "/CambiarContrasenia",
     component: <CambiarContrasenia />,
-    visible: false,
+    visible: true,
     codigoPermiso: 404
   },
   {

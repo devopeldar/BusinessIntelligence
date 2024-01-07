@@ -4,15 +4,14 @@ import MDTypography from "../../../controls/MDTypography";
 import MDBox from "../../../controls/MDBox";
 import MDBadge from "../../../controls/MDBadge";
 import MDButton from "../../../controls/MDButton";
-import { Edit } from "@mui/icons-material";
 import { PencilSquare } from "react-bootstrap-icons";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
 export default function TareasTipoGet() {
-  const [perfiles, setTareasTipo] = useState([]);
+ 
   const [rows, setRows] = useState([]);
-  const [error, setError] = useState([]);
+ 
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -22,7 +21,7 @@ export default function TareasTipoGet() {
           },
         });
         console.log("response " + response.json);
-        setTareasTipo(response.data);
+        //setTareasTipo(response.data);
         const data = response.data.map((tareatipo) => ({
           idTareatipo: tareatipo.idTareaTipo,
           nombre: tareatipo.nombre,
@@ -34,7 +33,7 @@ export default function TareasTipoGet() {
 
         setRows(data);
       } catch (ex) {
-        setError(ex);
+       // setError(ex);
 
         console.log(ex);
       }
@@ -80,7 +79,7 @@ export default function TareasTipoGet() {
   );
   return {
     columns: [
-      { Header: "ID Tipo Tarea", accessor: "idtareatipo", align: "left" },
+     // { Header: "ID Tipo Tarea", accessor: "idtareatipo", align: "left" },
       { Header: "Nombre", accessor: "nombre", width: "45%", align: "left" },
       { Header: "Vencimientos", accessor: "vencimientos", align: "center" },
       { Header: "Activo", accessor: "activo", align: "center" },
@@ -88,17 +87,17 @@ export default function TareasTipoGet() {
     ],
     rows: rows.map((tareatipo) => ({
        
-      idtareatipo: (
-        <MDTypography
-          component="a"
-          href="#"
-          variant="caption"
-          color="text"
-          fontWeight="medium"
-        >
-          {tareatipo.idTareatipo}
-        </MDTypography>
-      ), // Reemplaza <TuComponenteControl1 /> por el componente que desees en esta celda
+      // idtareatipo: (
+      //   <MDTypography
+      //     component="a"
+      //     href="#"
+      //     variant="caption"
+      //     color="text"
+      //     fontWeight="medium"
+      //   >
+      //     {tareatipo.idTareatipo}
+      //   </MDTypography>
+      // ), // Reemplaza <TuComponenteControl1 /> por el componente que desees en esta celda
       nombre: (
         <Nombre
           title={tareatipo.nombre}

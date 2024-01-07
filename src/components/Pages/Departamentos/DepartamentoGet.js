@@ -40,24 +40,24 @@ export default function DepartamentoGet() {
 
   return {
     columns: [
-      { Header: "ID Depto", accessor: "idDepartamento", align: "left" },
+      //{ Header: "ID Depto", accessor: "idDepartamento", align: "left" },
       { Header: "Nombre", accessor: "nombre", width: "45%", align: "left" },
       { Header: "Activo", accessor: "activo", align: "center" },
       { Header: "Acciones", accessor: "action", align: "center" },
     ],
     rows: rows.map((Departamento) => ({
        
-        idDepartamento: (
-        <MDTypography
-          component="a"
-          href="#"
-          variant="caption"
-          color="text"
-          fontWeight="medium"
-        >
-          {Departamento.idDepartamento}
-        </MDTypography>
-      ), // Reemplaza <TuComponenteControl1 /> por el componente que desees en esta celda
+      //   idDepartamento: (
+      //   <MDTypography
+      //     component="a"
+      //     href="#"
+      //     variant="caption"
+      //     color="text"
+      //     fontWeight="medium"
+      //   >
+      //     {Departamento.idDepartamento}
+      //   </MDTypography>
+      // ), // Reemplaza <TuComponenteControl1 /> por el componente que desees en esta celda
       nombre: (
         <MDTypography
         component="a"

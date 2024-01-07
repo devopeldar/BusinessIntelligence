@@ -5,7 +5,6 @@ import MDTypography from "../../controls/MDTypography";
 import MDBox from "../../controls/MDBox";
 import MDBadge from "../../controls/MDBadge";
 import MDButton from "../../controls/MDButton";
-import { Edit } from "@mui/icons-material";
 import { PencilSquare } from "react-bootstrap-icons";
 import axios from "axios";
 import { Link } from "react-router-dom";
@@ -69,7 +68,7 @@ export default function ClienteGet() {
 
   return {
     columns: [
-      { Header: "ID Cliente", accessor: "idCliente", align: "left" },
+      // { Header: "ID Cliente", accessor: "idCliente", align: "left" },
       { Header: "Cliente", accessor: "nombre", width: "25%", align: "left" },
       { Header: "Cuit", accessor: "cuit", align: "left" },
       { Header: "Cond. Iva", accessor: "descripcionIVA", align: "left" },
@@ -79,17 +78,17 @@ export default function ClienteGet() {
     ],
     rows: rows.map((Cliente) => ({
        
-        idCliente: (
-        <MDTypography
-          component="a"
-          href="#"
-          variant="caption"
-          color="text"
-          fontWeight="medium"
-        >
-          {Cliente.idCliente}
-        </MDTypography>
-      ), // Reemplaza <TuComponenteControl1 /> por el componente que desees en esta celda
+      //   idCliente: (
+      //   <MDTypography
+      //     component="a"
+      //     href="#"
+      //     variant="caption"
+      //     color="text"
+      //     fontWeight="medium"
+      //   >
+      //     {Cliente.idCliente}
+      //   </MDTypography>
+      // ), // Reemplaza <TuComponenteControl1 /> por el componente que desees en esta celda
       nombre: (
         <Nombre
           nombre={Cliente.nombre}

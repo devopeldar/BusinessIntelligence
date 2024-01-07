@@ -21,15 +21,15 @@ import Configurator from "../src/components/layauots/Configurator";
 
 // Material Dashboard 2 React themes
 import theme from "../src/assets/theme/theme-rtl";
-import themeRTL from "../src/assets/theme/theme-rtl";
+//import themeRTL from "../src/assets/theme/theme-rtl";
 
 // Material Dashboard 2 React Dark Mode themes
 import themeDark from "../src/assets/theme-dark";
-import themeDarkRTL from "../src/assets/theme-dark/theme-rtl";
+//import themeDarkRTL from "../src/assets/theme-dark/theme-rtl";
 
 // RTL plugins
 //import rtlPlugin from "stylis-plugin-rtl";
-import { CacheProvider } from "@emotion/react";
+//import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
 
 // Material Dashboard 2 React routes
@@ -78,8 +78,8 @@ import ConfirmacionActivacionCuenta from "./components/authentication/Confirmaci
 import RolAdd from "./components/authentication/Rol/RolAdd";
 import RolEdit from "./components/authentication/Rol/RolEdit";
 import Permisos from "./components/authentication/Permisos";
-import routeNew from "../src/routes";
 import CloseSession from "./components/authentication/CloseSession";
+import EventoTareaAdd from "./components/Pages/Tareas/EventoTareaAdd";
 
 export default function App() {
 
@@ -152,6 +152,7 @@ export default function App() {
     console.log("updatedRoutes ", updatedRoutes);
     setRoutesVisible(updatedRoutes);
     if (shouldReload) {
+      console.log("shouldReload " + shouldReload);
       window.location.reload();
       setShouldReload(false); // Restablece shouldReload a false después de la recarga
     }
@@ -259,6 +260,7 @@ export default function App() {
             <Route
               path="/TareaEstado/TareaEstadoEdit/:id"
               element={<TareaEstadoEdit />}
+              
             />
             <Route path="/TareaEstadoAdd" element={<TareaEstadoAdd />} />
             <Route path="/TareaEstado" element={<TareaEstadoList />} />
@@ -292,6 +294,9 @@ export default function App() {
             <Route path="/RolVolver" element={<RolList />} />
             <Route path="/Permisos/:id" element={<Permisos />} />
             <Route path="/CloseSession" element={<CloseSession />} />
+
+            <Route path="/EventoTareaAdd/:id" element={<EventoTareaAdd />} />
+            <Route path="/TareaListVolver" element={<TareaList />} />
             {/* 
 
 

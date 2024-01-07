@@ -1,54 +1,46 @@
-import React, { useEffect, useState } from "react";
+// EditarTipoEvento.js
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
 import API_URL from "../../../config";
-import "bootstrap/dist/css/bootstrap.min.css"; // Importa los es../tilos de Bootstrap
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import BasicLayout from "../../layauots/BasicLayout";
-import { Alert, Autocomplete, Card, TextField } from "@mui/material";
+import { Card } from "react-bootstrap";
 import MDBox from "../../controls/MDBox";
 import MDTypography from "../../controls/MDTypography";
-import bgImage from "../../../assets/images/bg-sign-up-cover.jpeg";
 import MDInput from "../../controls/MDInput";
-import * as yup from "yup";
-import { useNavigate } from "react-router-dom";
-import MDProgress from "../../controls/MDProgress";
-import { AlertTitle, Checkbox } from "@mui/material";
-import MDButton from "../../controls/MDButton";
 import { Save } from "react-bootstrap-icons";
 import { ExitToApp } from "@mui/icons-material";
-import axios from "axios";
-import EstadosProgresoTarea from "../../Utils/estadosProgresoTarea";
+import MDButton from "../../controls/MDButton";
+import * as yup from "yup";
+import {
+  Alert,
+  AlertTitle,
+  Autocomplete,
+  TextField,
+} from "@mui/material";
+import bgImage from "../../../assets/images/bg-sign-up-cover.jpeg";
+import MDProgress from "../../controls/MDProgress";
 
-const TipoEventoAdd = () => {
-  const navigate = useNavigate();
-
-  // const [nombre, setNombre] = useState('');
-  // const [activo, setActivo] = useState(false);
-  const [formData, setFormData] = useState({
-    idEventoTipo: 0,
-    descripcion: "",
-    activo: true,
-    idTareaEstado: 0,
-    observaciones: "",
-    estado:"",
-    detiene:false,
-    enviaMail:false
-  });
-
-  const validationSchema = yup.object().shape({
-    descripcion: yup.string().required("El campo descripcion es requerido"),
-    idTareaEstado: yup.string().required("El campo Estado es requerido"),
-  });
-
-  const estados = Object.values(EstadosProgresoTarea);
-  const [grabando, setGrabando] = useState(false);
+const EventoTareaAdd = () => {
+  const { id } = useParams(); // Obtener el parámetro de la URL (el ID del TipoEvento a editar)
+  const [elements, setElements] = useState(false);
+  const [descripcion, setDescripcion] = useState("");
+  const [nombreboton, setnombreboton] = useState("Volver");
   const [mensaje, setMensaje] = useState("");
+  const history = useNavigate();
+  const [grabando, setGrabando] = useState(false);
   const [exito, setExito] = useState(false);
-  const [elements, setElements] = useState([]);
+  const [selectedValue, setSelectedValue] = useState("");
   const [progress, setProgress] = useState(0);
   const [showprogrees, setShowprogrees] = React.useState(0);
   const [loading, setLoading] = useState(false);
-  const [selectedValue, setSelectedValue] = useState(elements[0]);
-  const [selectedValuEestado, setSelectedValueEstado] = useState(estados[0]);
-  const [nombreboton, setnombreboton] = useState("Cancelar");
+  const [idEventoTipo, setIdEventoTipo] = useState(0);
+  const [idTarea, setIdTarea] = useState(0);
+  const handleVolver = () => {
+    history("/TareaListVolver"); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
+  };
 
   const handleInputChange = (event) => {
     const { name, value, type, checked } = event.target;
@@ -62,6 +54,39 @@ const TipoEventoAdd = () => {
       [name]: newValue,
     });
   };
+  const [formData, setFormData] = useState({
+    idEventoTipo: 0,
+    observaciones: "",
+    idUsuario: 0,
+    idTarea: id,
+  });
+
+  const validationSchema = yup.object().shape({
+    observaciones: yup
+      .string()
+      .required("Indique una descripcion indicando detalles del evento"),
+    idEventoTipo: yup
+      .string()
+      .required("Indique el Tipo de Evento que esta intentando realizar"),
+  });
+
+  useEffect(() => {
+    setIdTarea(id);
+    // Aquí realizas la llamada a tu API para obtener el TipoEvento específico por su ID
+    const GetEventoTipo = async () => {
+      const response = await axios.post(API_URL + "/EventoTipoListar", {
+        headers: {
+          accept: "application/json",
+        },
+      });
+
+      setElements(response.data);
+      if (response.data && response.data.length > 0) {
+        setSelectedValue(response.data[0]); // Establecer el primer elemento como valor seleccionado
+      }
+    };
+    GetEventoTipo();
+  }, [id]);
 
   const handleSubmit = (event) => {
     setGrabando(false); // Inicia la grabación
@@ -83,38 +108,13 @@ const TipoEventoAdd = () => {
     procesarFormulario(formData);
   };
 
-  useEffect(() => {
-    const GetEstadosTareas = async () => {
-
-      const response = await axios.post(API_URL + "/TareaEstadoListar", {
-        headers: {
-          accept: "application/json",
-        },
-      });
-      console.log("response " + response.data);
-      setElements(response.data);
-    };
-    GetEstadosTareas();
-  }, []);
-
-  const handleVolver = () => {
-    navigate("/TipoEventoVolver"); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
-  };
-
-  const handleAutocompleteChange = (event, value) => {
-    setSelectedValue(value);
-  };
-
-  const handleAutocompleteEstadoChange = (event, value) => {
-    setSelectedValueEstado(value);
-  };
-
   const procesarFormulario = async (data) => {
     try {
       setLoading(true);
 
-      data.idTareaEstado = selectedValue.idTareaEstado;
-      data.estado = selectedValuEestado.valor;
+      data.idEventoTipo = selectedValue.idEventoTipo;
+      data.idTarea = idTarea;
+      data.idUsuario = localStorage.getItem('iduserlogueado');
       validationSchema
         .validate(data)
         .then(async (validatedData) => {
@@ -123,22 +123,21 @@ const TipoEventoAdd = () => {
           setExito(true);
           setMensaje("");
 
-          console.log("formData " + JSON.stringify(formData))
+          console.log("formData " + JSON.stringify(formData));
 
-          const response = await fetch(API_URL + "/EventoTipoAlta", {
+          const response = await fetch(API_URL + "/EventoAlta", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
             body: JSON.stringify(formData),
-
           });
 
           const res = await response.json();
 
           if (res.rdoAccion) {
             // Manejar respuesta exitosa
-            setMensaje("El Tipo de Evento ha sido Registrado exitosamente!");
+            setMensaje("El Evento ha sido Registrado exitosamente!");
             setGrabando(true);
             setExito(true);
           } else {
@@ -166,14 +165,21 @@ const TipoEventoAdd = () => {
     }
   };
 
+  const handleAutocompleteChange = (event, value) => {
+    setSelectedValue(value);
+    setIdEventoTipo(value.idEventoTipo);
+    setDescripcion(value.observaciones);
+    console.log("value ", value);
+  };
+
   return (
     <BasicLayout image={bgImage}>
       <Card>
         <MDBox
           variant="gradient"
-          bgColor="primary"
+          bgColor="info"
           borderRadius="lg"
-          coloredShadow="primary"
+          coloredShadow="info"
           mx={2}
           mt={-3}
           p={3}
@@ -181,57 +187,46 @@ const TipoEventoAdd = () => {
           textAlign="center"
         >
           <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-            Agregar Tipo de Evento
+            Agregar Evento
           </MDTypography>
           <MDTypography display="block" variant="button" color="white" my={1}>
-            Un Tipo de Evento especifica un estado que la tarea tendra.
+            Esta accion influye sobre la tarea seleccionada
           </MDTypography>
         </MDBox>
+
         <MDBox pt={4} pb={3} px={3}>
           <MDBox component="form" role="form">
             <MDBox mb={2}>
-              <MDInput
-                type="text"
-                name="descripcion"
-                required
-                label="Descripcion"
-                variant="standard"
-                value={formData.descripcion}
-                onChange={handleInputChange}
-                fullWidth
-              />
-            </MDBox>
-            <MDBox mb={2}>
               <Autocomplete
-                onChange={handleAutocompleteChange}
                 options={elements}
-
                 getOptionLabel={(option) => option.descripcion}
-                getOptionDisabled={(option) => option.activo === false}
+                value={selectedValue}
+                disableClearable={true}
+                onChange={handleAutocompleteChange}
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    label="Seleccione Estado de Tarea"
+                    label="Selecciona Tipo Evento"
                     variant="outlined"
                   />
                 )}
               />
             </MDBox>
             <MDBox mb={2}>
-              <Autocomplete
-                options={estados}
-                getOptionLabel={(option) => option.descripcion}
-                value={selectedValuEestado}
-                onChange={handleAutocompleteEstadoChange}
-                renderInput={(params) => (
-                  <TextField {...params} label="Selecciona Estado de Progreso" variant="outlined" />
-                )}
+              <MDInput
+                multiline
+                type="text"
+                name="detalleTipoEvento"
+                label="Detalle Tipo Evento"
+                variant="standard"
+                value={descripcion}
+                disabled
+                fullWidth
               />
-
             </MDBox>
-
             <MDBox mb={2}>
               <MDInput
+                multiline
                 type="text"
                 name="observaciones"
                 required
@@ -242,58 +237,14 @@ const TipoEventoAdd = () => {
                 fullWidth
               />
             </MDBox>
-            <MDBox mb={2}>
-              <Checkbox
-                name="enviaMail"
-                onChange={handleInputChange}
-                checked={formData.enviaMail || false}
-              />
-              <MDTypography
-                variant="button"
-                fontWeight="regular"
-                color="text"
-                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
-              >
-                &nbsp;&nbsp;Envia Mail
-              </MDTypography>
-            </MDBox>
-            <MDBox mb={2}>
-              <Checkbox
-                name="detiene"
-                onChange={handleInputChange}
-                checked={formData.detiene || false}
-              />
-              <MDTypography
-                variant="button"
-                fontWeight="regular"
-                color="text"
-                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
-              >
-                &nbsp;&nbsp;Detiene Tarea
-              </MDTypography>
-            </MDBox>
-            <MDBox mb={2}>
-              <Checkbox
-                name="activo"
-                onChange={handleInputChange}
-                checked={formData.activo || false}
-              />
-              <MDTypography
-                variant="button"
-                fontWeight="regular"
-                color="text"
-                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
-              >
-                &nbsp;&nbsp;Activo
-              </MDTypography>
-            </MDBox>
+
             <MDBox mt={4} mb={1}>
               <MDButton
                 onClick={() => {
                   handleSubmit();
                 }}
                 variant="gradient"
-                color="primary"
+                color="info"
                 endIcon={<Save />}
                 disabled={grabando}
                 fullWidth
@@ -307,7 +258,7 @@ const TipoEventoAdd = () => {
                   handleVolver();
                 }}
                 variant="gradient"
-                color="primary"
+                color="info"
                 endIcon={<ExitToApp />}
                 fullWidth
               >
@@ -325,7 +276,6 @@ const TipoEventoAdd = () => {
               variant="contained"
             ></MDProgress>
           </MDBox>
-
           {mensaje !== "" && (
             <Alert severity={exito ? "success" : "error"}>
               <AlertTitle>{exito ? "Felicitaciones" : "Error"}</AlertTitle>
@@ -338,4 +288,4 @@ const TipoEventoAdd = () => {
   );
 };
 
-export default TipoEventoAdd;
+export default EventoTareaAdd;

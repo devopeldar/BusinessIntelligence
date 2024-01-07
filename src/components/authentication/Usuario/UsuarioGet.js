@@ -4,7 +4,7 @@ import MDTypography from "../../controls/MDTypography";
 import MDBox from "../../controls/MDBox";
 import MDBadge from "../../controls/MDBadge";
 import MDButton from "../../controls/MDButton";
-import { Check2All, CheckCircle, PencilSquare } from "react-bootstrap-icons";
+import { CheckCircle, PencilSquare } from "react-bootstrap-icons";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { Cancel, NoAccounts, PersonSearch } from "@mui/icons-material";
@@ -132,7 +132,7 @@ export default function UsuarioGet() {
 
   return {
     columns: [
-      { Header: "ID Usuario", accessor: "idUsuario", align: "left" },
+      //{ Header: "ID Usuario", accessor: "idUsuario", align: "left" },
       { Header: "Usuario", accessor: "nombre", width: "35%", align: "left" },
       { Header: "Datos Acceso", accessor: "datosacceso", align: "left" },
       { Header: "Activo", accessor: "activo", align: "center" },
@@ -140,17 +140,17 @@ export default function UsuarioGet() {
     ],
     rows: rows.map((Usuario) => ({
 
-      idUsuario: (
-        <MDTypography
-          component="a"
-          href="#"
-          variant="caption"
-          color="text"
-          fontWeight="medium"
-        >
-          {Usuario.idUsuario}
-        </MDTypography>
-      ), // Reemplaza <TuComponenteControl1 /> por el componente que desees en esta celda
+      // idUsuario: (
+      //   <MDTypography
+      //     component="a"
+      //     href="#"
+      //     variant="caption"
+      //     color="text"
+      //     fontWeight="medium"
+      //   >
+      //     {Usuario.idUsuario}
+      //   </MDTypography>
+      // ), // Reemplaza <TuComponenteControl1 /> por el componente que desees en esta celda
       nombre: (
         <Nombre nombre={Usuario.nombre} email={Usuario.email} telefono={Usuario.telefono} />
       ),

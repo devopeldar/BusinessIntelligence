@@ -55,23 +55,23 @@ export default function PerfilesGet() {
 
   return {
     columns: [
-      { Header: "IDPerfil", accessor: "idPerfil", align: "left" },
+     // { Header: "IDPerfil", accessor: "idPerfil", align: "left" },
       { Header: "Nombre", accessor: "nombre", width: "45%", align: "left" },
       { Header: "Activo", accessor: "activo", align: "center" },
       { Header: "Acciones", accessor: "action", align: "center" },
     ],
     rows: rows.map((perfil) => ({
-      idPerfil: (
-        <MDTypography
-          component="a"
-          href="#"
-          variant="caption"
-          color="text"
-          fontWeight="medium"
-        >
-          {perfil.idPerfil}
-        </MDTypography>
-      ), // Reemplaza <TuComponenteControl1 /> por el componente que desees en esta celda
+      // idPerfil: (
+      //   <MDTypography
+      //     component="a"
+      //     href="#"
+      //     variant="caption"
+      //     color="text"
+      //     fontWeight="medium"
+      //   >
+      //     {perfil.idPerfil}
+      //   </MDTypography>
+      // ), // Reemplaza <TuComponenteControl1 /> por el componente que desees en esta celda
       nombre: (
         <Nombre
           title={perfil.nombre}

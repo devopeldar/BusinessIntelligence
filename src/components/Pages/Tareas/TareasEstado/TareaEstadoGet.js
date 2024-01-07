@@ -4,15 +4,12 @@ import MDTypography from "../../../controls/MDTypography";
 import MDBox from "../../../controls/MDBox";
 import MDBadge from "../../../controls/MDBadge";
 import MDButton from "../../../controls/MDButton";
-import { Edit } from "@mui/icons-material";
 import { PencilSquare } from "react-bootstrap-icons";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
 export default function TareaEstadoGet() {
-  const [tareasestados, setTareaEstado] = useState([]);
   const [rows, setRows] = useState([]);
-  const [error, setError] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -21,8 +18,8 @@ export default function TareaEstadoGet() {
             accept: "application/json",
           },
         });
-        console.log("response " + response.data);
-        setTareaEstado(response.data);
+      //  console.log("response " + response.data);
+       // setTareaEstado(response.data);
         const data = response.data.map((tareaestado) => ({
             idTareaEstado: tareaestado.idTareaEstado,
             descripcion: tareaestado.descripcion,
@@ -32,7 +29,7 @@ export default function TareaEstadoGet() {
 
         setRows(data);
       } catch (ex) {
-        setError(ex);
+       // setError(ex);
 
         console.log(ex);
       }
@@ -43,7 +40,7 @@ export default function TareaEstadoGet() {
 
   return {
     columns: [
-      { Header: "ID Estado Tarea", accessor: "idTareaEstado", align: "left" },
+      //{ Header: "ID Estado Tarea", accessor: "idTareaEstado", align: "left" },
       { Header: "Descripcion", accessor: "descripcion", width: "45%", align: "left" },
       { Header: "Estado Final", accessor: "esEstadoFinal", align: "center" },
       { Header: "Activo", accessor: "activo", align: "center" },
@@ -51,17 +48,17 @@ export default function TareaEstadoGet() {
     ],
     rows: rows.map((tareaestado) => ({
        
-        idTareaEstado: (
-        <MDTypography
-          component="a"
-          href="#"
-          variant="caption"
-          color="text"
-          fontWeight="medium"
-        >
-          {tareaestado.idTareaEstado}
-        </MDTypography>
-      ), // Reemplaza <TuComponenteControl1 /> por el componente que desees en esta celda
+      //   idTareaEstado: (
+      //   <MDTypography
+      //     component="a"
+      //     href="#"
+      //     variant="caption"
+      //     color="text"
+      //     fontWeight="medium"
+      //   >
+      //     {tareaestado.idTareaEstado}
+      //   </MDTypography>
+      // ), // Reemplaza <TuComponenteControl1 /> por el componente que desees en esta celda
       descripcion: (
         <MDTypography
         component="a"

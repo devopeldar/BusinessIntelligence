@@ -40,24 +40,24 @@ export default function RolGet() {
 
   return {
     columns: [
-      { Header: "ID Rol", accessor: "idRol", align: "left" },
+     // { Header: "ID Rol", accessor: "idRol", align: "left" },
       { Header: "Descripcion", accessor: "descripcion", width: "45%", align: "left" },
       { Header: "Activo", accessor: "activo", align: "center" },
       { Header: "Acciones", accessor: "action", align: "center" },
     ],
     rows: rows.map((Rol) => ({
        
-        idRol: (
-        <MDTypography
-          component="a"
-          href="#"
-          variant="caption"
-          color="text"
-          fontWeight="medium"
-        >
-          {Rol.idRol}
-        </MDTypography>
-      ), // Reemplaza <TuComponenteControl1 /> por el componente que desees en esta celda
+      //   idRol: (
+      //   <MDTypography
+      //     component="a"
+      //     href="#"
+      //     variant="caption"
+      //     color="text"
+      //     fontWeight="medium"
+      //   >
+      //     {Rol.idRol}
+      //   </MDTypography>
+      // ), // Reemplaza <TuComponenteControl1 /> por el componente que desees en esta celda
       descripcion: (
         <MDTypography
         component="a"

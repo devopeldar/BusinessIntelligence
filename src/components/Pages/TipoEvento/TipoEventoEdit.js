@@ -15,13 +15,18 @@ import { ExitToApp } from "@mui/icons-material";
 import MDButton from "../../controls/MDButton";
 import { Alert, AlertTitle, Autocomplete, Checkbox, TextField } from "@mui/material";
 import bgImage from "../../../assets/images/bg-sign-up-cover.jpeg";
+import EstadosProgresoTarea from "../../Utils/estadosProgresoTarea";
 
 const TipoEventoEdit = () => {
     const { id } = useParams(); // Obtener el parámetro de la URL (el ID del TipoEvento a editar)
+    const estados = Object.values(EstadosProgresoTarea);
     const [TipoEvento, setTipoEvento] = useState(null);
     const [idEventoTipo, setidEventoTipo] = useState("");
     const [activo, setActivo] = useState(false);
+    const [enviaMail, setEnviaMail] = useState(false);
+    const [detiene, setDetiene] = useState(false);
     const [elements, setElements] = useState(false);
+    const [observaciones, setObservaciones] = useState("");
     const [descripcion, setDescripcion] = useState("");
     const [nombreboton, setnombreboton] = useState("Cancelar");
     const [mensaje, setMensaje] = useState("");
@@ -29,8 +34,9 @@ const TipoEventoEdit = () => {
     const [grabando, setGrabando] = useState(false);
     const [exito, setExito] = useState(false);
     const [selectedValue, setSelectedValue] = useState('');
+    const [selectedValuEestado, setSelectedValueEstado] = useState(estados[0]);
     const [idTareaEstado, setIdTareaEstado] = useState(0);
-
+    const [estado, setEstado] = useState(0);
     const handleVolver = () => {
         history("/TipoEventoVolver"); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
     };
@@ -56,6 +62,13 @@ const TipoEventoEdit = () => {
                 setDescripcion(data.descripcion);
                 setActivo(data.activo);
                 setIdTareaEstado(data.idTareaEstado);
+                setActivo(data.activo);
+                setEnviaMail(data.enviaMail);
+                setDetiene(data.detiene);
+                setObservaciones(data.observaciones);
+                setEstado(data.estado);
+
+                setSelectedValueEstado(obtenerEstadoPorValor(data.estado));
 
 
             } catch (error) {
@@ -64,6 +77,15 @@ const TipoEventoEdit = () => {
         };
         GetTipoEvento();
     }, [id]);
+
+    function obtenerEstadoPorValor(valor) {
+        for (let estado in EstadosProgresoTarea) {
+          if (EstadosProgresoTarea[estado].valor === valor) {
+            return EstadosProgresoTarea[estado];
+          }
+        }
+        return null; // Retorna null si no se encuentra ningún estado con el valor proporcionado
+      }
 
     useEffect(() => {
 
@@ -121,8 +143,10 @@ const TipoEventoEdit = () => {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ idEventoTipo, descripcion, idTareaEstado, activo }),
+                body: JSON.stringify({ idEventoTipo, descripcion, idTareaEstado, activo, enviaMail, detiene,estado,observaciones }),
             });
+
+
             const res = await response.json();
 
             if (res.rdoAccion) {
@@ -147,6 +171,13 @@ const TipoEventoEdit = () => {
         setSelectedValue(value);
         setIdTareaEstado(value.idTareaEstado);
     };
+
+    const handleAutocompleteChangeEstados = (event, value) => {
+        setSelectedValueEstado(value);
+        setEstado(value.valor);
+    };
+
+    
 
     if (!TipoEvento) {
 
@@ -226,6 +257,70 @@ const TipoEventoEdit = () => {
                                     />
                                 )}
                             />
+                        </MDBox>
+                        <MDBox mb={2}>
+                            <Autocomplete
+                                onChange={handleAutocompleteChangeEstados}
+                                // onChange={(event, newValue) => {
+                                //     setSelectedValue(newValue);
+                                // }}
+                                options={estados}
+                                value={selectedValuEestado}
+                                getOptionLabel={(option) => option.descripcion}
+                                getOptionDisabled={(option) => option.activo === false}
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        label="Seleccione Estado de Progreso"
+                                        variant="outlined"
+                                    />
+                                )}
+                            />
+                        </MDBox>
+                        <MDBox mb={2}>
+                            <MDInput
+                                type="text"
+                                name="observaciones"
+                                required
+                                label="Observaciones"
+                                variant="standard"
+                                value={observaciones}
+                                onChange={(e) => setObservaciones(e.target.value)}
+                                fullWidth
+                            />
+                        </MDBox>
+
+                        <MDBox mb={2}>
+
+                            <Checkbox name="enviaMail"
+                                onChange={(e) => setEnviaMail(e.target.checked)}
+                                checked={enviaMail}
+
+                            />
+                            <MDTypography
+                                variant="button"
+                                fontWeight="regular"
+                                color="text"
+                                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
+                            >
+                                &nbsp;&nbsp;Envia Mail
+                            </MDTypography>
+                        </MDBox>
+                        <MDBox mb={2}>
+
+                            <Checkbox name="detiene"
+                                onChange={(e) => setDetiene(e.target.checked)}
+                                checked={detiene}
+
+                            />
+                            <MDTypography
+                                variant="button"
+                                fontWeight="regular"
+                                color="text"
+                                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
+                            >
+                                &nbsp;&nbsp;Detiene Tarea
+                            </MDTypography>
                         </MDBox>
                         <MDBox mb={2}>
 

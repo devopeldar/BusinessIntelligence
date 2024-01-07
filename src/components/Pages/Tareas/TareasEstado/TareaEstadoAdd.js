@@ -42,7 +42,7 @@ const TareaEstadoAdd = () => {
   const [showprogrees, setShowprogrees] = React.useState(0);
   const [loading, setLoading] = useState(false);
 
-  const [nombreboton, setnombreboton] = useState("Cancelar");
+  const [nombreboton, setnombreboton] = useState("Volver");
 
   const handleInputChange = (event) => {
     const { name, value, type, checked } = event.target;
