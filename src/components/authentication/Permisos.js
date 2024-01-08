@@ -1,20 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import BasicLayout from '../layauots/BasicLayout';
 import { Card } from 'react-bootstrap';
 import MDBox from '../controls/MDBox';
 import MDTypography from '../controls/MDTypography';
 import bgImage from '../../assets/images/bg-sign-up-cover.jpeg';
-import { Checkbox } from '@mui/material';
+import { Alert, AlertTitle, Checkbox } from '@mui/material';
 import API_URL from '../../config';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
-import { HandIndex, Save2Fill } from 'react-bootstrap-icons';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Save2Fill } from 'react-bootstrap-icons';
 import MDButton from '../controls/MDButton';
 import itemsMenu from '../Utils/itemsMenu';
+import MDProgress from '../controls/MDProgress';
+import { ExitToApp } from '@mui/icons-material';
 
 
 const Permisos = () => {
-
+  const navigate = useNavigate();
   const { id } = useParams();
   const [mantenimientotareas, setMantenimientoTareas] = useState(false);
   const [departamentos, setDepartamentos] = useState(false);
@@ -31,8 +33,14 @@ const Permisos = () => {
   const [usuarios, setUsuarios] = useState(false);
   const [mnuseguridad, setMnuSeguridad] = useState(false);
   const [roles, setRol] = useState(false);
-
-
+  const [nombreboton, setnombreboton] = useState("Cancelar");
+  const [progress, setProgress] = useState(0);
+  const [showprogrees, setShowprogrees] = React.useState(0);
+  const [loading, setLoading] = useState(false);
+  const [mensaje, setMensaje] = useState("");
+  const [exito, setExito] = useState(false);
+  const listaPerfilPermisoRef = useRef([]);
+  const [grabando, setGrabando] = useState(false);
   useEffect(() => {
     setidPerfil(id);
     // Aquí realizas la llamada a tu API para obtener el Departamento específico por su ID
@@ -50,16 +58,16 @@ const Permisos = () => {
         const data = response.data;
         const TAREA = data.some(item => item.codigoPermiso === itemsMenu.TAREA.valor);
         setTareas(TAREA);
-       
+
 
         const TAREAS = data.some(item => item.codigoPermiso === itemsMenu.TAREAS.valor);
-       
+
         setMantenimientoTareas(TAREAS);
-        
+
         const DEPARTAMENTOS = data.some(item => item.codigoPermiso === itemsMenu.DEPARTAMENTOS.valor);
         setDepartamentos(DEPARTAMENTOS);
 
-       
+
 
         const ESTADOSDETAREA = data.some(item => item.codigoPermiso === itemsMenu.ESTADOSDETAREA.valor);
         setEstadoTarea(ESTADOSDETAREA);
@@ -97,15 +105,70 @@ const Permisos = () => {
   }, [id]);
 
 
-  const handleSubmit = (event) => {
-    console.log("handleSubmit " + tareas);
-    console.log("handleSubmit " + departamentos);
-    console.log("handleSubmit " + estadotarea);
-    console.log("handleSubmit " + tipodetareas);
-    console.log("handleSubmit " + mantenimientotareas);
+  // Función para agregar un nuevo item a la lista
+  const agregarItem = (codigoPermiso) => {
+  
+    const nuevoItem = { IDPerfil: idperfil, codigoPermiso: codigoPermiso.valor }; // Ejemplo de nuevo item
+    listaPerfilPermisoRef.current.push(nuevoItem);
+  
+  };
+
+  const handleSubmit = async (data) => {
+    try {
+      setLoading(true);
+
+      listaPerfilPermisoRef.current = [];
+      if (tareas === true) { agregarItem(itemsMenu.TAREA); }
+      if (mantenimientotareas === true) { agregarItem(itemsMenu.TAREAS); }
+      if (departamentos === true) { agregarItem(itemsMenu.DEPARTAMENTOS); }
+      if (tipodetareas === true) { agregarItem(itemsMenu.TIPOSDETAREAS); }
+      if (estadotarea === true) { agregarItem(itemsMenu.ESTADOSDETAREA); }
+      if (mnuseguridad === true) { agregarItem(itemsMenu.SEGURIDAD); }
+      if (usuarios === true) { agregarItem(itemsMenu.USUARIOS); }
+      if (perfiles === true) { agregarItem(itemsMenu.PERFILES); }
+      if (roles === true) { agregarItem(itemsMenu.ROLES); }
+      if (mnuclientes === true) { agregarItem(itemsMenu.CLIENTES); }
+      if (mantenimientoclientes === true) { agregarItem(itemsMenu.MANTENIMIENTOCLIENTES); }
+      if (mnueventos === true) { agregarItem(itemsMenu.EVENTO); }
+      if (evento === true) { agregarItem(itemsMenu.EVENTOS); }
+      if (tipoevento === true) { agregarItem(itemsMenu.TIPOSDEEVENTOS); }
+
+      console.log("listaPerfilPermisoRef ", listaPerfilPermisoRef);
+
+      
+      const response = await fetch(API_URL + "/PerfilxPermisoDTOModificacion", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(listaPerfilPermisoRef.current),
+      });
+
+      const res = await response.json();
+
+      if (res.rdoAccion) {
+        // Manejar respuesta exitosa
+        setMensaje("Los Permisos han sido Registrado exitosamente!");
+        setGrabando(true);
+        setExito(true);
+      } else {
+        // Manejar errores si la respuesta no es exitosa
+        setMensaje(res.rdoAccionDesc);
+        setExito(false);
+        setGrabando(false);
+      }
+    } catch (error) {
+      setMensaje("Error en la solicitud:", error);
+      setGrabando(true); // Inicia la grabación
+      setnombreboton("Cancelar");
+    } finally {
+      setLoading(false);
+      setShowprogrees(0);
+      setProgress(100);
+    }
   };
   const HandleMnuTarea = (event) => {
-    console.log("event " + event);
+
     setTareas(event.target.checked)
     setMantenimientoTareas(event.target.checked);
     setDepartamentos(event.target.checked);
@@ -146,7 +209,9 @@ const Permisos = () => {
   //     [name]: newValue,
   //   });
 
-
+  const handleVolver = () => {
+    navigate("/PerfilesVolver"); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
+  };
 
   return (
     <BasicLayout image={bgImage}>
@@ -157,9 +222,9 @@ const Permisos = () => {
           borderRadius="lg"
           coloredShadow="warning"
           mx={2}
-          mt={-3}
+          mt={6}
           p={3}
-          mb={1}
+          mb={-5}
           textAlign="center"
         >
           <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
@@ -169,260 +234,294 @@ const Permisos = () => {
             Esta seccion permite establecer que pantallas podra visualizar el usuario
           </MDTypography>
         </MDBox>
-        <MDBox>
+        <MDBox pt={6} pb={0} px={3}>
+          <MDBox component="form" role="form">
+            <MDBox mb={2}>
 
-          <Checkbox name="tareas"
-            onChange={(e) => HandleMnuTarea(e)}
-            checked={tareas || (tipodetareas || estadotarea || mantenimientotareas || departamentos)}
+              <Checkbox name="tareas"
+                onChange={(e) => HandleMnuTarea(e)}
+                checked={tareas || (tipodetareas || estadotarea || mantenimientotareas || departamentos)}
 
-          />
+              />
 
-          <MDTypography
-            variant="button"
-            fontWeight="regular"
-            color="text"
-            sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
-          >
-            &nbsp;&nbsp;Tareas
-          </MDTypography>
-        </MDBox>
-        <MDBox sx={{ ml: 5 }}>
-          <Checkbox name="mantenimientotareas"
-            onChange={(e) => setMantenimientoTareas(e.target.checked)}
-            checked={mantenimientotareas}
+              <MDTypography
+                variant="button"
+                fontWeight="regular"
+                color="text"
+                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
+              >
+                &nbsp;&nbsp;Tareas
+              </MDTypography>
+            </MDBox>
+            <MDBox sx={{ ml: 5 }}>
+              <Checkbox name="mantenimientotareas"
+                onChange={(e) => setMantenimientoTareas(e.target.checked)}
+                checked={mantenimientotareas}
 
-          />
-          <MDTypography
-            variant="button"
-            fontWeight="regular"
-            color="text"
-            sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
-          >
-            &nbsp;&nbsp;Tareas
-          </MDTypography>
+              />
+              <MDTypography
+                variant="button"
+                fontWeight="regular"
+                color="text"
+                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
+              >
+                &nbsp;&nbsp;Tareas
+              </MDTypography>
 
-        </MDBox>
-        <MDBox sx={{ ml: 5 }}>
-          <Checkbox name="tipodetareas"
-            onChange={(e) => setTipoDeTareas(e.target.checked)}
-            checked={tipodetareas}
+            </MDBox>
+            <MDBox sx={{ ml: 5 }}>
+              <Checkbox name="tipodetareas"
+                onChange={(e) => setTipoDeTareas(e.target.checked)}
+                checked={tipodetareas}
 
-          />
-          <MDTypography
-            variant="button"
-            fontWeight="regular"
-            color="text"
-            sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
-          >
-            &nbsp;&nbsp;Tipos de Tarea
-          </MDTypography>
-
-
-        </MDBox>
-        <MDBox sx={{ ml: 5 }}>
-          <Checkbox name="departamentos"
-            onChange={(e) => setDepartamentos(e.target.checked)}
-            checked={departamentos}
-
-          />
-          <MDTypography
-            variant="button"
-            fontWeight="regular"
-            color="text"
-            sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
-          >
-            &nbsp;&nbsp;Departamentos
-          </MDTypography>
-        </MDBox>
-        <MDBox sx={{ ml: 5 }}>
-          <Checkbox name="estadotarea"
-            onChange={(e) => setEstadoTarea(e.target.checked)}
-            checked={estadotarea}
-
-          />
-          <MDTypography
-            variant="button"
-            fontWeight="regular"
-            color="text"
-            sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
-          >
-            &nbsp;&nbsp;Estado de Tarea
-          </MDTypography>
-        </MDBox>
-        <MDBox>
-
-          <Checkbox name="mnueventos"
-            onChange={(e) => HandleMnuEvento(e)}
-            checked={mnueventos || (evento || tipoevento)}
-
-          />
-
-          <MDTypography
-            variant="button"
-            fontWeight="regular"
-            color="text"
-            sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
-          >
-            &nbsp;&nbsp;Eventos
-          </MDTypography>
-        </MDBox>
-        <MDBox sx={{ ml: 5 }}>
-
-          <Checkbox name="evento"
-            onChange={(e) => setEventos(e.target.checked)}
-            checked={evento}
-
-          />
-
-          <MDTypography
-            variant="button"
-            fontWeight="regular"
-            color="text"
-            sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
-          >
-            &nbsp;&nbsp;Eventos de Tareas
-          </MDTypography>
-        </MDBox>
-        <MDBox sx={{ ml: 5 }}>
-          <Checkbox name="tipoevento"
-            onChange={(e) => setTipoEventos(e.target.checked)}
-            checked={tipoevento}
-
-          />
-
-          <MDTypography
-            variant="button"
-            fontWeight="regular"
-            color="text"
-            sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
-          >
-            &nbsp;&nbsp;Tipos de Eventos
-          </MDTypography>
-        </MDBox>
-
-        <MDBox>
-
-          <Checkbox name="mnuclientes"
-            onChange={(e) => HandleMnuClientes(e)}
-            checked={mnuclientes && mantenimientoclientes}
-
-          />
-
-          <MDTypography
-            variant="button"
-            fontWeight="regular"
-            color="text"
-            sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
-          >
-            &nbsp;&nbsp;Clientes
-          </MDTypography>
-        </MDBox>
-        <MDBox sx={{ ml: 5 }}>
-
-          <Checkbox name="mantenimientoclientes"
-            onChange={(e) => setMantenimientoClientes(e.target.checked)}
-            checked={mantenimientoclientes}
-
-          />
-
-          <MDTypography
-            variant="button"
-            fontWeight="regular"
-            color="text"
-            sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
-          >
-            &nbsp;&nbsp;Mantenimiento Clientes
-          </MDTypography>
+              />
+              <MDTypography
+                variant="button"
+                fontWeight="regular"
+                color="text"
+                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
+              >
+                &nbsp;&nbsp;Tipos de Tarea
+              </MDTypography>
 
 
-        </MDBox>
-        <MDBox>
+            </MDBox>
+            <MDBox sx={{ ml: 5 }}>
+              <Checkbox name="departamentos"
+                onChange={(e) => setDepartamentos(e.target.checked)}
+                checked={departamentos}
 
-          <Checkbox name="mnuseguridad"
-            onChange={(e) => HandleMnuSeguridad(e)}
-            checked={mnuseguridad || (usuarios || perfiles || roles)}
+              />
+              <MDTypography
+                variant="button"
+                fontWeight="regular"
+                color="text"
+                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
+              >
+                &nbsp;&nbsp;Departamentos
+              </MDTypography>
+            </MDBox>
+            <MDBox sx={{ ml: 5 }}>
+              <Checkbox name="estadotarea"
+                onChange={(e) => setEstadoTarea(e.target.checked)}
+                checked={estadotarea}
 
-          />
+              />
+              <MDTypography
+                variant="button"
+                fontWeight="regular"
+                color="text"
+                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
+              >
+                &nbsp;&nbsp;Estado de Tarea
+              </MDTypography>
+            </MDBox>
+            <MDBox>
 
-          <MDTypography
-            variant="button"
-            fontWeight="regular"
-            color="text"
-            sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
-          >
-            &nbsp;&nbsp;Seguridad
-          </MDTypography>
-        </MDBox>
-        <MDBox sx={{ ml: 5 }}>
+              <Checkbox name="mnueventos"
+                onChange={(e) => HandleMnuEvento(e)}
+                checked={mnueventos || (evento || tipoevento)}
 
-          <Checkbox name="usuarios"
-            onChange={(e) => setUsuarios(e.target.checked)}
-            checked={usuarios}
+              />
 
-          />
+              <MDTypography
+                variant="button"
+                fontWeight="regular"
+                color="text"
+                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
+              >
+                &nbsp;&nbsp;Eventos
+              </MDTypography>
+            </MDBox>
+            <MDBox sx={{ ml: 5 }}>
 
-          <MDTypography
-            variant="button"
-            fontWeight="regular"
-            color="text"
-            sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
-          >
-            &nbsp;&nbsp;Usuarios
-          </MDTypography>
+              <Checkbox name="evento"
+                onChange={(e) => setEventos(e.target.checked)}
+                checked={evento}
+
+              />
+
+              <MDTypography
+                variant="button"
+                fontWeight="regular"
+                color="text"
+                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
+              >
+                &nbsp;&nbsp;Eventos de Tareas
+              </MDTypography>
+            </MDBox>
+            <MDBox sx={{ ml: 5 }}>
+              <Checkbox name="tipoevento"
+                onChange={(e) => setTipoEventos(e.target.checked)}
+                checked={tipoevento}
+
+              />
+
+              <MDTypography
+                variant="button"
+                fontWeight="regular"
+                color="text"
+                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
+              >
+                &nbsp;&nbsp;Tipos de Eventos
+              </MDTypography>
+            </MDBox>
+
+            <MDBox>
+
+              <Checkbox name="mnuclientes"
+                onChange={(e) => HandleMnuClientes(e)}
+                checked={mnuclientes && mantenimientoclientes}
+
+              />
+
+              <MDTypography
+                variant="button"
+                fontWeight="regular"
+                color="text"
+                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
+              >
+                &nbsp;&nbsp;Clientes
+              </MDTypography>
+            </MDBox>
+            <MDBox sx={{ ml: 5 }}>
+
+              <Checkbox name="mantenimientoclientes"
+                onChange={(e) => setMantenimientoClientes(e.target.checked)}
+                checked={mantenimientoclientes}
+
+              />
+
+              <MDTypography
+                variant="button"
+                fontWeight="regular"
+                color="text"
+                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
+              >
+                &nbsp;&nbsp;Mantenimiento Clientes
+              </MDTypography>
 
 
-        </MDBox>
-        <MDBox sx={{ ml: 5 }}>
+            </MDBox>
+            <MDBox>
 
-          <Checkbox name="perfiles"
-            onChange={(e) => setPerfiles(e.target.checked)}
-            checked={perfiles}
+              <Checkbox name="mnuseguridad"
+                onChange={(e) => HandleMnuSeguridad(e)}
+                checked={mnuseguridad || (usuarios || perfiles || roles)}
 
-          />
+              />
 
-          <MDTypography
-            variant="button"
-            fontWeight="regular"
-            color="text"
-            sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
-          >
-            &nbsp;&nbsp;Perfiles
-          </MDTypography>
+              <MDTypography
+                variant="button"
+                fontWeight="regular"
+                color="text"
+                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
+              >
+                &nbsp;&nbsp;Seguridad
+              </MDTypography>
+            </MDBox>
+            <MDBox sx={{ ml: 5 }}>
 
+              <Checkbox name="usuarios"
+                onChange={(e) => setUsuarios(e.target.checked)}
+                checked={usuarios}
 
-        </MDBox>
-        <MDBox sx={{ ml: 5 }}>
+              />
 
-          <Checkbox name="roles"
-            onChange={(e) => setRol(e.target.checked)}
-            checked={roles}
-
-          />
-
-          <MDTypography
-            variant="button"
-            fontWeight="regular"
-            color="text"
-            sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
-          >
-            &nbsp;&nbsp;Roles
-          </MDTypography>
+              <MDTypography
+                variant="button"
+                fontWeight="regular"
+                color="text"
+                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
+              >
+                &nbsp;&nbsp;Usuarios
+              </MDTypography>
 
 
-        </MDBox>
-        <MDBox mt={4} mb={1}>
-          <MDButton mt={4} mb={1}
-            onClick={() => {
-              handleSubmit();
-            }}
-            variant="gradient"
-            color="warning"
-            endIcon={<Save2Fill />}
+            </MDBox>
+            <MDBox sx={{ ml: 5 }}>
 
-            fullWidth
-          >
-            Grabar
-          </MDButton>
+              <Checkbox name="perfiles"
+                onChange={(e) => setPerfiles(e.target.checked)}
+                checked={perfiles}
+
+              />
+
+              <MDTypography
+                variant="button"
+                fontWeight="regular"
+                color="text"
+                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
+              >
+                &nbsp;&nbsp;Perfiles
+              </MDTypography>
+
+
+            </MDBox>
+            <MDBox sx={{ ml: 5 }}>
+
+              <Checkbox name="roles"
+                onChange={(e) => setRol(e.target.checked)}
+                checked={roles}
+
+              />
+
+              <MDTypography
+                variant="button"
+                fontWeight="regular"
+                color="text"
+                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
+              >
+                &nbsp;&nbsp;Roles
+              </MDTypography>
+
+
+            </MDBox>
+            <MDBox mt={4} mb={1}>
+              <MDButton mt={4} mb={1}
+                onClick={() => {
+                  handleSubmit();
+                }}
+                variant="gradient"
+                color="warning"
+                endIcon={<Save2Fill />}
+
+                fullWidth
+              >
+                Grabar
+              </MDButton>
+            </MDBox>
+            <MDBox mt={4} mb={1}>
+              <MDButton
+                onClick={() => {
+                  handleVolver();
+                }}
+                variant="gradient"
+                color="primary"
+                endIcon={<ExitToApp />}
+                fullWidth
+              >
+                {nombreboton}
+              </MDButton>
+            </MDBox>
+          </MDBox>
+          <MDBox mt={4} mb={1}>
+            <MDProgress
+              color="success"
+              loading="true"
+              label={true}
+              value={showprogrees === 0 ? progress : 0}
+              display={loading && exito ? "true" : "false"}
+              variant="contained"
+            ></MDProgress>
+          </MDBox>
+
+          {mensaje !== "" && (
+            <Alert severity={exito ? "success" : "error"}>
+              <AlertTitle>{exito ? "Felicitaciones" : "Error"}</AlertTitle>
+              {mensaje}
+            </Alert>
+          )}
         </MDBox>
       </Card>
     </BasicLayout>

@@ -248,7 +248,8 @@ export default function App() {
             <Route path="/Perfil/PerfilAdd" element={<PerfilAdd />} />
             <Route path="/Perfil/PerfilEdit/:id" element={<PerfilEdit />} />
             <Route path="/Perfil/Perfiles" element={<Perfiles />} />
-
+            <Route path="/PerfilesVolver" element={<Perfiles />} />
+            
             <Route path="/DepartamentoAdd" element={<DepartamentoAdd />} />
             <Route
               path="/Departamento/DepartamentoEdit/:id"

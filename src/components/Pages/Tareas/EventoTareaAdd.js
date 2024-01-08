@@ -18,6 +18,7 @@ import {
   Alert,
   AlertTitle,
   Autocomplete,
+  Checkbox,
   TextField,
 } from "@mui/material";
 import bgImage from "../../../assets/images/bg-sign-up-cover.jpeg";
@@ -59,6 +60,7 @@ const EventoTareaAdd = () => {
     observaciones: "",
     idUsuario: 0,
     idTarea: id,
+    enviaMailCliente: false
   });
 
   const validationSchema = yup.object().shape({
@@ -237,7 +239,21 @@ const EventoTareaAdd = () => {
                 fullWidth
               />
             </MDBox>
-
+            <MDBox mb={2}>
+              <Checkbox
+                name="enviaMailCliente"
+                onChange={handleInputChange}
+                checked={formData.enviaMailCliente || false}
+              />
+              <MDTypography
+                variant="button"
+                fontWeight="regular"
+                color="text"
+                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
+              >
+                &nbsp;&nbsp;Envia Mail Cliente
+              </MDTypography>
+            </MDBox>
             <MDBox mt={4} mb={1}>
               <MDButton
                 onClick={() => {

@@ -5,8 +5,9 @@ import MDTypography from "../../controls/MDTypography";
 import MDBox from "../../controls/MDBox";
 import MDBadge from "../../controls/MDBadge";
 import MDButton from "../../controls/MDButton";
-import { PencilSquare } from "react-bootstrap-icons";
+import { PencilSquare, People, PersonFillDash } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
+import { AdminPanelSettings } from "@mui/icons-material";
 
 export default function PerfilesGet() {
   const [rows, setRows] = useState([]);
@@ -105,6 +106,16 @@ export default function PerfilesGet() {
             >
           <MDButton variant="text" color="dark">
             <PencilSquare color="blue" />
+            
+              
+           
+          </MDButton>
+          </Link>
+          <Link
+              to={`../Permisos/${perfil.idPerfil}`}
+            >
+          <MDButton variant="text" color="dark">
+            <AdminPanelSettings titleAccess="Modificar Perfiles"  color="success" />
             
               
            

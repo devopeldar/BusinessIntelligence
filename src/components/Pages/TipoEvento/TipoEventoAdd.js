@@ -40,16 +40,18 @@ const TipoEventoAdd = () => {
 
   const estados = Object.values(EstadosProgresoTarea);
   const [grabando, setGrabando] = useState(false);
-  const [mensaje, setMensaje] = useState("");
-  const [exito, setExito] = useState(false);
+  
   const [elements, setElements] = useState([]);
-  const [progress, setProgress] = useState(0);
-  const [showprogrees, setShowprogrees] = React.useState(0);
-  const [loading, setLoading] = useState(false);
+  
   const [selectedValue, setSelectedValue] = useState(elements[0]);
   const [selectedValuEestado, setSelectedValueEstado] = useState(estados[0]);
   const [nombreboton, setnombreboton] = useState("Cancelar");
-
+  const [progress, setProgress] = useState(0);
+  const [showprogrees, setShowprogrees] = React.useState(0);
+  const [loading, setLoading] = useState(false);
+  const [mensaje, setMensaje] = useState("");
+  const [exito, setExito] = useState(false);
+  
   const handleInputChange = (event) => {
     const { name, value, type, checked } = event.target;
     console.log("chk :" + event);
