@@ -111,12 +111,16 @@ function DataTable({
   // A function that sets the sorted value for the table
   const setSortedValue = (column) => {
     let sortedValue;
-
+    //console.log("column ", column)
     if (isSorted && column.isSorted) {
       sortedValue = column.isSortedDesc ? "desc" : "asce";
     } else if (isSorted) {
+      
+      //console.log("column 1")
+      //sortedValue = column.isSortedDesc ? "desc" : "asce";
       sortedValue = "none";
     } else {
+      //console.log("column 0")
       sortedValue = false;
     }
 
@@ -188,6 +192,7 @@ function DataTable({
                   width={column.width ? column.width : "auto"}
                   align={column.align ? column.align : "left"}
                   sorted={setSortedValue(column)}
+                  
                 >
                   {column.render("Header")}
                 </DataTableHeadCell>

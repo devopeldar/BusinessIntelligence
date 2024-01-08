@@ -12,7 +12,7 @@ import EstadosProgresoTarea from "../../Utils/estadosProgresoTarea";
 export default function TipoEventoGet() {
  
     const [rows, setRows] = useState([]);
-
+    const [error, setError] = useState([]);
     function obtenerDescripcionPorValor(valor) {
         for (let estado in EstadosProgresoTarea) {
           if (EstadosProgresoTarea[estado].valor === valor) {
@@ -42,30 +42,31 @@ export default function TipoEventoGet() {
                     enviaMail: EventoTipo.enviaMail,
                     detiene: EventoTipo.detiene,
                     estado: EventoTipo.estado,
+                    observaciones:EventoTipo.observaciones
                 }));
 
                 setRows(data);
             } catch (ex) {
-                //setError(ex);
+                setError(ex);
 
                 console.log(ex);
             }
         };
 
         fetchData();
-    });
+    },[error]);
 
     return {
         columns: [
            // { Header: "ID Tipo Evento", accessor: "idEventoTipo", align: "left" },
             { Header: "Descripcion", accessor: "descripcion", width: "25%", align: "left" },
-            { Header: "Estado Tarea", accessor: "estadotareadescripcion", align: "center" },
-            { Header: "Estado", accessor: "estado", align: "center" },
+            { Header: "Estado Tarea", accessor: "estadotareadescripcion", align: "left" },
+            { Header: "Estado", accessor: "estado", align: "left" },
             { Header: "Envia Mail", accessor: "enviaMail", align: "center" },
-            { Header: "Detiene Tarea", accessor: "detiene", align: "center" },
-            { Header: "Activo", accessor: "activo", align: "center" },
-            // { Header: "idTareaEstado", accessor: "idTareaEstado", align: "center"},
-            { Header: "Acciones", accessor: "action", align: "center" },
+            { Header: "Detiene Tarea",  accessor: "detiene", align: "center" },
+            { Header: "Activo",  accessor: "activo", align: "center" },
+            { Header: "Observaciones",  accessor: "observaciones", align: "left"},
+            { Header: "Acciones",  accessor: "action", align: "center" },
         ],
         rows: rows.map((EventoTipo) => ({
 
@@ -81,6 +82,7 @@ export default function TipoEventoGet() {
             //     </MDTypography>
             // ), // Reemplaza <TuComponenteControl1 /> por el componente que desees en esta celda
             descripcion: (
+                
                 <MDTypography
                     component="a"
                     href="#"
@@ -169,6 +171,17 @@ export default function TipoEventoGet() {
                         />
                     )}
                 </MDBox>
+            ),
+            observaciones: (
+                <MDTypography
+                    component="a"
+                    href="#"
+                    variant="caption"
+                    color="text"
+                    fontWeight="medium"
+                >
+                    {EventoTipo.observaciones}
+                </MDTypography>
             ),
             action: (
                 <MDTypography variant="caption" color="text" fontWeight="medium">

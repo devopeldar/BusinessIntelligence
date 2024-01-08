@@ -6,7 +6,7 @@ import MDButton from "../../controls/MDButton";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import MDProgress from "../../controls/MDProgress";
-import { AccessAlarm, PlayArrow, Stop } from "@mui/icons-material";
+import { AccessAlarm, Grid3x3, PlayArrow, Stop } from "@mui/icons-material";
 import PauseIcon from '@mui/icons-material/Pause';
 export default function TareaGet() {
   const [rows, setRows] = useState([]);
@@ -78,7 +78,8 @@ export default function TareaGet() {
             fechaFinalizacion: Tarea.fechaFinalizacion,
             porcentajetranscurrido: Tarea.porcentajeTrascurrido,
             color: color,
-            estado: Tarea.estado, // Se asigna el color correspondiente al objeto retornado
+            estado: Tarea.estado,
+            tiempoDetenido: Tarea.tiempoDetenido
           };
         });
         setRows(data);
@@ -152,7 +153,7 @@ export default function TareaGet() {
     fechaInicio,
     fechaVencimiento,
     fechaVencimientoLegal,
-    fechaFinalizacion,
+    fechaFinalizacion,tiempoDetenido
   }) => (
     <MDBox lineHeight={1} textAlign="left">
       <MDTypography
@@ -195,6 +196,15 @@ export default function TareaGet() {
       >
         Fecha Finalizacion :{formatDate(fechaFinalizacion)}{" "}
       </MDTypography>
+      <MDTypography
+        variant="caption"
+        display="block"
+        color="error"
+        fontWeight="bold"
+      >
+        Tiempo Detenido :{tiempoDetenido}{" "}
+      </MDTypography>
+      
     </MDBox>
   );
 
@@ -227,7 +237,7 @@ export default function TareaGet() {
       {
         Header: "Descripcion",
         accessor: "descripcion",
-        width: "25%",
+        width: "20%",
         align: "left",
       },
       { Header: "Roles", accessor: "roles", align: "left" },
@@ -292,6 +302,7 @@ export default function TareaGet() {
           fechaVencimiento={Tarea.fechaVencimiento}
           fechaVencimientoLegal={Tarea.fechaVencimientoLegal}
           fechaFinalizacion={Tarea.fechaFinalizacion}
+          tiempoDetenido={Tarea.tiempoDetenido}
         />
       ),
 
@@ -319,8 +330,18 @@ export default function TareaGet() {
             <Link to={`../EventoTareaAdd/${Tarea.idTarea}`}>
               <MDButton variant="text" color="dark">
                 <AccessAlarm
-                  color="blue"
+                  color="warning"
                   titleAccess="Agregar Evento a Tarea"
+                />
+              </MDButton>
+            </Link>
+          </MDTypography>
+          <MDTypography variant="caption" color="text" fontWeight="medium">
+            <Link to={`../EventoTareaTraking/${Tarea.idTarea}`}>
+              <MDButton variant="text" color="dark">
+                <Grid3x3
+                  color="info"
+                  titleAccess="Ver traking de Eventos de una Tarea"
                 />
               </MDButton>
             </Link>

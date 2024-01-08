@@ -58,7 +58,7 @@ function TipoEventoList() {
                   </MDButton>
                 <DataTable
                   table={{ columns, rows }}
-                  isSorted={false}
+                  isSorted={true}
                   entriesPerPage={true}
                   showTotalEntries={true}
                   canSearch={false}
