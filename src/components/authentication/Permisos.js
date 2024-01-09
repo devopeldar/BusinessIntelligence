@@ -146,7 +146,7 @@ const Permisos = () => {
 
       const res = await response.json();
    
-      if (res.length > 0) {
+      if (res.rdoAccion) {
         // Manejar respuesta exitosa
         setMensaje("Los Permisos han sido Registrado exitosamente!");
         setGrabando(true);
@@ -223,9 +223,9 @@ const Permisos = () => {
           borderRadius="lg"
           coloredShadow="warning"
           mx={2}
-          mt={6}
-          p={3}
-          mb={-5}
+                    mt={-3}
+                    p={3}
+                    mb={1}
           textAlign="center"
         >
           <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
@@ -235,8 +235,8 @@ const Permisos = () => {
             Esta seccion permite establecer que pantallas podra visualizar el usuario
           </MDTypography>
         </MDBox>
-        <MDBox pt={6} pb={0} px={3}>
-          <MDBox component="form" role="form">
+        <MDBox pt={4} pb={3} px={3}>
+                    <MDBox component="form" role="form">
             <MDBox mb={2}>
 
               <Checkbox name="tareas"
@@ -478,8 +478,8 @@ const Permisos = () => {
 
 
             </MDBox>
-            <MDBox mt={4} mb={1}>
-              <MDButton mt={4} mb={1}
+            <MDBox mt={5} mb={1}ml={5} mr={5}>
+              <MDButton
                 onClick={() => {
                   handleSubmit();
                 }}
@@ -492,7 +492,7 @@ const Permisos = () => {
                 Grabar
               </MDButton>
             </MDBox>
-            <MDBox mt={4} mb={1}>
+            <MDBox mt={5} mb={1}ml={5} mr={5}>
               <MDButton
                 onClick={() => {
                   handleVolver();

@@ -70,17 +70,6 @@ export default function TipoEventoGet() {
         ],
         rows: rows.map((EventoTipo) => ({
 
-            // idEventoTipo: (
-            //     <MDTypography
-            //         component="a"
-            //         href="#"
-            //         variant="caption"
-            //         color="text"
-            //         fontWeight="medium"
-            //     >
-            //         {EventoTipo.idEventoTipo}
-            //     </MDTypography>
-            // ), // Reemplaza <TuComponenteControl1 /> por el componente que desees en esta celda
             descripcion: (
                 
                 <MDTypography

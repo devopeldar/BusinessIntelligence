@@ -19,6 +19,7 @@ export default function TareaGet() {
         const requsuario = {
           idUsuario: localStorage.getItem('iduserlogueado')
         };
+        console.log(requsuario)
         const response = await axios.post(API_URL + "/TareaListarTodo",requsuario, {
           headers: {
             accept: "application/json",
@@ -49,14 +50,7 @@ export default function TareaGet() {
 
         const data = response.data.map((Tarea) => {
           let color = "info"; // Valor por defecto
-          // let roles = Tarea.roles;
-
-          // // Verificar si el campo Roles contiene "|"
-          // if (roles.includes('|')) {
-          //     // Reemplazar "|" por un salto de línea "\n"
-          //     roles = roles.replace(/\|/g, '\n');
-          // }
-
+     
           if (Tarea.porcentajeTrascurrido < 20) {
             color = "error";
           } else if (Tarea.porcentajeTrascurrido > 60) {

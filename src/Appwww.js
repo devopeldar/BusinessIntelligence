@@ -81,6 +81,7 @@ import Permisos from "./components/authentication/Permisos";
 import CloseSession from "./components/authentication/CloseSession";
 import EventoTareaAdd from "./components/Pages/Tareas/EventoTareaAdd";
 import TareaTrakingList from "./components/Pages/Tareas/TareaTrakingList";
+import TareaAdd from "./components/Pages/Tareas/TareaAdd";
 
 export default function App() {
 
@@ -286,7 +287,7 @@ export default function App() {
             <Route path="/ClienteVolver" element={<ClienteList />} />
 
             <Route path="/TareaEdit/:id" element={<TareaList />} />
-            <Route path="/TareaAdd" element={<TareaList />} />
+            <Route path="/TareaAdd" element={<TareaAdd />} />
             <Route path="/Tarea" element={<TareaList />} />
             <Route path="/TareaVolver" element={<TareaList />} />
 
