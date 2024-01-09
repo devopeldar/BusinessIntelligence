@@ -80,7 +80,7 @@ export default function TareasTipoGet() {
   return {
     columns: [
      // { Header: "ID Tipo Tarea", accessor: "idtareatipo", align: "left" },
-      { Header: "Nombre", isSorted:true, isSortedDesc:true,  accessor: "nombre", width: "45%", align: "left" },
+      { Header: "Nombre",  accessor: "nombre", width: "45%", align: "left" },
       { Header: "Vencimientos", accessor: "vencimientos", align: "center" },
       { Header: "Activo", accessor: "activo", align: "center" },
       { Header: "Acciones", accessor: "action", align: "center" },

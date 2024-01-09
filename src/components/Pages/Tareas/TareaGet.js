@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import MDProgress from "../../controls/MDProgress";
 import { AccessAlarm, Grid3x3, PlayArrow, Stop } from "@mui/icons-material";
 import PauseIcon from '@mui/icons-material/Pause';
+
 export default function TareaGet() {
   const [rows, setRows] = useState([]);
   const [error, setError] = useState([]);
@@ -337,7 +338,7 @@ export default function TareaGet() {
             </Link>
           </MDTypography>
           <MDTypography variant="caption" color="text" fontWeight="medium">
-            <Link to={`../EventoTareaTraking/${Tarea.idTarea}`}>
+            <Link to={`../TareaTraking/${Tarea.idTarea}`}>
               <MDButton variant="text" color="dark">
                 <Grid3x3
                   color="info"

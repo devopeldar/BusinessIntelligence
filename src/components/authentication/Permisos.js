@@ -118,18 +118,18 @@ const Permisos = () => {
       setLoading(true);
 
       listaPerfilPermisoRef.current = [];
-      if (tareas === true) { agregarItem(itemsMenu.TAREA); }
+      if (tareas || (tipodetareas || estadotarea || mantenimientotareas || departamentos)) { agregarItem(itemsMenu.TAREA); }
       if (mantenimientotareas === true) { agregarItem(itemsMenu.TAREAS); }
       if (departamentos === true) { agregarItem(itemsMenu.DEPARTAMENTOS); }
       if (tipodetareas === true) { agregarItem(itemsMenu.TIPOSDETAREAS); }
       if (estadotarea === true) { agregarItem(itemsMenu.ESTADOSDETAREA); }
-      if (mnuseguridad === true) { agregarItem(itemsMenu.SEGURIDAD); }
+      if (mnuseguridad || (usuarios || perfiles || roles)) { agregarItem(itemsMenu.SEGURIDAD); }
       if (usuarios === true) { agregarItem(itemsMenu.USUARIOS); }
       if (perfiles === true) { agregarItem(itemsMenu.PERFILES); }
       if (roles === true) { agregarItem(itemsMenu.ROLES); }
-      if (mnuclientes === true) { agregarItem(itemsMenu.CLIENTES); }
+      if (mnuclientes || mantenimientoclientes) { agregarItem(itemsMenu.CLIENTES); }
       if (mantenimientoclientes === true) { agregarItem(itemsMenu.MANTENIMIENTOCLIENTES); }
-      if (mnueventos === true) { agregarItem(itemsMenu.EVENTO); }
+      if (mnueventos || (evento || tipoevento)) { agregarItem(itemsMenu.EVENTO); }
       if (evento === true) { agregarItem(itemsMenu.EVENTOS); }
       if (tipoevento === true) { agregarItem(itemsMenu.TIPOSDEEVENTOS); }
 
@@ -145,12 +145,13 @@ const Permisos = () => {
       });
 
       const res = await response.json();
-
-      if (res.rdoAccion) {
+   
+      if (res.length > 0) {
         // Manejar respuesta exitosa
         setMensaje("Los Permisos han sido Registrado exitosamente!");
         setGrabando(true);
         setExito(true);
+        setnombreboton("Volver");
       } else {
         // Manejar errores si la respuesta no es exitosa
         setMensaje(res.rdoAccionDesc);
@@ -371,7 +372,7 @@ const Permisos = () => {
 
               <Checkbox name="mnuclientes"
                 onChange={(e) => HandleMnuClientes(e)}
-                checked={mnuclientes && mantenimientoclientes}
+                checked={mnuclientes || mantenimientoclientes}
 
               />
 
@@ -485,7 +486,7 @@ const Permisos = () => {
                 variant="gradient"
                 color="warning"
                 endIcon={<Save2Fill />}
-
+                disabled={grabando}
                 fullWidth
               >
                 Grabar

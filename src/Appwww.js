@@ -80,6 +80,7 @@ import RolEdit from "./components/authentication/Rol/RolEdit";
 import Permisos from "./components/authentication/Permisos";
 import CloseSession from "./components/authentication/CloseSession";
 import EventoTareaAdd from "./components/Pages/Tareas/EventoTareaAdd";
+import TareaTrakingList from "./components/Pages/Tareas/TareaTrakingList";
 
 export default function App() {
 
@@ -297,6 +298,7 @@ export default function App() {
             <Route path="/CloseSession" element={<CloseSession />} />
 
             <Route path="/EventoTareaAdd/:id" element={<EventoTareaAdd />} />
+            <Route path="/TareaTraking/:id" element={<TareaTrakingList />} />
             <Route path="/TareaListVolver" element={<TareaList />} />
             {/* 
 
