@@ -4,16 +4,19 @@ import MDTypography from "../../controls/MDTypography";
 import MDBox from "../../controls/MDBox";
 import axios from "axios";
 import MDBadge from "../../controls/MDBadge";
+import { IdTarea } from "./IdTarea";
+
 
 export default function TareaTrakingGet() {
   const [rows, setRows] = useState([]);
+  const [id] = IdTarea();
 
   useEffect(() => {
-    const fetchData = async () => {
-      console.log("ssssssssssssssssss");
+    const fetchData = async (id) => {
+      console.log("TareaTrakingGet(id); ", id);
       try {
         const reqTrk = {
-          idTarea: 1,
+          idTarea: id,
         };
         const response = await axios.post(
           API_URL + "/EventoTrackingDTO",
@@ -45,8 +48,8 @@ export default function TareaTrakingGet() {
       }
     };
 
-    fetchData();
-  }, []);
+    fetchData(id);
+  }, [id]);
 
   const Fechas = ({ fechaEvento }) => (
     <MDBox lineHeight={1} textAlign="left">
@@ -56,7 +59,7 @@ export default function TareaTrakingGet() {
         color="dark"
         fontWeight="bold"
       >
-        Fecha Evento: {formatDateTime(fechaEvento)}
+        {formatDateTime(fechaEvento)}
       </MDTypography>
     </MDBox>
   );
