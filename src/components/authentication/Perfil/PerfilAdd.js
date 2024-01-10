@@ -7,7 +7,7 @@ import MDBox from "../../controls/MDBox";
 import MDTypography from "../../controls/MDTypography";
 import bgImage from "../../../assets/images/bg-sign-up-cover.jpeg";
 import MDInput from "../../controls/MDInput";
-import * as yup from "yup";
+//import * as yup from "yup";
 import { useNavigate } from 'react-router-dom';
 import MDProgress from "../../controls/MDProgress";
 import { AlertTitle, Checkbox } from "@mui/material";
@@ -29,9 +29,9 @@ const PerfilAdd = () => {
     cantUsuarios: 0,
     idPerfil: 0,
   });
-  const validationSchema = yup.object().shape({
-    nombre: yup.string().required("El campo Nombre es requerido"),
-  });
+  // const validationSchema = yup.object().shape({
+  //   nombre: yup.string().required("El campo Nombre es requerido"),
+  // });
 
   const [grabando, setGrabando] = useState(false);
   const [mensaje, setMensaje] = useState("");
@@ -69,6 +69,7 @@ const PerfilAdd = () => {
 
   const handleSubmit = (event) => {
     setGrabando(false); // Inicia la grabación
+    
     const timer = setInterval(() => {
       setProgress((oldProgress) => {
         if (oldProgress === 100) {
@@ -93,6 +94,7 @@ const PerfilAdd = () => {
 
   const procesarFormulario = async (data) => {
     try {
+      setLoading(true);
       setGrabando(true); // Inicia la grabación
       setnombreboton("Volver");
       const response = await fetch(API_URL + "/PerfilAlta", {
@@ -110,17 +112,20 @@ const PerfilAdd = () => {
         // Manejar respuesta exitosa
         setMensaje("Perfil Registrado exitosamente!");
         setGrabando(true);
+        setLoading(false);
        
       } else {
         // Manejar errores si la respuesta no es exitosa
         setMensaje(res.rdoAccionDesc);
         setExito(false);
         setGrabando(false);
+        setLoading(false);
       }
     } catch (error) {
       setMensaje("Error en la solicitud:", error);
       setGrabando(true); // Inicia la grabación
       setnombreboton("Cancelar");
+      setLoading(false);
     }
   };
 

@@ -5,7 +5,7 @@ import MDTypography from "../../controls/MDTypography";
 import MDBox from "../../controls/MDBox";
 import MDBadge from "../../controls/MDBadge";
 import MDButton from "../../controls/MDButton";
-import { PencilSquare, People, PersonFillDash } from "react-bootstrap-icons";
+import { PencilSquare } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
 import { AdminPanelSettings } from "@mui/icons-material";
 

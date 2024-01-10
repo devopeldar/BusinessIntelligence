@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css"; // Importa el archivo CSS de Bootstrap
 
 import MDBox from "../../../controls/MDBox";

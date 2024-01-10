@@ -102,6 +102,7 @@ const TareaTipoAdd = () => {
 
   const procesarFormulario = async (data) => {
     try {
+      setLoading(true)
       setGrabando(true); // Inicia la grabación
       setnombreboton("Volver");
       const response = await fetch(API_URL + "/TareaTipoAlta", {
@@ -120,17 +121,19 @@ const TareaTipoAdd = () => {
         setMensaje("Tipo de Tarea Registrado exitosamente!");
         setGrabando(true);
         setExito(true);
-       
+        setLoading(false);
       } else {
         // Manejar errores si la respuesta no es exitosa
         setMensaje(res.rdoAccionDesc);
         setExito(false);
         setGrabando(false);
+        setLoading(false);
       }
     } catch (error) {
       setMensaje("Error en la solicitud:", error);
       setGrabando(true); // Inicia la grabación
       setnombreboton("Cancelar");
+      setLoading(false);
     }
   };
 

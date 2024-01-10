@@ -26,7 +26,7 @@ const Login = ({ handleLogin }) => {
 
   //   console.log('wwwwwwwwwwwwwww');
   // }, []);
-  const [userPermissions, setUserPermissions] = useState({}); // Datos de permisos del usuario
+  //const [userPermissions, setUserPermissions] = useState({}); // Datos de permisos del usuario
   const [formData, setFormData] = useState({
 
     // Inicializa los campos del formulario

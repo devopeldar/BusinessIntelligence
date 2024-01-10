@@ -8,7 +8,6 @@ import { Link } from "react-router-dom";
 import MDProgress from "../../controls/MDProgress";
 import { AccessAlarm, Delete, Grid3x3, PlayArrow, PlayCircle, Stop } from "@mui/icons-material";
 import PauseIcon from '@mui/icons-material/Pause';
-import { HandIndex } from "react-bootstrap-icons";
 import MDSnackbar from "../../controls/MDSnackbar";
 
 export default function TareaGet() {
@@ -18,7 +17,7 @@ export default function TareaGet() {
   const [successSB, setSuccessSB] = useState(false);
   const [dateTime, setDateTime] = useState("");
   const [errorSB, setErrorSB] = useState(false);
-  const openErrorSB = () => setErrorSB(true);
+ // const openErrorSB = () => setErrorSB(true);
   const closeErrorSB = () => setErrorSB(false);
   useEffect(() => {
     const obtenerFechaHoraActual = () => {

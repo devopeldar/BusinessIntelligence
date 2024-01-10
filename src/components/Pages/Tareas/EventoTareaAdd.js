@@ -37,7 +37,7 @@ const EventoTareaAdd = () => {
   const [progress, setProgress] = useState(0);
   const [showprogrees, setShowprogrees] = React.useState(0);
   const [loading, setLoading] = useState(false);
-  const [idEventoTipo, setIdEventoTipo] = useState(0);
+  //const [idEventoTipo, setIdEventoTipo] = useState(0);
   const [idTarea, setIdTarea] = useState(0);
   const handleVolver = () => {
     history("/TareaListVolver"); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
@@ -169,7 +169,7 @@ const EventoTareaAdd = () => {
 
   const handleAutocompleteChange = (event, value) => {
     setSelectedValue(value);
-    setIdEventoTipo(value.idEventoTipo);
+    //setIdEventoTipo(value.idEventoTipo);
     setDescripcion(value.observaciones);
     console.log("value ", value);
   };

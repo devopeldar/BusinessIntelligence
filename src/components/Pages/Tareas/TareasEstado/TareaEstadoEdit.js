@@ -15,7 +15,7 @@ import { ExitToApp } from "@mui/icons-material";
 import MDButton from "../../../controls/MDButton";
 import { Alert, AlertTitle, Checkbox } from "@mui/material";
 import bgImage from "../../../../assets/images/bg-sign-up-cover.jpeg";
-import * as yup from "yup";
+//import * as yup from "yup";
 
 const TareaEstadoEdit = () => {
     const { id } = useParams(); // Obtener el parámetro de la URL (el ID del TareaEstado a editar)

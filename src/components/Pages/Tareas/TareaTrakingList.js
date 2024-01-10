@@ -7,12 +7,9 @@ import { Grid } from '@mui/material';
 import { Card } from 'react-bootstrap';
 import MDTypography from '../../controls/MDTypography';
 import DataTable from '../../controls/Tables/DataTable';
-import TareaTrakingGet from './TareaTrakingGet';
 import { useParams } from 'react-router-dom';
-//import { useParams } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
 import MDButton from '../../controls/MDButton';
-import { BuildingFillAdd } from 'react-bootstrap-icons';
 import { ExitToApp } from '@mui/icons-material';
 import { IdTarea } from './IdTarea';
 import axios from 'axios';
@@ -93,7 +90,7 @@ const [rows, setRows] = useState([]);
     };
 
     fetchData();
-  }, [id, setId]);
+  });
 
   const formatDateTime = (date) => {
     const formattedDate = new Date(date);

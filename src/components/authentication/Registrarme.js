@@ -303,30 +303,6 @@ const Registrarme = ({ handleLogin }) => {
       </Card>
     </BasicLayout>
 
-    //         {loading && <BarLoader color={'#36D7B7'} loading={loading} />}
-
-    //         {mensaje && (
-    //           <div className="alert alert-success mt-3" role="alert">
-    //             {mensaje}
-    //           </div>
-    //         )}
-    //       </div>
-    //     )}
-
-    //     {!showForm && (
-    //       <div className="divconfregistro">
-    //         <h2 className='titulomensajeregister'>¡Registro exitoso!</h2>
-    //         <p className='mensajeregister'>Felicitaciones <b>{formik.values.Email}</b> por registrarte con éxito. En minutos mas recibiras un correo con instrucciones de como activar tu usuario</p>
-    //         <p className='mensajeregister'>Recuerda revisar tu casilla de correo no deseado, si al pasar 10 minutos aun no has recibido</p>
-    //         {/* Agrega más contenido según lo necesites */}
-
-    //         <button className="buttonnodal btn btn-primary" onClick={handleLogin} >Comenzar</button>
-
-    //       </div>
-
-    //     )}
-
-    //   </div>
   );
 };
 

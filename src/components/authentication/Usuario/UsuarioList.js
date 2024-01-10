@@ -9,15 +9,10 @@ import MDTypography from '../../controls/MDTypography';
 
 import DataTable from '../../controls/Tables/DataTable';
 
-import { useNavigate } from 'react-router-dom';
 import UsuarioGet from './UsuarioGet';
 
 function UsuarioList() {
   const { columns, rows } = UsuarioGet();
-  const history = useNavigate();
-  const handleAdd = () => {
-    history('/UsuarioAdd'); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
-  };
 
   return (
     <DashboardLayout>

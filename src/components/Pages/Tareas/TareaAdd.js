@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import API_URL from "../../../config";
 import "bootstrap/dist/css/bootstrap.min.css"; // Importa los es../tilos de Bootstrap
 import BasicLayout from "../../layauots/BasicLayout";
-import { Alert, Autocomplete, Card, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from "@mui/material";
+import { Alert, Autocomplete, Card, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableRow, TextField } from "@mui/material";
 import MDBox from "../../controls/MDBox";
 import MDTypography from "../../controls/MDTypography";
 import bgImage from "../../../assets/images/bg-sign-up-cover.jpeg";
@@ -10,12 +10,11 @@ import MDInput from "../../controls/MDInput";
 import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
 import MDProgress from "../../controls/MDProgress";
-import { AlertTitle, Checkbox } from "@mui/material";
+import { AlertTitle } from "@mui/material";
 import MDButton from "../../controls/MDButton";
 import { PersonFillAdd, Save } from "react-bootstrap-icons";
 import { Delete, ExitToApp } from "@mui/icons-material";
 import axios from "axios";
-import DataTable from "../../controls/Tables/DataTable";
 
 const TareaAdd = () => {
     const navigate = useNavigate();
