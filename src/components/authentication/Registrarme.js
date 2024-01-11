@@ -15,7 +15,7 @@ import { Link } from "react-router-dom";
 import MDInput from "../controls/MDInput";
 import MDButton from "../controls/MDButton";
 import MDProgress from "../controls/MDProgress";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 const Registrarme = ({ handleLogin }) => {
   const validationSchema = yup.object().shape({
@@ -46,7 +46,6 @@ const Registrarme = ({ handleLogin }) => {
   const [showprogrees, setShowprogrees] = React.useState(0);
   const [loading, setLoading] = useState(false);
 
-
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -70,43 +69,41 @@ const Registrarme = ({ handleLogin }) => {
   };
 
   const handleRegistrarme = () => {
-    localStorage.setItem('isRegister', 'false');
+    localStorage.setItem("isRegister", "false");
+    localStorage.setItem("isLoggedIn", "false");
+    localStorage.setItem("isActivarCuenta", "false");
+    localStorage.setItem("isForgotPassword", "false");
   };
-  
 
   const handleSubmit = (event) => {
-    setGrabando(false); // Inicia la grabación
+    setGrabando(true); // Inicia la grabación
     const timer = setInterval(() => {
-    
       setProgress((oldProgress) => {
         if (oldProgress === 100) {
-
           clearInterval(timer);
-          return 0;
+          return 100;
         }
         if (showprogrees === 0) {
-
           clearInterval(timer);
           return 0;
         }
 
-        const diff = Math.floor(Math.random() * 10);
-        return Math.min(oldProgress + diff, 100);
+        const diff = Math.floor(Math.random() + 10);
+        return Math.min(oldProgress + diff, oldProgress);
       });
-    }, 1000);
+    }, 5000);
     procesarFormulario(formData);
   };
-
 
   const procesarFormulario = async (data) => {
     try {
       setLoading(true);
-      validationSchema.validate(data)
+      validationSchema
+        .validate(data)
         .then(async (validatedData) => {
-
           setExito(true);
-          setMensaje('');
-
+          setMensaje("Registrando.....");
+          setExito(true);
           try {
             const response = await fetch(API_URL + "/UsuarioAlta", {
               method: "POST",
@@ -122,14 +119,12 @@ const Registrarme = ({ handleLogin }) => {
               // Manejar respuesta exitosa
               setMensaje("¡Usuario Registrado exitosamente!");
               setGrabando(true);
-            
+
               handleRegistrarme();
-            
+
               setTimeout(() => {
-                navigate('/Confirmacion'); // Redirige a la ruta deseada
+                navigate("/Confirmacion"); // Redirige a la ruta deseada
               }, 3000); // 3000 milisegundos = 3 segundos
-
-
             } else {
               // Manejar errores si la respuesta no es exitosa
               setMensaje(res.rdoAccionDesc);
@@ -137,7 +132,9 @@ const Registrarme = ({ handleLogin }) => {
               setGrabando(false);
             }
           } catch (error) {
-            setMensaje("Error en la solicitud: el usuario no pudo ser registrado");
+            setMensaje(
+              "Error en la solicitud: el usuario no pudo ser registrado"
+            );
             console.log("Error en la solicitud:", error);
             setShowprogrees(0);
             setExito(false);
@@ -281,28 +278,32 @@ const Registrarme = ({ handleLogin }) => {
             </MDBox>
           </MDBox>
           <MDBox mt={4} mb={1}>
-            <MDProgress color="success"
+            <MDProgress
+              color="success"
               loading="true"
               label={true}
               value={showprogrees === 0 ? progress : 0}
-              display={loading && exito ? 'true' : 'false'}
-              variant="contained"></MDProgress>
-
+              display={loading && exito ? "true" : "false"}
+              variant="contained"
+            ></MDProgress>
           </MDBox>
-          
-          {mensaje !== '' && (
+
+          {mensaje !== "" && mensaje !== "Registrando....." ? (
             <Alert severity={exito ? "success" : "error"}>
               <AlertTitle>{exito ? "Felicitaciones" : "Error"}</AlertTitle>
               {mensaje}
             </Alert>
+          ) : (
+            mensaje !== "" && (
+              <Alert severity="info">
+                <AlertTitle>Procesando Registro</AlertTitle>
+                {mensaje}
+              </Alert>
+            )
           )}
-
-
-
         </MDBox>
       </Card>
     </BasicLayout>
-
   );
 };
 

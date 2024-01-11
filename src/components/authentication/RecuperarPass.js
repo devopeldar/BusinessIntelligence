@@ -5,7 +5,7 @@ import { Alert, AlertTitle, Card } from "@mui/material";
 import MDBox from "../controls/MDBox";
 import MDTypography from "../controls/MDTypography";
 import MDButton from "../controls/MDButton";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import bgImage from "../../assets/images/bg-sign-up-cover.jpeg";
 import { KeyFill } from "react-bootstrap-icons";
 import MDInput from "../controls/MDInput";
@@ -30,13 +30,13 @@ const RecuperarPass = () => {
       [name]: value,
     });
   };
-  // const validationSchema = yup.object().shape({
-   
-  //   email: yup
-  //     .string()
-  //     .email("Ingrese un correo electrónico válido")
-  //     .required("El correo electrónico es requerido"),
-  // });
+ 
+  const handleForgotPassCancel = () => {
+    localStorage.setItem('isRegister', 'false');
+    localStorage.setItem('isLoggedIn', 'false');
+    localStorage.setItem('isActivarCuenta', 'false');
+    localStorage.setItem('isForgotPassword', 'false');
+  };
 
   const handleSubmit = async (data) => {
     // validationSchema
@@ -121,6 +121,24 @@ const RecuperarPass = () => {
             Recuperar Contraseña
           </MDButton>
         </MDBox>
+        <MDBox mt={3} mb={1} textAlign="center">
+              <MDTypography variant="button" color="text">
+                Recordaste la clave?{" "}
+                <MDTypography
+                  component={Link}
+                  to="/Login"
+                  variant="button"
+                  color="info"
+                  fontWeight="medium"
+                  textGradient
+                  onClick={() => {
+                    handleForgotPassCancel();
+                  }}
+                >
+                  Ir al Inicio
+                </MDTypography>
+              </MDTypography>
+            </MDBox>
         {mensaje !== '' && (
             <Alert severity={"error"}>
               <AlertTitle>{"Error"}</AlertTitle>

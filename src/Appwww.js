@@ -1,12 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 
 // react-router components
-import {
-  Routes,
-  Route,
-  useLocation,
-  useNavigate,
-} from "react-router-dom";
+import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 
 // @mui material components
 import { ThemeProvider } from "@mui/material/styles";
@@ -86,7 +81,6 @@ import UsuarioEdit from "./components/authentication/Usuario/UsuarioEdit";
 import UsuarioList from "./components/authentication/Usuario/UsuarioList";
 
 export default function App() {
-
   const [controller, dispatch] = useMaterialUIController();
   const {
     miniSidenav,
@@ -104,9 +98,13 @@ export default function App() {
   // const [IsRegister, setIsRegister] = useState(false);
 
   const initialAuthState = localStorage.getItem("isLoggedIn") === "true";
-  console.log("initialAuthState " + initialAuthState);
+
   const isRegistrar = localStorage.getItem("isRegister") === "true";
-  console.log("isRegistrar " + isRegistrar); 
+
+  const isActivarCuenta = localStorage.getItem("isActivarCuenta") === "true";
+
+  const isForgotPassword = localStorage.getItem("isForgotPassword") === "true";
+
   const [isLoggedIn, setIsLoggedIn] = useState(initialAuthState);
   const [shouldReload, setShouldReload] = useState(false);
   //const rutasVisibles = routes.filter(route => route.visible === true);
@@ -140,23 +138,24 @@ export default function App() {
 
   const handleLogin = () => {
     setIsLoggedIn(true);
-    console.log("wwwwwww ");
     localStorage.setItem("isLoggedIn", isLoggedIn);
-    setShouldReload(true); 
+    localStorage.setItem('isRegister', 'false');
+    localStorage.setItem('isActivarCuenta', 'false');
+    localStorage.setItem('isForgotPassword', 'false');
+    setShouldReload(true);
     navigate("/ConfirmacionIngreso");
   };
 
   // Almacena el estado de autenticación en localStorage cuando cambie
   useEffect(() => {
-    console.log("isLoggedIn " + isLoggedIn);
     localStorage.setItem("isLoggedIn", isLoggedIn);
 
     // Lógica para reconstruir las rutas basadas en el estado de autenticación (isLoggedIn)
-    const updatedRoutes = routes.filter(route => route.visible === true);
+    const updatedRoutes = routes.filter((route) => route.visible === true);
     console.log("updatedRoutes ", updatedRoutes);
     setRoutesVisible(updatedRoutes);
     if (shouldReload) {
-      console.log("shouldReload " + shouldReload);
+      
       window.location.reload();
       setShouldReload(false); // Restablece shouldReload a false después de la recarga
     }
@@ -177,9 +176,6 @@ export default function App() {
   }, [pathname]);
 
   const getRoutes = (allRoutes) =>
-
-
-
     allRoutes.map((route) => {
       if (route.collapse) {
         return getRoutes(route.collapse);
@@ -187,7 +183,6 @@ export default function App() {
 
       if (route.route) {
         return (
-
           <Route
             exact
             path={route.route}
@@ -227,7 +222,7 @@ export default function App() {
 
   return (
     <>
-      {/* {isLoggedIn ? ( */}
+      {isLoggedIn ? (
         <ThemeProvider theme={darkMode ? themeDark : theme}>
           <CssBaseline />
 
@@ -236,12 +231,23 @@ export default function App() {
           <Routes>
             {getRoutes(routesVisible)}
 
-
-            <Route path="/ConfirmacionActivacionCuenta" element={<ConfirmacionActivacionCuenta />} />
-            <Route path="/ConfirmarCuentaXToken" element={<ConfirmarCuentaxToken />} />
-            <Route path="/ConfirmacionIngreso" element={<ConfirmacionIngreso />} />
+            <Route
+              path="/ConfirmacionActivacionCuenta"
+              element={<ConfirmacionActivacionCuenta />}
+            />
+            <Route
+              path="/ConfirmarCuentaXToken"
+              element={<ConfirmarCuentaxToken />}
+            />
+            <Route
+              path="/ConfirmacionIngreso"
+              element={<ConfirmacionIngreso />}
+            />
             <Route path="/Confirmacion" element={<Confirmacion />} />
-            <Route path="/Login" element={<Login handleLogin={handleLogin} />} />
+            <Route
+              path="/Login"
+              element={<Login handleLogin={handleLogin} />}
+            />
             {/* <Route path="*" element={<Login handleLogin={handleLogin} />} /> */}
             <Route path="/Registrarme" element={<Registrarme />} />
             <Route path="/RecuperarPass" element={<RecuperarPass />} />
@@ -253,7 +259,7 @@ export default function App() {
             <Route path="/Perfil/PerfilEdit/:id" element={<PerfilEdit />} />
             <Route path="/Perfil/Perfiles" element={<Perfiles />} />
             <Route path="/PerfilesVolver" element={<Perfiles />} />
-            
+
             <Route path="/DepartamentoAdd" element={<DepartamentoAdd />} />
             <Route
               path="/Departamento/DepartamentoEdit/:id"
@@ -265,7 +271,6 @@ export default function App() {
             <Route
               path="/TareaEstado/TareaEstadoEdit/:id"
               element={<TareaEstadoEdit />}
-              
             />
             <Route path="/TareaEstadoAdd" element={<TareaEstadoAdd />} />
             <Route path="/TareaEstado" element={<TareaEstadoList />} />
@@ -313,37 +318,52 @@ export default function App() {
         <Route path="/EstadoTareas" element={<TareaEstadoList />} /> */}
           </Routes>
 
-          {!isLoggedIn && !isRegistrar ? (
-            <Login handleLogin={handleLogin} />
-          ) : isRegistrar ? (
-            <Registrarme />
-          ) : (
-
-            <>
-              <Sidenav
-                color={sidenavColor}
-                brand={
-                  (transparentSidenav && !darkMode) || whiteSidenav
-                    ? brandDark
-                    : brandWhite
-                }
-                brandName="Task Manager"
-                routes={routesVisible}
-                onMouseEnter={handleOnMouseEnter}
-                onMouseLeave={handleOnMouseLeave}
-              />
-              <Configurator />
-              {configsButton}
-              {layout === "vr" && <Configurator />}
-
-
-            </>
-          )}
+          <>
+            <Sidenav
+              color={sidenavColor}
+              brand={
+                (transparentSidenav && !darkMode) || whiteSidenav
+                  ? brandDark
+                  : brandWhite
+              }
+              brandName="Task Manager"
+              routes={routesVisible}
+              onMouseEnter={handleOnMouseEnter}
+              onMouseLeave={handleOnMouseLeave}
+            />
+            <Configurator />
+            {configsButton}
+            {layout === "vr" && <Configurator />}
+          </>
         </ThemeProvider>
-
-      {/* ) : (<><ThemeProvider theme={darkMode ? themeDark : theme}>
-        <CssBaseline />
-        <Login handleLogin={handleLogin} /></ThemeProvider> </>)} */}
+      ) : (
+        <>
+          {!isLoggedIn &&
+          !isRegistrar &&
+          !isActivarCuenta &&
+          !isForgotPassword ? (
+            <ThemeProvider theme={darkMode ? themeDark : theme}>
+              <CssBaseline />
+              <Login handleLogin={handleLogin} />
+            </ThemeProvider>
+          ) : isRegistrar ? (
+            <ThemeProvider theme={darkMode ? themeDark : theme}>
+              <CssBaseline />
+              <Registrarme />
+            </ThemeProvider>
+          ) : isActivarCuenta ? (
+            <ThemeProvider theme={darkMode ? themeDark : theme}>
+              <CssBaseline />
+              <ConfirmarCuentaxToken />
+            </ThemeProvider>
+          ) : (
+            <ThemeProvider theme={darkMode ? themeDark : theme}>
+              <CssBaseline />
+              <RecuperarPass />
+            </ThemeProvider>
+          )}
+        </>
+      )}
     </>
   );
 }

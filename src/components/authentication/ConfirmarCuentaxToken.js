@@ -9,7 +9,7 @@ import MDInput from '../controls/MDInput';
 import MDButton from '../controls/MDButton';
 import { AlertTitle } from '@mui/material';
 import { KeyFill } from 'react-bootstrap-icons';
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 function ConfirmarCuentaxToken() {
   const navigate = useNavigate();
   const [mensaje, setMensaje] = useState("");
@@ -29,7 +29,12 @@ function ConfirmarCuentaxToken() {
       [name]: value,
     });
   };
-
+  const handleConfirmado = () => {
+    localStorage.setItem('isRegister', 'false');
+    localStorage.setItem('isLoggedIn', 'false');
+    localStorage.setItem('isActivarCuenta', 'false');
+    localStorage.setItem('isForgotPassword', 'false');
+  };
   const handleSubmit = async (data) => {
 
       console.log("formData ", formData);
@@ -117,6 +122,7 @@ function ConfirmarCuentaxToken() {
               />
             </MDBox>
           </MDBox>
+          
         </MDBox>
         <MDBox height="150px" textAlign="center">
           <MDButton variant="gradient" color="warning" onClick={() => {
@@ -125,6 +131,24 @@ function ConfirmarCuentaxToken() {
             Activar Cuenta
           </MDButton>
         </MDBox>
+        <MDBox mt={4} mb={1} textAlign="center">
+              <MDTypography variant="button" color="text">
+                Ya activaste tu cuenta?{" "}
+                <MDTypography
+                  component={Link}
+                  to="/Login"
+                  variant="button"
+                  color="info"
+                  fontWeight="medium"
+                  textGradient
+                  onClick={() => {
+                    handleConfirmado();
+                  }}
+                >
+                  Ir al Inicio
+                </MDTypography>
+              </MDTypography>
+            </MDBox>
         {mensaje !== '' && (
             <Alert severity={"error"}>
               <AlertTitle>{"Error"}</AlertTitle>

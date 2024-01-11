@@ -16,6 +16,7 @@ const Login = ({ handleLogin }) => {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [captchaValue, setCaptchaValue] = useState('');
+  const [grabando, setGrabando] = useState(false);
   const captcha = useRef(null);
   const [mensaje, setMensaje] = useState("");
 
@@ -44,33 +45,47 @@ const Login = ({ handleLogin }) => {
       [name]: value,
     });
   };
-
-
-  const handleChangePassword = (value) => {
-    if (captcha.current.getValue()) {
-      console.log('El usuario no es un robot');
+  
+  const handleCuentaXToken = (value) => {
+ 
       setCaptchaValue(true);
-    }
+      localStorage.setItem('isRegister', 'false');
+      localStorage.setItem('isLoggedIn', 'false');
+      localStorage.setItem('isActivarCuenta', 'true');
+      localStorage.setItem('isForgotPassword', 'false');
+    
+  };
+  const handleChangePassword = (value) => {
+ 
+      setCaptchaValue(true);
+      localStorage.setItem('isRegister', 'false');
+      localStorage.setItem('isLoggedIn', 'false');
+      localStorage.setItem('isActivarCuenta', 'false');
+      localStorage.setItem('isForgotPassword', 'true');
+    
   };
   const handleCaptchaChange = (value) => {
     if (captcha.current.getValue()) {
-      console.log('El usuario no es un robot');
+
       setCaptchaValue(true);
     }
   };
   const handleRegistrarme = () => {
     localStorage.setItem('isRegister', 'true');
-    //navigate("/Registrarme");
+    localStorage.setItem('isLoggedIn', 'false');
+    localStorage.setItem('isActivarCuenta', 'false');
+    localStorage.setItem('isForgotPassword', 'false');
   };
 
   const handleSubmit = async (data) => {
     setMensaje("");
-    
+    setGrabando(true);
     if (captcha.current.getValue()) {
       console.log('El usuario no es un robot');
       setCaptchaValue(true);
 
     } else {
+      setGrabando(false);
       console.log('Por favor acepta el captcha');
       setCaptchaValue(false);
       setIsLoggedIn(false);
@@ -108,13 +123,13 @@ const Login = ({ handleLogin }) => {
       } else {
         // Manejar errores si la respuesta no es exitosa
         setMensaje(res.rdoAccionDesc);
-
+        setGrabando(false);
         setIsLoggedIn(false);
       }
     }
     catch (error) {
       setMensaje("Error en la solicitud: el usuario no pudo ser identificado");
-
+      setGrabando(false);
       setIsLoggedIn(false);
     }
 
@@ -181,6 +196,7 @@ const Login = ({ handleLogin }) => {
                 color="info"
                 endIcon={<People />}
                 fullWidth
+                disabled={grabando}
               >
                 Iniciar
               </MDButton>
@@ -213,9 +229,9 @@ const Login = ({ handleLogin }) => {
                   color="info"
                   fontWeight="medium"
                   textGradient
-                // onClick={() => {
-                //   handleCuentaXToken();
-                // }}
+                onClick={() => {
+                  handleCuentaXToken();
+                }}
                 >
                   Activa tu cuenta
                 </MDTypography>
