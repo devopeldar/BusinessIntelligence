@@ -106,7 +106,7 @@ export default function App() {
   const initialAuthState = localStorage.getItem("isLoggedIn") === "true";
   console.log("initialAuthState " + initialAuthState);
   const isRegistrar = localStorage.getItem("isRegister") === "true";
-
+  console.log("isRegistrar " + isRegistrar); 
   const [isLoggedIn, setIsLoggedIn] = useState(initialAuthState);
   const [shouldReload, setShouldReload] = useState(false);
   //const rutasVisibles = routes.filter(route => route.visible === true);
@@ -227,7 +227,7 @@ export default function App() {
 
   return (
     <>
-      {isLoggedIn ? (
+      {/* {isLoggedIn ? ( */}
         <ThemeProvider theme={darkMode ? themeDark : theme}>
           <CssBaseline />
 
@@ -341,9 +341,9 @@ export default function App() {
           )}
         </ThemeProvider>
 
-      ) : (<><ThemeProvider theme={darkMode ? themeDark : theme}>
+      {/* ) : (<><ThemeProvider theme={darkMode ? themeDark : theme}>
         <CssBaseline />
-        <Login handleLogin={handleLogin} /></ThemeProvider> </>)}
+        <Login handleLogin={handleLogin} /></ThemeProvider> </>)} */}
     </>
   );
 }

@@ -60,6 +60,7 @@ const Login = ({ handleLogin }) => {
   };
   const handleRegistrarme = () => {
     localStorage.setItem('isRegister', 'true');
+    //navigate("/Registrarme");
   };
 
   const handleSubmit = async (data) => {
