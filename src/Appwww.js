@@ -82,6 +82,8 @@ import CloseSession from "./components/authentication/CloseSession";
 import EventoTareaAdd from "./components/Pages/Tareas/EventoTareaAdd";
 import TareaTrakingList from "./components/Pages/Tareas/TareaTrakingList";
 import TareaAdd from "./components/Pages/Tareas/TareaAdd";
+import UsuarioEdit from "./components/authentication/Usuario/UsuarioEdit";
+import UsuarioList from "./components/authentication/Usuario/UsuarioList";
 
 export default function App() {
 
@@ -301,6 +303,9 @@ export default function App() {
             <Route path="/EventoTareaAdd/:id" element={<EventoTareaAdd />} />
             <Route path="/TareaTraking/:id" element={<TareaTrakingList />} />
             <Route path="/TareaListVolver" element={<TareaList />} />
+
+            <Route path="/UsuarioEdit/:id" element={<UsuarioEdit />} />
+            <Route path="/UsuarioVolver" element={<UsuarioList />} />
             {/* 
 
 

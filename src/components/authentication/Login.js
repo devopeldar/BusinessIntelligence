@@ -63,8 +63,8 @@ const Login = ({ handleLogin }) => {
   };
 
   const handleSubmit = async (data) => {
-
-    console.log("Datos " + JSON.stringify(formData));
+    setMensaje("");
+    
     if (captcha.current.getValue()) {
       console.log('El usuario no es un robot');
       setCaptchaValue(true);

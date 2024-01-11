@@ -91,7 +91,7 @@ const TipoEventoEdit = () => {
 
         const GetEstadosTareas = async () => {
             if (TipoEvento) {
-                console.log("GetEstadosTareas");
+           
                 const response = await axios.post(API_URL + "/TareaEstadoListar", {
                     headers: {
                         accept: "application/json",
@@ -128,7 +128,7 @@ const TipoEventoEdit = () => {
                 return;
             }
             if (idTareaEstado === 0) {
-                setMensaje("El campo Descripcion es obligatorio");
+                setMensaje("El campo Estado Tarea es obligatorio");
                 setExito(false);
                 return;
             }

@@ -180,26 +180,26 @@ export default function UsuarioGet() {
       ),
       action: (
         <MDTypography variant="caption" color="text" fontWeight="medium">
-          <Link to={`../Usuario/UsuarioEdit/${Usuario.idUsuario}`}>
+          <Link to={`../UsuarioEdit/${Usuario.idUsuario}`}>
             <MDButton variant="text" color="dark">
               <PencilSquare color="blue" />
             </MDButton>
           </Link>
-          <Link to={`../Usuario/UsuarioEdit/${Usuario.idUsuario}`}>
+          {/* <Link to={`../UsuarioEdit/${Usuario.idUsuario}`}>
             <MDButton disabled={!Usuario.activo} variant="text" color="dark">
               <NoAccounts titleAccess="bloquear usuario"color="error" />
             </MDButton>
           </Link>
-          <Link to={`../Usuario/UsuarioEdit/${Usuario.idUsuario}`}>
+          <Link to={`../UsuarioEdit/${Usuario.idUsuario}`}>
             <MDButton  variant="text" color="dark">
               <PersonSearch titleAccess="asignar rol a usuario" color="warning" />
             </MDButton>
           </Link>
-          <Link to={`../Usuario/UsuarioEdit/${Usuario.idUsuario}`}>
+          <Link to={`../UsuarioEdit/${Usuario.idUsuario}`}>
             <MDButton  variant="text" color="dark">
               <PersonSearch titleAccess="asignar perfil a usuario" color="success" />
             </MDButton>
-          </Link>
+          </Link> */}
         </MDTypography>
       ),
 

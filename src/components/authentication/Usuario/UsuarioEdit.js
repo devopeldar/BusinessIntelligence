@@ -13,7 +13,7 @@ import MDInput from "../../controls/MDInput";
 import { Save } from "react-bootstrap-icons";
 import { ExitToApp } from "@mui/icons-material";
 import MDButton from "../../controls/MDButton";
-import { Alert, AlertTitle, Checkbox } from "@mui/material";
+import { Alert, AlertTitle, Autocomplete, Checkbox, TextField } from "@mui/material";
 import bgImage from "../../../assets/images/bg-sign-up-cover.jpeg";
 
 
@@ -23,6 +23,13 @@ const UsuarioEdit = () => {
     const [idUsuario, setidUsuario] = useState("");
     const [activo, setActivo] = useState(false);
     const [nombre, setNombre] = useState("");
+    const [email, setEmail] = useState("");
+    const [telefono, setTelefono] = useState("");
+    const [idPerfil, setIdPerfil] = useState("");
+    const [elementsPerfil, setElementsPerfil] = useState(false);
+    const [selectedValuePerfil, setSelectedValuePerfil] = useState('');
+
+
     const [nombreboton, setnombreboton] = useState("Cancelar");
     const [mensaje, setMensaje] = useState("");
     const history = useNavigate();
@@ -31,6 +38,7 @@ const UsuarioEdit = () => {
     const handleVolver = () => {
         history("/UsuarioVolver"); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
     };
+
 
     useEffect(() => {
         setidUsuario(id);
@@ -41,15 +49,20 @@ const UsuarioEdit = () => {
                     idUsuario: id
                 };
 
-                const response = await axios.post(API_URL + `/UsuarioGetByID`, reqUsuario, {
+                const response = await axios.post(API_URL + `/UsuarioGetByID/`, reqUsuario, {
                     headers: {
                         "Content-Type": "application/json"
                     }
                 });
                 const data = response.data;
                 setUsuario(data);
+                setIdPerfil(data.idPerfil);
                 setNombre(data.nombre);
                 setActivo(data.activo);
+                setEmail(data.email);
+                setTelefono(data.telefono);
+
+
             } catch (error) {
                 console.error("Error:", error);
             }
@@ -58,15 +71,47 @@ const UsuarioEdit = () => {
     }, [id]);
 
 
+
+    useEffect(() => {
+        const GetPerfil = async () => {
+            if (Usuario) {
+                const response = await axios.post(API_URL + "/PerfilListar", {
+                    headers: {
+                        accept: "application/json",
+                    },
+                });
+
+
+                setElementsPerfil(response.data);
+
+
+                const defaultValueId = idPerfil;
+                const defaultValue = response.data.find(item => item.idPerfil === defaultValueId);
+                console.log("defaultValue", defaultValue)
+                setSelectedValuePerfil(defaultValue);
+
+            }
+        }; GetPerfil();
+    }, [Usuario]);
+
+
+
+    const handleAutocompletePerfilChange = (event, value) => {
+        setSelectedValuePerfil(value);
+        setIdPerfil(value.idPerfil);
+    };
+
     const handleSubmit = async (event) => {
 
         try {
 
+            setMensaje("");
             if (nombre === '') {
                 setMensaje("El campo nombre es obligatorio");
                 setExito(false);
                 return;
             }
+   
             setGrabando(true); // Inicia la grabación
             setnombreboton("Volver");
             setExito(true);
@@ -77,7 +122,8 @@ const UsuarioEdit = () => {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ idUsuario, nombre, activo }),
+   
+                body: JSON.stringify({ idUsuario, nombre, telefono, idPerfil, activo }),
             });
             const res = await response.json();
 
@@ -87,13 +133,13 @@ const UsuarioEdit = () => {
             } else {
                 // Manejar errores si la respuesta no es exitosa
                 setMensaje(res.rdoAccionDesc);
-                setGrabando(true); // Inicia la grabación
+                setGrabando(false); // Inicia la grabación
                 setnombreboton("Cancelar");
                 setExito(false);
             }
         } catch (error) {
             setMensaje("Error en la solicitud:", error);
-            setGrabando(true); // Inicia la grabación
+            setGrabando(false); // Inicia la grabación
             setExito(false);
             setnombreboton("Cancelar");
             console.log("Error en la solicitud:" + error);
@@ -101,7 +147,7 @@ const UsuarioEdit = () => {
     };
 
     if (!Usuario) {
-        return <div>Cargando Estado de Tarea...</div>;
+        return <div>Cargando Usuario...</div>;
     }
 
     return (
@@ -109,7 +155,7 @@ const UsuarioEdit = () => {
             <Card>
                 <MDBox
                     variant="gradient"
-                    bgColor="info"
+                    bgColor="warning"
                     borderRadius="lg"
                     coloredShadow="success"
                     mx={2}
@@ -122,7 +168,7 @@ const UsuarioEdit = () => {
                         Editar Usuario
                     </MDTypography>
                     <MDTypography display="block" variant="button" color="white" my={1}>
-                    Un Usuario especifica un area de la empresa que elabora una accion
+                        Un Usuario es la entidad que interactua con el sistema, segun el perfil que tenga
                     </MDTypography>
                 </MDBox>
                 <MDBox pt={4} pb={3} px={3}>
@@ -140,7 +186,47 @@ const UsuarioEdit = () => {
                                 fullWidth
                             />
                         </MDBox>
-                       
+                        <MDBox mb={2}>
+                            <MDInput
+                                type="text"
+                                name="email"
+                                required
+                                label="Email"
+                                disabled={true}
+                                variant="standard"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                fullWidth
+                            />
+                        </MDBox>
+                        <MDBox mb={2}>
+                            <MDInput
+                                type="text"
+                                name="telefono"
+                                required
+                                label="Telefono"
+                                variant="standard"
+                                value={telefono}
+                                onChange={(e) => setTelefono(e.target.value)}
+                                fullWidth
+                            />
+                        </MDBox>
+                        <MDBox mb={2} >
+                            <Autocomplete
+                                onChange={handleAutocompletePerfilChange}
+                                options={elementsPerfil}
+                                value={selectedValuePerfil}
+                                getOptionLabel={(option) => option.nombre || ''}
+                                getOptionDisabled={(option) => option.activo === false}
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        label="Seleccione Perfil"
+                                        variant="outlined"
+                                    />
+                                )}
+                            />
+                        </MDBox>
                         <MDBox mb={2}>
 
                             <Checkbox name="activo"
@@ -165,7 +251,7 @@ const UsuarioEdit = () => {
                                     handleSubmit();
                                 }}
                                 variant="gradient"
-                                color="info"
+                                color="warning"
                                 endIcon={<Save />}
                                 disabled={grabando}
                                 fullWidth
@@ -179,7 +265,7 @@ const UsuarioEdit = () => {
                                     handleVolver();
                                 }}
                                 variant="gradient"
-                                color="info"
+                                color="warning"
                                 endIcon={<ExitToApp />}
 
                                 fullWidth

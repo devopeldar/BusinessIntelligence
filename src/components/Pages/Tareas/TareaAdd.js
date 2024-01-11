@@ -312,7 +312,7 @@ const TareaAdd = () => {
         }
     };
     const eliminarItem = (id) => {
-        console.log("id", id)
+
         const newData = data.filter(item => item.id !== id);
         setData(newData);
     };

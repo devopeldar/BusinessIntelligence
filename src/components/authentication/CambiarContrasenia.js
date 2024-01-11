@@ -91,12 +91,12 @@ const CambiarContrasenia = () => {
           setMensaje('');
 
           try {
-            console.log("1111111");
+
             const userLogin = localStorage.getItem('userlogueado');
-            console.log("userLogin", userLogin);
+
 
             validatedData.email = userLogin;
-            console.log("validatedData", validatedData);
+
 
             const response = await fetch(API_URL + "/UsuarioCambioClave", {
               method: "POST",
