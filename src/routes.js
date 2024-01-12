@@ -45,7 +45,7 @@ routesnew = [
     title: "Tareas",
     key: "tareas",
     icon: <People />,
-    visible: false,
+    visible: true,
     codigoPermiso: 100,
   },
   {
@@ -55,7 +55,7 @@ routesnew = [
     icon: <Task />,
     route: "components/Pages/Tarea",
     component: <TareaList />,
-    visible: false,
+    visible: true,
     codigoPermiso: 101,
     //visible: retrievedPermissions.USUARIOS?.valor || false
   },
@@ -66,7 +66,7 @@ routesnew = [
     icon: <TaskAlt />,
     route: "/TipoTareas",
     component: <TareaTipoList />,
-    visible: false,
+    visible: true,
     codigoPermiso: 102,
   },
   {
@@ -76,7 +76,7 @@ routesnew = [
     icon: <Event />,
     route: "/Departamentos",
     component: <DepartamentoList />,
-    visible: false,
+    visible: true,
     codigoPermiso: 103,
   },
   {
@@ -86,7 +86,7 @@ routesnew = [
     icon: <Event />,
     route: "/EstadoTareas",
     component: <TareaEstadoList />,
-    visible: false,
+    visible: true,
     codigoPermiso: 104,
   },
   {
@@ -94,7 +94,7 @@ routesnew = [
     name: "Eventos",
     key: "eventos",
     title: "Eventos",
-    visible: false,
+    visible: true,
     codigoPermiso: 200,
   },
   {
@@ -104,7 +104,7 @@ routesnew = [
     icon: <EventAvailable />,
     route: "components/Pages/TipoEvento",
     component: <TipoEventoList />,
-    visible: false,
+    visible: true,
     codigoPermiso: 201,
   },
   {
@@ -112,7 +112,7 @@ routesnew = [
     name: "Clientes",
     key: "clientes",
     title: "Clientes",
-    visible: false,
+    visible: true,
     codigoPermiso: 300,
   },
   {
@@ -122,7 +122,7 @@ routesnew = [
     icon: <People />,
     route: "components/Pages/Clientes",
     component: <ClienteList />,
-    visible: false,
+    visible: true,
     codigoPermiso: 301,
   },
   {
@@ -131,7 +131,7 @@ routesnew = [
     key: "seguridad",
     title: "Seguridad",
     icon: <KeyFill />,
-    visible: false,
+    visible: true,
     codigoPermiso: 400,
   },
   {
@@ -142,7 +142,7 @@ routesnew = [
     icon: <ManageAccounts />,
     route: "/Usuarios",
     component: <UsuarioList />,
-    visible: false,
+    visible: true,
     codigoPermiso: 401,
   },
   {
@@ -153,7 +153,7 @@ routesnew = [
     icon: <Person />,
     route: "/components/authentication/Perfil",
     component: <Perfiles />,
-    visible: false,
+    visible: true,
     codigoPermiso: 402,
   },
   {
@@ -163,7 +163,7 @@ routesnew = [
     icon: <PersonSearch />,
     route: "/Roles",
     component: <RolList />,
-    visible: false,
+    visible: true,
     codigoPermiso: 403,
   },
   {
@@ -188,49 +188,49 @@ routesnew = [
   },
 ];
 
-const GetPermisos = async () => {
-  try {
-    const reqPermisosxPerfil = {
-      idperfil: localStorage.getItem("idPerfil"),
-    };
-console.log("idperfil" , reqPermisosxPerfil);
-    const response = await axios.post(
-      API_URL + `/PerfilxPermisoListar`,
-      reqPermisosxPerfil,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    const permisosBaseDatos = response.data;
+// const GetPermisos = async () => {
+//   try {
+//     const reqPermisosxPerfil = {
+//       idperfil: localStorage.getItem("idPerfil"),
+//     };
+// console.log("idperfil" , reqPermisosxPerfil);
+//     const response = await axios.post(
+//       API_URL + `/PerfilxPermisoListar`,
+//       reqPermisosxPerfil,
+//       {
+//         headers: {
+//           "Content-Type": "application/json",
+//         },
+//       }
+//     );
+//     const permisosBaseDatos = response.data;
 
-    // Aquí se realiza cualquier operación o lógica que dependa de los permisos recuperados
-    routes = routesnew.map((route) => {
-      const permisoEncontrado = permisosBaseDatos.find(
-        (permiso) => permiso.codigoPermiso === route.codigoPermiso
-      );
-      if (permisoEncontrado) {
-        route.visible = true;
-      } else {
-        if (route.codigoPermiso === 999 || route.codigoPermiso === 404) {
-          route.visible = true;
-        } else {
-          route.visible = false;
-        }
-      }
-      return route;
-    });
+//     // Aquí se realiza cualquier operación o lógica que dependa de los permisos recuperados
+//     routes = routesnew.map((route) => {
+//       const permisoEncontrado = permisosBaseDatos.find(
+//         (permiso) => permiso.codigoPermiso === route.codigoPermiso
+//       );
+//       if (permisoEncontrado) {
+//         route.visible = true;
+//       } else {
+//         if (route.codigoPermiso === 999 || route.codigoPermiso === 404) {
+//           route.visible = true;
+//         } else {
+//           route.visible = false;
+//         }
+//       }
+//       return route;
+//     });
 
-    return routes;
-    // Llamar a cualquier otra función o realizar operaciones adicionales aquí después de actualizar 'routes'
-  } catch (error) {
-    console.error("Error:", error);
-  }
-};
+//     return routes;
+//     // Llamar a cualquier otra función o realizar operaciones adicionales aquí después de actualizar 'routes'
+//   } catch (error) {
+//     console.error("Error:", error);
+//   }
+// };
 
-(async () => {
-  routes = await GetPermisos(); // Espera la resolución de GetPermisos()
-})();
+// (async () => {
+//   routes = await GetPermisos(); // Espera la resolución de GetPermisos()
+// })();
 
 export default routesnew;

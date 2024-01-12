@@ -146,6 +146,10 @@ export default function App() {
     navigate("/ConfirmacionIngreso");
   };
 
+  // const updatedRoutes = routes.filter((route) => route.visible === true);
+  // setRoutesVisible(updatedRoutes);
+  //   console.log("updatedRoutes ", updatedRoutes);
+
   // Almacena el estado de autenticación en localStorage cuando cambie
   useEffect(() => {
     localStorage.setItem("isLoggedIn", isLoggedIn);
