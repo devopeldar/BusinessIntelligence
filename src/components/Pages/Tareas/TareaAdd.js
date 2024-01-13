@@ -303,7 +303,7 @@ const TareaAdd = () => {
         } catch (error) {
             console.log("error:", error);
             setMensaje("Error en la solicitud:", error);
-            setGrabando(true); // Inicia la grabación
+            setGrabando(false); // Inicia la grabación
             setnombreboton("Cancelar");
         } finally {
             setLoading(false);

@@ -6,9 +6,10 @@ import MDButton from "../../controls/MDButton";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import MDProgress from "../../controls/MDProgress";
-import { AccessAlarm, Delete, DoneAll, Grid3x3, PlayArrow, PlayCircle, Stop } from "@mui/icons-material";
+import { AccessAlarm, Delete, DoneAll, Grid3x3, PanoramaFishEye, PlayArrow, PlayCircle, SearchOutlined, Stop } from "@mui/icons-material";
 import PauseIcon from '@mui/icons-material/Pause';
 import MDSnackbar from "../../controls/MDSnackbar";
+import { EmojiHeartEyes } from "react-bootstrap-icons";
 
 export default function TareaGet() {
   const [rows, setRows] = useState([]);
@@ -16,7 +17,7 @@ export default function TareaGet() {
   const closeSuccessSB = () => setSuccessSB(false);
   const [successSB, setSuccessSB] = useState(false);
   const [successSBPrev, setSuccessSBPrev] = useState(false);
-  
+
   const [dateTime, setDateTime] = useState("");
   const [errorSB, setErrorSB] = useState(false);
   // const openErrorSB = () => setErrorSB(true);
@@ -107,7 +108,7 @@ export default function TareaGet() {
         idUsuario: localStorage.getItem('iduserlogueado'),
         idTarea: idTarea
       };
-     
+
       const response = await axios.post(API_URL + "/EventoIniciar", reqtarea, {
         headers: {
           accept: "application/json",
@@ -384,12 +385,12 @@ export default function TareaGet() {
           {Tarea.estado === 0 &&
             <MDBox ml={0}>
               <MDTypography variant="caption" color="text" fontWeight="medium">
-              <Link onClick={() => HandleIniciar(Tarea.idTarea)} >
-                {/* <MDButton variant="text" color="dark" onClick={() => HandleIniciar(Tarea.idTarea)}> */}
-                <PlayCircle fontSize="large"
-                  color="success"
-                  titleAccess="Iniciar Tarea"
-                />
+                <Link onClick={() => HandleIniciar(Tarea.idTarea)} >
+                  {/* <MDButton variant="text" color="dark" onClick={() => HandleIniciar(Tarea.idTarea)}> */}
+                  <PlayCircle fontSize="large"
+                    color="success"
+                    titleAccess="Iniciar Tarea"
+                  />
                 </Link>
                 <MDSnackbar
                   color="success"
@@ -400,7 +401,7 @@ export default function TareaGet() {
                   open={successSBPrev}
                   onClose={closeSuccessSB}
                   close={closeSuccessSB}
-                  
+
                 />
                 {/* </MDButton> */}
                 <MDSnackbar
@@ -412,7 +413,7 @@ export default function TareaGet() {
                   open={successSB}
                   onClose={closeSuccessSB}
                   close={closeSuccessSB}
-                  
+
                 />
                 <MDSnackbar
                   color="error"
@@ -423,7 +424,7 @@ export default function TareaGet() {
                   open={errorSB}
                   onClose={closeErrorSB}
                   close={closeErrorSB}
-                  
+
                 />
               </MDTypography>
 
@@ -438,29 +439,29 @@ export default function TareaGet() {
                 </Link>
               </MDTypography>
             </MDBox>}
-          {Tarea.estado > 0 &&
-            <MDBox ml={0}>
-              <MDTypography variant="caption" color="text" fontWeight="medium">
-                <Link to={`../EventoTareaAdd/${Tarea.idTarea}`}>
+          <MDBox ml={0}>
+            {Tarea.estado > 0 && Tarea.estado !== 4 &&
+                <MDTypography variant="caption" color="text" fontWeight="medium">
+                  <Link to={`../EventoTareaAdd/${Tarea.idTarea}`}>
 
-                  <AccessAlarm fontSize="large"
-                    color="warning"
-                    titleAccess="Agregar Evento a Tarea"
-                  />
+                    <AccessAlarm fontSize="large"
+                      color="warning"
+                      titleAccess="Agregar Evento a Tarea"
+                    />
 
-                </Link>
-              </MDTypography>
-              <MDTypography variant="caption" color="text" fontWeight="medium">
-                <Link to={`../TareaTraking/${Tarea.idTarea}`}>
+                  </Link>
+                </MDTypography>}
+            <MDTypography variant="caption" color="text" fontWeight="medium">
+              <Link to={`../TareaTraking/${Tarea.idTarea}`}>
 
-                  <Grid3x3 fontSize="large"
-                    color="info"
-                    titleAccess="Ver traking de Eventos de una Tarea"
-                  />
-                  {/* </MDButton> */}
-                </Link>
-              </MDTypography>
-            </MDBox>}
+                <SearchOutlined fontSize="large"
+                  color="info"
+                  titleAccess="Ver traking de Eventos de una Tarea"
+                />
+                {/* </MDButton> */}
+              </Link>
+            </MDTypography>
+          </MDBox>
         </MDBox>
       ),
     })),

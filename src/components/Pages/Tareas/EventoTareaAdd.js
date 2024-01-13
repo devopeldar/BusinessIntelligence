@@ -84,7 +84,7 @@ const EventoTareaAdd = () => {
 
       setElements(response.data);
       if (response.data && response.data.length > 0) {
-        setSelectedValue(response.data[0]); // Establecer el primer elemento como valor seleccionado
+        setSelectedValue(response.data[1]); // Establecer el primer elemento como valor seleccionado
       }
     };
     GetEventoTipo();
@@ -201,7 +201,8 @@ const EventoTareaAdd = () => {
             <MDBox mb={2}>
               <Autocomplete
                 options={elements}
-                getOptionLabel={(option) => option.descripcion}
+                getOptionLabel={(option) => option.descripcion || ''}
+                getOptionDisabled={(option) => option.activo === false}
                 value={selectedValue}
                 disableClearable={true}
                 onChange={handleAutocompleteChange}
