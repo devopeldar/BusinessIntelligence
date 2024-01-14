@@ -9,7 +9,6 @@ import MDProgress from "../../controls/MDProgress";
 import { AccessAlarm, Delete, DoneAll, Grid3x3, PanoramaFishEye, PlayArrow, PlayCircle, SearchOutlined, Stop } from "@mui/icons-material";
 import PauseIcon from '@mui/icons-material/Pause';
 import MDSnackbar from "../../controls/MDSnackbar";
-import { EmojiHeartEyes } from "react-bootstrap-icons";
 
 export default function TareaGet() {
   const [rows, setRows] = useState([]);
