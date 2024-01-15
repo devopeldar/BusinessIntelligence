@@ -166,7 +166,22 @@ const RolAdd = () => {
                 fullWidth
               />
             </MDBox>
+            <MDBox mb={2}>
 
+              <Checkbox name="requerido"
+                onChange={handleInputChange}
+                checked={formData.requerido || false}
+
+              />
+              <MDTypography
+                variant="button"
+                fontWeight="regular"
+                color="text"
+                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
+              >
+                &nbsp;&nbsp;Requerido
+              </MDTypography>
+            </MDBox>
             <MDBox mb={2}>
 
               <Checkbox name="activo"
@@ -223,7 +238,7 @@ const RolAdd = () => {
           </MDBox>
 
           {mensaje !== '' && (
-            
+
             <Alert severity={exito ? "success" : "error"}>
               <AlertTitle>{exito ? "Felicitaciones" : "Error"}</AlertTitle>
               {mensaje}

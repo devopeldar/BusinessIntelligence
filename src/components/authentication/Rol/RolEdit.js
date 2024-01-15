@@ -22,6 +22,7 @@ const RolEdit = () => {
     const [Rol, setRol] = useState(null);
     const [idRol, setidRol] = useState("");
     const [activo, setActivo] = useState(false);
+    const [requerido, setRequerido] = useState(false);
     const [descripcion, setNombre] = useState("");
     const [nombreboton, setnombreboton] = useState("Cancelar");
     const [mensaje, setMensaje] = useState("");
@@ -50,6 +51,7 @@ const RolEdit = () => {
                 setRol(data);
                 setNombre(data.descripcion);
                 setActivo(data.activo);
+                setRequerido(data.requerido);
             } catch (error) {
                 console.error("Error:", error);
             }
@@ -77,7 +79,7 @@ const RolEdit = () => {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ idRol, descripcion, activo }),
+                body: JSON.stringify({ idRol, descripcion, activo, requerido }),
             });
             const res = await response.json();
 
@@ -101,7 +103,7 @@ const RolEdit = () => {
     };
 
     if (!Rol) {
-        return <div>Cargando Estado de Tarea...</div>;
+        return <div>Cargando Roles...</div>;
     }
 
     return (
@@ -140,7 +142,22 @@ const RolEdit = () => {
                                 fullWidth
                             />
                         </MDBox>
-                       
+                        <MDBox mb={2}>
+
+                            <Checkbox name="requerido"
+                                onChange={(e) => setRequerido(e.target.checked)}
+                                checked={requerido}
+
+                            />
+                            <MDTypography
+                                variant="button"
+                                fontWeight="regular"
+                                color="text"
+                                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
+                            >
+                                &nbsp;&nbsp;Requerido
+                            </MDTypography>
+                        </MDBox>
                         <MDBox mb={2}>
 
                             <Checkbox name="activo"

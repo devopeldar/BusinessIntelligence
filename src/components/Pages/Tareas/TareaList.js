@@ -32,6 +32,7 @@ import {
   SearchOutlined,
   Pause,
   Filter,
+  PeopleAltTwoTone,
 } from "@mui/icons-material";
 import MDProgress from "../../controls/MDProgress";
 import EstadoTarea from "../../Utils/estadoTarea";
@@ -41,6 +42,7 @@ import Departamento from "../../Utils/departamento";
 import FechasFiltro from "../../Utils/fechasFiltro";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { startOfMonth, addMonths } from 'date-fns';
 function TareaList() {
   //const { columns, rows } = TareaGet();
   const [columns, setColumns] = useState([]);
@@ -76,8 +78,15 @@ function TareaList() {
   const [selectedValueTipoTarea, setSelectedValueTipoTarea] = useState(
     tipoTarea[0]
   );
-  const [selectedDateFrom, setSelectedDateFrom] = React.useState(null);
-  const [selectedDateTo, setSelectedDateTo] = React.useState(null);
+  const today = new Date();
+  const firstDayOfMonth = startOfMonth(today);
+  const firstDayOfNextMonth = startOfMonth(addMonths(today, 1));
+
+  const [selectedDateFrom, setSelectedDateFrom] = React.useState(firstDayOfMonth);
+  const [selectedDateTo, setSelectedDateTo] = React.useState(firstDayOfNextMonth);
+
+
+
 
   const handleDateFromChange = (date) => {
     setSelectedDateFrom(date);
@@ -142,8 +151,8 @@ function TareaList() {
         idDepartamento: selectedValueDepartamentos?.idDepartamento || 0,
         IDTareaTipo: selectedValueTipoTarea?.idTareaTipo || 0,
         CampoFiltroFecha: selectedValueFechaFiltro?.campo || "",
-        fechaDesde: selectedDateFrom ? selectedDateFrom : "20200101",
-        fechaHasta: selectedDateTo ? selectedDateTo : "21340101",
+        fechaDesde: selectedDateFrom ? selectedDateFrom : firstDayOfMonth,
+        fechaHasta: selectedDateTo ? selectedDateTo : firstDayOfNextMonth,
       };
       console.log(requsuario);
       const response = await axios.post(
@@ -222,9 +231,9 @@ function TareaList() {
         );
 
         const action = (
-          <MDBox ml={0}>
+          <MDBox ml={2}>
             {Tarea.estado === 0 && (
-              <MDBox ml={0}>
+              <>
                 <MDTypography
                   variant="caption"
                   color="text"
@@ -232,7 +241,7 @@ function TareaList() {
                 >
                   <Link onClick={() => HandleIniciar(Tarea.idTarea)}>
                     {/* <MDButton variant="text" color="dark" onClick={() => HandleIniciar(Tarea.idTarea)}> */}
-                    <PlayCircle
+                    <PlayArrow
                       fontSize="large"
                       color="success"
                       titleAccess="Iniciar Tarea"
@@ -285,35 +294,52 @@ function TareaList() {
                     />
                   </Link>
                 </MDTypography>
-              </MDBox>
+
+              </>
+
             )}
-            <MDBox ml={0}>
-              {Tarea.estado > 0 && Tarea.estado !== 4 && (
-                <MDTypography
-                  variant="caption"
-                  color="text"
-                  fontWeight="medium"
-                >
-                  <Link to={`../EventoTareaAdd/${Tarea.idTarea}`}>
-                    <AccessAlarm
-                      fontSize="large"
-                      color="warning"
-                      titleAccess="Agregar Evento a Tarea"
-                    />
-                  </Link>
-                </MDTypography>
-              )}
-              <MDTypography variant="caption" color="text" fontWeight="medium">
-                <Link to={`../TareaTraking/${Tarea.idTarea}`}>
-                  <SearchOutlined
+
+            {Tarea.estado > 0 && Tarea.estado !== 4 && (
+              <MDBox>
+              <MDTypography
+                variant="caption"
+                color="text"
+                fontWeight="medium"
+              >
+                <Link to={`../EventoTareaAdd/${Tarea.idTarea}`}>
+                  <AccessAlarm
                     fontSize="large"
-                    color="info"
-                    titleAccess="Ver traking de Eventos de una Tarea"
+                    color="warning"
+                    titleAccess="Agregar Evento a Tarea"
                   />
-                  {/* </MDButton> */}
                 </Link>
               </MDTypography>
-            </MDBox>
+
+                <MDTypography
+                variant="caption"
+                color="text"
+                fontWeight="medium"
+              >
+                <Link to={`../EventoTareaEdit/${Tarea.idTarea}/1`}>
+                  <PeopleAltTwoTone
+                    fontSize="large"
+                    color="success"
+                    titleAccess="Cambiar Roles"
+                  />
+                </Link>
+              </MDTypography>
+              </MDBox>
+            )}
+            <MDTypography variant="caption" color="text" fontWeight="medium">
+              <Link to={`../TareaTraking/${Tarea.idTarea}`}>
+                <SearchOutlined
+                  fontSize="large"
+                  color="info"
+                  titleAccess="Ver traking de Eventos de una Tarea"
+                />
+              </Link>
+            </MDTypography>
+
           </MDBox>
         );
 
@@ -837,12 +863,9 @@ function TareaList() {
                         />
                       </MDBox>
 
-                      <MDBox
-                        mb={2}
-                        mt={3}
-                        mr={4}
-                        style={{ display: "flex", alignItems: "center" }}
-                      >
+                    </MDBox>
+                    <MDBox mb={2} mt={3} style={{ display: "block" }}>
+                      <MDBox mb={2} mt={3} style={{ display: "block" }}>
                         <Autocomplete
                           options={fechasfiltro}
                           getOptionLabel={(option) =>
@@ -862,37 +885,38 @@ function TareaList() {
                             />
                           )}
                         />
-
-                        <DatePicker
-                          style={{ marginRight: "2px" }}
-                          selected={selectedDateFrom}
-                          onChange={(date) => setSelectedDateFrom(date)}
-                          dateFormat="dd/MM/yyyy"
-                          customInput={
-                            <TextField variant="outlined" label="Fecha Desde" />
-                          }
-                          isClearable // Agrega un botón para borrar la fecha seleccionada
-                          showYearDropdown // Muestra un dropdown para seleccionar el año
-                          yearDropdownItemNumber={10} // Especifica cuántos años mostrar en el dropdown
-                          scrollableYearDropdown // Permite desplazarse por el dropdown de años
-                        />
-                        <DatePicker
-                          style={{ marginRight: "2px" }}
-                          selected={selectedDateTo}
-                          onChange={(date) => setSelectedDateTo(date)}
-                          dateFormat="dd/MM/yyyy"
-                          customInput={
-                            <TextField variant="outlined" label="Fecha Hasta" />
-                          }
-                          isClearable // Agrega un botón para borrar la fecha seleccionada
-                          showYearDropdown // Muestra un dropdown para seleccionar el año
-                          yearDropdownItemNumber={10} // Especifica cuántos años mostrar en el dropdown
-                          scrollableYearDropdown // Permite desplazarse por el dropdown de años
-                        />
                       </MDBox>
+                      <DatePicker
+                        style={{ marginRight: "2px" }}
+                        selected={selectedDateFrom}
+                        onChange={(date) => setSelectedDateFrom(date)}
+                        dateFormat="dd/MM/yyyy"
+                        customInput={
+                          <TextField variant="outlined" label="Fecha Desde" />
+                        }
+                        isClearable // Agrega un botón para borrar la fecha seleccionada
+                        showYearDropdown // Muestra un dropdown para seleccionar el año
+                        yearDropdownItemNumber={10} // Especifica cuántos años mostrar en el dropdown
+                        scrollableYearDropdown // Permite desplazarse por el dropdown de años
+                      />
+                      <DatePicker
+                        style={{ marginRight: "2px" }}
+                        selected={selectedDateTo}
+                        onChange={(date) => setSelectedDateTo(date)}
+                        dateFormat="dd/MM/yyyy"
+                        customInput={
+                          <TextField variant="outlined" label="Fecha Hasta" />
+                        }
+                        isClearable // Agrega un botón para borrar la fecha seleccionada
+                        showYearDropdown // Muestra un dropdown para seleccionar el año
+                        yearDropdownItemNumber={10} // Especifica cuántos años mostrar en el dropdown
+                        scrollableYearDropdown // Permite desplazarse por el dropdown de años
+                      />
                     </MDBox>
                   </Grid>
+                  <Grid>
 
+                  </Grid>
                   {/* <Grid item>
                     <Grid
                       container
@@ -921,7 +945,7 @@ function TareaList() {
         </Grid>
       </MDBox>
       {/* <Footer /> */}
-    </DashboardLayout>
+    </DashboardLayout >
   );
 }
 

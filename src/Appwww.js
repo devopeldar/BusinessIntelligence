@@ -79,6 +79,7 @@ import TareaTrakingList from "./components/Pages/Tareas/TareaTrakingList";
 import TareaAdd from "./components/Pages/Tareas/TareaAdd";
 import UsuarioEdit from "./components/authentication/Usuario/UsuarioEdit";
 import UsuarioList from "./components/authentication/Usuario/UsuarioList";
+import EventoTareaEdit from "./components/Pages/Tareas/EventoTareaEdit";
 
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
@@ -309,6 +310,7 @@ export default function App() {
             <Route path="/Permisos/:id" element={<Permisos />} />
             <Route path="/CloseSession" element={<CloseSession />} />
 
+            <Route path="/EventoTareaEdit/:id/:habilitado" element={<EventoTareaEdit />} />
             <Route path="/EventoTareaAdd/:id" element={<EventoTareaAdd />} />
             <Route path="/TareaTraking/:id" element={<TareaTrakingList />} />
             <Route path="/TareaListVolver" element={<TareaList />} />

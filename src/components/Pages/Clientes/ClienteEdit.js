@@ -157,7 +157,6 @@ const ClienteEdit = () => {
         }
     };
     const handleAutocompleteChange = (event, value) => {
-        console.log("tipoIVA " + value)
         setSelectedValue(value);
         setTipoIva(value.valor);
     };

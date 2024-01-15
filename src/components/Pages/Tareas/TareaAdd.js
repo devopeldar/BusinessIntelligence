@@ -490,14 +490,6 @@ const TareaAdd = () => {
                                     </MDBox>
                                     <TableContainer component={Paper}>
                                         <Table>
-                                            {/* <TableHead>
-                                        <TableRow>
-                                            <TableCell style={{ display: 'none' }}>IDUsuario</TableCell>
-                                            <TableCell>Usuario</TableCell>
-                                            <TableCell style={{ display: 'none' }}>IDRol</TableCell>
-                                            <TableCell>Rol</TableCell>
-                                        </TableRow> 
-                                    </TableHead> */}
                                             <TableBody>
                                                 {data.map((item, index) => (
                                                     <TableRow key={index}>

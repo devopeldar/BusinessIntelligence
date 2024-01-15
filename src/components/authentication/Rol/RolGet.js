@@ -20,11 +20,12 @@ export default function RolGet() {
           },
         });
 
- 
+
         const data = response.data.map((Rol) => ({
-            idRol: Rol.idRol,
-            descripcion: Rol.descripcion,
-            activo: Rol.activo,
+          idRol: Rol.idRol,
+          descripcion: Rol.descripcion,
+          requerido: Rol.requerido,
+          activo: Rol.activo,
         }));
 
         setRows(data);
@@ -40,13 +41,14 @@ export default function RolGet() {
 
   return {
     columns: [
-     // { Header: "ID Rol", accessor: "idRol", align: "left" },
+      // { Header: "ID Rol", accessor: "idRol", align: "left" },
       { Header: "Descripcion", accessor: "descripcion", width: "45%", align: "left" },
+      { Header: "Requerido", accessor: "requerido", align: "center" },
       { Header: "Activo", accessor: "activo", align: "center" },
       { Header: "Acciones", accessor: "action", align: "center" },
     ],
     rows: rows.map((Rol) => ({
-       
+
       //   idRol: (
       //   <MDTypography
       //     component="a"
@@ -60,14 +62,14 @@ export default function RolGet() {
       // ), // Reemplaza <TuComponenteControl1 /> por el componente que desees en esta celda
       descripcion: (
         <MDTypography
-        component="a"
-        href="#"
-        variant="caption"
-        color="text"
-        fontWeight="medium"
-      >
-        {Rol.descripcion}
-      </MDTypography>
+          component="a"
+          href="#"
+          variant="caption"
+          color="text"
+          fontWeight="medium"
+        >
+          {Rol.descripcion}
+        </MDTypography>
       ),
 
       activo: (
@@ -82,6 +84,25 @@ export default function RolGet() {
           ) : (
             <MDBadge
               badgeContent="desactivado"
+              color="error"
+              variant="gradient"
+              size="sm"
+            />
+          )}
+        </MDBox>
+      ), 
+      requerido: (
+        <MDBox ml={-1}>
+          {Rol.requerido ? (
+            <MDBadge
+              badgeContent="SI"
+              color="success"
+              variant="gradient"
+              size="sm"
+            />
+          ) : (
+            <MDBadge
+              badgeContent="NO"
               color="error"
               variant="gradient"
               size="sm"
