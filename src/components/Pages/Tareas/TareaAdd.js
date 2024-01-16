@@ -231,6 +231,7 @@ const TareaAdd = () => {
         if (!usuarioExistente) {
             setData(prevDatos => [...prevDatos, newRow]);
         }
+        console.log("newRow", newRow)
     };
 
     const handleAutocompleteUserChange = (event, value) => {

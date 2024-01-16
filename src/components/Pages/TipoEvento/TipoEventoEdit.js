@@ -105,16 +105,6 @@ const TipoEventoEdit = () => {
 
                 setSelectedValue(defaultValue);
 
-                // const comboOptions = entityData.map(item => ({
-                //     idTareaEstado: item.idTareaEstado,
-                //     descripcion: item.descripcion,
-                //   }));
-
-                //   // Actualizar el estado del combo con los datos obtenidos
-                //   setComboData(comboOptions);
-
-
-
             }
         }; GetEstadosTareas();
     }, [TipoEvento]);
