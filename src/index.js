@@ -40,7 +40,6 @@ root.render(
         <App />
       
       </MaterialUIControllerProvider>
-      {/* <Route path="" component={ <Confirmacion />} /> */}
     </BrowserRouter>
    
 );

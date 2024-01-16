@@ -160,7 +160,7 @@ const TareaTipoAdd = () => {
         </MDBox>
         <MDBox pt={4} pb={3} px={3}>
           <MDBox component="form" role="form">
-            <MDBox mb={2}>
+          <MDBox mb={2} style={{ display: "flex", gap: "16px" }}>
               <MDInput
                 type="text"
                 name="nombre"
@@ -171,8 +171,7 @@ const TareaTipoAdd = () => {
                 onChange={handleInputChange}
                 fullWidth
               />
-            </MDBox>
-            <MDBox mb={2}>
+           
               <MDInput
                 type="text"
                 name="codigo"
@@ -183,8 +182,8 @@ const TareaTipoAdd = () => {
                 onChange={handleInputChange}
                 fullWidth
               />
-            </MDBox>
-            <MDBox mb={2}>
+              </MDBox>
+           <MDBox mb={2}>
               <MDInput
                 type="text"
                 name="descripcion"
@@ -196,7 +195,7 @@ const TareaTipoAdd = () => {
                 fullWidth
               />
             </MDBox>
-            <MDBox mb={2}>
+            <MDBox mb={2} style={{ display: "flex", gap: "16px" }}>
               <MDInput
                 type="number"
                 name="vencimientodias"
@@ -207,8 +206,7 @@ const TareaTipoAdd = () => {
                 onChange={handleInputChange}
                 fullWidth
               />
-            </MDBox>
-            <MDBox mb={2}>
+           
               <MDInput
                 type="number"
                 name="vencimientolegal"
@@ -221,27 +219,19 @@ const TareaTipoAdd = () => {
               />
             </MDBox>
             <MDBox mb={2}>
-            <MDTypography variant="h17" fontWeight="light" mt={1}>
-              Activo
-          
               <Checkbox name="activo"
-              onChange={handleInputChange}
-              checked={formData.activo || false}
-           
-              >
-
-              </Checkbox> 
-             
-              {/* <MDInput
-                type="checkbox"
-                name="activo"
-                label="Activo"
-                variant="standard"
-                value={formData.activo}
                 onChange={handleInputChange}
-                fullWidth
-              /> */}
-               </MDTypography>
+                checked={formData.activo || false}
+
+              />
+              <MDTypography
+                variant="button"
+                fontWeight="regular"
+                color="text"
+                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
+              >
+                &nbsp;&nbsp;Activo
+              </MDTypography>
             </MDBox>
             <MDBox mt={4} mb={1}>
               <MDButton

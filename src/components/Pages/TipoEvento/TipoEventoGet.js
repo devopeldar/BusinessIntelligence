@@ -65,7 +65,7 @@ export default function TipoEventoGet() {
             { Header: "Envia Mail", accessor: "enviaMail", align: "center" },
             { Header: "Detiene Tarea",  accessor: "detiene", align: "center" },
             { Header: "Activo",  accessor: "activo", align: "center" },
-            { Header: "Observaciones",  accessor: "observaciones", align: "left"},
+            { Header: "Observaciones",  accessor: "observaciones", width: "20px", align: "left"},
             { Header: "Acciones",  accessor: "action", align: "center" },
         ],
         rows: rows.map((EventoTipo) => ({

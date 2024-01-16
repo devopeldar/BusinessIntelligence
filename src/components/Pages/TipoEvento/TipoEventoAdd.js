@@ -170,7 +170,7 @@ const TipoEventoAdd = () => {
 
   return (
     <BasicLayout image={bgImage}>
-      <Card>
+      <Card style={{    width: "157%" }}>
         <MDBox
           variant="gradient"
           bgColor="primary"
@@ -203,7 +203,7 @@ const TipoEventoAdd = () => {
                 fullWidth
               />
             </MDBox>
-            <MDBox mb={2}>
+            <MDBox mb={2} style={{ display: "flex", gap: "16px" }}>
               <Autocomplete
                 onChange={handleAutocompleteChange}
                 options={elements}
@@ -217,9 +217,9 @@ const TipoEventoAdd = () => {
                     variant="outlined"
                   />
                 )}
+                style={{ flex: 1 }}  // Añade esta línea
               />
-            </MDBox>
-            <MDBox mb={2}>
+            
               <Autocomplete
                 options={estados}
                 getOptionLabel={(option) => option.descripcion}
@@ -228,6 +228,7 @@ const TipoEventoAdd = () => {
                 renderInput={(params) => (
                   <TextField {...params} label="Selecciona Estado de Progreso" variant="outlined" />
                 )}
+                style={{ flex: 1 }}  // Añade esta línea
               />
 
             </MDBox>
@@ -244,7 +245,7 @@ const TipoEventoAdd = () => {
                 fullWidth
               />
             </MDBox>
-            <MDBox mb={2}>
+            <MDBox mb={2} style={{ display: "flex", gap: "16px" }}>
               <Checkbox
                 name="enviaMail"
                 onChange={handleInputChange}
@@ -258,8 +259,7 @@ const TipoEventoAdd = () => {
               >
                 &nbsp;&nbsp;Envia Mail
               </MDTypography>
-            </MDBox>
-            <MDBox mb={2}>
+            
               <Checkbox
                 name="detiene"
                 onChange={handleInputChange}
@@ -273,8 +273,7 @@ const TipoEventoAdd = () => {
               >
                 &nbsp;&nbsp;Detiene Tarea
               </MDTypography>
-            </MDBox>
-            <MDBox mb={2}>
+            
               <Checkbox
                 name="activo"
                 onChange={handleInputChange}

@@ -73,7 +73,6 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
     let returnValue;
 
     if (type === "collapse") {
-      console.log(href);
       returnValue = href ? (
        
           <Link

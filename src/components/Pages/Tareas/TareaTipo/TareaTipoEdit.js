@@ -43,7 +43,7 @@ const TareaTipoEdit = () => {
         const reqTareaTipo = {
           idTareaTipo: id
         };
-    
+
         const response = await axios.post(API_URL + `/TareaTipoGetByID`, reqTareaTipo, {
           headers: {
             "Content-Type": "application/json"
@@ -65,7 +65,7 @@ const TareaTipoEdit = () => {
   }, [id]);
 
   const handleSubmit = async (event) => {
-    
+
     try {
       setGrabando(true); // Inicia la grabación
       setnombreboton("Volver");
@@ -100,12 +100,31 @@ const TareaTipoEdit = () => {
   };
 
   if (!TareaTipo) {
-    return <div>Cargando Tipo de Tarea...</div>;
+    return <BasicLayout image={bgImage}>
+      <Card style={{ width: "157%" }}>
+        <MDBox
+          variant="gradient"
+          bgColor="warning"
+          borderRadius="lg"
+          coloredShadow="primary"
+          mx={2}
+          mt={-3}
+          p={3}
+          mb={1}
+          textAlign="center"
+        >
+          <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
+            Cargando Tipos de eventos...
+          </MDTypography>
+        </MDBox>
+
+      </Card>
+    </BasicLayout>
   }
 
   return (
     <BasicLayout image={bgImage}>
-      <Card>
+      <Card style={{ width: "157%" }}>
         <MDBox
           variant="gradient"
           bgColor="warning"
@@ -126,7 +145,7 @@ const TareaTipoEdit = () => {
         </MDBox>
         <MDBox pt={4} pb={3} px={3}>
           <MDBox component="form" role="form">
-            <MDBox mb={2}>
+            <MDBox mb={2} style={{ display: "flex", gap: "16px" }}>
               <MDInput
                 type="text"
                 name="nombre"
@@ -134,11 +153,10 @@ const TareaTipoEdit = () => {
                 label="Nombre"
                 variant="standard"
                 value={nombre}
-             onChange={(e) => setNombre(e.target.value)}
+                onChange={(e) => setNombre(e.target.value)}
                 fullWidth
               />
-            </MDBox>
-            <MDBox mb={2}>
+
               <MDInput
                 type="text"
                 name="codigo"
@@ -146,7 +164,7 @@ const TareaTipoEdit = () => {
                 label="Codigo"
                 variant="standard"
                 value={codigo}
-             onChange={(e) => setCodigo(e.target.value)}
+                onChange={(e) => setCodigo(e.target.value)}
                 fullWidth
               />
             </MDBox>
@@ -155,14 +173,14 @@ const TareaTipoEdit = () => {
                 type="text"
                 name="descripcion"
                 required
-                label="Observaciones"
+                label="Descripcion"
                 variant="standard"
                 value={descripcion}
-             onChange={(e) => setDescripcion(e.target.value)}
+                onChange={(e) => setDescripcion(e.target.value)}
                 fullWidth
               />
             </MDBox>
-            <MDBox mb={2}>
+            <MDBox mb={2} style={{ display: "flex", gap: "16px" }}>
               <MDInput
                 type="text"
                 name="vencimientoDias"
@@ -170,11 +188,10 @@ const TareaTipoEdit = () => {
                 label="Vencimiento en Dias"
                 variant="standard"
                 value={vencimientoDias}
-             onChange={(e) => setVencimientoDias(e.target.value)}
+                onChange={(e) => setVencimientoDias(e.target.value)}
                 fullWidth
               />
-            </MDBox>
-            <MDBox mb={2}>
+
               <MDInput
                 type="text"
                 name="vencimientoLegal"
@@ -182,24 +199,25 @@ const TareaTipoEdit = () => {
                 label="Vencimiento Legal"
                 variant="standard"
                 value={vencimientoLegal}
-             onChange={(e) => setVencimientoLegal(e.target.value)}
+                onChange={(e) => setVencimientoLegal(e.target.value)}
                 fullWidth
               />
             </MDBox>
-           
-            <MDBox mb={2}>
-            <MDTypography variant="h17" fontWeight="light" mt={1}>
-              Activo
-          
-              <Checkbox name="activo"
-              checked={activo}
-              onChange={(e) => setActivo(e.target.checked)}
-     
-              >
 
-              </Checkbox> 
-     
-               </MDTypography>
+            <MDBox mb={2}>
+              <Checkbox name="activo"
+                onChange={(e) => setActivo(e.target.checked)}
+                checked={activo}
+
+              />
+              <MDTypography
+                variant="button"
+                fontWeight="regular"
+                color="text"
+                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
+              >
+                &nbsp;&nbsp;Activo
+              </MDTypography>
             </MDBox>
             <MDBox mt={4} mb={1}>
               <MDButton
@@ -223,7 +241,7 @@ const TareaTipoEdit = () => {
                 variant="gradient"
                 color="warning"
                 endIcon={<ExitToApp />}
-                
+
                 fullWidth
               >
                 {nombreboton}
@@ -239,10 +257,10 @@ const TareaTipoEdit = () => {
               variant="contained"></MDProgress>
 
           </MDBox> */}
-          
+
           {mensaje !== '' && (
             <Alert severity={"success"}>
-              <AlertTitle>{"Aviso" }</AlertTitle>
+              <AlertTitle>{"Aviso"}</AlertTitle>
               {mensaje}
             </Alert>
           )}

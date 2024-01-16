@@ -172,12 +172,12 @@ const TipoEventoEdit = () => {
     if (!TipoEvento) {
 
         return <BasicLayout image={bgImage}>
-            <Card>
+             <Card style={{    width: "157%" }}>
                 <MDBox
                     variant="gradient"
-                    bgColor="info"
+                    bgColor="primary"
                     borderRadius="lg"
-                    coloredShadow="success"
+                    coloredShadow="primary"
                     mx={2}
                     mt={-3}
                     p={3}
@@ -195,7 +195,7 @@ const TipoEventoEdit = () => {
 
     return (
         <BasicLayout image={bgImage}>
-            <Card>
+            <Card style={{    width: "157%" }}>
                 <MDBox
                     variant="gradient"
                     bgColor="primary"
@@ -229,7 +229,7 @@ const TipoEventoEdit = () => {
                                 fullWidth
                             />
                         </MDBox>
-                        <MDBox mb={2}>
+                        <MDBox mb={2} style={{ display: "flex", gap: "16px" }}>
                             <Autocomplete
                                 onChange={handleAutocompleteChange}
                                 // onChange={(event, newValue) => {
@@ -246,9 +246,9 @@ const TipoEventoEdit = () => {
                                         variant="outlined"
                                     />
                                 )}
+                                style={{ flex: 1 }} 
                             />
-                        </MDBox>
-                        <MDBox mb={2}>
+                        
                             <Autocomplete
                                 onChange={handleAutocompleteChangeEstados}
                                 // onChange={(event, newValue) => {
@@ -265,6 +265,7 @@ const TipoEventoEdit = () => {
                                         variant="outlined"
                                     />
                                 )}
+                                style={{ flex: 1 }} 
                             />
                         </MDBox>
                         <MDBox mb={2}>
@@ -280,7 +281,7 @@ const TipoEventoEdit = () => {
                             />
                         </MDBox>
 
-                        <MDBox mb={2}>
+                        <MDBox mb={2} style={{ display: "flex", gap: "16px" }}>
 
                             <Checkbox name="enviaMail"
                                 onChange={(e) => setEnviaMail(e.target.checked)}
@@ -295,8 +296,7 @@ const TipoEventoEdit = () => {
                             >
                                 &nbsp;&nbsp;Envia Mail
                             </MDTypography>
-                        </MDBox>
-                        <MDBox mb={2}>
+                        
 
                             <Checkbox name="detiene"
                                 onChange={(e) => setDetiene(e.target.checked)}
@@ -311,8 +311,7 @@ const TipoEventoEdit = () => {
                             >
                                 &nbsp;&nbsp;Detiene Tarea
                             </MDTypography>
-                        </MDBox>
-                        <MDBox mb={2}>
+                       
 
                             <Checkbox name="activo"
                                 onChange={(e) => setActivo(e.target.checked)}

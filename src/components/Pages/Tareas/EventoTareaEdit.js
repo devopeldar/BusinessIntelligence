@@ -21,7 +21,7 @@ import {
     TableCell,
     TableContainer,
     TableRow,
-    TextField,Table
+    TextField, Table
 } from "@mui/material";
 import bgImage from "../../../assets/images/bg-sign-up-cover.jpeg";
 import MDBox from "../../controls/MDBox";
@@ -112,12 +112,11 @@ const EventoTareaEdit = () => {
                 });
 
                 setRolesxTareaUpdate(newRows);
-                if(habilitado=== "1")
-                {
+                if (habilitado === "1") {
                     setControlHabilitado(true);
-                }else  {
+                } else {
                     setControlHabilitado(false);
-                } 
+                }
 
                 setTarea(data);
             } catch (error) {
@@ -221,7 +220,7 @@ const EventoTareaEdit = () => {
                 return;
             }
             const request = {
-                idTarea:id,
+                idTarea: id,
                 idTareaTipo: selectedValueTipoTarea.idTareaTipo,
                 idCliente: selectedValueCliente.idCliente,
                 idDepartamento: selectedValueDepartamentos.idDepartamento,
@@ -229,11 +228,11 @@ const EventoTareaEdit = () => {
                 fechaVencimientoLegal: fechaVencimientoLegal,
                 observaciones: observaciones,
                 tareaxRoles: rolesxTareaUpdate.map(item => ({
-                  idUsuario: item.idUsuario,
-                  idRol: item.idRol
+                    idUsuario: item.idUsuario,
+                    idRol: item.idRol
                 })),
                 idUsuario: localStorage.getItem('iduserlogueado')
-              };
+            };
             console.log("formData Tarea" + JSON.stringify(request))
 
 
@@ -300,7 +299,7 @@ const EventoTareaEdit = () => {
 
         return newRow;
     };
-   
+
     const handleAddRol = () => {
         const newRow = {
             id: (rolesxTareaUpdate.length + 1),
@@ -378,7 +377,7 @@ const EventoTareaEdit = () => {
 
     return (
         <BasicLayout image={bgImage}>
-            <Card>
+            <Card style={{ width: "257%", marginL: "-367px", marginT: "-35px" }}>
                 <MDBox
                     variant="gradient"
                     bgColor="info"
@@ -391,236 +390,251 @@ const EventoTareaEdit = () => {
                     textAlign="center"
                 >
                     <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-                       {!controlHabilitado ? "Cambio de Roles" : "Editar Tarea"} 
+                        {!controlHabilitado ? "Cambio de Roles" : "Editar Tarea"}
                     </MDTypography>
                     <MDTypography display="block" variant="button" color="white" my={1}>
-                    {!controlHabilitado ? "Solo podra modificar los Roles de la tarea" : "Un Tarea especifica las tareas que tienen que cumplir los encargados de las mismas"} 
+                        {!controlHabilitado ? "Solo podra modificar los Roles de la tarea" : "Un Tarea especifica las tareas que tienen que cumplir los encargados de las mismas"}
                     </MDTypography>
                 </MDBox>
                 <MDBox pt={4} pb={3} px={3}>
                     <MDBox component="form" tarea="form">
-                        <MDBox mb={2}>
-                            <Autocomplete
-                                onChange={handleAutocompleteIDClienteChange}
-                                options={elementsclientes}
-                                value={selectedValueCliente || null}
-                                getOptionLabel={(option) =>
-                                    option.nombre || "Seleccione Cliente"
-                                }
-                                disabled={!controlHabilitado}
-                                getOptionDisabled={(option) => option.activo === false}
-                                renderInput={(params) => (
-                                    <TextField
-                                        {...params}
-                                        label="Seleccione Cliente"
-                                        variant="outlined"
+                        <MDBox
+                            mb={2}
+                            style={{
+                                display: "flex",
+                                gap: "16px",
+                                flexDirection: "row",
+                                height: "100%", // Asegura que el contenedor principal ocupe el alto completo
+                            }}
+                        >
+                            <div style={{ flex: 1, marginT: "-35px"  }}>
+                                <MDBox mb={2}>
+                                    <Autocomplete
+                                        onChange={handleAutocompleteIDClienteChange}
+                                        options={elementsclientes}
+                                        value={selectedValueCliente || null}
+                                        getOptionLabel={(option) =>
+                                            option.nombre || "Seleccione Cliente"
+                                        }
+                                        disabled={!controlHabilitado}
+                                        getOptionDisabled={(option) => option.activo === false}
+                                        renderInput={(params) => (
+                                            <TextField
+                                                {...params}
+                                                label="Seleccione Cliente"
+                                                variant="outlined"
+                                            />
+                                        )}
                                     />
-                                )}
-                            />
-                        </MDBox>
-                        <MDBox mb={2}>
-                            <Autocomplete
-                                onChange={handleAutocompleteTareaTipoChange}
-                                options={elementsTipoTarea}
-                                value={selectedValueTipoTarea || null}
-                                getOptionLabel={(option) => option.nombre || "Seleccione Tipo de Tarea"}
-                                getOptionDisabled={(option) => option.activo === false}
-                                disabled={!controlHabilitado}
-                                renderInput={(params) => (
-                                    <TextField
-                                        {...params}
-                                        label="Seleccione Tipo de Tarea"
-                                        variant="outlined"
+                                </MDBox>
+                                <MDBox mb={2} style={{ display: "flex", gap: "16px" }}>
+                                    <Autocomplete
+                                        onChange={handleAutocompleteTareaTipoChange}
+                                        options={elementsTipoTarea}
+                                        value={selectedValueTipoTarea || null}
+                                        getOptionLabel={(option) => option.nombre || "Seleccione Tipo de Tarea"}
+                                        getOptionDisabled={(option) => option.activo === false}
+                                        disabled={!controlHabilitado}
+                                        renderInput={(params) => (
+                                            <TextField
+                                                {...params}
+                                                label="Seleccione Tipo de Tarea"
+                                                variant="outlined"
+                                            />
+                                        )}
+                                        style={{ flex: 1 }}  // Añade esta línea
                                     />
-                                )}
-                            />
-                        </MDBox>
-                        <MDBox mb={2}>
-                            <Autocomplete
-                                onChange={handleAutocompleteDeptoChange}
-                                options={elementsDepto}
-                                value={selectedValueDepartamentos || null}
-                                disabled={!controlHabilitado}
-                                getOptionLabel={(option) => option.nombre || "Seleccione Departamento"}
-                                getOptionDisabled={(option) => option.activo === false}
-                                renderInput={(params) => (
-                                    <TextField
-                                        {...params}
-                                        label="Seleccione Departamento"
-                                        variant="outlined"
+
+                                    <Autocomplete
+                                        onChange={handleAutocompleteDeptoChange}
+                                        options={elementsDepto}
+                                        value={selectedValueDepartamentos || null}
+                                        disabled={!controlHabilitado}
+                                        getOptionLabel={(option) => option.nombre || "Seleccione Departamento"}
+                                        getOptionDisabled={(option) => option.activo === false}
+                                        renderInput={(params) => (
+                                            <TextField
+                                                {...params}
+                                                label="Seleccione Departamento"
+                                                variant="outlined"
+                                            />
+                                        )}
+                                        style={{ flex: 1 }}  // Añade esta línea
                                     />
-                                )}
-                            />
-                        </MDBox>
-                        <MDBox mb={2}>
-                            <MDInput
-                                type="number"
-                                name="vencimientodias"
-                                required
-                                label="Vencimiento en Dias"
-                                variant="standard"
-                                value={vencimientoDias}
-                                disabled={!controlHabilitado}
-                                onChange={(e) => setVencimientoDias(e.target.value)}
-                                fullWidth
-                            />
-                        </MDBox>
-                        <MDBox mb={2}>
-                            <MDInput
-                                type="date"
-                                name="fechaVencimientoLegal"
-                                required
-                                label="Vencimiento legal"
-                                variant="standard"
-                                value={fechaVencimientoLegal}
-                                disabled={!controlHabilitado}
-                                onChange={(e) => setFechaVencimientoLegal(e.target.value)}
-                                fullWidth
-                            />
-                        </MDBox>
-                        <MDBox mb={2}>
-                            <MDInput
-                                type="text"
-                                name="observaciones"
-                                required
-                                label="Observaciones"
-                                variant="standard"
-                                value={observaciones}
-                                disabled={!controlHabilitado}
-                                onChange={(e) => setObservaciones(e.target.value)}
-                                fullWidth
-                            />
-                        </MDBox>
-                        <MDBox mb={2}>
-                            <Card>
-                                <MDBox
-                                    variant="gradient"
-                                    bgColor="warning"
-                                    borderRadius="lg"
-                                    coloredShadow="warning"
-                                    mx={2}
-                                    mt={0}
-                                    p={1}
-                                    mb={1}
-                                    textAlign="center"
-                                >
-                                    <MDTypography
-                                        variant="h8"
-                                        fontWeight="light"
-                                        color="white"
-                                        mt={1}
-                                    >
-                                        Administracion Roles
-                                    </MDTypography>
+                                </MDBox>
+                                <MDBox mb={2} style={{ display: "flex", gap: "16px" }}>
+                                    <MDInput
+                                        type="number"
+                                        name="vencimientodias"
+                                        required
+                                        label="Vencimiento en Dias"
+                                        variant="standard"
+                                        value={vencimientoDias}
+                                        disabled={!controlHabilitado}
+                                        onChange={(e) => setVencimientoDias(e.target.value)}
+                                        fullWidth
+                                    />
+
+                                    <MDInput
+                                        type="date"
+                                        name="fechaVencimientoLegal"
+                                        required
+                                        label="Vencimiento legal"
+                                        variant="standard"
+                                        value={fechaVencimientoLegal}
+                                        disabled={!controlHabilitado}
+                                        onChange={(e) => setFechaVencimientoLegal(e.target.value)}
+                                        fullWidth
+                                    />
                                 </MDBox>
                                 <MDBox mb={2}>
-                                    <MDBox mb={2} mr={4} ml={4}>
-                                        <Autocomplete
-                                            onChange={handleAutocompleteUserChange}
-                                            options={elementsUsuario}
-                                            getOptionLabel={(option) => option.nombre}
-                                            getOptionDisabled={(option) => option.activo === false}
-                                            renderInput={(params) => (
-                                                <TextField
-                                                    {...params}
-                                                    label="Seleccione Usuario"
-                                                    variant="outlined"
-                                                />
-                                            )}
-                                        />
-                                    </MDBox>
-                                    <MDBox mb={2} mr={4} ml={4}>
-                                        <Autocomplete
-                                            onChange={handleAutocompleteRolChange}
-                                            options={elementsRol}
-                                            getOptionLabel={(option) => option.descripcion}
-                                            getOptionDisabled={(option) => option.activo === false}
-                                            renderInput={(params) => (
-                                                <TextField
-                                                    {...params}
-                                                    label="Seleccione Rol"
-                                                    variant="outlined"
-                                                />
-                                            )}
-                                        />
-                                    </MDBox>
-                                    <MDBox mb={2} mr={6} ml={6}>
-                                        <MDButton
-                                            onClick={() => {
-                                                handleAddRol();
-                                            }}
-                                            variant="gradient"
-                                            color="warning"
-                                            endIcon={<PersonFillAdd />}
-                                            fullWidth
-                                        >
-                                            Agregar Rol
-                                        </MDButton>
-                                    </MDBox>
-
-                                    <TableContainer component={Paper}>
-                                        <Table>
-                                            <TableBody>
-
-                                                {rolesxTareaUpdate.map((item) => (
-                                                    <TableRow key={item.id}>
-                                                        <TableCell style={{ display: "block" }}>
-                                                            {item.id}
-                                                        </TableCell>
-                                                        <TableCell style={{ display: "none" }}>
-                                                            {item.idUsuario}
-                                                        </TableCell>
-                                                        <TableCell>{item.nombreUsuario}</TableCell>
-                                                        <TableCell style={{ display: "none" }}>
-                                                            {item.idRol}
-                                                        </TableCell>
-                                                        <TableCell>{item.nombreRol}</TableCell>
-                                                        <TableCell>
-                                                            <IconButton
-                                                                aria-label="Eliminar"
-                                                                onClick={() => eliminarItem(item.id)}
-                                                            >
-                                                                <Delete color="error" />
-                                                            </IconButton>
-                                                        </TableCell>
-                                                    </TableRow>
-                                                ))
-                                                }
-                                            </TableBody>
-                                        </Table>
-                                    </TableContainer> 
+                                    <MDInput
+                                        type="text"
+                                        name="observaciones"
+                                        required
+                                        label="Observaciones"
+                                        variant="standard"
+                                        value={observaciones}
+                                        disabled={!controlHabilitado}
+                                        onChange={(e) => setObservaciones(e.target.value)}
+                                        fullWidth
+                                    />
                                 </MDBox>
-                            </Card>
-                        </MDBox>
-                        <MDBox mt={4} mb={1}>
-                            <MDButton
-                                onClick={() => {
-                                    handleSubmit();
-                                }}
-                                variant="gradient"
-                                color="info"
-                                endIcon={<Save />}
-                                disabled={grabando}
-                                fullWidth
-                            >
-                                Grabar
-                            </MDButton>
-                        </MDBox>
-                        <MDBox mt={4} mb={1}>
-                            <MDButton
-                                onClick={() => {
-                                    handleVolver();
-                                }}
-                                variant="gradient"
-                                color="info"
-                                endIcon={<ExitToApp />}
-                                fullWidth
-                            >
-                                {nombreboton}
-                            </MDButton>
-                        </MDBox>
-                    </MDBox>
+                            </div>
+                            <div style={{ flex: 1 , marginT: "-35px" }}>
 
+                                <MDBox mb={2}>
+                                    <Card >
+                                        <MDBox
+                                            variant="gradient"
+                                            bgColor="info"
+                                            borderRadius="lg"
+                                            coloredShadow="warning"
+                                            mx={2}
+                                            mt={0}
+                                            p={1}
+                                            mb={1}
+                                            textAlign="center"
+                                        >
+                                            <MDTypography
+                                                variant="h8"
+                                                fontWeight="light"
+                                                color="white"
+                                                mt={1}
+                                            >
+                                                Administracion Roles
+                                            </MDTypography>
+                                        </MDBox>
+                                        <MDBox mb={2}>
+                                            <MDBox mb={2} mr={4} ml={4}>
+                                                <Autocomplete
+                                                    onChange={handleAutocompleteUserChange}
+                                                    options={elementsUsuario}
+                                                    getOptionLabel={(option) => option.nombre}
+                                                    getOptionDisabled={(option) => option.activo === false}
+                                                    renderInput={(params) => (
+                                                        <TextField
+                                                            {...params}
+                                                            label="Seleccione Usuario"
+                                                            variant="outlined"
+                                                        />
+                                                    )}
+                                                />
+                                            </MDBox>
+                                            <MDBox mb={2} mr={4} ml={4}>
+                                                <Autocomplete
+                                                    onChange={handleAutocompleteRolChange}
+                                                    options={elementsRol}
+                                                    getOptionLabel={(option) => option.descripcion}
+                                                    getOptionDisabled={(option) => option.activo === false}
+                                                    renderInput={(params) => (
+                                                        <TextField
+                                                            {...params}
+                                                            label="Seleccione Rol"
+                                                            variant="outlined"
+                                                        />
+                                                    )}
+                                                />
+                                            </MDBox>
+                                            <MDBox mb={2} mr={6} ml={6}>
+                                                <MDButton
+                                                    onClick={() => {
+                                                        handleAddRol();
+                                                    }}
+                                                    variant="gradient"
+                                                    color="info"
+                                                    endIcon={<PersonFillAdd />}
+                                                    fullWidth
+                                                >
+                                                    Agregar Rol
+                                                </MDButton>
+                                            </MDBox>
+
+                                            <TableContainer component={Paper}>
+                                                <Table>
+                                                    <TableBody>
+
+                                                        {rolesxTareaUpdate.map((item) => (
+                                                            <TableRow key={item.id}>
+                                                                <TableCell style={{ display: "none" }}>
+                                                                    {item.id}
+                                                                </TableCell>
+                                                                <TableCell style={{ display: "none" }}>
+                                                                    {item.idUsuario}
+                                                                </TableCell>
+                                                                <TableCell>{item.nombreUsuario}</TableCell>
+                                                                <TableCell style={{ display: "none" }}>
+                                                                    {item.idRol}
+                                                                </TableCell>
+                                                                <TableCell>{item.nombreRol}</TableCell>
+                                                                <TableCell>
+                                                                    <IconButton
+                                                                        aria-label="Eliminar"
+                                                                        onClick={() => eliminarItem(item.id)}
+                                                                    >
+                                                                        <Delete color="error" />
+                                                                    </IconButton>
+                                                                </TableCell>
+                                                            </TableRow>
+                                                        ))
+                                                        }
+                                                    </TableBody>
+                                                </Table>
+                                            </TableContainer>
+                                        </MDBox>
+                                    </Card>
+                                </MDBox>
+                            </div>
+                            </MDBox>
+                            <MDBox mt={1} mb={1}>
+                                <MDButton
+                                    onClick={() => {
+                                        handleSubmit();
+                                    }}
+                                    variant="gradient"
+                                    color="info"
+                                    endIcon={<Save />}
+                                    disabled={grabando}
+                                    fullWidth
+                                >
+                                    Grabar
+                                </MDButton>
+                            </MDBox>
+                            <MDBox mt={2} mb={1}>
+                                <MDButton
+                                    onClick={() => {
+                                        handleVolver();
+                                    }}
+                                    variant="gradient"
+                                    color="info"
+                                    endIcon={<ExitToApp />}
+                                    fullWidth
+                                >
+                                    {nombreboton}
+                                </MDButton>
+                            </MDBox>
+                        
+                    </MDBox>
                     {mensaje !== "" && (
                         <Alert severity={exito ? "success" : "error"}>
                             <AlertTitle>{exito ? "Felicitaciones" : "Error"}</AlertTitle>
