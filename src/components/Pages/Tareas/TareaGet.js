@@ -279,7 +279,7 @@ export default function TareaGet() {
   };
 
   const renderRolesWithLineBreaks = (roles) => {
-    console.log("aca");
+
     if (roles.includes("|")) {
       return roles.split("|").map((role, index) => (
         <React.Fragment key={index}>

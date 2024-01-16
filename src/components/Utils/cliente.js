@@ -13,7 +13,7 @@ const Cliente = () => {
             accept: "application/json",
           },
         });
-        console.log("response.data cli", response.data)
+    
         const data = response.data.map((cliente) => ({
           idCliente: cliente.idCliente,
           nombre: cliente.nombre,

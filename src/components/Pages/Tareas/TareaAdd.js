@@ -284,7 +284,7 @@ const TareaAdd = () => {
 
                     if (res.rdoAccion) {
                         // Manejar respuesta exitosa
-                        setMensaje("La Tarea ha sido Registrado exitosamente!");
+                        setMensaje("La Tarea ha sido Modificada exitosamente!");
                         setGrabando(true);
                         setExito(true);
                     } else {

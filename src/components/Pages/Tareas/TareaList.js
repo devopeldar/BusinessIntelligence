@@ -33,6 +33,7 @@ import {
   Pause,
   Filter,
   PeopleAltTwoTone,
+  Edit,
 } from "@mui/icons-material";
 import MDProgress from "../../controls/MDProgress";
 import EstadoTarea from "../../Utils/estadoTarea";
@@ -295,6 +296,20 @@ function TareaList() {
                   </Link>
                 </MDTypography>
 
+                <MDTypography
+                  variant="caption"
+                  color="text"
+                  fontWeight="medium"
+                >
+                  <Link to={`../EventoTareaEdit/${Tarea.idTarea}/1`}>
+                    <Edit
+                      fontSize="large"
+                      color="primary"
+                      titleAccess="Editar Tarea"
+                    />
+                  </Link>
+                </MDTypography>
+
               </>
 
             )}
@@ -320,7 +335,7 @@ function TareaList() {
                 color="text"
                 fontWeight="medium"
               >
-                <Link to={`../EventoTareaEdit/${Tarea.idTarea}/1`}>
+                <Link to={`../EventoTareaEdit/${Tarea.idTarea}/0`}>
                   <PeopleAltTwoTone
                     fontSize="large"
                     color="success"
@@ -689,7 +704,7 @@ function TareaList() {
   };
 
   const renderRolesWithLineBreaks = (roles) => {
-    console.log("aca");
+
     if (roles.includes("|")) {
       return roles.split("|").map((role, index) => (
         <React.Fragment key={index}>

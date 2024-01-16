@@ -13,7 +13,7 @@ const Departamento = () => {
             accept: "application/json",
           },
         });
-        console.log("response.data dep", response.data)
+
         const data = response.data.map((departamento) => ({
           idDepartamento: departamento.idDepartamento,
           nombre: departamento.nombre,
