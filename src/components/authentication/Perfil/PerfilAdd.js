@@ -56,10 +56,10 @@ const PerfilAdd = () => {
 
   const handleInputChange = (event) => {
     const { name, value, type, checked } = event.target;
-  console.log("chk :" + event)
+    console.log("chk :" + event)
     // Verifica si el tipo de campo es un checkbox (para campos booleanos)
     const newValue = type === 'checkbox' ? checked : value;
-  
+
     setShowprogrees(1);
     setFormData({
       ...formData,
@@ -69,7 +69,7 @@ const PerfilAdd = () => {
 
   const handleSubmit = (event) => {
     setGrabando(false); // Inicia la grabación
-    
+
     const timer = setInterval(() => {
       setProgress((oldProgress) => {
         if (oldProgress === 100) {
@@ -113,7 +113,7 @@ const PerfilAdd = () => {
         setMensaje("Perfil Registrado exitosamente!");
         setGrabando(true);
         setLoading(false);
-       
+
       } else {
         // Manejar errores si la respuesta no es exitosa
         setMensaje(res.rdoAccionDesc);
@@ -165,74 +165,65 @@ const PerfilAdd = () => {
               />
             </MDBox>
             <MDBox mb={2}>
-            <MDTypography variant="h17" fontWeight="light" mt={1}>
-              Activo
-          
-              <Checkbox name="activo"
-              onChange={handleInputChange}
-              checked={formData.activo || false}
-           
-              >
+                <Checkbox name="activo"
+                  onChange={handleInputChange}
+                  checked={formData.activo || false}
 
-              </Checkbox> 
+                />
+                <MDTypography
+                  variant="button"
+                  fontWeight="regular"
+                  color="text"
+                  sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
+                >
+                  &nbsp;&nbsp;Activo
+                </MDTypography>
+              </MDBox>
+              <MDBox mb={1} style={{ display: "flex", gap: "16px" }}>
+                <MDButton
+                  onClick={() => {
+                    handleSubmit();
+                  }}
+                  variant="gradient"
+                  color="warning"
+                  endIcon={<Save />}
+                  disabled={grabando}
+                  fullWidth
+                >
+                  Grabar
+                </MDButton>
              
-              {/* <MDInput
-                type="checkbox"
-                name="activo"
-                label="Activo"
-                variant="standard"
-                value={formData.activo}
-                onChange={handleInputChange}
-                fullWidth
-              /> */}
-               </MDTypography>
-            </MDBox>
-            <MDBox mt={4} mb={1}>
-              <MDButton
-                onClick={() => {
-                  handleSubmit();
-                }}
-                variant="gradient"
-                color="warning"
-                endIcon={<Save />}
-                disabled={grabando}
-                fullWidth
-              >
-                Grabar
-              </MDButton>
-            </MDBox>
-            <MDBox mt={4} mb={1}>
-              <MDButton
-                onClick={() => {
-                  handleVolver();
-                }}
-                variant="gradient"
-                color="warning"
-                endIcon={<ExitToApp />}
-                
-                fullWidth
-              >
-                {nombreboton}
-              </MDButton>
-            </MDBox>
-          </MDBox>
-          <MDBox mt={4} mb={1}>
-            <MDProgress color="success"
-              loading="true"
-              label={true}
-              value={showprogrees === 0 ? progress : 0}
-              display={loading && exito ? 'true' : 'false'}
-              variant="contained"></MDProgress>
+                <MDButton
+                  onClick={() => {
+                    handleVolver();
+                  }}
+                  variant="gradient"
+                  color="warning"
+                  endIcon={<ExitToApp />}
 
+                  fullWidth
+                >
+                  {nombreboton}
+                </MDButton>
+              </MDBox>
+            </MDBox>
+            <MDBox mt={4} mb={1}>
+              <MDProgress color="success"
+                loading="true"
+                label={true}
+                value={showprogrees === 0 ? progress : 0}
+                display={loading && exito ? 'true' : 'false'}
+                variant="contained"></MDProgress>
+
+            </MDBox>
+
+            {mensaje !== '' && (
+              <Alert severity={exito ? "success" : "error"}>
+                <AlertTitle>{exito ? "Felicitaciones" : "Error"}</AlertTitle>
+                {mensaje}
+              </Alert>
+            )}
           </MDBox>
-          
-          {mensaje !== '' && (
-            <Alert severity={exito ? "success" : "error"}>
-              <AlertTitle>{exito ? "Felicitaciones" : "Error"}</AlertTitle>
-              {mensaje}
-            </Alert>
-          )}
-        </MDBox>
       </Card>
     </BasicLayout>
     // <div className="container mt-4">

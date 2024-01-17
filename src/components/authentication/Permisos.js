@@ -107,10 +107,10 @@ const Permisos = () => {
 
   // Función para agregar un nuevo item a la lista
   const agregarItem = (codigoPermiso) => {
-  
+
     const nuevoItem = { IDPerfil: idperfil, codigoPermiso: codigoPermiso.valor }; // Ejemplo de nuevo item
     listaPerfilPermisoRef.current.push(nuevoItem);
-  
+
   };
 
   const handleSubmit = async (data) => {
@@ -135,7 +135,7 @@ const Permisos = () => {
 
       console.log("listaPerfilPermisoRef ", listaPerfilPermisoRef);
 
-      
+
       const response = await fetch(API_URL + "/PerfilxPermisoDTOModificacion", {
         method: "POST",
         headers: {
@@ -145,7 +145,7 @@ const Permisos = () => {
       });
 
       const res = await response.json();
-   
+
       if (res.rdoAccion) {
         // Manejar respuesta exitosa
         setMensaje("Los Permisos han sido Registrado exitosamente!");
@@ -223,9 +223,9 @@ const Permisos = () => {
           borderRadius="lg"
           coloredShadow="warning"
           mx={2}
-                    mt={-3}
-                    p={3}
-                    mb={1}
+          mt={2}
+          p={1}
+          mb={1}
           textAlign="center"
         >
           <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
@@ -235,8 +235,8 @@ const Permisos = () => {
             Esta seccion permite establecer que pantallas podra visualizar el usuario
           </MDTypography>
         </MDBox>
-        <MDBox pt={4} pb={3} px={3}>
-                    <MDBox component="form" role="form">
+        <MDBox pt={1} pb={3} px={3}>
+          <MDBox component="form" role="form">
             <MDBox mb={2}>
 
               <Checkbox name="tareas"
@@ -478,7 +478,7 @@ const Permisos = () => {
 
 
             </MDBox>
-            <MDBox mt={5} mb={1}ml={5} mr={5}>
+            <MDBox mb={1} style={{ display: "flex", gap: "16px" }}>
               <MDButton
                 onClick={() => {
                   handleSubmit();
@@ -491,14 +491,13 @@ const Permisos = () => {
               >
                 Grabar
               </MDButton>
-            </MDBox>
-            <MDBox mt={5} mb={1}ml={5} mr={5}>
+
               <MDButton
                 onClick={() => {
                   handleVolver();
                 }}
                 variant="gradient"
-                color="primary"
+                color="warning"
                 endIcon={<ExitToApp />}
                 fullWidth
               >
@@ -506,7 +505,7 @@ const Permisos = () => {
               </MDButton>
             </MDBox>
           </MDBox>
-          <MDBox mt={4} mb={1}>
+          <MDBox mt={1} mb={1}>
             <MDProgress
               color="success"
               loading="true"

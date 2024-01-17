@@ -186,7 +186,7 @@ const UsuarioEdit = () => {
                                 fullWidth
                             />
                         </MDBox>
-                        <MDBox mb={2}>
+                        <MDBox mb={1} style={{ display: "flex", gap: "16px" }}>
                             <MDInput
                                 type="text"
                                 name="email"
@@ -198,8 +198,7 @@ const UsuarioEdit = () => {
                                 onChange={(e) => setEmail(e.target.value)}
                                 fullWidth
                             />
-                        </MDBox>
-                        <MDBox mb={2}>
+                        
                             <MDInput
                                 type="text"
                                 name="telefono"
@@ -245,7 +244,7 @@ const UsuarioEdit = () => {
                         </MDBox>
 
 
-                        <MDBox mt={4} mb={1}>
+                        <MDBox mb={1} style={{ display: "flex", gap: "16px" }}>
                             <MDButton
                                 onClick={() => {
                                     handleSubmit();
@@ -258,8 +257,7 @@ const UsuarioEdit = () => {
                             >
                                 Grabar
                             </MDButton>
-                        </MDBox>
-                        <MDBox mt={4} mb={1}>
+                       
                             <MDButton
                                 onClick={() => {
                                     handleVolver();

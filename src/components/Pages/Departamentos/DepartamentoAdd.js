@@ -183,7 +183,7 @@ const DepartamentoAdd = () => {
                 &nbsp;&nbsp;Activo
               </MDTypography>
             </MDBox>
-            <MDBox mt={4} mb={1}>
+            <MDBox mb={1} style={{ display: "flex", gap: "16px" }}>
               <MDButton
                 onClick={() => {
                   handleSubmit();
@@ -196,8 +196,7 @@ const DepartamentoAdd = () => {
               >
                 Grabar
               </MDButton>
-            </MDBox>
-            <MDBox mt={4} mb={1}>
+           
               <MDButton
                 onClick={() => {
                   handleVolver();

@@ -39,15 +39,15 @@ const PerfilEdit = () => {
         const reqperfil = {
           idperfil: id
         };
-    
+
         const response = await axios.post(API_URL + `/PerfilGetByID`, reqperfil, {
           headers: {
             "Content-Type": "application/json"
           }
         });
-    
+
         console.log("response", response);
-    
+
         const data = response.data;
         setPerfil(data);
         setNombre(data.nombre);
@@ -60,7 +60,7 @@ const PerfilEdit = () => {
   }, [id]);
 
   const handleSubmit = async (event) => {
-    
+
     try {
       setGrabando(true); // Inicia la grabación
       setnombreboton("Volver");
@@ -129,34 +129,28 @@ const PerfilEdit = () => {
                 label="Nombre"
                 variant="standard"
                 value={nombre}
-             onChange={(e) => setNombre(e.target.value)}
+                onChange={(e) => setNombre(e.target.value)}
                 fullWidth
               />
             </MDBox>
             <MDBox mb={2}>
-            <MDTypography variant="h17" fontWeight="light" mt={1}>
-              Activo
-          
-              <Checkbox name="activo"
-              checked={activo}
-              onChange={(e) => setActivo(e.target.checked)}
-     
-              >
 
-              </Checkbox> 
-             
-              {/* <MDInput
-                type="checkbox"
-                name="activo"
-                label="Activo"
-                variant="standard"
-                value={formData.activo}
-                onChange={handleInputChange}
-                fullWidth
-              /> */}
-               </MDTypography>
+              <Checkbox name="activo"
+                onChange={(e) => setActivo(e.target.checked)}
+                checked={activo}
+
+              />
+              <MDTypography
+                variant="button"
+                fontWeight="regular"
+                color="text"
+                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
+              >
+                &nbsp;&nbsp;Activo
+              </MDTypography>
             </MDBox>
-            <MDBox mt={4} mb={1}>
+
+            <MDBox mb={1} style={{ display: "flex", gap: "16px" }}>
               <MDButton
                 onClick={() => {
                   handleSubmit();
@@ -169,8 +163,7 @@ const PerfilEdit = () => {
               >
                 Grabar
               </MDButton>
-            </MDBox>
-            <MDBox mt={4} mb={1}>
+
               <MDButton
                 onClick={() => {
                   handleVolver();
@@ -178,26 +171,18 @@ const PerfilEdit = () => {
                 variant="gradient"
                 color="warning"
                 endIcon={<ExitToApp />}
-                
+
                 fullWidth
               >
                 {nombreboton}
               </MDButton>
             </MDBox>
           </MDBox>
-          {/* <MDBox mt={4} mb={1}>
-            <MDProgress color="success"
-              loading="true"
-              label={true}
-              value={showprogrees === 0 ? progress : 0}
-              display={loading && exito ? 'true' : 'false'}
-              variant="contained"></MDProgress>
 
-          </MDBox> */}
-          
+
           {mensaje !== '' && (
             <Alert severity={"success"}>
-              <AlertTitle>{"Aviso" }</AlertTitle>
+              <AlertTitle>{"Aviso"}</AlertTitle>
               {mensaje}
             </Alert>
           )}

@@ -4,7 +4,7 @@ import * as yup from "yup";
 import API_URL from "../../config";
 
 import "./../../index.css";
-import { Alert, AlertTitle, Card } from "@mui/material";
+import { Alert, AlertTitle, Card, Icon, IconButton } from "@mui/material";
 import MDTypography from "../controls/MDTypography";
 import MDBox from "../controls/MDBox";
 import BasicLayout from "../layauots/BasicLayout";
@@ -16,6 +16,7 @@ import MDInput from "../controls/MDInput";
 import MDButton from "../controls/MDButton";
 import MDProgress from "../controls/MDProgress";
 import { useNavigate } from "react-router-dom";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const Registrarme = ({ handleLogin }) => {
   const validationSchema = yup.object().shape({
@@ -45,8 +46,30 @@ const Registrarme = ({ handleLogin }) => {
   const [progress, setProgress] = useState(0);
   const [showprogrees, setShowprogrees] = React.useState(0);
   const [loading, setLoading] = useState(false);
-
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordNew, setShowPasswordNew] = useState(false);
   const navigate = useNavigate();
+  const styles = {
+    container: {
+      display: 'flex',
+      alignItems: 'center',
+      position: 'relative',
+    },
+    passwordInput: {
+      flex: 1,
+    },
+    passwordIcon: {
+      position: 'absolute',
+      right: 0,
+      cursor: 'pointer',
+      zIndex: 1, // Asegura que el icono esté en la capa superior
+      height: 'auto', // Ajusta la altura según sea necesario
+    },
+    pwIcon: {
+
+      height: 'auto', // Ajusta la altura según sea necesario
+    },
+  };
 
   const [formData, setFormData] = useState({
     // Inicializa los campos del formulario
@@ -67,7 +90,12 @@ const Registrarme = ({ handleLogin }) => {
       [name]: value,
     });
   };
-
+  const handleTogglePasswordVisibility = () => {
+    setShowPassword((prevShowPassword) => !prevShowPassword);
+  };
+  const handleTogglePasswordVisibilityNew = () => {
+    setShowPasswordNew((prevShowPassword) => !prevShowPassword);
+  };
   const handleRegistrarme = () => {
     localStorage.setItem("isRegister", "false");
     localStorage.setItem("isLoggedIn", "false");
@@ -198,7 +226,7 @@ const Registrarme = ({ handleLogin }) => {
                 fullWidth
               />
             </MDBox>
-            <MDBox mb={2}>
+            <MDBox mb={1} style={{ display: "flex", gap: "16px" }}>
               <MDInput
                 type="text"
                 name="telefono"
@@ -209,8 +237,7 @@ const Registrarme = ({ handleLogin }) => {
                 onChange={handleInputChange}
                 fullWidth
               />
-            </MDBox>
-            <MDBox mb={2}>
+
               <MDInput
                 type="email"
                 name="email"
@@ -222,9 +249,10 @@ const Registrarme = ({ handleLogin }) => {
                 fullWidth
               />
             </MDBox>
-            <MDBox mb={2}>
+            <MDBox mb={1} style={{ display: "flex", gap: "16px" }}>
+            <MDBox mb={2} style={styles.container}>
               <MDInput
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 name="pass"
                 label="Contraseña"
                 variant="standard"
@@ -232,10 +260,21 @@ const Registrarme = ({ handleLogin }) => {
                 onChange={handleInputChange}
                 fullWidth
               />
+              <IconButton onClick={handleTogglePasswordVisibility}>
+                {showPassword ? (
+                  <Icon style={styles.passwordIcon}>
+                    <Visibility />
+                  </Icon>
+                ) : (
+                  <Icon style={styles.passwordIcon}>
+                    <VisibilityOff />
+                  </Icon>
+                )}
+              </IconButton>
             </MDBox>
-            <MDBox mb={2}>
+            <MDBox mb={2} style={styles.container}>
               <MDInput
-                type="password"
+                type={showPasswordNew ? 'text' : 'password'}
                 name="passreply"
                 label="Repetir Contraseña"
                 variant="standard"
@@ -243,67 +282,79 @@ const Registrarme = ({ handleLogin }) => {
                 onChange={handleInputChange}
                 fullWidth
               />
-            </MDBox>
-            <MDBox mt={4} mb={1}>
-              <MDButton
-                onClick={() => {
-                  handleSubmit();
-                }}
-                variant="gradient"
-                color="info"
-                endIcon={<Register />}
-                disabled={grabando}
-                fullWidth
-              >
-                Registrarse
-              </MDButton>
-            </MDBox>
-            <MDBox mt={3} mb={1} textAlign="center">
-              <MDTypography variant="button" color="text">
-                Ya tienes una cuenta?{" "}
-                <MDTypography
-                  component={Link}
-                  to="/Login"
-                  variant="button"
-                  color="info"
-                  fontWeight="medium"
-                  textGradient
-                  onClick={() => {
-                    handleRegistrarme();
-                  }}
-                >
-                  Ir al Inicio
-                </MDTypography>
-              </MDTypography>
+              <IconButton onClick={handleTogglePasswordVisibilityNew}>
+                {showPasswordNew ? (
+                  <Icon style={styles.passwordIcon}>
+                    <Visibility />
+                  </Icon>
+                ) : (
+                  <Icon style={styles.passwordIcon}>
+                    <VisibilityOff />
+                  </Icon>
+                )}
+              </IconButton>
             </MDBox>
           </MDBox>
           <MDBox mt={4} mb={1}>
-            <MDProgress
-              color="success"
-              loading="true"
-              label={true}
-              value={showprogrees === 0 ? progress : 0}
-              display={loading && exito ? "true" : "false"}
-              variant="contained"
-            ></MDProgress>
+            <MDButton
+              onClick={() => {
+                handleSubmit();
+              }}
+              variant="gradient"
+              color="info"
+              endIcon={<Register />}
+              disabled={grabando}
+              fullWidth
+            >
+              Registrarse
+            </MDButton>
           </MDBox>
+          <MDBox mt={3} mb={1} textAlign="center">
+            <MDTypography variant="button" color="text">
+              Ya tienes una cuenta?{" "}
+              <MDTypography
+                component={Link}
+                to="/Login"
+                variant="button"
+                color="info"
+                fontWeight="medium"
+                textGradient
+                onClick={() => {
+                  handleRegistrarme();
+                }}
+              >
+                Ir al Inicio
+              </MDTypography>
+            </MDTypography>
+          </MDBox>
+        </MDBox>
+        <MDBox mt={4} mb={1}>
+          <MDProgress
+            color="success"
+            loading="true"
+            label={true}
+            value={showprogrees === 0 ? progress : 0}
+            display={loading && exito ? "true" : "false"}
+            variant="contained"
+          ></MDProgress>
+        </MDBox>
 
-          {mensaje !== "" && mensaje !== "Registrando....." ? (
-            <Alert severity={exito ? "success" : "error"}>
-              <AlertTitle>{exito ? "Felicitaciones" : "Error"}</AlertTitle>
+        {mensaje !== "" && mensaje !== "Registrando....." ? (
+          <Alert severity={exito ? "success" : "error"}>
+            <AlertTitle>{exito ? "Felicitaciones" : "Error"}</AlertTitle>
+            {mensaje}
+          </Alert>
+        ) : (
+          mensaje !== "" && (
+            <Alert severity="info">
+              <AlertTitle>Procesando Registro</AlertTitle>
               {mensaje}
             </Alert>
-          ) : (
-            mensaje !== "" && (
-              <Alert severity="info">
-                <AlertTitle>Procesando Registro</AlertTitle>
-                {mensaje}
-              </Alert>
-            )
-          )}
-        </MDBox>
-      </Card>
-    </BasicLayout>
+          )
+        )}
+      </MDBox>
+    </Card>
+    </BasicLayout >
   );
 };
 

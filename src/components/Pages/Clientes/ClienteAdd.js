@@ -23,7 +23,7 @@ const ClienteAdd = () => {
     const [selectedValue, setSelectedValue] = useState(null);
 
     const situacionesImpositivas = Object.values(SituacionImpositiva);
-  
+
     const [formData, setFormData] = useState({
         idCliente: 0,
         nombre: "",
@@ -70,7 +70,7 @@ const ClienteAdd = () => {
 
     const handleSubmit = (event) => {
         setGrabando(false); // Inicia la grabación
-       
+
 
         const timer = setInterval(() => {
             setProgress((oldProgress) => {
@@ -148,7 +148,7 @@ const ClienteAdd = () => {
     const handleAutocompleteChange = (event, newValue) => {
         console.log(newValue);
         setSelectedValue(newValue);
-      };
+    };
     return (
         <BasicLayout image={bgImage}>
             <Card>
@@ -170,7 +170,7 @@ const ClienteAdd = () => {
                         Un Cliente es una entidad que origina el pedido de una tarea
                     </MDTypography>
                 </MDBox>
-                <MDBox pt={4} pb={3} px={3}>
+                <MDBox pt={1} pb={3} px={3}>
                     <MDBox component="form" role="form">
                         <MDBox mb={2}>
                             <MDInput
@@ -185,7 +185,7 @@ const ClienteAdd = () => {
                             />
                         </MDBox>
 
-                        <MDBox mb={2}>
+                        <MDBox mb={2} style={{ display: "flex", gap: "16px" }}>
                             <MDInput
                                 type="text"
                                 name="contacto"
@@ -196,8 +196,7 @@ const ClienteAdd = () => {
                                 onChange={handleInputChange}
                                 fullWidth
                             />
-                        </MDBox>
-                        <MDBox mb={2}>
+
                             <MDInput
                                 type="text"
                                 name="cuit"
@@ -209,7 +208,7 @@ const ClienteAdd = () => {
                                 fullWidth
                             />
                         </MDBox>
-                        <MDBox mb={2}>
+                        <MDBox mb={2} style={{ display: "flex", gap: "16px" }}>
                             <MDInput
                                 type="text"
                                 name="telefono"
@@ -220,8 +219,7 @@ const ClienteAdd = () => {
                                 onChange={handleInputChange}
                                 fullWidth
                             />
-                        </MDBox>
-                        <MDBox mb={2}>
+
                             <MDInput
                                 type="text"
                                 name="email"
@@ -271,7 +269,7 @@ const ClienteAdd = () => {
                                 &nbsp;&nbsp;Activo
                             </MDTypography>
                         </MDBox>
-                        <MDBox mt={4} mb={1}>
+                        <MDBox mb={2} style={{ display: "flex", gap: "16px" }}>
                             <MDButton
                                 onClick={() => {
                                     handleSubmit();
@@ -284,8 +282,7 @@ const ClienteAdd = () => {
                             >
                                 Grabar
                             </MDButton>
-                        </MDBox>
-                        <MDBox mt={4} mb={1}>
+                       
                             <MDButton
                                 onClick={() => {
                                     handleVolver();
@@ -300,7 +297,7 @@ const ClienteAdd = () => {
                             </MDButton>
                         </MDBox>
                     </MDBox>
-                    <MDBox mt={4} mb={1}>
+                    <MDBox mt={1} mb={1}>
                         <MDProgress color="success"
                             loading="true"
                             label={true}

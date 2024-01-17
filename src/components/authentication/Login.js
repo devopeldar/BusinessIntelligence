@@ -3,7 +3,7 @@ import ReCAPTCHA from 'react-google-recaptcha'; // Importar el componente ReCAPT
 import 'bootstrap/dist/css/bootstrap.min.css'; // Importar estilos de Bootstrap
 import { Link, useNavigate } from 'react-router-dom';
 import BasicLayout from '../layauots/BasicLayout';
-import { Alert, AlertTitle, Card } from '@mui/material';
+import { Alert, AlertTitle, Card, Icon, IconButton } from '@mui/material';
 import MDBox from '../controls/MDBox';
 import MDTypography from '../controls/MDTypography';
 import bgImage from "../../assets/images/bg-sign-up-cover.jpeg";
@@ -11,6 +11,7 @@ import MDInput from '../controls/MDInput';
 import { People } from 'react-bootstrap-icons';
 import MDButton from '../controls/MDButton';
 import API_URL from '../../config';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 const Login = ({ handleLogin }) => {
   const navigate = useNavigate();
@@ -20,6 +21,28 @@ const Login = ({ handleLogin }) => {
   const captcha = useRef(null);
   const [mensaje, setMensaje] = useState("");
 
+  const styles = {
+    container: {
+      display: 'flex',
+      alignItems: 'center',
+      position: 'relative',
+    },
+    passwordInput: {
+      flex: 1,
+    },
+    passwordIcon: {
+      position: 'absolute',
+      right: 0,
+      cursor: 'pointer',
+      zIndex: 1, // Asegura que el icono esté en la capa superior
+      height: 'auto', // Ajusta la altura según sea necesario
+    },
+    pwIcon: {
+   
+      height: 'auto', // Ajusta la altura según sea necesario
+    },
+  };
+  
   localStorage.setItem('isLoggedIn', 'false');
 
   // useEffect(() => {
@@ -134,7 +157,10 @@ const Login = ({ handleLogin }) => {
     }
 
   };
-
+  const [showPassword, setShowPassword] = useState(false);
+  const handleTogglePasswordVisibility = () => {
+    setShowPassword((prevShowPassword) => !prevShowPassword);
+  };
   return (
     <BasicLayout image={bgImage}>
       <Card>
@@ -169,16 +195,29 @@ const Login = ({ handleLogin }) => {
                 fullWidth
               />
             </MDBox>
-            <MDBox mb={2}>
+            
+            <MDBox mb={2} style={styles.container}>
               <MDInput
-                type="password"
+                 type={showPassword ? 'text' : 'password'}
                 name="pass"
                 label="Contraseña"
                 variant="standard"
                 value={formData.pass}
                 onChange={handleInputChange}
                 fullWidth
+                style={styles.passwordInput}
               />
+               <IconButton  style={styles.passwordIcon} onClick={handleTogglePasswordVisibility}>
+                {showPassword ? (
+                  <Icon style={styles.passwordIcon}>
+                    <Visibility />
+                  </Icon>
+                ) : (
+                  <Icon style={styles.passwordIcon}>
+                    <VisibilityOff />
+                  </Icon>
+                )}
+              </IconButton>
             </MDBox>
             <MDBox mb={2}>
               <ReCAPTCHA

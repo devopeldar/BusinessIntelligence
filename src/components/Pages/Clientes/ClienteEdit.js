@@ -207,7 +207,7 @@ const ClienteEdit = () => {
                         Un Cliente es una entidad que origina el pedido de una tarea
                     </MDTypography>
                 </MDBox>
-                <MDBox pt={4} pb={3} px={3}>
+                <MDBox pt={1} pb={3} px={3}>
                     <MDBox component="form" role="form">
 
                         <MDBox mb={2}>
@@ -222,7 +222,7 @@ const ClienteEdit = () => {
                                 fullWidth
                             />
                         </MDBox>
-                        <MDBox mb={2}>
+                        <MDBox mb={2} style={{ display: "flex", gap: "16px" }}>
                             <MDInput
                                 type="text"
                                 name="contacto"
@@ -233,8 +233,7 @@ const ClienteEdit = () => {
                                 onChange={(e) => setContacto(e.target.value)}
                                 fullWidth
                             />
-                        </MDBox>
-                        <MDBox mb={2}>
+                        
                             <MDInput
                                 type="text"
                                 name="cuit"
@@ -246,7 +245,7 @@ const ClienteEdit = () => {
                                 fullWidth
                             />
                         </MDBox>
-                        <MDBox mb={2}>
+                        <MDBox mb={2} style={{ display: "flex", gap: "16px" }}>
                             <MDInput
                                 type="text"
                                 name="telefono"
@@ -257,8 +256,7 @@ const ClienteEdit = () => {
                                 onChange={(e) => setTelefono(e.target.value)}
                                 fullWidth
                             />
-                        </MDBox>
-                        <MDBox mb={2}>
+                        
                             <MDInput
                                 type="text"
                                 name="email"
@@ -321,7 +319,7 @@ const ClienteEdit = () => {
                         </MDBox>
 
 
-                        <MDBox mt={4} mb={1}>
+                        <MDBox mb={1} style={{ display: "flex", gap: "16px" }}>
                             <MDButton
                                 onClick={() => {
                                     handleSubmit();
@@ -334,8 +332,7 @@ const ClienteEdit = () => {
                             >
                                 Grabar
                             </MDButton>
-                        </MDBox>
-                        <MDBox mt={4} mb={1}>
+                        
                             <MDButton
                                 onClick={() => {
                                     handleVolver();

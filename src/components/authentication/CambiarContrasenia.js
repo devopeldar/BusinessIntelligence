@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import * as yup from "yup";
 import BasicLayout from "../layauots/BasicLayout";
-import { Alert, AlertTitle, Card } from "@mui/material";
+import { Alert, AlertTitle, Card, Icon, IconButton } from "@mui/material";
 import MDBox from "../controls/MDBox";
 import MDTypography from "../controls/MDTypography";
 import MDInput from "../controls/MDInput";
@@ -12,21 +12,45 @@ import bgImage from "../../assets/images/bg-sign-up-cover.jpeg";
 import MDProgress from "../controls/MDProgress";
 import API_URL from "../../config";
 import { useNavigate } from "react-router-dom";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+
+
 const CambiarContrasenia = () => {
+
   const navigate = useNavigate();
   const [grabando, setGrabando] = useState(false);
   const [mensaje, setMensaje] = useState("");
   const [exito, setExito] = useState(false);
   const [showprogrees, setShowprogrees] = useState(0);
   const [progress, setProgress] = useState(0);
-  
 
+  const styles = {
+    container: {
+      display: 'flex',
+      alignItems: 'center',
+      position: 'relative',
+    },
+    passwordInput: {
+      flex: 1,
+    },
+    passwordIcon: {
+      position: 'absolute',
+      right: 0,
+      cursor: 'pointer',
+      zIndex: 1, // Asegura que el icono esté en la capa superior
+      height: 'auto', // Ajusta la altura según sea necesario
+    },
+    pwIcon: {
+   
+      height: 'auto', // Ajusta la altura según sea necesario
+    },
+  };
   const validationSchema = yup.object().shape({
-    
+
     pass: yup
       .string()
       .required("la Contraseña actual es requerida"),
-      passnueva: yup
+    passnueva: yup
       .string()
       .matches(
         /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/,
@@ -62,7 +86,7 @@ const CambiarContrasenia = () => {
   const handleSubmit = (event) => {
     setGrabando(false); // Inicia la grabación
     // const timer = setInterval(() => {
-    
+
     //   setProgress((oldProgress) => {
     //     if (oldProgress === 100) {
 
@@ -83,7 +107,7 @@ const CambiarContrasenia = () => {
   };
   const procesarFormulario = async (data) => {
     try {
-      
+
       validationSchema.validate(data)
         .then(async (validatedData) => {
 
@@ -107,27 +131,27 @@ const CambiarContrasenia = () => {
             });
 
             const res = await response.json();
-          
+
             if (res.rdoAccion) {
               // Manejar respuesta exitosa
               setMensaje("Contraseña cambiada exitosamente!");
               setGrabando(true);
-       
+
               setTimeout(() => {
                 navigate('/Login'); // Redirige a la ruta deseada
               }, 3000); // 3000 milisegundos = 3 segundos
 
-              
-       
+
+
             } else {
               // Manejar errores si la respuesta no es exitosa
               setMensaje(res.rdoAccionDesc);
               setExito(false);
               setGrabando(false);
-          
+
             }
           } catch (error) {
-         
+
             setMensaje("Error en la solicitud: la Contraseña no pudo ser cambiada");
             console.log("Error en la solicitud:", error);
             setShowprogrees(0);
@@ -156,6 +180,20 @@ const CambiarContrasenia = () => {
       setProgress(100);
     }
   };
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordNew, setShowPasswordNew] = useState(false);
+  const [showPasswordNew2, setShowPasswordNew2] = useState(false);
+  const handleTogglePasswordVisibility = () => {
+    setShowPassword((prevShowPassword) => !prevShowPassword);
+  };
+  const handleTogglePasswordVisibilityNew = () => {
+    setShowPasswordNew((prevShowPassword) => !prevShowPassword);
+  };
+  const handleTogglePasswordVisibilityNew2 = () => {
+    setShowPasswordNew2((prevShowPassword) => !prevShowPassword);
+  };
+
+
   return (
     <BasicLayout image={bgImage}>
       <Card>
@@ -180,20 +218,32 @@ const CambiarContrasenia = () => {
         </MDBox>
         <MDBox pt={4} pb={3} px={3}>
           <MDBox component="form" role="form">
-            <MDBox mb={2}>
+            <MDBox mb={2} style={styles.container}>
               <MDInput
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 name="pass"
                 label="Contraseña Actual"
                 variant="standard"
                 value={formData.email}
                 onChange={handleInputChange}
                 fullWidth
+                style={styles.passwordInput}
               />
+              <IconButton  onClick={handleTogglePasswordVisibility}>
+                {showPassword ? (
+                  <Icon style={styles.passwordIcon}>
+                    <Visibility />
+                  </Icon>
+                ) : (
+                  <Icon style={styles.passwordIcon}>
+                    <VisibilityOff />
+                  </Icon>
+                )}
+              </IconButton>
             </MDBox>
-            <MDBox mb={2}>
+            <MDBox mb={2} style={styles.container}>
               <MDInput
-                type="password"
+                type={showPasswordNew ? 'text' : 'password'}
                 name="passnueva"
                 label="Nueva Contraseña"
                 variant="standard"
@@ -201,10 +251,21 @@ const CambiarContrasenia = () => {
                 onChange={handleInputChange}
                 fullWidth
               />
+              <IconButton  onClick={handleTogglePasswordVisibilityNew}>
+                {showPasswordNew ? (
+                  <Icon style={styles.passwordIcon}>
+                    <Visibility />
+                  </Icon>
+                ) : (
+                  <Icon style={styles.passwordIcon}>
+                    <VisibilityOff />
+                  </Icon>
+                )}
+              </IconButton>
             </MDBox>
-            <MDBox mb={2}>
+            <MDBox mb={2} style={styles.container}>
               <MDInput
-                type="password"
+                type={showPasswordNew2 ? 'text' : 'password'}
                 name="passreply"
                 label="Repetir Contraseña"
                 variant="standard"
@@ -212,6 +273,17 @@ const CambiarContrasenia = () => {
                 onChange={handleInputChange}
                 fullWidth
               />
+              <IconButton  onClick={handleTogglePasswordVisibilityNew2}>
+                {showPasswordNew2 ? (
+                  <Icon style={styles.passwordIcon}>
+                    <Visibility />
+                  </Icon>
+                ) : (
+                  <Icon style={styles.passwordIcon}>
+                    <VisibilityOff />
+                  </Icon>
+                )}
+              </IconButton>
             </MDBox>
 
             <MDBox mt={4} mb={1}>
@@ -230,13 +302,13 @@ const CambiarContrasenia = () => {
             </MDBox>
 
             <MDBox mt={4} mb={1}>
-            <MDProgress color="success"
-              loading="true"
-              value={showprogrees === 0 ? progress : 0}
-              display={'true'}
-              variant="contained"></MDProgress>
+              <MDProgress color="success"
+                loading="true"
+                value={showprogrees === 0 ? progress : 0}
+                display={'true'}
+                variant="contained"></MDProgress>
 
-          </MDBox>
+            </MDBox>
 
             {mensaje !== "" && (
               <Alert severity={exito ? "success" : "error"}>
