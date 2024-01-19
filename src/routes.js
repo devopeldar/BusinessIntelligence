@@ -21,6 +21,7 @@ import UsuarioList from "./components/authentication/Usuario/UsuarioList";
 import axios from "axios";
 import API_URL from "./config";
 import CloseSession from "./components/authentication/CloseSession";
+import PresupuestoList from "./components/Pages/Presupuestos/PresupuestoList";
 
 const handleCloseSession = () => {
   console.log("uuuuuuuuuuuuuuu ");
@@ -88,6 +89,16 @@ routesnew = [
     component: <TareaEstadoList />,
     visible: true,
     codigoPermiso: 104,
+  },
+  {
+    type: "collapse",
+    name: "Presupuestos",
+    key: "presupuestos",
+    icon: <Event />,
+    route: "/Presupuestos",
+    component: <PresupuestoList />,
+    visible: true,
+    codigoPermiso: 105,
   },
   {
     type: "title",
