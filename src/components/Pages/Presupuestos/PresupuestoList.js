@@ -10,7 +10,7 @@ import MDButton from "../../controls/MDButton";
 import DataTable from "../../controls/Tables/DataTable";
 import { BuildingFillAdd } from "react-bootstrap-icons";
 import { Link, useNavigate } from "react-router-dom";
-import { Filter, OneK } from "@mui/icons-material";
+import { Edit, Filter, OneK } from "@mui/icons-material";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Cliente from "../../Utils/cliente";
@@ -143,14 +143,14 @@ function PresupuestoList() {
 
         const action = (
           <MDBox ml={2}>
-            {Presupuesto.aceptado === 0 && (
+            {Presupuesto.aceptado === false && (
               <>
                 <MDTypography
                   variant="caption"
                   color="text"
                   fontWeight="medium"
                 >
-                  <Link to={`../AceptarPresupuesto/${Presupuesto.idTarea}`}>
+                  <Link to={`../AceptarPresupuesto/${Presupuesto.idPresupuesto}`}>
                     <OneK
                       fontSize="large"
                       color="error"
@@ -158,8 +158,24 @@ function PresupuestoList() {
                     />
                   </Link>
                 </MDTypography>
+                <>
+                <MDTypography
+                  variant="caption"
+                  color="text"
+                  fontWeight="medium"
+                >
+                  <Link to={`../PresupuestoEdit/${Presupuesto.idPresupuesto}`}>
+                    <Edit
+                      fontSize="large"
+                      color="success"
+                      titleAccess="Editar Presupuesto"
+                    />
+                  </Link>
+                </MDTypography>
+              </>
               </>
             )}
+         
           </MDBox>
         );
 
@@ -201,8 +217,8 @@ function PresupuestoList() {
     <DashboardLayout>
       <DashboardNavbar />
       <MDBox pt={6} pb={3}>
-        <Grid container spacing={3}>
-          <Grid item xs={6}>
+        <Grid container spacing={6}>
+          <Grid item xs={12}>
             <Card>
               <MDBox
                 mx={2}

@@ -1,5 +1,4 @@
-
-// EditarCliente.js
+// EditarPresupuesto.js
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -8,135 +7,180 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import BasicLayout from "../../layauots/BasicLayout";
 import { Card } from "react-bootstrap";
-import MDBox from "../../controls/MDBox";
-import MDTypography from "../../controls/MDTypography";
-import MDInput from "../../controls/MDInput";
-import { Save } from "react-bootstrap-icons";
-import { Email, ExitToApp } from "@mui/icons-material";
-import MDButton from "../../controls/MDButton";
-import { Alert, AlertTitle, Autocomplete, Checkbox, TextField } from "@mui/material";
+
+import { PersonFillAdd, Save } from "react-bootstrap-icons";
+import { Delete, ExitToApp } from "@mui/icons-material";
+
+import {
+    Alert,
+    AlertTitle,
+    Autocomplete,
+    IconButton,
+    Paper,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableRow,
+    TextField, Table
+} from "@mui/material";
 import bgImage from "../../../assets/images/bg-sign-up-cover.jpeg";
-import SituacionImpositiva from "../../Utils/SituacionImpositiva";
+import MDBox from "../../controls/MDBox";
+import MDInput from "../../controls/MDInput";
+import MDTypography from "../../controls/MDTypography";
+import MDButton from "../../controls/MDButton";
+
 
 const PresupuestoEdit = () => {
-    const { id } = useParams(); // Obtener el parámetro de la URL (el ID del Cliente a editar)
-    const [Cliente, setCliente] = useState(null);
-    const [idCliente, setidCliente] = useState("");
-    const [activo, setActivo] = useState(false);
-    const [elements, setElements] = useState(false);
+    const { id, habilitado } = useParams(); // Obtener el parámetro de la URL (el ID del Presupuesto a editar)
+    const [Presupuesto, setPresupuesto] = useState(null);
+    const [idPresupuesto, setidPresupuesto] = useState("");
+    const [aceptado, setAceptado] = useState(false);
+    const [idCliente, setIdCliente] = useState(0);
+   
     const [observaciones, setObservaciones] = useState("");
-    const [tipoIVA, setTipoIva] = useState(0);
-    const [telefono, setTelefono] = useState("");
-    const [cuit, setCuit] = useState("");
-    const [nombre, setNombre] = useState("");
-    const [contacto, setContacto] = useState("");
-    const [email, setEmail] = useState("");
+    const [presupuestoxtareastipos, setPresupuestoxTareasTipos] = useState([]);
+    const [presupuestoxtareastiposUpdate, setPresupuestoxtareastiposUpdate] = useState([]);
+   
     const [nombreboton, setnombreboton] = useState("Cancelar");
     const [mensaje, setMensaje] = useState("");
     const history = useNavigate();
     const [grabando, setGrabando] = useState(false);
+    const [controlHabilitado, setControlHabilitado] = useState(false);
     const [exito, setExito] = useState(false);
-    const [selectedValue, setSelectedValue] = useState('');
 
+    const [elementsclientes, setElementsCliente] = useState([]);
+   
+
+    const [selectedValueCliente, setSelectedValueCliente] = useState([]);
+ 
+   
+    const [elementsTareasTipos, setElementsTareasTipos] = useState([]);
+   
+    const [selectedValueTareasTipos, setSelectedValueTareasTipos] = useState(
+        elementsTareasTipos[0]
+    );
+   
     const handleVolver = () => {
-        history("/ClienteVolver"); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
+        history("/PresupuestoVolver"); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
     };
 
     useEffect(() => {
-        setidCliente(id);
-        // Aquí realizas la llamada a tu API para obtener el Cliente específico por su ID
-        const GetCliente = async () => {
+        setidPresupuesto(id);
+        // Aquí realizas la llamada a tu API para obtener el Presupuesto específico por su ID
+        const GetPresupuesto = async () => {
             try {
-                console.log("GetCliente");
-                const reqCliente = {
-                    idCliente: id
+                const reqPresupuesto = {
+                    idPresupuesto: id,
                 };
 
-                const response = await axios.post(API_URL + `/ClienteGetByID`, reqCliente, {
+                const response = await axios.post(API_URL + `/PresupuestoGetByID`, reqPresupuesto, {
                     headers: {
-                        "Content-Type": "application/json"
-                    }
+                        "Content-Type": "application/json",
+                    },
                 });
-
                 const data = response.data;
-                setCliente(data);
-                setCuit(data.cuit);
-                setNombre(data.nombre);
-                setTelefono(data.telefono);
-                setEmail(data.email);
+
+                console.log("data Presupuesto" + JSON.stringify(data))
+
                 setObservaciones(data.observaciones);
-                setTipoIva(data.tipoIVA);
-                setActivo(data.activo);
-                setContacto(data.contacto);
+                //setRolesxPresupuesto(data.tareaxRolDTOs);
+                setAceptado(data.aceptado);
+                setIdCliente(data.idCliente);
+                
+                let newRows = [];
+                let i = 0;
+                if(presupuestoxtareastipos.length > 0){
 
+                    data.presupuestoxtareastipos.forEach((item, index) => {
+                        // Incremento index solo si es necesario según la lógica
+                        i = i + 1;
+                        newRows.push(CargarDatos(item, i));
+                    });
+    
+                    setPresupuestoxtareastiposUpdate(newRows);
+                }
+               
+                if (habilitado === "1") {
+                    setControlHabilitado(true);
+                } else {
+                    setControlHabilitado(false);
+                }
 
+                setPresupuesto(data);
             } catch (error) {
                 console.error("Error:", error);
             }
         };
-        GetCliente();
+        GetPresupuesto();
     }, [id]);
 
     useEffect(() => {
+        const GetTareaTipo = async () => {
+          const response = await axios.post(API_URL + "/TareaTipoListar", {
+            headers: {
+              accept: "application/json",
+            },
+          });
+    
+          console.log("response " + response.data);
+          setElementsTareasTipos(response.data);
+        };
+        GetTareaTipo();
+      }, []);
 
-        const GetEstadosTareas = async () => {
-            if (Cliente) {
-                const situacionesImpositivas = Object.values(SituacionImpositiva);
+    useEffect(() => {
+        const GetClientes = async () => {
+            const response = await axios.post(API_URL + "/CLienteListar", {
+                headers: {
+                    accept: "application/json",
+                },
+            });
 
-                setElements(situacionesImpositivas);
+            setElementsCliente(response.data);
 
-                const defaultValueId = tipoIVA; // ID del elemento que deseas seleccionar por defecto
-                const defaultValue = situacionesImpositivas.find(item => item.valor === defaultValueId);
+            const defaultValueId = idCliente; // ID del elemento que deseas seleccionar por defecto
+            const defaultValue = response.data.find(
+                (item) => item.idCliente === defaultValueId
+            );
 
-                setSelectedValue(defaultValue);
+            setSelectedValueCliente(defaultValue);
+        };
+        GetClientes();
+    }, [Presupuesto]);
 
-            }
-        }; GetEstadosTareas();
-    }, [Cliente, tipoIVA]);
     const handleSubmit = async (event) => {
-
         try {
+            if (observaciones === "") {
+                setMensaje("El campo observaciones es obligatorio");
+                setExito(false);
+                return;
+            }
+            const request = {
+                idPresupuesto: id,
+               
+                idCliente: selectedValueCliente.idCliente,
+              
+                observaciones: observaciones,
+                presupuestoxtareastipos: presupuestoxtareastiposUpdate.map(item => ({
+                    idTareaTipo: item.idTareaTipo
+                })),
+                idUsuario: localStorage.getItem('iduserlogueado')
+            };
+            console.log("formData Presupuesto" + JSON.stringify(request))
 
-            if (nombre === '') {
-                setMensaje("El campo Nombre es obligatorio");
-                setExito(false);
-                return;
-            }
-            if (cuit === '') {
-                setMensaje("El campo Cuit es obligatorio");
-                setExito(false);
-                return;
-            }
-            if (telefono === '') {
-                setMensaje("El campo Telefono es obligatorio");
-                setExito(false);
-                return;
-            }
-            if (contacto === '') {
-                setMensaje("El campo Contacto es obligatorio");
-                setExito(false);
-                return;
-            }
-            if (tipoIVA === 0) {
-                setMensaje("El campo Tipo de Iva es obligatorio");
-                setExito(false);
-                return;
-            }
+
             setGrabando(true); // Inicia la grabación
             setnombreboton("Volver");
             setExito(true);
-            setMensaje('');
-            // Aquí realizas la llamada a tu API para actualizar el Cliente con los nuevos datos
-
-            const response = await fetch(API_URL + `/ClienteModificacion`, {
+            setMensaje("");
+            // Aquí realizas la llamada a tu API para actualizar el Presupuesto con los nuevos datos
+            const response = await fetch(API_URL + `/PresupuestoModificacion`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ idCliente, nombre, contacto, telefono, email, cuit, tipoIVA, observaciones, activo }),
+                body: JSON.stringify(request),
             });
-
-
             const res = await response.json();
 
             if (res.rdoAccion) {
@@ -145,56 +189,118 @@ const PresupuestoEdit = () => {
             } else {
                 // Manejar errores si la respuesta no es exitosa
                 setMensaje(res.rdoAccionDesc);
-                setGrabando(true); // Inicia la grabación
+                setGrabando(false); // Inicia la grabación
                 setnombreboton("Cancelar");
                 setExito(false);
             }
         } catch (error) {
             setMensaje("Error en la solicitud:", error);
-            setGrabando(true); // Inicia la grabación
+            setGrabando(false); // Inicia la grabación
             setExito(false);
             setnombreboton("Cancelar");
             console.log("Error en la solicitud:" + error);
         }
     };
-    const handleAutocompleteChange = (event, value) => {
-        setSelectedValue(value);
-        setTipoIva(value.valor);
+    const CargarDatos = (item, index) => {
+        const newRow = {
+            id: index,
+            idTareaTipo: item.idTareaTipo,
+            nombreTareaTipo: (
+              <MDTypography
+                component="a"
+                href="#"
+                variant="caption"
+                color="text"
+                fontWeight="medium"
+              >
+                {item.nombre}
+              </MDTypography>
+            ),
+        };
+
+        return newRow;
     };
 
-    
-    if (!Cliente) {
-
-        return <BasicLayout image={bgImage}>
-            <Card>
-                <MDBox
-                    variant="gradient"
-                    bgColor="secondary"
-                    borderRadius="lg"
-                    coloredShadow="secondary"
-                    mx={2}
-                    mt={-3}
-                    p={3}
-                    mb={1}
-                    textAlign="center"
+    const handleAddTareaTipo = () => {
+        const newRow = {
+            id: (presupuestoxtareastiposUpdate.length + 1),
+            idTareaTipo: selectedValueTareasTipos.idTareaTipo,
+            nombreTareaTipo: (
+                <MDTypography
+                    component="a"
+                    href="#"
+                    variant="caption"
+                    color="text"
+                    fontWeight="medium"
                 >
-                    <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-                        Cargando Tipos de eventos...
-                    </MDTypography>
-                </MDBox>
+                    {selectedValueTareasTipos.nombre}
+                </MDTypography>
+            )
+        };
+        const TareaTipoExistente = presupuestoxtareastiposUpdate.find(
+            (item) =>
+                item.idTareaTipo === selectedValueTareasTipos.idTareaTipo 
+        );
 
-            </Card>
-        </BasicLayout>
+
+
+        if (!TareaTipoExistente) {
+            setPresupuestoxtareastiposUpdate((prevDatos) => [...prevDatos, newRow]);
+        }
+
+    };
+
+    const handleAutocompleteIDClienteChange = (event, value) => {
+        setSelectedValueCliente(value);
+    };
+
+   
+
+    const eliminarItem = (id) => {
+        const newData = presupuestoxtareastiposUpdate.filter((item) => item.id !== id);
+        setPresupuestoxtareastiposUpdate(newData);
+    };
+    //   useEffect(() => {
+    //     console.log(
+    //       "presupuestoxtareastiposUpdate después de la actualizacióneeeeeeeeeee:",
+    //       presupuestoxtareastiposUpdate
+    //     );
+    //   }, [presupuestoxtareastiposUpdate]);
+    if (!Presupuesto) {
+        return <BasicLayout image={bgImage}>
+        <Card style={{    width: "157%" }}>
+           <MDBox
+               variant="gradient"
+               bgColor="info"
+               borderRadius="lg"
+               coloredShadow="primary"
+               mx={2}
+               mt={-3}
+               p={3}
+               mb={1}
+               textAlign="center"
+           >
+               <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
+                   Cargando Datos Presupeusto...
+               </MDTypography>
+           </MDBox>
+
+       </Card>
+   </BasicLayout>
     }
+
+    const handleAutocompleteTareaTipoChange = (event, value) => {
+        setSelectedValueTareasTipos(value);
+    };
 
     return (
         <BasicLayout image={bgImage}>
-            <Card>
+            <Card style={{ width: "150%", marginT: "-35px" }}>
                 <MDBox
                     variant="gradient"
-                    bgColor="secondary"
+                    bgColor="info"
                     borderRadius="lg"
-                    coloredShadow="secondary"
+                    coloredShadow="warning"
                     mx={2}
                     mt={-3}
                     p={3}
@@ -202,164 +308,177 @@ const PresupuestoEdit = () => {
                     textAlign="center"
                 >
                     <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-                        Editar Cliente
+                    {/*  {!controlHabilitado ? "Cambio de Roles" : "Editar Presupuesto"} */}
+                    Editar Presupuesto
                     </MDTypography>
                     <MDTypography display="block" variant="button" color="white" my={1}>
-                        Un Cliente es una entidad que origina el pedido de una tarea
+                        Puede Aceptar el Presupuesto o bien modificar el mismo ante un cambio que haya surgido
                     </MDTypography>
                 </MDBox>
-                <MDBox pt={1} pb={3} px={3}>
-                    <MDBox component="form" role="form">
-
-                        <MDBox mb={2}>
-                            <MDInput
-                                type="text"
-                                name="nombre"
-                                required
-                                label="Razon Social"
-                                variant="standard"
-                                value={nombre}
-                                onChange={(e) => setNombre(e.target.value)}
-                                fullWidth
-                            />
-                        </MDBox>
-                        <MDBox mb={2} style={{ display: "flex", gap: "16px" }}>
-                            <MDInput
-                                type="text"
-                                name="contacto"
-                                required
-                                label="Contacto"
-                                variant="standard"
-                                value={contacto}
-                                onChange={(e) => setContacto(e.target.value)}
-                                fullWidth
-                            />
-                        
-                            <MDInput
-                                type="text"
-                                name="cuit"
-                                required
-                                label="Cuit"
-                                variant="standard"
-                                value={cuit}
-                                onChange={(e) => setCuit(e.target.value)}
-                                fullWidth
-                            />
-                        </MDBox>
-                        <MDBox mb={2} style={{ display: "flex", gap: "16px" }}>
-                            <MDInput
-                                type="text"
-                                name="telefono"
-                                required
-                                label="Telefono"
-                                variant="standard"
-                                value={telefono}
-                                onChange={(e) => setTelefono(e.target.value)}
-                                fullWidth
-                            />
-                        
-                            <MDInput
-                                type="text"
-                                name="email"
-                                required
-                                label="Email"
-                                variant="standard"
-                                value={email}
-                                endIcon={< Email />  }                             
-                                 onChange={(e) => setEmail(e.target.value)}
-                                fullWidth
-                            />
-                        </MDBox>
-                        <MDBox mb={2}>
-                            <Autocomplete
-                                onChange={handleAutocompleteChange}
-                                // onChange={(event, newValue) => {
-                                //     setSelectedValue(newValue);
-                                // }}
-                                options={elements}
-                                value={selectedValue}
-                                getOptionLabel={(option) => option.descripcion}
-                                getOptionDisabled={(option) => option.activo === false}
-                                renderInput={(params) => (
-                                    <TextField
-                                        {...params}
-                                        label="Seleccione Tipo de Iva"
-                                        variant="outlined"
+                <MDBox pt={4} pb={3} px={3}>
+                    <MDBox component="form" tarea="form">
+                        <MDBox
+                            mb={2}
+                            style={{
+                                display: "flex",
+                                gap: "16px",
+                                flexDirection: "row",
+                                height: "100%", // Asegura que el contenedor principal ocupe el alto completo
+                            }}
+                        >
+                            <div style={{ flex: 1, marginT: "-35px"  }}>
+                                <MDBox mb={2}>
+                                    <Autocomplete
+                                        onChange={handleAutocompleteIDClienteChange}
+                                        options={elementsclientes}
+                                        value={selectedValueCliente || null}
+                                        getOptionLabel={(option) =>
+                                            option.nombre || "Seleccione Cliente"
+                                        }
+                                        disabled={!controlHabilitado}
+                                        getOptionDisabled={(option) => option.activo === false}
+                                        renderInput={(params) => (
+                                            <TextField
+                                                {...params}
+                                                label="Seleccione Cliente"
+                                                variant="outlined"
+                                            />
+                                        )}
                                     />
-                                )}
-                            />
-                        </MDBox>
-                        <MDBox mb={2}>
-                            <MDInput
-                                type="text"
-                                name="observaciones"
-                                required
-                                label="Observaciones"
-                                variant="standard"
-                                value={observaciones}
-                                endIcon={< Email />  }                             
-                                 onChange={(e) => setObservaciones(e.target.value)}
-                                fullWidth
-                            />
-                        </MDBox>
-                        <MDBox mb={2}>
+                                </MDBox>
+                                
+                                <MDBox mb={2}>
+                                    <MDInput
+                                        type="text"
+                                        name="observaciones"
+                                        required
+                                        label="Observaciones"
+                                        variant="standard"
+                                        value={observaciones}
+                                        // disabled={!controlHabilitado}
+                                        onChange={(e) => setObservaciones(e.target.value)}
+                                        fullWidth
+                                    />
+                                </MDBox>
+                            </div>
+                            <div style={{ flex: 1 , marginT: "-35px" }}>
 
-                            <Checkbox name="activo"
-                                onChange={(e) => setActivo(e.target.checked)}
-                                checked={activo}
+                                <MDBox mb={2}>
+                                    <Card >
+                                        <MDBox
+                                            variant="gradient"
+                                            bgColor="info"
+                                            borderRadius="lg"
+                                            coloredShadow="warning"
+                                            mx={2}
+                                            mt={0}
+                                            p={1}
+                                            mb={1}
+                                            textAlign="center"
+                                        >
+                                            <MDTypography
+                                                variant="h8"
+                                                fontWeight="light"
+                                                color="white"
+                                                mt={1}
+                                            >
+                                                Administracion Roles
+                                            </MDTypography>
+                                        </MDBox>
+                                        <MDBox mb={2}>
+                                            <MDBox mb={2} mr={4} ml={4}>
+                                                <Autocomplete
+                                                    onChange={handleAutocompleteTareaTipoChange}
+                                                    options={elementsTareasTipos}
+                                                    getOptionLabel={(option) => option.nombre}
+                                                    getOptionDisabled={(option) => option.activo === false}
+                                                    renderInput={(params) => (
+                                                        <TextField
+                                                            {...params}
+                                                            label="Seleccione Tipo de Tarea"
+                                                            variant="outlined"
+                                                        />
+                                                    )}
+                                                />
+                                            </MDBox>
+                                            
+                                            <MDBox mb={2} mr={6} ml={6}>
+                                                <MDButton
+                                                    onClick={() => {
+                                                        handleAddTareaTipo();
+                                                    }}
+                                                    variant="gradient"
+                                                    color="info"
+                                                    endIcon={<PersonFillAdd />}
+                                                    fullWidth
+                                                >
+                                                    Agregar Tipo de Tarea
+                                                </MDButton>
+                                            </MDBox>
 
-                            />
-                            <MDTypography
-                                variant="button"
-                                fontWeight="regular"
-                                color="text"
-                                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
-                            >
-                                &nbsp;&nbsp;Activo
-                            </MDTypography>
-                        </MDBox>
+                                            <TableContainer component={Paper}>
+                                                <Table>
+                                                    <TableBody>
 
-
-                        <MDBox mb={1} style={{ display: "flex", gap: "16px" }}>
-                            <MDButton
-                                onClick={() => {
-                                    handleSubmit();
-                                }}
-                                variant="gradient"
-                                color="secondary"
-                                endIcon={<Save />}
-                                disabled={grabando}
-                                fullWidth
-                            >
-                                Grabar
-                            </MDButton>
+                                                        {presupuestoxtareastiposUpdate.map((item) => (
+                                                            <TableRow key={item.id}>
+                                                                <TableCell style={{ display: "none" }}>
+                                                                    {item.id}
+                                                                </TableCell>
+                                                                <TableCell style={{ display: "none" }}>
+                                                                    {item.idTareaTipo}
+                                                                </TableCell>
+                                                                <TableCell>{item.nombreTareaTipo}</TableCell>
+                                                                
+                                                                <TableCell>
+                                                                    <IconButton
+                                                                        aria-label="Eliminar"
+                                                                        onClick={() => eliminarItem(item.id)}
+                                                                    >
+                                                                        <Delete color="error" />
+                                                                    </IconButton>
+                                                                </TableCell>
+                                                            </TableRow>
+                                                        ))
+                                                        }
+                                                    </TableBody>
+                                                </Table>
+                                            </TableContainer>
+                                        </MDBox>
+                                    </Card>
+                                </MDBox>
+                            </div>
+                            </MDBox>
+                            <MDBox mt={1} mb={1}>
+                                <MDButton
+                                    onClick={() => {
+                                        handleSubmit();
+                                    }}
+                                    variant="gradient"
+                                    color="info"
+                                    endIcon={<Save />}
+                                    disabled={grabando}
+                                    fullWidth
+                                >
+                                    Grabar
+                                </MDButton>
+                            </MDBox>
+                            <MDBox mt={2} mb={1}>
+                                <MDButton
+                                    onClick={() => {
+                                        handleVolver();
+                                    }}
+                                    variant="gradient"
+                                    color="info"
+                                    endIcon={<ExitToApp />}
+                                    fullWidth
+                                >
+                                    {nombreboton}
+                                </MDButton>
+                            </MDBox>
                         
-                            <MDButton
-                                onClick={() => {
-                                    handleVolver();
-                                }}
-                                variant="gradient"
-                                color="secondary"
-                                endIcon={<ExitToApp />}
-
-                                fullWidth
-                            >
-                                {nombreboton}
-                            </MDButton>
-                        </MDBox>
                     </MDBox>
-                    {/* <MDBox mt={4} mb={1}>
-            <MDProgress color="success"
-              loading="true"
-              label={true}
-              value={showprogrees === 0 ? progress : 0}
-              display={loading && exito ? 'true' : 'false'}
-              variant="contained"></MDProgress>
-
-          </MDBox> */}
-
-                    {mensaje !== '' && (
-
+                    {mensaje !== "" && (
                         <Alert severity={exito ? "success" : "error"}>
                             <AlertTitle>{exito ? "Felicitaciones" : "Error"}</AlertTitle>
                             {mensaje}
@@ -372,4 +491,3 @@ const PresupuestoEdit = () => {
 };
 
 export default PresupuestoEdit;
-
