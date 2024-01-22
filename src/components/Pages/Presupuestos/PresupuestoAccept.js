@@ -9,7 +9,7 @@ import BasicLayout from "../../layauots/BasicLayout";
 import { Card } from "react-bootstrap";
 
 import { PersonFillAdd, Save } from "react-bootstrap-icons";
-import { Delete, ExitToApp } from "@mui/icons-material";
+import { Delete, ExitToApp, Task } from "@mui/icons-material";
 
 import {
   Alert,
@@ -23,6 +23,7 @@ import {
   TableRow,
   TextField,
   Table,
+  TableHead,
 } from "@mui/material";
 import bgImage from "../../../assets/images/bg-sign-up-cover.jpeg";
 import MDBox from "../../controls/MDBox";
@@ -92,7 +93,7 @@ const PresupuestoAccept = () => {
 
         setObservaciones(data.observaciones);
         setPresupuestoxTareasTipos(data.presupuestoxTareasTipos);
-       
+
         setIdCliente(data.idCliente);
         setIdDepartamento(data.idDepartamento);
         let newRows = [];
@@ -192,7 +193,9 @@ const PresupuestoAccept = () => {
       }
       const request = {
         idPresupuesto: id,
-        presupuestoxRoL: rolesxTareaUpdate.map((item) => ({
+        observaciones:observaciones,
+        idUsuario: localStorage.getItem("iduserlogueado"),
+        tareaxRoles: rolesxTareaUpdate.map((item) => ({
           idUsuario: item.idUsuario,
           idRol: item.idRol,
         })),
@@ -203,7 +206,7 @@ const PresupuestoAccept = () => {
       setExito(true);
       setMensaje("");
       // Aquí realizas la llamada a tu API para actualizar el Presupuesto con los nuevos datos
-      const response = await fetch(API_URL + `/PresupuestoAccept`, {
+      const response = await fetch(API_URL + `/PresupuestoAceptar`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -244,6 +247,17 @@ const PresupuestoAccept = () => {
           fontWeight="medium"
         >
           {item.nombre}
+        </MDTypography>
+      ),
+      vencimientoDias: (
+        <MDTypography
+          component="a"
+          href="#"
+          variant="caption"
+          color="text"
+          fontWeight="medium"
+        >
+          {item.vencimientoDias}
         </MDTypography>
       ),
     };
@@ -381,7 +395,7 @@ const PresupuestoAccept = () => {
               }}
             >
               <div style={{ flex: 1, marginT: "-35px" }}>
-                <MDBox mb={2} style={{ display: "flex", gap: "16px" }}>
+                <MDBox mb={2}>
                   <Autocomplete
                     onChange={handleAutocompleteIDClienteChange}
                     options={elementsclientes}
@@ -399,6 +413,8 @@ const PresupuestoAccept = () => {
                       />
                     )}
                   />
+                </MDBox>
+                <MDBox mb={2}>
                   <Autocomplete
                     onChange={handleAutocompleteDeptoChange}
                     options={elementsDepto}
@@ -433,7 +449,7 @@ const PresupuestoAccept = () => {
                   />
                 </MDBox>
               </div>
-              <div style={{ flex: 1, marginT: "-35px" }}>
+              <div style={{ flex: 2, marginT: "-35px" }}>
                 <MDBox mb={2}>
                   <Card>
                     <MDBox
@@ -452,118 +468,162 @@ const PresupuestoAccept = () => {
                         fontWeight="light"
                         color="white"
                         mt={1}
+                        endIcon={<Task />}
                       >
-                        Administracion Roles
+                        Tipos de Tarea del Presupuesto
                       </MDTypography>
                     </MDBox>
-                    <MDBox mb={2}>
+                    <MDBox mb={2} style={{ display: "flex", gap: "16px" }}>
                       <TableContainer component={Paper}>
                         <Table>
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>
+                                <MDTypography
+                                  component="a"
+                                  href="#"
+                                  variant="caption"
+                                  color="text"
+                                  fontWeight="medium"
+                                >
+                                  Tipo Tarea
+                                </MDTypography>
+                              </TableCell>
+                              <TableCell>
+                                <MDTypography
+                                  component="a"
+                                  href="#"
+                                  variant="caption"
+                                  color="text"
+                                  fontWeight="medium"
+                                  textAlign="right"
+                                  style={{
+                                    marginLeft: "10px",
+                                    marginRight: "8px",
+                                  }}
+                                >
+                                  Vencimiento Días
+                                </MDTypography>
+                              </TableCell>
+                              {/* Agrega más títulos para otras columnas si es necesario */}
+                            </TableRow>
+                          </TableHead>
                           <TableBody>
                             {presupuestoxtareastiposUpdate.map((item) => (
                               <TableRow key={item.id}>
-                                <TableCell style={{ display: "none" }}>
-                                  {item.id}
-                                </TableCell>
-                                <TableCell style={{ display: "none" }}>
-                                  {item.idTareaTipo}
-                                </TableCell>
                                 <TableCell>{item.nombreTareaTipo}</TableCell>
-
-                                <TableCell>
-                                  <IconButton
-                                    aria-label="Eliminar"
-                                    onClick={() => eliminarItem(item.id)}
-                                  >
-                                    <Delete color="error" />
-                                  </IconButton>
-                                </TableCell>
+                                <TableCell>{item.vencimientoDias}</TableCell>
                               </TableRow>
                             ))}
                           </TableBody>
                         </Table>
                       </TableContainer>
-                    </MDBox>
-                    <MDBox mb={2}>
-                      <MDBox mb={2} mr={4} ml={4}>
-                        <Autocomplete
-                          onChange={handleAutocompleteUserChange}
-                          options={elementsUsuario}
-                          getOptionLabel={(option) => option.nombre}
-                          getOptionDisabled={(option) =>
-                            option.activo === false
-                          }
-                          renderInput={(params) => (
-                            <TextField
-                              {...params}
-                              label="Seleccione Usuario"
-                              variant="outlined"
-                            />
-                          )}
-                        />
-                      </MDBox>
-                      <MDBox mb={2} mr={4} ml={4}>
-                        <Autocomplete
-                          onChange={handleAutocompleteRolChange}
-                          options={elementsRol}
-                          getOptionLabel={(option) => option.descripcion}
-                          getOptionDisabled={(option) =>
-                            option.activo === false
-                          }
-                          renderInput={(params) => (
-                            <TextField
-                              {...params}
-                              label="Seleccione Rol"
-                              variant="outlined"
-                            />
-                          )}
-                        />
-                      </MDBox>
-                      <MDBox mb={2} mr={6} ml={6}>
-                        <MDButton
-                          onClick={() => {
-                            handleAddRol();
-                          }}
-                          variant="gradient"
-                          color="info"
-                          endIcon={<PersonFillAdd />}
-                          fullWidth
-                        >
-                          Agregar Rol
-                        </MDButton>
-                      </MDBox>
-
-                      <TableContainer component={Paper}>
-                        <Table>
-                          <TableBody>
-                            {rolesxTareaUpdate.map((item) => (
-                              <TableRow key={item.id}>
-                                <TableCell style={{ display: "none" }}>
-                                  {item.id}
-                                </TableCell>
-                                <TableCell style={{ display: "none" }}>
-                                  {item.idUsuario}
-                                </TableCell>
-                                <TableCell>{item.nombreUsuario}</TableCell>
-                                <TableCell style={{ display: "none" }}>
-                                  {item.idRol}
-                                </TableCell>
-                                <TableCell>{item.nombreRol}</TableCell>
-                                <TableCell>
-                                  <IconButton
-                                    aria-label="Eliminar"
-                                    onClick={() => eliminarItemRol(item.id)}
-                                  >
-                                    <Delete color="error" />
-                                  </IconButton>
-                                </TableCell>
-                              </TableRow>
-                            ))}
-                          </TableBody>
-                        </Table>
-                      </TableContainer>
-                    </MDBox>
+                    </MDBox>{" "}
                   </Card>
+                  <MDBox mb={2}>
+                    <Card>
+                      <MDBox
+                        variant="gradient"
+                        bgColor="info"
+                        borderRadius="lg"
+                        coloredShadow="warning"
+                        mx={2}
+                        mt={0}
+                        p={1}
+                        mb={1}
+                        textAlign="center"
+                      >
+                        <MDTypography
+                          variant="h8"
+                          fontWeight="light"
+                          color="white"
+                          mt={1}
+                          endIcon={<Task />}
+                        >
+                          Administrar Roles
+                        </MDTypography>
+                      </MDBox>
+                      <MDBox mb={2}>
+                        <MDBox mb={2} mr={4} ml={4}>
+                          <Autocomplete
+                            onChange={handleAutocompleteUserChange}
+                            options={elementsUsuario}
+                            getOptionLabel={(option) => option.nombre}
+                            getOptionDisabled={(option) =>
+                              option.activo === false
+                            }
+                            renderInput={(params) => (
+                              <TextField
+                                {...params}
+                                label="Seleccione Usuario"
+                                variant="outlined"
+                              />
+                            )}
+                          />
+                        </MDBox>
+                        <MDBox mb={2} mr={4} ml={4}>
+                          <Autocomplete
+                            onChange={handleAutocompleteRolChange}
+                            options={elementsRol}
+                            getOptionLabel={(option) => option.descripcion}
+                            getOptionDisabled={(option) =>
+                              option.activo === false
+                            }
+                            renderInput={(params) => (
+                              <TextField
+                                {...params}
+                                label="Seleccione Rol"
+                                variant="outlined"
+                              />
+                            )}
+                          />
+                        </MDBox>
+                        <MDBox mb={2} mr={6} ml={6}>
+                          <MDButton
+                            onClick={() => {
+                              handleAddRol();
+                            }}
+                            variant="gradient"
+                            color="info"
+                            endIcon={<PersonFillAdd />}
+                            fullWidth
+                          >
+                            Agregar Rol
+                          </MDButton>
+                        </MDBox>
+
+                        <TableContainer component={Paper}>
+                          <Table>
+                            <TableBody>
+                              {rolesxTareaUpdate.map((item) => (
+                                <TableRow key={item.id}>
+                                  <TableCell style={{ display: "none" }}>
+                                    {item.id}
+                                  </TableCell>
+                                  <TableCell style={{ display: "none" }}>
+                                    {item.idUsuario}
+                                  </TableCell>
+                                  <TableCell>{item.nombreUsuario}</TableCell>
+                                  <TableCell style={{ display: "none" }}>
+                                    {item.idRol}
+                                  </TableCell>
+                                  <TableCell>{item.nombreRol}</TableCell>
+                                  <TableCell>
+                                    <IconButton
+                                      aria-label="Eliminar"
+                                      onClick={() => eliminarItemRol(item.id)}
+                                    >
+                                      <Delete color="error" />
+                                    </IconButton>
+                                  </TableCell>
+                                </TableRow>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </TableContainer>
+                      </MDBox>
+                    </Card>
+                  </MDBox>
                 </MDBox>
               </div>
             </MDBox>

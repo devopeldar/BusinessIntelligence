@@ -83,6 +83,7 @@ import EventoTareaEdit from "./components/Pages/Tareas/EventoTareaEdit";
 import PresupuestoList from "./components/Pages/Presupuestos/PresupuestoList";
 import PresupuestoAdd from "./components/Pages/Presupuestos/PresupuestoAdd";
 import PresupuestoEdit from "./components/Pages/Presupuestos/PresupuestoEdit";
+import PresupuestoAccept from "./components/Pages/Presupuestos/PresupuestoAccept";
 
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
@@ -321,7 +322,7 @@ export default function App() {
             <Route path="/UsuarioEdit/:id" element={<UsuarioEdit />} />
             <Route path="/UsuarioVolver" element={<UsuarioList />} />
 
-            {/* <Route path="/PresupuestoAceptar/:id" element={<UsuarioList />} /> //AceptarPresupuesto */}
+            <Route path="/PresupuestoAceptar/:id/:habilitado" element={<PresupuestoAccept />} /> 
             <Route path="/PresupuestoVolver" element={<PresupuestoList />} />
             <Route path="/PresupuestoAdd" element={<PresupuestoAdd />} />
             <Route path="/PresupuestoEdit/:id" element={<PresupuestoEdit />} />
