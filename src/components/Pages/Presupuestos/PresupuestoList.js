@@ -10,7 +10,11 @@ import MDButton from "../../controls/MDButton";
 import DataTable from "../../controls/Tables/DataTable";
 import { BuildingFillAdd } from "react-bootstrap-icons";
 import { Link, useNavigate } from "react-router-dom";
-import { Checklist, Edit, EditNote, Filter, NoteAlt, OneK } from "@mui/icons-material";
+import {
+  Checklist,
+  Filter,
+  NoteAlt,
+} from "@mui/icons-material";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Cliente from "../../Utils/cliente";
@@ -18,6 +22,7 @@ import { addMonths, startOfMonth } from "date-fns";
 import axios from "axios";
 import API_URL from "../../../config";
 import MDBadge from "../../controls/MDBadge";
+import Departamento from "../../Utils/departamento";
 
 function PresupuestoList() {
   const history = useNavigate();
@@ -29,6 +34,7 @@ function PresupuestoList() {
   const [error, setError] = useState([]);
 
   const clientes = Cliente();
+  const departamentos = Departamento();
   const today = new Date();
   const firstDayOfMonth = startOfMonth(today);
   const firstDayOfNextMonth = startOfMonth(addMonths(today, 1));
@@ -37,6 +43,9 @@ function PresupuestoList() {
   const [selectedDateTo, setSelectedDateTo] =
     React.useState(firstDayOfNextMonth);
   const [selectedValueCliente, setSelectedValueCliente] = useState(clientes[0]);
+  const [selectedValueDepartamento, setSelectedValueDepartamento] = useState(
+    departamentos[0]
+  );
   useEffect(() => {
     fetchDataTareas();
   }, []);
@@ -48,6 +57,10 @@ function PresupuestoList() {
   const handleAutocompleteClienteChange = (event, value) => {
     setSelectedValueCliente(value);
   };
+  const handleAutocompleteDeptoChange = (event, value) => {
+    setSelectedValueDepartamento(value);
+  };
+  
   const handleDateFromChange = (date) => {
     setSelectedDateFrom(date);
   };
@@ -61,7 +74,7 @@ function PresupuestoList() {
     const year = formattedDate.getFullYear();
     return `${day}/${month}/${year}`;
   };
-  const Nombre = ({ cliente, fechaCreacion, fechaAceptacion }) => (
+  const Nombre = ({ cliente, fechaCreacion, fechaAceptacion, depto }) => (
     <MDBox lineHeight={1} textAlign="left">
       <MDTypography
         display="block"
@@ -70,6 +83,15 @@ function PresupuestoList() {
         fontWeight="bold"
       >
         {cliente}
+      </MDTypography>
+
+      <MDTypography
+        display="block"
+        variant="caption"
+        color="dark"
+        fontWeight="bold"
+      >
+        Departamento: {depto}
       </MDTypography>
 
       <MDTypography
@@ -87,7 +109,6 @@ function PresupuestoList() {
         color="info"
         fontWeight="bold"
       >
-        
         Aceptado :{fechaAceptacion ? formatDate(fechaAceptacion) : "--/--/--"}{" "}
       </MDTypography>
     </MDBox>
@@ -98,6 +119,7 @@ function PresupuestoList() {
       const requsuario = {
         //idUsuario: localStorage.getItem("iduserlogueado"),
         idCliente: selectedValueCliente?.idCliente || 0,
+        idDepartamento: selectedValueDepartamento?.idDepartamento || 0,
         fechaDesde: selectedDateFrom ? selectedDateFrom : firstDayOfMonth,
         fechaHasta: selectedDateTo ? selectedDateTo : firstDayOfNextMonth,
       };
@@ -116,6 +138,7 @@ function PresupuestoList() {
         const clienteNombre = (
           <Nombre
             cliente={Presupuesto.nombre}
+            depto={Presupuesto.nombreDepartamento}
             fechaCreacion={Presupuesto.fechaCreacion}
             fechaAceptacion={Presupuesto.fechaAceptacion}
           />
@@ -150,7 +173,9 @@ function PresupuestoList() {
                   color="text"
                   fontWeight="medium"
                 >
-                  <Link to={`../AceptarPresupuesto/${Presupuesto.idPresupuesto}`}>
+                  <Link
+                    to={`../AceptarPresupuesto/${Presupuesto.idPresupuesto}`}
+                  >
                     <Checklist
                       fontSize="large"
                       color="error"
@@ -159,23 +184,24 @@ function PresupuestoList() {
                   </Link>
                 </MDTypography>
                 <>
-                <MDTypography
-                  variant="caption"
-                  color="text"
-                  fontWeight="medium"
-                >
-                  <Link to={`../PresupuestoEdit/${Presupuesto.idPresupuesto}`}>
-                    <NoteAlt
-                      fontSize="large"
-                      color="info"
-                      titleAccess="Editar Presupuesto"
-                    />
-                  </Link>
-                </MDTypography>
-              </>
+                  <MDTypography
+                    variant="caption"
+                    color="text"
+                    fontWeight="medium"
+                  >
+                    <Link
+                      to={`../PresupuestoEdit/${Presupuesto.idPresupuesto}`}
+                    >
+                      <NoteAlt
+                        fontSize="large"
+                        color="info"
+                        titleAccess="Editar Presupuesto"
+                      />
+                    </Link>
+                  </MDTypography>
+                </>
               </>
             )}
-         
           </MDBox>
         );
 
@@ -235,7 +261,7 @@ function PresupuestoList() {
                 </MDTypography>
               </MDBox>
               <MDBox mb={2} mt={3} mr={1} ml={2} pr={10}>
-                <MDBox mb={2} mt={3}  mr={1} style={{ display: "block" }}>
+                <MDBox mb={2} mt={3} mr={1} style={{ display: "block" }}>
                   <MDButton
                     onClick={() => {
                       handleAdd();
@@ -287,26 +313,49 @@ function PresupuestoList() {
                     scrollableYearDropdown // Permite desplazarse por el dropdown de años
                   />
                 </MDBox>
-                <MDBox mb={2} mt={3} mr={2}>
-                  <Autocomplete
-                    options={clientes}
-                    getOptionLabel={(option) =>
-                      option.nombre || "Seleccione Cliente"
-                    }
-                    getOptionSelected={(option, value) =>
-                      option.idCliente === value.idCliente
-                    }
-                    value={selectedValueCliente || null}
-                    onChange={handleAutocompleteClienteChange}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Seleccione Cliente"
-                        variant="outlined"
-                        style={{ width: `300px` }}
-                      />
-                    )}
-                  />
+                <MDBox mb={2} mt={3} style={{ display: "flex" }}>
+                  <MDBox mb={2} mt={3} mr={2}>
+                    <Autocomplete
+                      options={clientes}
+                      getOptionLabel={(option) =>
+                        option.nombre || "Seleccione Cliente"
+                      }
+                      getOptionSelected={(option, value) =>
+                        option.idCliente === value.idCliente
+                      }
+                      value={selectedValueCliente || null}
+                      onChange={handleAutocompleteClienteChange}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Seleccione Cliente"
+                          variant="outlined"
+                          style={{ width: `300px` }}
+                        />
+                      )}
+                    />
+                  </MDBox>
+                  <MDBox mb={2} mt={3} mr={2}>
+                    <Autocomplete
+                      options={departamentos}
+                      getOptionLabel={(option) =>
+                        option.nombre || "Seleccione Departamento"
+                      }
+                      getOptionSelected={(option, value) =>
+                        option.idDepartamento === value.idDepartamento
+                      }
+                      value={selectedValueDepartamento || null}
+                      onChange={handleAutocompleteDeptoChange}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Seleccione Departamento"
+                          variant="outlined"
+                          style={{ width: `300px` }}
+                        />
+                      )}
+                    />
+                  </MDBox>
                 </MDBox>
                 <DataTable
                   table={{ columns, rows }}

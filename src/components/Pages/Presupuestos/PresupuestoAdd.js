@@ -34,10 +34,9 @@ const PresupuestoAdd = () => {
   // const [nombre, setNombre] = useState('');
   // const [activo, setActivo] = useState(false);
   const [formData, setFormData] = useState({
-   
     observaciones: "",
     idCliente: 0,
-   
+
     idUsuario: 0,
     presupuestoxtareastipos: [],
     fechaVencimientoLegal: new Date(),
@@ -54,7 +53,12 @@ const PresupuestoAdd = () => {
   const [elementsTareaTipo, setElementsTareaTipo] = useState([]);
   const [selectedValueTareaTipo, setSelectedValueTareaTipo] = useState([]);
   const [selectedValueCliente, setSelectedValueCliente] = useState([]);
-
+  const [elementsDepto, setElementsDepto] = useState([]);
+  const [selectedValueDepartamentos, setSelectedValueDepartamentos] = useState(
+    []
+  );
+  const [vencimientoDias, setVencimientoDias] = useState(0);
+  const [idDepartamento, setIdDepartamento] = useState(0);
   const [nombreboton, setnombreboton] = useState("Cancelar");
   const [progress, setProgress] = useState(0);
   const [showprogrees, setShowprogrees] = React.useState(0);
@@ -131,6 +135,24 @@ const PresupuestoAdd = () => {
     GetCliente();
   }, []);
 
+  useEffect(() => {
+    const GetDepartamento = async () => {
+      const response = await axios.post(API_URL + "/DepartamentoListar", {
+        headers: {
+          accept: "application/json",
+        },
+      });
+      setElementsDepto(response.data);
+
+      const defaultValueId = idDepartamento; // ID del elemento que deseas seleccionar por defectoa asd asd asd asd a sdasd asd asd
+      const defaultValue = response.data.find(
+        (item) => item.idDepartamento === defaultValueId
+      );
+      setSelectedValueDepartamentos(defaultValue);
+    };
+    GetDepartamento();
+  }, []);
+
   const handleVolver = () => {
     navigate("/PresupuestoVolver"); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
   };
@@ -150,6 +172,18 @@ const PresupuestoAdd = () => {
           {selectedValueTareaTipo.nombre}
         </MDTypography>
       ),
+      vencimientoDias: (
+        <MDTypography
+          component="a"
+          href="#"
+          variant="caption"
+          color="text"
+          fontWeight="medium"
+        >
+          {vencimientoDias}
+        </MDTypography>
+      ),
+      vencimientoDiasValor:vencimientoDias,
     };
     const usuarioExistente = data.find(
       (item) => item.idTareaTipo === selectedValueTareaTipo.idTareaTipo
@@ -163,15 +197,19 @@ const PresupuestoAdd = () => {
   const handleAutocompleteClienteChange = (event, value) => {
     setSelectedValueCliente(value);
   };
-
+  const handleAutocompleteDeptoChange = (event, value) => {
+    setSelectedValueDepartamentos(value);
+  };
   const procesarFormulario = async (request) => {
     try {
       setLoading(true);
 
       request.idCliente = selectedValueCliente.idCliente;
+      request.idDepartamento = selectedValueDepartamentos.idDepartamento;
 
       request.presupuestoxtareastipos = data.map((item) => ({
         idTareaTipo: item.idTareaTipo,
+        vencimientoDias: item.vencimientoDiasValor,
       }));
       request.idUsuario = localStorage.getItem("iduserlogueado");
       console.log("formData " + JSON.stringify(formData));
@@ -225,6 +263,9 @@ const PresupuestoAdd = () => {
   };
   const handleAutocompleteChangeTareaTipo = (event, value) => {
     setSelectedValueTareaTipo(value);
+    try {
+      setVencimientoDias(value.vencimientoDias);
+    } catch (error) {}
   };
 
   const eliminarItem = (id) => {
@@ -270,7 +311,9 @@ const PresupuestoAdd = () => {
                     options={elementsCliente}
                     getOptionLabel={(option) => option.nombre}
                     getOptionDisabled={(option) => option.activo === false}
-                    isOptionEqualToValue={(option, value) => option.nombre === value.nombre}
+                    isOptionEqualToValue={(option, value) =>
+                      option.nombre === value.nombre
+                    }
                     renderInput={(params) => (
                       <TextField
                         {...params}
@@ -278,6 +321,25 @@ const PresupuestoAdd = () => {
                         variant="outlined"
                       />
                     )}
+                  />
+                </MDBox>
+                <MDBox mb={2}>
+                  <Autocomplete
+                    onChange={handleAutocompleteDeptoChange}
+                    options={elementsDepto}
+                    value={selectedValueDepartamentos || null}
+                    getOptionLabel={(option) =>
+                      option.nombre || "Seleccione Departamento"
+                    }
+                    getOptionDisabled={(option) => option.activo === false}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Seleccione Departamento"
+                        variant="outlined"
+                      />
+                    )}
+                    style={{ flex: 1 }} // Añade esta línea
                   />
                 </MDBox>
 
@@ -326,7 +388,9 @@ const PresupuestoAdd = () => {
                           getOptionDisabled={(option) =>
                             option.activo === false
                           }
-                          isOptionEqualToValue={(option, value) => option.nombre === value.nombre}
+                          isOptionEqualToValue={(option, value) =>
+                            option.nombre === value.nombre
+                          }
                           renderInput={(params) => (
                             <TextField
                               {...params}
@@ -334,10 +398,21 @@ const PresupuestoAdd = () => {
                               variant="outlined"
                             />
                           )}
-                          style={{ flex: 1 }}
+                         
                         />
                       </MDBox>
-
+                      <MDBox mb={2} mr={4} ml={4}>
+                        <MDInput
+                          type="text"
+                          name="vencimientoDias"
+                          required
+                          label="Vencimiento en Dias"
+                          variant="standard"
+                          value={vencimientoDias}
+                          onChange={(e) => setVencimientoDias(e.target.value)}
+                          fullWidth
+                        />
+                      </MDBox>
                       <MDBox mb={2} mr={6} ml={6}>
                         <MDButton
                           onClick={() => {
@@ -363,7 +438,8 @@ const PresupuestoAdd = () => {
                                   {item.idTareaTipo}
                                 </TableCell>
                                 <TableCell>{item.nombreTareaTipo}</TableCell>
-
+                                <TableCell>{item.vencimientoDias}</TableCell>
+                                <TableCell style={{ display: "none" }}>{item.vencimientoDiasValor}</TableCell>
                                 <TableCell>
                                   <IconButton
                                     aria-label="Eliminar"
