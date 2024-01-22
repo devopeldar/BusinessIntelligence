@@ -30,7 +30,7 @@ import MDTypography from "../../controls/MDTypography";
 import MDButton from "../../controls/MDButton";
 
 
-const PresupuestoEdit = () => {
+const PresupuestoAccept = () => {
     const { id, habilitado } = useParams(); // Obtener el parámetro de la URL (el ID del Presupuesto a editar)
     const [Presupuesto, setPresupuesto] = useState(null);
     const [idPresupuesto, setidPresupuesto] = useState("");
@@ -59,7 +59,13 @@ const PresupuestoEdit = () => {
     const [selectedValueTareasTipos, setSelectedValueTareasTipos] = useState(
         { idTareaTipo: '' }
     );
-
+    const [elementsUsuario, setElementsUsuario] = useState([]);
+    const [elementsRol, setElementsRol] = useState([]);
+    const [selectedValueUsuario, setSelectedValueUsuario] = useState(
+        elementsUsuario[0]
+    );
+    const [rolesxTareaUpdate, setRolesxTareaUpdate] = useState([]);
+    const [selectedValueRol, setSelectedValueRol] = useState(elementsRol[0]);
     const handleVolver = () => {
         history("/PresupuestoVolver"); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
     };
@@ -87,8 +93,7 @@ const PresupuestoEdit = () => {
 
                 let newRows = [];
                 let i = 0;
-                console.log("presupuestoxtareastipos", presupuestoxtareastipos.length)
-
+     
                 data.presupuestoxTareasTipos.forEach((item, index) => {
 
                     i = i + 1;
@@ -127,6 +132,35 @@ const PresupuestoEdit = () => {
     }, []);
 
     useEffect(() => {
+        const GetRol = async () => {
+
+            const response = await axios.post(API_URL + "/RolListar", {
+                headers: {
+                    accept: "application/json",
+                },
+            });
+
+            setElementsRol(response.data);
+        };
+        GetRol();
+    }, []);
+
+    useEffect(() => {
+        const GetUsuario = async () => {
+
+            const response = await axios.post(API_URL + "/UsuarioListar", {
+                headers: {
+                    accept: "application/json",
+                },
+            });
+
+            setElementsUsuario(response.data);
+        };
+        GetUsuario();
+    }, []);
+
+
+    useEffect(() => {
         const GetClientes = async () => {
             const response = await axios.post(API_URL + "/CLienteListar", {
                 headers: {
@@ -155,23 +189,18 @@ const PresupuestoEdit = () => {
             }
             const request = {
                 idPresupuesto: id,
-
-                idCliente: selectedValueCliente.idCliente,
-                observaciones: observaciones,
-                presupuestoxtareastipos: presupuestoxtareastiposUpdate.map(item => ({
-                    idTareaTipo: item.idTareaTipo
+                presupuestoxRoL: rolesxTareaUpdate.map(item => ({
+                    idUsuario: item.idUsuario,
+                    idRol: item.idRol
                 })),
-                idUsuario: localStorage.getItem('iduserlogueado')
             };
-            console.log("formData Presupuesto" + JSON.stringify(request))
-
 
             setGrabando(true); // Inicia la grabación
             setnombreboton("Volver");
             setExito(true);
             setMensaje("");
             // Aquí realizas la llamada a tu API para actualizar el Presupuesto con los nuevos datos
-            const response = await fetch(API_URL + `/PresupuestoModificacion`, {
+            const response = await fetch(API_URL + `/PresupuestoAccept`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -219,39 +248,7 @@ const PresupuestoEdit = () => {
         return newRow;
     };
 
-    const handleAddTareaTipo = () => {
-        if (selectedValueTareasTipos.idTareaTipo != "") {
-            const newRow = {
-                id: (presupuestoxtareastiposUpdate.length + 1),
-                idPresupuesto: id,
-                idTareaTipo: selectedValueTareasTipos.idTareaTipo,
-                nombreTareaTipo: (
-                    <MDTypography
-                        component="a"
-                        href="#"
-                        variant="caption"
-                        color="text"
-                        fontWeight="medium"
-                    >
-                        {selectedValueTareasTipos.nombre}
-                    </MDTypography>
-                )
-            };
-            const TareaTipoExistente = presupuestoxtareastiposUpdate.find(
-                (item) =>
-                    item.idTareaTipo === selectedValueTareasTipos.idTareaTipo
-            );
-
-
-
-            if (!TareaTipoExistente) {
-                setPresupuestoxtareastiposUpdate((prevDatos) => [...prevDatos, newRow]);
-            }
-        }
-
-    };
-
-    const handleAutocompleteIDClienteChange = (event, value) => {
+      const handleAutocompleteIDClienteChange = (event, value) => {
         setSelectedValueCliente(value);
     };
 
@@ -292,6 +289,61 @@ const PresupuestoEdit = () => {
 
     const handleAutocompleteTareaTipoChange = (event, value) => {
         setSelectedValueTareasTipos(value);
+    };
+    const eliminarItemRol = (id) => {
+        const newData = rolesxTareaUpdate.filter((item) => item.id !== id);
+        setRolesxTareaUpdate(newData);
+    };
+
+    
+    const handleAddRol = () => {
+        const newRow = {
+            id: (rolesxTareaUpdate.length + 1),
+            idUsuario: selectedValueUsuario.idUsuario,
+            nombreUsuario: (
+                <MDTypography
+                    component="a"
+                    href="#"
+                    variant="caption"
+                    color="text"
+                    fontWeight="medium"
+                >
+                    {selectedValueUsuario.nombre}
+                </MDTypography>
+            ),
+            idRol: selectedValueRol.idRol,
+            nombreRol: (
+                <MDTypography
+                    component="a"
+                    href="#"
+                    variant="caption"
+                    color="text"
+                    fontWeight="medium"
+                >
+                    {selectedValueRol.descripcion}
+                </MDTypography>
+            ),
+        };
+        const usuarioExistente = rolesxTareaUpdate.find(
+            (item) =>
+                item.idUsuario === selectedValueUsuario.idUsuario &&
+                item.idRol === selectedValueRol.idRol
+        );
+
+
+
+        if (!usuarioExistente) {
+            setRolesxTareaUpdate((prevDatos) => [...prevDatos, newRow]);
+        }
+
+    };
+
+    const handleAutocompleteUserChange = (event, value) => {
+        setSelectedValueUsuario(value);
+    };
+
+    const handleAutocompleteRolChange = (event, value) => {
+        setSelectedValueRol(value);
     };
 
     return (
@@ -387,36 +439,7 @@ const PresupuestoEdit = () => {
                                             </MDTypography>
                                         </MDBox>
                                         <MDBox mb={2}>
-                                            <MDBox mb={2} mr={4} ml={4}>
-                                                <Autocomplete
-                                                    onChange={handleAutocompleteTareaTipoChange}
-                                                    options={elementsTareasTipos}
-                                                    getOptionLabel={(option) => option.nombre}
-                                                    getOptionDisabled={(option) => option.activo === false}
-                                                    renderInput={(params) => (
-                                                        <TextField
-                                                            {...params}
-                                                            label="Seleccione Tipo de Tarea"
-                                                            variant="outlined"
-                                                        />
-                                                    )}
-                                                />
-                                            </MDBox>
-
-                                            <MDBox mb={2} mr={6} ml={6}>
-                                                <MDButton
-                                                    onClick={() => {
-                                                        handleAddTareaTipo();
-                                                    }}
-                                                    variant="gradient"
-                                                    color="info"
-                                                    endIcon={<PersonFillAdd />}
-                                                    fullWidth
-                                                >
-                                                    Agregar Tipo de Tarea
-                                                </MDButton>
-                                            </MDBox>
-
+                                           
                                             <TableContainer component={Paper}>
                                                 <Table>
                                                     <TableBody>
@@ -446,6 +469,83 @@ const PresupuestoEdit = () => {
                                                 </Table>
                                             </TableContainer>
                                         </MDBox>
+                                        <MDBox mb={2}>
+                                            <MDBox mb={2} mr={4} ml={4}>
+                                                <Autocomplete
+                                                    onChange={handleAutocompleteUserChange}
+                                                    options={elementsUsuario}
+                                                    getOptionLabel={(option) => option.nombre}
+                                                    getOptionDisabled={(option) => option.activo === false}
+                                                    renderInput={(params) => (
+                                                        <TextField
+                                                            {...params}
+                                                            label="Seleccione Usuario"
+                                                            variant="outlined"
+                                                        />
+                                                    )}
+                                                />
+                                            </MDBox>
+                                            <MDBox mb={2} mr={4} ml={4}>
+                                                <Autocomplete
+                                                    onChange={handleAutocompleteRolChange}
+                                                    options={elementsRol}
+                                                    getOptionLabel={(option) => option.descripcion}
+                                                    getOptionDisabled={(option) => option.activo === false}
+                                                    renderInput={(params) => (
+                                                        <TextField
+                                                            {...params}
+                                                            label="Seleccione Rol"
+                                                            variant="outlined"
+                                                        />
+                                                    )}
+                                                />
+                                            </MDBox>
+                                            <MDBox mb={2} mr={6} ml={6}>
+                                                <MDButton
+                                                    onClick={() => {
+                                                        handleAddRol();
+                                                    }}
+                                                    variant="gradient"
+                                                    color="info"
+                                                    endIcon={<PersonFillAdd />}
+                                                    fullWidth
+                                                >
+                                                    Agregar Rol
+                                                </MDButton>
+                                            </MDBox>
+
+                                            <TableContainer component={Paper}>
+                                                <Table>
+                                                    <TableBody>
+
+                                                        {rolesxTareaUpdate.map((item) => (
+                                                            <TableRow key={item.id}>
+                                                                <TableCell style={{ display: "none" }}>
+                                                                    {item.id}
+                                                                </TableCell>
+                                                                <TableCell style={{ display: "none" }}>
+                                                                    {item.idUsuario}
+                                                                </TableCell>
+                                                                <TableCell>{item.nombreUsuario}</TableCell>
+                                                                <TableCell style={{ display: "none" }}>
+                                                                    {item.idRol}
+                                                                </TableCell>
+                                                                <TableCell>{item.nombreRol}</TableCell>
+                                                                <TableCell>
+                                                                    <IconButton
+                                                                        aria-label="Eliminar"
+                                                                        onClick={() => eliminarItemRol(item.id)}
+                                                                    >
+                                                                        <Delete color="error" />
+                                                                    </IconButton>
+                                                                </TableCell>
+                                                            </TableRow>
+                                                        ))
+                                                        }
+                                                    </TableBody>
+                                                </Table>
+                                            </TableContainer>
+                                        </MDBox>
                                     </Card>
                                 </MDBox>
                             </div>
@@ -461,7 +561,7 @@ const PresupuestoEdit = () => {
                                 disabled={grabando}
                                 fullWidth
                             >
-                                Grabar
+                                Aceptar Presupuesto
                             </MDButton>
                         </MDBox>
                         <MDBox mt={2} mb={1}>
@@ -491,4 +591,4 @@ const PresupuestoEdit = () => {
     );
 };
 
-export default PresupuestoEdit;
+export default PresupuestoAccept;

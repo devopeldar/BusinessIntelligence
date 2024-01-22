@@ -34,6 +34,7 @@ import {
   Filter,
   PeopleAltTwoTone,
   Edit,
+  NoteAlt,
 } from "@mui/icons-material";
 import MDProgress from "../../controls/MDProgress";
 import EstadoTarea from "../../Utils/estadoTarea";
@@ -302,9 +303,9 @@ function TareaList() {
                   fontWeight="medium"
                 >
                   <Link to={`../EventoTareaEdit/${Tarea.idTarea}/1`}>
-                    <Edit
+                    <NoteAlt
                       fontSize="large"
-                      color="primary"
+                      color="info"
                       titleAccess="Editar Tarea"
                     />
                   </Link>

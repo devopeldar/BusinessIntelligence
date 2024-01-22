@@ -10,7 +10,7 @@ import MDButton from "../../controls/MDButton";
 import DataTable from "../../controls/Tables/DataTable";
 import { BuildingFillAdd } from "react-bootstrap-icons";
 import { Link, useNavigate } from "react-router-dom";
-import { Edit, Filter, OneK } from "@mui/icons-material";
+import { Checklist, Edit, EditNote, Filter, NoteAlt, OneK } from "@mui/icons-material";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Cliente from "../../Utils/cliente";
@@ -151,7 +151,7 @@ function PresupuestoList() {
                   fontWeight="medium"
                 >
                   <Link to={`../AceptarPresupuesto/${Presupuesto.idPresupuesto}`}>
-                    <OneK
+                    <Checklist
                       fontSize="large"
                       color="error"
                       titleAccess="Aceptar Presupuesto"
@@ -165,9 +165,9 @@ function PresupuestoList() {
                   fontWeight="medium"
                 >
                   <Link to={`../PresupuestoEdit/${Presupuesto.idPresupuesto}`}>
-                    <Edit
+                    <NoteAlt
                       fontSize="large"
-                      color="success"
+                      color="info"
                       titleAccess="Editar Presupuesto"
                     />
                   </Link>

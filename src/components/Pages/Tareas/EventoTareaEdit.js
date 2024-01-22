@@ -377,7 +377,7 @@ const EventoTareaEdit = () => {
 
     return (
         <BasicLayout image={bgImage}>
-            <Card style={{ width: "257%", marginL: "-367px", marginT: "-35px" }}>
+            <Card style={{ width: "158%" }}>
                 <MDBox
                     variant="gradient"
                     bgColor="info"
