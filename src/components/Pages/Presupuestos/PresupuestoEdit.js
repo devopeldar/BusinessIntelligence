@@ -159,7 +159,6 @@ const PresupuestoEdit = () => {
                 idPresupuesto: id,
                
                 idCliente: selectedValueCliente.idCliente,
-              
                 observaciones: observaciones,
                 presupuestoxtareastipos: presupuestoxtareastiposUpdate.map(item => ({
                     idTareaTipo: item.idTareaTipo
