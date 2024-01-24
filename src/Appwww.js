@@ -84,6 +84,9 @@ import PresupuestoList from "./components/Pages/Presupuestos/PresupuestoList";
 import PresupuestoAdd from "./components/Pages/Presupuestos/PresupuestoAdd";
 import PresupuestoEdit from "./components/Pages/Presupuestos/PresupuestoEdit";
 import PresupuestoAccept from "./components/Pages/Presupuestos/PresupuestoAccept";
+import VencimientosEdit from "./components/Pages/Vencimientos/VencimientosEdit";
+import VencimientosList from "./components/Pages/Vencimientos/VencimientosList";
+import VencimientosAdd from "./components/Pages/Vencimientos/VencimientosAdd";
 
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
@@ -326,6 +329,11 @@ export default function App() {
             <Route path="/PresupuestoVolver" element={<PresupuestoList />} />
             <Route path="/PresupuestoAdd" element={<PresupuestoAdd />} />
             <Route path="/PresupuestoEdit/:id" element={<PresupuestoEdit />} />
+
+            <Route path="/VencimientosEdit/:id" element={<VencimientosEdit />} /> 
+            <Route path="/VencimientosVolver" element={<VencimientosList />} />
+            <Route path="/VencimientosAdd" element={<VencimientosAdd />} />
+           
             {/* 
 
 

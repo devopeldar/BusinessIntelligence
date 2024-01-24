@@ -3,6 +3,7 @@ import CambiarContrasenia from "./components/authentication/CambiarContrasenia";
 import Perfiles from "./components/authentication/Perfil/Perfiles";
 import {
   Close,
+  DateRange,
   Event,
   EventAvailable,
   ManageAccounts,
@@ -22,6 +23,7 @@ import axios from "axios";
 import API_URL from "./config";
 import CloseSession from "./components/authentication/CloseSession";
 import PresupuestoList from "./components/Pages/Presupuestos/PresupuestoList";
+import VencimientosList from "./components/Pages/Vencimientos/VencimientosList";
 
 const handleCloseSession = () => {
   console.log("uuuuuuuuuuuuuuu ");
@@ -99,6 +101,16 @@ routesnew = [
     component: <PresupuestoList />,
     visible: true,
     codigoPermiso: 105,
+  },
+  {
+    type: "collapse",
+    name: "Vencimientos",
+    key: "vencimientos",
+    icon: <DateRange />,
+    route: "/Vencimientos",
+    component: <VencimientosList />,
+    visible: true,
+    codigoPermiso: 106,
   },
   {
     type: "title",

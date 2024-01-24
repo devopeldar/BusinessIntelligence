@@ -1,0 +1,16 @@
+const Meses = {
+    ENERO: { valor: 1, descripcion: "ENERO" },
+    FEBRERO: { valor: 2, descripcion: "FEBRERO" },
+    MARZO: { valor: 3, descripcion: "MARZO" },
+    ABRIL: { valor: 4, descripcion: "ABRIL" },
+    MAYO: { valor: 5, descripcion: "MAYO" },
+    JUNIO: { valor: 6, descripcion: "JUNIO" },
+    JULIO: { valor: 6, descripcion: "JULIO" },
+    AGOSTO: { valor: 6, descripcion: "AGOSTO" },
+    SEPTIEMBRE: { valor: 6, descripcion: "SEPTIEMBRE" },
+    OCTUBRE: { valor: 6, descripcion: "OCTUBRE" },
+    NOVIEMBRE: { valor: 6, descripcion: "NOVIEMBRE" },
+    DICIEMBRE: { valor: 6, descripcion: "DICIEMBRE" }
+  };
+  
+  export default Meses;
