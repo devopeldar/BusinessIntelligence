@@ -376,7 +376,7 @@ const PresupuestoAccept = () => {
         >
           <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
             {/*  {!controlHabilitado ? "Cambio de Roles" : "Editar Presupuesto"} */}
-            Editar Presupuesto
+            Aceptar Presupuesto
           </MDTypography>
           <MDTypography display="block" variant="button" color="white" my={1}>
             Puede Aceptar el Presupuesto o bien modificar el mismo ante un

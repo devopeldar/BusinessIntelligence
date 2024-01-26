@@ -185,7 +185,7 @@ function PresupuestoList() {
                   fontWeight="medium"
                 >
                   <Link
-                    to={`../PresupuestoAceptar/${Presupuesto.idPresupuesto}, 0`}
+                    to={`../PresupuestoAceptar/${Presupuesto.idPresupuesto}/0`}
                   >
                     <Checklist
                       fontSize="large"
