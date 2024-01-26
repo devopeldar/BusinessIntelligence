@@ -25,6 +25,7 @@ import MDBadge from "../../controls/MDBadge";
 import Departamento from "../../Utils/departamento";
 import TipoTarea from "../../Utils/tipoTarea";
 import Meses from "../../Utils/Meses";
+import Anios from "../../Utils/Anios";
 
 function VencimientosList() {
     const history = useNavigate();
@@ -38,6 +39,7 @@ function VencimientosList() {
     const clientes = Cliente();
     const tareastipos = TipoTarea();
     const meses = Object.values(Meses);
+    const anios = Object.values(Anios);
     const [selectedValueCliente, setSelectedValueCliente] = useState(clientes[0]);
     const [selectedValueTareaTipo, setSelectedValueTareaTipo] = useState(
         tareastipos[0]
@@ -45,7 +47,10 @@ function VencimientosList() {
     const [selectedValueMes, setSelectedValueMes] = useState(
         meses[0]
     );
-
+    const [selectedValueAnio, setSelectedValueAnio] = useState(
+        anios[0]
+    );
+    
     const today = new Date();
     const firstDayOfMonth = startOfMonth(today);
     const firstDayOfNextMonth = startOfMonth(addMonths(today, 1));
@@ -70,7 +75,10 @@ function VencimientosList() {
     const handleAutocompleteMesChange = (event, value) => {
         setSelectedValueMes(value);
     };
-
+    const handleAutocompleteAnioChange = (event, value) => {
+        setSelectedValueAnio(value);
+    };
+    
     const Nombre = ({ cliente, nombreTipoTarea }) => (
         <MDBox lineHeight={1} textAlign="left">
             <MDTypography
@@ -107,8 +115,9 @@ function VencimientosList() {
             const requsuario = {
                 //idUsuario: localStorage.getItem("iduserlogueado"),
                 idCliente: selectedValueCliente?.idCliente || 0,
-                idTareaTipo: selectedValueTareaTipo?.TareaTipo || 0,
+                idTareaTipo: selectedValueTareaTipo?.idTareaTipo || 0,
                 mes: selectedValueMes?.valor || 0,
+                anio: selectedValueAnio?.valor || 2024,
             };
             console.log(requsuario);
             const response = await axios.post(
@@ -265,7 +274,7 @@ function VencimientosList() {
                                         Filtrar
                                     </MDButton>
                                 </MDBox>
-                                <MDBox mb={2} mt={3} style={{ display: "block" }}>
+                                {/* <MDBox mb={2} mt={3} style={{ display: "block" }}>
                                     <DatePicker
                                         style={{ marginRight: "2px" }}
                                         selected={selectedDateFrom}
@@ -292,7 +301,7 @@ function VencimientosList() {
                                         yearDropdownItemNumber={10} // Especifica cuántos años mostrar en el dropdown
                                         scrollableYearDropdown // Permite desplazarse por el dropdown de años
                                     />
-                                </MDBox>
+                                </MDBox> */}
                                 <MDBox mb={2} mt={3} style={{ display: "flex" }}>
                                     <MDBox mb={2} mt={3} mr={2}>
                                         <Autocomplete
@@ -310,7 +319,7 @@ function VencimientosList() {
                                                     {...params}
                                                     label="Seleccione Cliente"
                                                     variant="outlined"
-                                                    style={{ width: `300px` }}
+                                                    style={{ width: `250px` }}
                                                 />
                                             )}
                                         />
@@ -331,7 +340,7 @@ function VencimientosList() {
                                                     {...params}
                                                     label="Seleccione  Tipo Tarea"
                                                     variant="outlined"
-                                                    style={{ width: `300px` }}
+                                                    style={{ width: `250px` }}
                                                 />
                                             )}
                                         />
@@ -355,6 +364,29 @@ function VencimientosList() {
                                                     variant="outlined"
                                                     fontSize="small"
                                                     style={{ width: `200px` }}
+                                                />
+                                            )}
+                                        />
+
+                                    </MDBox>
+                                    <MDBox mb={2} mt={3} mr={2}>
+                                        <Autocomplete
+                                            options={anios}
+                                            getOptionLabel={(option) =>
+                                                option.descripcion || "Seleccione Año"
+                                            }
+                                            getOptionSelected={(option, value) =>
+                                                option.anio === value
+                                            }
+                                            value={selectedValueAnio || null}
+                                            onChange={handleAutocompleteAnioChange}
+                                            renderInput={(params) => (
+                                                <TextField
+                                                    {...params}
+                                                    label="Seleccione Año"
+                                                    variant="outlined"
+                                                    fontSize="small"
+                                                    style={{ width: `150px` }}
                                                 />
                                             )}
                                         />

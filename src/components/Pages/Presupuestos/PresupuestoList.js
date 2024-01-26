@@ -23,6 +23,7 @@ import axios from "axios";
 import API_URL from "../../../config";
 import MDBadge from "../../controls/MDBadge";
 import Departamento from "../../Utils/departamento";
+import EstadosSiNo from "../../Utils/estadossino";
 
 function PresupuestoList() {
   const history = useNavigate();
@@ -35,6 +36,8 @@ function PresupuestoList() {
 
   const clientes = Cliente();
   const departamentos = Departamento();
+  const estadosino = Object.values(EstadosSiNo);
+
   const today = new Date();
   const firstDayOfMonth = startOfMonth(today);
   const firstDayOfNextMonth = startOfMonth(addMonths(today, 1));
@@ -46,6 +49,10 @@ function PresupuestoList() {
   const [selectedValueDepartamento, setSelectedValueDepartamento] = useState(
     departamentos[0]
   );
+  const [selectedValueAceptado, setSelectedValueAceptado] = useState(
+    estadosino[0]
+  );
+
   useEffect(() => {
     fetchDataTareas();
   }, []);
@@ -60,7 +67,10 @@ function PresupuestoList() {
   const handleAutocompleteDeptoChange = (event, value) => {
     setSelectedValueDepartamento(value);
   };
-  
+  const handleAutocompleteAceptadoChange = (event, value) => {
+    setSelectedValueAceptado(value);
+  };
+
   const handleDateFromChange = (date) => {
     setSelectedDateFrom(date);
   };
@@ -120,10 +130,11 @@ function PresupuestoList() {
         //idUsuario: localStorage.getItem("iduserlogueado"),
         idCliente: selectedValueCliente?.idCliente || 0,
         idDepartamento: selectedValueDepartamento?.idDepartamento || 0,
+        aceptado: selectedValueAceptado?.valor || false,
         fechaDesde: selectedDateFrom ? selectedDateFrom : firstDayOfMonth,
         fechaHasta: selectedDateTo ? selectedDateTo : firstDayOfNextMonth,
       };
-      console.log(requsuario);
+
       const response = await axios.post(
         API_URL + "/PresupuestoListar",
         requsuario,
@@ -133,7 +144,7 @@ function PresupuestoList() {
           },
         }
       );
-
+      console.log("Presupuesto", response.data);
       const data = response.data.map((Presupuesto) => {
         const clienteNombre = (
           <Nombre
@@ -146,7 +157,7 @@ function PresupuestoList() {
 
         const aceptado = (
           <MDBox ml={-1}>
-            {Presupuesto.Aceptado ? (
+            {Presupuesto.aceptado === true ? (
               <MDBadge
                 badgeContent="Aceptado"
                 color="success"
@@ -355,6 +366,29 @@ function PresupuestoList() {
                         />
                       )}
                     />
+                  </MDBox>
+                  <MDBox mb={2} mt={3} mr={2}>
+                    <Autocomplete
+                      options={estadosino}
+                      getOptionLabel={(option) =>
+                        option.descripcion || "Aceptado?"
+                      }
+                      getOptionSelected={(option, value) =>
+                        option.aceptado === value
+                      }
+                      value={selectedValueAceptado || null}
+                      onChange={handleAutocompleteAceptadoChange}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Aceptado?"
+                          variant="outlined"
+                          fontSize="small"
+                          style={{ width: `150px` }}
+                        />
+                      )}
+                    />
+
                   </MDBox>
                 </MDBox>
                 <DataTable
