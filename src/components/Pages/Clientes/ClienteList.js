@@ -246,12 +246,9 @@ function ClienteList() {
                                     </Grid>
                                     <DataTable
                                         table={{ columns, rows }}
-                                        isSorted={true}
-                                        entriesPerPage={true}
+                                        isSorted={false}                                        
                                         showTotalEntries={true}
-                                        canSearch={true}
-                                        noEndBorder
-
+                                        canSearch={false}
                                         pagination={{ color: "secondary", variant: "gradient" }}
                                     />
                                 </Grid>

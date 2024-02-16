@@ -34,7 +34,7 @@ function DataTable({
   isSorted,
   noEndBorder,
 }) {
-  const defaultValue = entriesPerPage.defaultValue ? entriesPerPage.defaultValue : 10;
+  const defaultValue = entriesPerPage.defaultValue ? entriesPerPage.defaultValue : 100;
   const entries = entriesPerPage.entries
     ? entriesPerPage.entries.map((el) => el.toString())
     : ["10", "20", "25", "50", "100"];
@@ -134,10 +134,13 @@ function DataTable({
   let entriesEnd;
 
   if (pageIndex === 0) {
+   
     entriesEnd = pageSize;
   } else if (pageIndex === pageOptions.length - 1) {
+    
     entriesEnd = rows.length;
   } else {
+    
     entriesEnd = pageSize * (pageIndex + 1);
   }
 

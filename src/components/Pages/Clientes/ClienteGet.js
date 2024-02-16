@@ -35,7 +35,7 @@ export default function ClienteGet() {
             tipoIVA: Cliente.tipoIVA,
             descripcionIVA: Cliente.descripcionIVA
         }));
-
+       
         setRows(data);
       } catch (ex) {
         setError(ex);
