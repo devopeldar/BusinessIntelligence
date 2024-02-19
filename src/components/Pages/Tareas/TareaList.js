@@ -13,7 +13,6 @@ import {
   BuildingFillAdd,
   FileExcel,
   FilePdf,
-  PlayCircle,
   Stop,
 } from "react-bootstrap-icons";
 import { Link, useNavigate } from "react-router-dom";
@@ -33,7 +32,6 @@ import {
   Pause,
   Filter,
   PeopleAltTwoTone,
-  Edit,
   NoteAlt,
 } from "@mui/icons-material";
 import MDProgress from "../../controls/MDProgress";
@@ -67,27 +65,96 @@ function TareaList() {
   const tipoTarea = TipoTarea();
   const departamentos = Departamento();
   const fechasfiltro = Object.values(FechasFiltro);
-  const [selectedValuEestado, setSelectedValueEstado] = useState(estados[0]);
 
-  const [selectedValueFechaFiltro, setSelectedValueFechaFiltro] = useState(
-    fechasfiltro[0]
-  );
+  let selectedEstadoInitialValue = estados[0];
+  
+  const filtroEstadoCookie = getCookie("FILTROESTADO");
+if (filtroEstadoCookie !== null) {const filtroEstadoObjeto = JSON.parse(filtroEstadoCookie);  selectedEstadoInitialValue = filtroEstadoObjeto;}
 
-  const [selectedValueCliente, setSelectedValueCliente] = useState(clientes[0]);
-  const [selectedValueDepartamentos, setSelectedValueDepartamentos] = useState(
-    departamentos[0]
-  );
+  const [selectedValuEestado, setSelectedValueEstado] = useState(selectedEstadoInitialValue);
+
+  let selectedTipoFechaInitialValue = clientes[0];
+  
+  const filtroTipoFechaCookie = getCookie("FILTROTIPOFECHA");
+if (filtroTipoFechaCookie !== null) {const filtroTipoFechaObjeto = JSON.parse(filtroTipoFechaCookie);  selectedTipoFechaInitialValue = filtroTipoFechaObjeto;}
+
+  const [selectedValueFechaFiltro, setSelectedValueFechaFiltro] = useState(selectedTipoFechaInitialValue);
+
+  let selectedClienteInitialValue = clientes[0];
+  
+  const filtroClienteCookie = getCookie("FILTROCLIENTE");
+if (filtroClienteCookie !== null) {const filtroClienteObjeto = JSON.parse(filtroClienteCookie);  selectedClienteInitialValue = filtroClienteObjeto;}
+
+  const [selectedValueCliente, setSelectedValueCliente] = useState(selectedClienteInitialValue);
+  
+  
+  let selectedDeptoInitialValue = departamentos[0];
+
+  const filtroDeptoCookie = getCookie("FILTRODEPTO");
+if (filtroDeptoCookie !== null) {const filtroDeptoObjeto = JSON.parse(filtroDeptoCookie);  selectedDeptoInitialValue = filtroDeptoObjeto;}
+
+  const [selectedValueDepartamentos, setSelectedValueDepartamentos] = useState(selectedDeptoInitialValue);
+
+  let selectedTipoTareaInitialValue = tipoTarea[0];
+
+  const filtroTipoTareaCookie = getCookie("FILTROTIPOTAREA");
+if (filtroTipoTareaCookie !== null) {const filtroTipoTareaObjeto = JSON.parse(filtroTipoTareaCookie);  selectedTipoTareaInitialValue = filtroTipoTareaObjeto;}
+
   const [selectedValueTipoTarea, setSelectedValueTipoTarea] = useState(
-    tipoTarea[0]
+    selectedTipoTareaInitialValue
   );
   const today = new Date();
-  const firstDayOfMonth = startOfMonth(today);
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(today.getDate() - 30);
+
+  const firstDayOfMonth = startOfMonth(thirtyDaysAgo);
   const firstDayOfNextMonth = startOfMonth(addMonths(today, 1));
 
-  const [selectedDateFrom, setSelectedDateFrom] = React.useState(firstDayOfMonth);
-  const [selectedDateTo, setSelectedDateTo] = React.useState(firstDayOfNextMonth);
+  // Inicializamos selectedDateFrom fuera del bloque if-else
+let selectedDateFromInitialValue = firstDayOfMonth;
+let selectedDateToInitialValue = firstDayOfNextMonth;
 
+// Verificamos si existe la cookie
+const filtroFechaDesdeCookie = getCookie("FILTROFECHADESDE");
+if (filtroFechaDesdeCookie !== null) {
+  selectedDateFromInitialValue = new Date(filtroFechaDesdeCookie);
+}
 
+  const [selectedDateFrom, setSelectedDateFrom] = React.useState(selectedDateFromInitialValue);
+
+  
+  const filtroFechaHastaCookie = getCookie("FILTROFECHAHASTA");
+if (filtroFechaDesdeCookie !== null) {
+  selectedDateToInitialValue = new Date(filtroFechaHastaCookie);
+}
+
+  const [selectedDateTo, setSelectedDateTo] = React.useState(selectedDateToInitialValue);
+
+  function setCookie(name, value, minutes) {
+    const expires = new Date();
+    expires.setTime(expires.getTime() + minutes * 60 * 1000);
+  
+    // Formatea la cookie con el nombre, el valor y la fecha de vencimiento
+    document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+  }
+  
+  function getCookie(name) {
+    const cookieName = `${name}=`;
+    const cookies = document.cookie.split(';');
+  
+    // Busca la cookie por su nombre
+    for (let i = 0; i < cookies.length; i++) {
+      let cookie = cookies[i].trim();
+      if (cookie.indexOf(cookieName) === 0) {
+        return cookie.substring(cookieName.length, cookie.length);
+      }
+    }
+    return null; // Retorna null si no se encuentra la cookie
+  }
+
+  function deleteCookie(name) {
+    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+  }
 
 
   const handleDateFromChange = (date) => {
@@ -108,19 +175,24 @@ function TareaList() {
 
   const handleAutocompleteEstadoChange = (event, value) => {
     setSelectedValueEstado(value);
+    setCookie("FILTROESTADO", JSON.stringify(value), 1400) 
   };
   const handleAutocompleteClienteChange = (event, value) => {
     setSelectedValueCliente(value);
+    setCookie("FILTROCLIENTE", JSON.stringify(value), 1400) 
   };
   const handleAutocompleteTipoTareaChange = (event, value) => {
     setSelectedValueTipoTarea(value);
+   setCookie("FILTROTIPOTAREA", JSON.stringify(value), 1400) 
   };
   const handleAutocompleteFechaFiltroChange = (event, value) => {
     setSelectedValueFechaFiltro(value);
+    setCookie("FILTROTIPOFECHA", JSON.stringify(value), 1400) 
   };
 
   const handleAutocompleteDeptoChange = (event, value) => {
     setSelectedValueDepartamentos(value);
+    setCookie("FILTRODEPTO", JSON.stringify(value), 1400) 
   };
   const obtenerFechaFormateada = (fecha) => {
     const options = {
@@ -224,10 +296,10 @@ function TareaList() {
             tiempoTranscurrido={Tarea.tiempoTranscurrido}
           />
         );
-
+        
         const porctranscurrido = (
           <PorcTranscurrido
-            progres={Tarea.porcentajetranscurrido}
+            progres={Tarea.porcentajeTrascurrido}
             color={color}
           />
         );
@@ -905,7 +977,8 @@ function TareaList() {
                       <DatePicker
                         style={{ marginRight: "2px" }}
                         selected={selectedDateFrom}
-                        onChange={(date) => setSelectedDateFrom(date)}
+                        onChange={(date) => {setSelectedDateFrom(date);
+                          setCookie("FILTROFECHADESDE", date, 1400) }}
                         dateFormat="dd/MM/yyyy"
                         customInput={
                           <TextField variant="outlined" label="Fecha Desde" />
@@ -918,7 +991,8 @@ function TareaList() {
                       <DatePicker
                         style={{ marginRight: "2px" }}
                         selected={selectedDateTo}
-                        onChange={(date) => setSelectedDateTo(date)}
+                        onChange={(date) => {setSelectedDateTo(date);
+                          setCookie("FILTROFECHAHASTA", date, 1400) }}
                         dateFormat="dd/MM/yyyy"
                         customInput={
                           <TextField variant="outlined" label="Fecha Hasta" />

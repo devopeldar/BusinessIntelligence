@@ -260,10 +260,34 @@ const TareaAdd = () => {
   const procesarFormulario = async (request) => {
     try {
       setLoading(true);
+     
+      if (selectedValueCliente !== null && selectedValueCliente !== undefined) {
+        request.idCliente = selectedValueCliente.idCliente;
+      } else {
+        setMensaje("El campo Cliente es obligatorio");
+        setExito(false);
+        return;
+      }
+     
+       
+        if (selectedValueDepto !== null && selectedValueDepto !== undefined) {
+          request.idDepartamento = selectedValueDepto.idDepartamento;
+        } else {
+          setMensaje("El campo Departamento es obligatorio");
+          setExito(false);
+          return;
+        }
+        if (selectedValueTareaTipo !== null && selectedValueTareaTipo !== undefined) {
+          request.idTareaTipo = selectedValueTareaTipo.idTareaTipo;
+        } else {
+          setMensaje("El campo Tipo de Tarea es obligatorio");
+          setExito(false);
+          return;
+        }
 
-      request.idTareaTipo = selectedValueTareaTipo.idTareaTipo;
-      request.idCliente = selectedValueCliente.idCliente;
-      request.idDepartamento = selectedValueDepto.idDepartamento;
+      //request.idTareaTipo = selectedValueTareaTipo.idTareaTipo;
+      // request.idCliente = selectedValueCliente.idCliente;
+      // request.idDepartamento = selectedValueDepto.idDepartamento;
       request.vencimientoDias = vencimientodiasTT;
       request.tareaxRoles = data.map((item) => ({
         idUsuario: item.idUsuario,
