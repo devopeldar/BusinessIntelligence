@@ -118,7 +118,7 @@ function MDSnackbar({ color, icon, title, dateTime, content, close, bgWhite, ...
               }}
               onClick={close}
             >
-              close
+              Close
             </Icon>
           </MDBox>
         </MDBox>

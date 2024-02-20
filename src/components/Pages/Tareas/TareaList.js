@@ -53,6 +53,7 @@ function TareaList() {
   const [espdf, setEsPDF] = useState(false);
   const closeSuccessSB = () => setSuccessSB(false);
   const [successSB, setSuccessSB] = useState(false);
+  const closeSuccessSBPrev = () => setSuccessSBPrev(false);
   const [successSBPrev, setSuccessSBPrev] = useState(false);
 
   const [dateTime, setDateTime] = useState("");
@@ -321,38 +322,7 @@ if (filtroFechaDesdeCookie !== null) {
                       titleAccess="Iniciar Tarea"
                     />
                   </Link>
-                  <MDSnackbar
-                    color="success"
-                    icon="notifications"
-                    title="Task Manager"
-                    content="Iniciando Tarea....."
-                    dateTime={dateTime}
-                    open={successSBPrev}
-                    onClose={closeSuccessSB}
-                    close={closeSuccessSB}
-                  />
-                  {/* </MDButton> */}
-                  <MDSnackbar
-                    color="info"
-                    icon="notifications"
-                    title="Task Manager"
-                    content="Tarea iniciada exitosamente"
-                    dateTime={dateTime}
-                    open={successSB}
-                    onClose={closeSuccessSB}
-                    close={closeSuccessSB}
-                  />
-                  {/* <MDSnackbar
-                                  color="error"
-                                  icon="warning"
-                                  title="Aviso"
-                                  content="Tarea eliminada con exito"
-                                  dateTime="11 mins ago"
-                                  open={errorSB}
-                                  onClose={closeErrorSB}
-                                  close={closeErrorSB}
-
-                              /> */}
+                  
                 </MDTypography>
 
                 <MDTypography
@@ -481,18 +451,22 @@ if (filtroFechaDesdeCookie !== null) {
           accept: "application/json",
         },
       });
-      const res = await response.json();
-      console.log("res tarea ", res);
+
+      const res = await response.data;
+
       if (res.rdoAccion) {
         setSuccessSB(true);
+        setSuccessSBPrev(false);
         setErrorSB(false);
+        fetchDataTareas();
       } else {
         setSuccessSB(false);
         setErrorSB(true);
+        setSuccessSBPrev(false);
       }
     } catch (ex) {
       setError(ex);
-
+      setErrorSB(true);
       console.log(error);
     }
   };
@@ -1027,6 +1001,38 @@ if (filtroFechaDesdeCookie !== null) {
                     canSearch={false}
                     noEndBorder
                     pagination={{ color: "secondary", variant: "gradient" }}
+                  />
+                  <MDSnackbar
+                    color="info"
+                    icon="notifications"
+                    title="Task Manager"
+                    content="Iniciando Tarea....."
+                    dateTime={dateTime}
+                    open={successSBPrev}
+                    onClose={closeSuccessSBPrev}
+                    close={closeSuccessSBPrev}
+                  />
+                  {/* </MDButton> */}
+                  <MDSnackbar
+                    color="success"
+                    icon="notifications"
+                    title="Task Manager"
+                    content="Tarea iniciada exitosamente"
+                    dateTime={dateTime}
+                    open={successSB}
+                    onClose={closeSuccessSB}
+                    close={closeSuccessSB}
+                  />
+                  <MDSnackbar
+                      color="error"
+                      icon="warning"
+                      title="Aviso"
+                      content="Error al iniciar tarea"
+                      dateTime={dateTime}
+                      open={errorSB}
+                      onClose={closeErrorSB}
+                      close={closeErrorSB}
+
                   />
                 </Grid>
               </MDBox>
