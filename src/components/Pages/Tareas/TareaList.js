@@ -43,6 +43,7 @@ import FechasFiltro from "../../Utils/fechasFiltro";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { startOfMonth, addMonths } from 'date-fns';
+import MDInput from "../../controls/MDInput";
 function TareaList() {
   //const { columns, rows } = TareaGet();
   const [columns, setColumns] = useState([]);
@@ -57,6 +58,7 @@ function TareaList() {
   const [successSBPrev, setSuccessSBPrev] = useState(false);
 
   const [dateTime, setDateTime] = useState("");
+
   const [errorSB, setErrorSB] = useState(false);
   // const openErrorSB = () => setErrorSB(true);
   const closeErrorSB = () => setErrorSB(false);
@@ -66,6 +68,15 @@ function TareaList() {
   const tipoTarea = TipoTarea();
   const departamentos = Departamento();
   const fechasfiltro = Object.values(FechasFiltro);
+
+  let nombreusuarioValue = "";
+  
+  const filtroNombreUsuarioCookie = getCookie("FILTRONOMBREUSUARIO");
+if (filtroNombreUsuarioCookie !== null) {const filtroNombreUsuarioObjeto = filtroNombreUsuarioCookie;  nombreusuarioValue = filtroNombreUsuarioObjeto;}
+
+  const [nombreusuario, setNombreUsuario] = useState(nombreusuarioValue);
+
+
 
   let selectedEstadoInitialValue = estados[0];
   
@@ -219,6 +230,8 @@ if (filtroFechaDesdeCookie !== null) {
 
   const fetchDataTareas = async () => {
     try {
+      deleteCookie("FILTRONOMBREUSUARIO");
+      setCookie("FILTRONOMBREUSUARIO", nombreusuario, 1400) 
       const requsuario = {
         idUsuario: localStorage.getItem("iduserlogueado"),
         idTareaEstado: selectedValuEestado?.idTareaEstado || 0,
@@ -228,8 +241,9 @@ if (filtroFechaDesdeCookie !== null) {
         CampoFiltroFecha: selectedValueFechaFiltro?.campo || "",
         fechaDesde: selectedDateFrom ? selectedDateFrom : firstDayOfMonth,
         fechaHasta: selectedDateTo ? selectedDateTo : firstDayOfNextMonth,
+        roles:nombreusuario
       };
-      console.log(requsuario);
+      console.log("requsuario", requsuario);
       const response = await axios.post(
         API_URL + "/TareaListarTodo",
         requsuario,
@@ -926,6 +940,18 @@ if (filtroFechaDesdeCookie !== null) {
                       </MDBox>
 
                     </MDBox>
+                    <MDBox mb={2}>
+                      <MDInput
+                        type="text"
+                        name="usuario"
+                        required
+                        label="Usuario"
+                        variant="standard"
+                        value={nombreusuario}
+                        onChange={(e) => setNombreUsuario(e.target.value)}
+                        
+                      />
+                  </MDBox>
                     <MDBox mb={2} mt={3} style={{ display: "block" }}>
                       <MDBox mb={2} mt={3} style={{ display: "block" }}>
                         <Autocomplete

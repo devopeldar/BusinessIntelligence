@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import DashboardLayout from '../../controls/DashboardLayout';
 import DashboardNavbar from '../../controls/DashboardNavbar';
@@ -9,16 +9,24 @@ import { Card } from 'react-bootstrap';
 import MDTypography from '../../controls/MDTypography';
 import MDButton from '../../controls/MDButton';
 import DataTable from '../../controls/Tables/DataTable';
-import { BuildingFillAdd, FileExcel, FilePdf } from 'react-bootstrap-icons';
+import { BuildingFillAdd, FileExcel, FilePdf, Filter, PencilSquare } from 'react-bootstrap-icons';
 import ClienteGet from './ClienteGet';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import API_URL from '../../../config';
 import ExcelJS from 'exceljs';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import MDBadge from '../../controls/MDBadge';
+import { Filter1 } from '@mui/icons-material';
+import MDInput from '../../controls/MDInput';
 function ClienteList() {
-    const { columns, rows } = ClienteGet();
+    const [nombrecliente   , setNombreCliente] = useState("");
+    const [email   , setEmail] = useState("");
+    const [columns, setColumns] = useState([]);
+    const [rows, setRows] = useState([]);
+    const [error, setError] = useState([]);
+    //const { columns, rows } = ClienteGet();
     const history = useNavigate();
     const [Clientes, setClientes] = useState([]);
     const [espdf, setEsPDF] = useState(false);
@@ -26,6 +34,124 @@ function ClienteList() {
         history('/ClienteAdd'); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
     };
 
+    useEffect(() => {
+        fetchData();
+      }, []);
+
+      
+
+        const fetchData = async () => {
+          try {
+            const reqcliente = {
+              nombre:nombrecliente,
+              email : email
+            };
+            console.log("reqCliente", reqcliente)
+            const response = await axios.post(API_URL + "/ClienteListar", reqcliente, {
+              headers: {
+                accept: "application/json",
+              },
+            });
+    
+         
+            const data = response.data.map((Cliente) => ({
+  
+            
+                nombre: (
+                    <Nombre
+                      nombre={Cliente.nombre}
+                      contacto={"Contacto: " + Cliente.contacto}
+                      email={"Email: " + Cliente.email}
+                      telefono={"Telefono: " + Cliente.telefono}
+                    />
+                  ),
+                  cuit: (
+                    <MDTypography
+                    component="a"
+                    href="#"
+                    variant="caption"
+                    color="text"
+                    fontWeight="medium"
+                  >
+                    {Cliente.cuit}
+                  </MDTypography>
+                  ),
+                  descripcionIVA: (
+                    <MDTypography
+                    component="a"
+                    href="#"
+                    variant="caption"
+                    color="text"
+                    fontWeight="medium"
+                  >
+                    {Cliente.descripcionIVA}
+                  </MDTypography>
+                  ),
+                  observaciones: (
+                    <MDTypography
+                    component="a"
+                    href="#"
+                    variant="caption"
+                    color="text"
+                    fontWeight="medium"
+                  >
+                    {Cliente.observaciones}
+                  </MDTypography>
+                  ),
+                  activo: (
+                    <MDBox ml={-1}>
+                      {Cliente.activo ? (
+                        <MDBadge
+                          badgeContent="activo"
+                          color="success"
+                          variant="gradient"
+                          size="sm"
+                        />
+                      ) : (
+                        <MDBadge
+                          badgeContent="desactivado"
+                          color="error"
+                          variant="gradient"
+                          size="sm"
+                        />
+                      )}
+                    </MDBox>
+                  ),
+                  action: (
+                    <MDTypography variant="caption" color="text" fontWeight="medium">
+                      <Link to={`../ClienteEdit/${Cliente.idCliente}`}>
+                        <MDButton variant="text" color="dark">
+                          <PencilSquare color="blue" />
+                        </MDButton>
+                      </Link>
+                    </MDTypography>
+                  ),
+            
+            
+            }));
+           
+            setRows(data);
+            setColumns( [
+                // { Header: "ID Cliente", accessor: "idCliente", align: "left" },
+                { Header: "Cliente", accessor: "nombre", width: "25%", align: "left" },
+                { Header: "Cuit", accessor: "cuit", align: "left" },
+                { Header: "Cond. Iva", accessor: "descripcionIVA", align: "left" },
+                { Header: "observaciones", accessor: "observaciones", align: "left" },
+                { Header: "Activo", accessor: "activo", align: "center" },
+                { Header: "Acciones", accessor: "action", align: "center" },
+              ]);
+        
+          } catch (ex) {
+            setError(ex);
+    
+            console.log(error);
+          }
+        };
+    
+      const handleFilter = () => {
+        fetchData(); // Llamada desde el evento del botón
+      };
+      
     const handlePDF = () => {
         setEsPDF(true);
         fetchData();
@@ -86,8 +212,27 @@ function ClienteList() {
     };
 
 
+    const Nombre = ({ nombre, contacto, email, telefono }) => (
+        <MDBox lineHeight={1} textAlign="left">
+          <MDTypography
+            display="block"
+            variant="caption"
+            color="dark"
+            fontWeight="bold"
+          >
+            {nombre}
+          </MDTypography>
+          <MDTypography variant="caption" color="warning" fontWeight="light">
+            {contacto}{" "}
+          </MDTypography>
+          <MDTypography variant="caption" color="warning" fontWeight="light">
+            {email}{" "}{telefono}{" "}
+          </MDTypography>
+        </MDBox>
+      );
 
-    const fetchData = async () => {
+      
+    const fetchDatapDF = async () => {
         try {
             const response = await axios.post(API_URL + "/ClienteListar", {
                 headers: {
@@ -211,39 +356,73 @@ function ClienteList() {
                                         >
                                             Agregar
                                         </MDButton>
-                                    </Grid>
-                                    <Grid item>
-                                        <Grid container spacing={2} alignItems="center" direction="row">
-                                            <Grid item>
+                                        <MDButton
+                                            onClick={() => {
+                                                handleFilter();
+                                            }}
+                                            variant="gradient"
+                                            color="info"
+                                            endIcon={<Filter1 />}
+                                            text="contained"
+                                            >
+                                            Filtrar
+                                        </MDButton>
+                                        <MDButton
+                                            onClick={() => {
+                                                handleExcel();
+                                            }}
+                                            variant="gradient"
+                                            color="warning"
+                                            endIcon={<FileExcel />}
+                                            text="contained"
+                                        >
+                                            Excel
+                                        </MDButton>
 
-                                                <MDButton
-                                                    onClick={() => {
-                                                        handleExcel();
-                                                    }}
-                                                    variant="gradient"
-                                                    color="warning"
-                                                    endIcon={<FileExcel />}
-                                                    text="contained"
-                                                >
-                                                    Excel
-                                                </MDButton>
 
+                                        <MDButton
+                                            onClick={() => {
+                                                handlePDF();
+                                            }}
+                                            variant="gradient"
+                                            color="error"
+                                            endIcon={<FilePdf />}
+                                            text="contained"
+                                        >
+                                            PDF
+                                        </MDButton>
 
-                                                <MDButton
-                                                    onClick={() => {
-                                                        handlePDF();
-                                                    }}
-                                                    variant="gradient"
-                                                    color="error"
-                                                    endIcon={<FilePdf />}
-                                                    text="contained"
-                                                >
-                                                    PDF
-                                                </MDButton>
-
+                                        <MDBox pt={3} py={3} px={2} style={{ display: "flex" }}>
+                                        <Grid>
+                                        <MDTypography variant="h9" color="info">
+                                            Filtros
+                                            </MDTypography>
+                                            <MDBox mb={2}>
+                                                <MDInput
+                                                    type="text"
+                                                    name="nombreCliente"
+                                                    label="Nombre Cliente"
+                                                    variant="standard"
+                                                    value={nombrecliente}
+                                                    onChange={(e) => setNombreCliente(e.target.value)}
+                                                    
+                                                />
+                                            </MDBox>
+                                            <MDBox mb={2}>
+                                                <MDInput
+                                                    type="text"
+                                                    name="email"
+                                                    label="Correo Electronico"
+                                                    variant="standard"
+                                                    value={email}
+                                                    onChange={(e) => setEmail(e.target.value)}
+                                                    
+                                                />
+                                            </MDBox>
                                             </Grid>
-                                        </Grid>
+                                        </MDBox>
                                     </Grid>
+                                    
                                     <DataTable
                                         table={{ columns, rows }}
                                         isSorted={false}                                        

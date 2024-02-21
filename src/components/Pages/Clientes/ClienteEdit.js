@@ -141,10 +141,11 @@ const ClienteEdit = () => {
             if (res.rdoAccion) {
                 // Manejar respuesta exitosa
                 setMensaje("¡Datos actualizados exitosamente!");
+                setGrabando(true);
             } else {
                 // Manejar errores si la respuesta no es exitosa
                 setMensaje(res.rdoAccionDesc);
-                setGrabando(true); // Inicia la grabación
+                setGrabando(false); // Inicia la grabación
                 setnombreboton("Cancelar");
                 setExito(false);
             }
