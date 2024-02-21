@@ -21,8 +21,7 @@ import MDBadge from '../../controls/MDBadge';
 import { Filter1 } from '@mui/icons-material';
 import MDInput from '../../controls/MDInput';
 function ClienteList() {
-    const [nombrecliente   , setNombreCliente] = useState("");
-    const [email   , setEmail] = useState("");
+
     const [columns, setColumns] = useState([]);
     const [rows, setRows] = useState([]);
     const [error, setError] = useState([]);
@@ -34,6 +33,50 @@ function ClienteList() {
         history('/ClienteAdd'); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
     };
 
+    function setCookie(name, value, minutes) {
+      const expires = new Date();
+      expires.setTime(expires.getTime() + minutes * 60 * 1000);
+    
+      // Formatea la cookie con el nombre, el valor y la fecha de vencimiento
+      document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+    }
+    
+    function getCookie(name) {
+      const cookieName = `${name}=`;
+      const cookies = document.cookie.split(';');
+    
+      // Busca la cookie por su nombre
+      for (let i = 0; i < cookies.length; i++) {
+        let cookie = cookies[i].trim();
+        if (cookie.indexOf(cookieName) === 0) {
+          return cookie.substring(cookieName.length, cookie.length);
+        }
+      }
+      return null; // Retorna null si no se encuentra la cookie
+    }
+  
+    function deleteCookie(name) {
+      document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+    }
+
+    let emailValue = "";
+  
+    const filtroemailCookie = getCookie("FILTROCLIENTEEMAIL");
+    if (filtroemailCookie !== null) {const filtroemailObjeto = filtroemailCookie;  emailValue = filtroemailObjeto;}
+  
+    const [email   , setEmail] = useState(emailValue);
+  
+  
+  
+    let nombreCValue ="";
+
+    const filtronombreCCookie = getCookie("FILTROCLIENTENOMBRE");
+    if (filtronombreCCookie !== null) {const filtronombreCObjeto = filtronombreCCookie;  nombreCValue = filtronombreCObjeto;}
+  
+    const [nombrecliente   , setNombreCliente] = useState(nombreCValue);
+
+    
+
     useEffect(() => {
         fetchData();
       }, []);
@@ -42,6 +85,8 @@ function ClienteList() {
 
         const fetchData = async () => {
           try {
+            setCookie("FILTROCLIENTENOMBRE", nombrecliente, 1400) 
+            setCookie("FILTROCLIENTEEMAIL", email, 1400) 
             const reqcliente = {
               nombre:nombrecliente,
               email : email

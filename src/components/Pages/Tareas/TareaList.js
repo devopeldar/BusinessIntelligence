@@ -944,12 +944,10 @@ if (filtroFechaDesdeCookie !== null) {
                       <MDInput
                         type="text"
                         name="usuario"
-                        required
-                        label="Usuario"
+                        label="Roles"
                         variant="standard"
                         value={nombreusuario}
                         onChange={(e) => setNombreUsuario(e.target.value)}
-                        
                       />
                   </MDBox>
                     <MDBox mb={2} mt={3} style={{ display: "block" }}>

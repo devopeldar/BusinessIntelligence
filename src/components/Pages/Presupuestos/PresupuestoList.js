@@ -12,6 +12,7 @@ import { BuildingFillAdd } from "react-bootstrap-icons";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Checklist,
+  CopyAll,
   Filter,
   NoteAlt,
 } from "@mui/icons-material";
@@ -39,19 +40,82 @@ function PresupuestoList() {
   const estadosino = Object.values(EstadosSiNo);
 
   const today = new Date();
-  const firstDayOfMonth = startOfMonth(today);
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(today.getDate() - 30);
+
+  const firstDayOfMonth = startOfMonth(thirtyDaysAgo);
   const firstDayOfNextMonth = startOfMonth(addMonths(today, 1));
-  const [selectedDateFrom, setSelectedDateFrom] =
-    React.useState(firstDayOfMonth);
-  const [selectedDateTo, setSelectedDateTo] =
-    React.useState(firstDayOfNextMonth);
-  const [selectedValueCliente, setSelectedValueCliente] = useState(clientes[0]);
-  const [selectedValueDepartamento, setSelectedValueDepartamento] = useState(
-    departamentos[0]
-  );
-  const [selectedValueAceptado, setSelectedValueAceptado] = useState(
-    estadosino[0]
-  );
+
+
+
+  let selectedEstadoInitialValue = estadosino[0];
+  
+  const filtroEstadoCookie = getCookie("FILTROPRESUPUESTOESTADO");
+  if (filtroEstadoCookie !== null) {const filtroEstadoObjeto = JSON.parse(filtroEstadoCookie);  selectedEstadoInitialValue = filtroEstadoObjeto;}
+
+  const [selectedValueAceptado, setSelectedValueAceptado] = useState(selectedEstadoInitialValue);
+  
+  
+  let selectedClienteInitialValue = clientes[0];
+  
+  const filtroClienteCookie = getCookie("FILTROPRESUPUESTOCLIENTE");
+  if (filtroClienteCookie !== null) {const filtroClienteObjeto = JSON.parse(filtroClienteCookie);  selectedClienteInitialValue = filtroClienteObjeto;}
+
+  const [selectedValueCliente, setSelectedValueCliente] = useState(selectedClienteInitialValue);
+  
+  
+  let selectedDeptoInitialValue = departamentos[0];
+
+  const filtroDeptoCookie = getCookie("FILTROPRESUPUESTODEPTO");
+  if (filtroDeptoCookie !== null) {const filtroDeptoObjeto = JSON.parse(filtroDeptoCookie);  selectedDeptoInitialValue = filtroDeptoObjeto;}
+
+  const [selectedValueDepartamento, setSelectedValueDepartamento] = useState(selectedDeptoInitialValue);
+
+    let selectedDateFromInitialValue = firstDayOfMonth;
+    let selectedDateToInitialValue = firstDayOfNextMonth;
+    
+    // Verificamos si existe la cookie
+    const filtroFechaDesdeCookie = getCookie("FILTROPRESUPUESTOFECHADESDE");
+    if (filtroFechaDesdeCookie !== null) {
+      selectedDateFromInitialValue = new Date(filtroFechaDesdeCookie);
+    }
+    
+      const [selectedDateFrom, setSelectedDateFrom] = React.useState(selectedDateFromInitialValue);
+    
+      
+      const filtroFechaHastaCookie = getCookie("FILTROPRESUPUESTOFECHAHASTA");
+    if (filtroFechaDesdeCookie !== null) {
+      selectedDateToInitialValue = new Date(filtroFechaHastaCookie);
+    }
+    
+      const [selectedDateTo, setSelectedDateTo] = React.useState(selectedDateToInitialValue);
+    
+      function setCookie(name, value, minutes) {
+        const expires = new Date();
+        expires.setTime(expires.getTime() + minutes * 60 * 1000);
+      
+        // Formatea la cookie con el nombre, el valor y la fecha de vencimiento
+        document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+      }
+      
+      function getCookie(name) {
+        const cookieName = `${name}=`;
+        const cookies = document.cookie.split(';');
+      
+        // Busca la cookie por su nombre
+        for (let i = 0; i < cookies.length; i++) {
+          let cookie = cookies[i].trim();
+          if (cookie.indexOf(cookieName) === 0) {
+            return cookie.substring(cookieName.length, cookie.length);
+          }
+        }
+        return null; // Retorna null si no se encuentra la cookie
+      }
+    
+      function deleteCookie(name) {
+        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+      }
+    
 
   useEffect(() => {
     fetchDataTareas();
@@ -63,14 +127,17 @@ function PresupuestoList() {
 
   const handleAutocompleteClienteChange = (event, value) => {
     setSelectedValueCliente(value);
+    setCookie("FILTROPRESUPUESTOCLIENTE", JSON.stringify(value), 1400) 
   };
   const handleAutocompleteDeptoChange = (event, value) => {
     setSelectedValueDepartamento(value);
+    setCookie("FILTROPRESUPUESTODEPTO", JSON.stringify(value), 1400) 
   };
   const handleAutocompleteAceptadoChange = (event, value) => {
     setSelectedValueAceptado(value);
-  };
-
+    setCookie("FILTROPRESUPUESTOESTADO", JSON.stringify(value), 1400) 
+  };           
+  
   const handleDateFromChange = (date) => {
     setSelectedDateFrom(date);
   };
@@ -95,14 +162,14 @@ function PresupuestoList() {
         {cliente}
       </MDTypography>
 
-      <MDTypography
+      {/* <MDTypography
         display="block"
         variant="caption"
         color="dark"
         fontWeight="bold"
       >
         Departamento: {depto}
-      </MDTypography>
+      </MDTypography> */}
 
       <MDTypography
         variant="caption"
@@ -177,6 +244,21 @@ function PresupuestoList() {
 
         const action = (
           <MDBox ml={2}>
+            <MDTypography
+                  variant="caption"
+                  color="text"
+                  fontWeight="medium"
+                >
+                  <Link
+                    to={`../PresupuestoEdit/${Presupuesto.idPresupuesto}`}
+                  >
+                    <CopyAll
+                      fontSize="large"
+                      color="success"
+                      titleAccess="Duplicar Presupuesto"
+                    />
+                  </Link>
+                </MDTypography>
             {Presupuesto.aceptado === false && (
               <>
                 <MDTypography
@@ -300,7 +382,8 @@ function PresupuestoList() {
                   <DatePicker
                     style={{ marginRight: "2px" }}
                     selected={selectedDateFrom}
-                    onChange={(date) => setSelectedDateFrom(date)}
+                    onChange={(date) => {setSelectedDateFrom(date);
+                      setCookie("FILTROPRESUPUESTOFECHADESDE", date, 1400) }}
                     dateFormat="dd/MM/yyyy"
                     customInput={
                       <TextField variant="outlined" label="Fecha Desde" />
@@ -313,7 +396,8 @@ function PresupuestoList() {
                   <DatePicker
                     style={{ marginRight: "2px" }}
                     selected={selectedDateTo}
-                    onChange={(date) => setSelectedDateTo(date)}
+                    onChange={(date) => {setSelectedDateTo(date);
+                      setCookie("FILTROPRESUPUESTOFECHAHASTA", date, 1400) }}
                     dateFormat="dd/MM/yyyy"
                     customInput={
                       <TextField variant="outlined" label="Fecha Hasta" />
@@ -393,7 +477,7 @@ function PresupuestoList() {
                 </MDBox>
                 <DataTable
                   table={{ columns, rows }}
-                  isSorted={true}
+                  isSorted={false}
                   entriesPerPage={true}
                   showTotalEntries={true}
                   canSearch={false}

@@ -62,7 +62,7 @@ function TareaEstadoList() {
                   </MDButton>
                 <DataTable
                   table={{ columns, rows }}
-                  isSorted={true}
+                  isSorted={false}
                   entriesPerPage={true}
                   showTotalEntries={true}
                   canSearch={false}

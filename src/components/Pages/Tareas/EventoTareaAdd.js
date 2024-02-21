@@ -83,9 +83,9 @@ const EventoTareaAdd = () => {
       });
 
       setElements(response.data);
-      if (response.data && response.data.length > 0) {
-        setSelectedValue(response.data[1]); // Establecer el primer elemento como valor seleccionado
-      }
+      // if (response.data && response.data.length > 0) {
+      //   setSelectedValue(response.data[1]); // Establecer el primer elemento como valor seleccionado
+      // }
     };
     GetEventoTipo();
   }, [id]);
@@ -201,9 +201,9 @@ const EventoTareaAdd = () => {
             <MDBox mb={2}>
               <Autocomplete
                 options={elements}
-                getOptionLabel={(option) => option.descripcion || ''}
+                getOptionLabel={(option) => option.descripcion || 'Selecciona Evento'}
                 getOptionDisabled={(option) => option.activo === false}
-                value={selectedValue}
+                value={selectedValue || null} 
                 disableClearable={true}
                 onChange={handleAutocompleteChange}
                 renderInput={(params) => (

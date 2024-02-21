@@ -158,6 +158,14 @@ const PresupuestoAdd = () => {
   };
 
   const handleAddTareaTipo = () => {
+    if(selectedValueTareaTipo == null)
+    {
+      return;
+    }
+    if(selectedValueDepartamentos == null)
+    {
+      return;
+    }
     const newRow = {
       id: data.length + 1,
       idTareaTipo: selectedValueTareaTipo.idTareaTipo,
@@ -172,6 +180,17 @@ const PresupuestoAdd = () => {
           {selectedValueTareaTipo.nombre}
         </MDTypography>
       ),
+      nombredepartamento: (
+        <MDTypography
+          component="a"
+          href="#"
+          variant="caption"
+          color="text"
+          fontWeight="medium"
+        >
+          {selectedValueDepartamentos.nombre}
+        </MDTypography>
+      ),
       vencimientoDias: (
         <MDTypography
           component="a"
@@ -183,8 +202,23 @@ const PresupuestoAdd = () => {
           {vencimientoDias}
         </MDTypography>
       ),
+      fechaVencimientoLegal: (
+        <MDTypography
+          component="a"
+          href="#"
+          variant="caption"
+          color="text"
+          fontWeight="medium"
+        >
+          {formData.fechaVencimientoLegal}
+        </MDTypography>
+      ),
+
+      idDepartamento: selectedValueDepartamentos.idDepartamento,
       vencimientoDiasValor:vencimientoDias,
+      fechaVencimientoLegalvalor:formData.fechaVencimientoLegal
     };
+    console.log("newRow", newRow)
     const usuarioExistente = data.find(
       (item) => item.idTareaTipo === selectedValueTareaTipo.idTareaTipo
     );
@@ -198,6 +232,7 @@ const PresupuestoAdd = () => {
     setSelectedValueCliente(value);
   };
   const handleAutocompleteDeptoChange = (event, value) => {
+    console.log("setSelectedValueDepartamentos", value)
     setSelectedValueDepartamentos(value);
   };
   const procesarFormulario = async (request) => {
@@ -205,11 +240,14 @@ const PresupuestoAdd = () => {
       setLoading(true);
 
       request.idCliente = selectedValueCliente.idCliente;
-      request.idDepartamento = selectedValueDepartamentos.idDepartamento;
+      //request.idDepartamento = selectedValueDepartamentos.idDepartamento;
 
       request.presupuestoxtareastipos = data.map((item) => ({
+  
         idTareaTipo: item.idTareaTipo,
         vencimientoDias: item.vencimientoDiasValor,
+        fechaVencimientoLegal : item.fechaVencimientoLegalvalor,
+        idDepartamento : item.idDepartamento
       }));
       request.idUsuario = localStorage.getItem("iduserlogueado");
       console.log("formData " + JSON.stringify(formData));
@@ -304,7 +342,10 @@ const PresupuestoAdd = () => {
                 height: "100%", // Asegura que el contenedor principal ocupe el alto completo
               }}
             >
-              <div style={{ flex: 1, marginTop: "-15px" }}>
+      
+                
+       
+                <MDBox mb={2}>
                 <MDBox mb={2}>
                   <Autocomplete
                     onChange={handleAutocompleteClienteChange}
@@ -323,25 +364,7 @@ const PresupuestoAdd = () => {
                     )}
                   />
                 </MDBox>
-                <MDBox mb={2}>
-                  <Autocomplete
-                    onChange={handleAutocompleteDeptoChange}
-                    options={elementsDepto}
-                    value={selectedValueDepartamentos || null}
-                    getOptionLabel={(option) =>
-                      option.nombre || "Seleccione Departamento"
-                    }
-                    getOptionDisabled={(option) => option.activo === false}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Seleccione Departamento"
-                        variant="outlined"
-                      />
-                    )}
-                    style={{ flex: 1 }} // Añade esta línea
-                  />
-                </MDBox>
+               
 
                 <MDBox mb={2}>
                   <MDInput
@@ -355,9 +378,6 @@ const PresupuestoAdd = () => {
                     fullWidth
                   />
                 </MDBox>
-              </div>
-              <div style={{ flex: 1, marginT: "-35px" }}>
-                <MDBox mb={2}>
                   <Card>
                     <MDBox
                       variant="gradient"
@@ -402,6 +422,25 @@ const PresupuestoAdd = () => {
                         />
                       </MDBox>
                       <MDBox mb={2} mr={4} ml={4}>
+                      <Autocomplete
+                        onChange={handleAutocompleteDeptoChange}
+                        options={elementsDepto}
+                        value={selectedValueDepartamentos || null}
+                        getOptionLabel={(option) =>
+                          option.nombre || "Seleccione Departamento"
+                        }
+                        getOptionDisabled={(option) => option.activo === false}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            label="Seleccione Departamento"
+                            variant="outlined"
+                          />
+                        )}
+                        style={{ flex: 1 }} // Añade esta línea
+                      />
+                    </MDBox>
+                      <MDBox mb={2} mr={4} ml={4}>
                         <MDInput
                           type="text"
                           name="vencimientoDias"
@@ -412,7 +451,19 @@ const PresupuestoAdd = () => {
                           onChange={(e) => setVencimientoDias(e.target.value)}
                           fullWidth
                         />
+                         <MDInput
+                            type="date"
+                            name="fechaVencimientoLegal"
+                            required
+                            label="Vencimiento legal"
+                            variant="standard"
+                            value={formData.fechaVencimientoLegal}
+                            onChange={handleInputChange}
+                            fullWidth
+                          />
                       </MDBox>
+
+            
                       <MDBox mb={2} mr={6} ml={6}>
                         <MDButton
                           onClick={() => {
@@ -437,8 +488,13 @@ const PresupuestoAdd = () => {
                                 <TableCell style={{ display: "none" }}>
                                   {item.idTareaTipo}
                                 </TableCell>
+                                <TableCell style={{ display: "none" }}>
+                                  {item.idDepartamento}
+                                </TableCell>
                                 <TableCell>{item.nombreTareaTipo}</TableCell>
+                                <TableCell>{item.nombredepartamento}</TableCell>
                                 <TableCell>{item.vencimientoDias}</TableCell>
+                                <TableCell>{item.fechaVencimientoLegal}</TableCell>
                                 <TableCell style={{ display: "none" }}>{item.vencimientoDiasValor}</TableCell>
                                 <TableCell>
                                   <IconButton
@@ -456,10 +512,10 @@ const PresupuestoAdd = () => {
                     </MDBox>
                   </Card>
                 </MDBox>
-              </div>
+          
             </MDBox>
           </MDBox>
-          <MDBox mb={1} style={{ display: "flex", gap: "16px" }}>
+          <MDBox mr={2} >
             <MDButton
               onClick={() => {
                 handleSubmit();
@@ -468,8 +524,8 @@ const PresupuestoAdd = () => {
               color="info"
               endIcon={<Save />}
               disabled={grabando}
-              fullWidth
-            >
+              style={{ width: '200px', marginR: '10px' }}
+                          >
               Grabar
             </MDButton>
 
@@ -480,7 +536,7 @@ const PresupuestoAdd = () => {
               variant="gradient"
               color="info"
               endIcon={<ExitToApp />}
-              fullWidth
+              style={{ width: '200px' }}
             >
               {nombreboton}
             </MDButton>
