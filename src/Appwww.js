@@ -81,6 +81,7 @@ import UsuarioEdit from "./components/authentication/Usuario/UsuarioEdit";
 import UsuarioList from "./components/authentication/Usuario/UsuarioList";
 import EventoTareaEdit from "./components/Pages/Tareas/EventoTareaEdit";
 import PresupuestoList from "./components/Pages/Presupuestos/PresupuestoList";
+import PresupuestoCopy from "./components/Pages/Presupuestos/PresupuestoCopy";
 import PresupuestoAdd from "./components/Pages/Presupuestos/PresupuestoAdd";
 import PresupuestoEdit from "./components/Pages/Presupuestos/PresupuestoEdit";
 import PresupuestoAccept from "./components/Pages/Presupuestos/PresupuestoAccept";
@@ -326,6 +327,7 @@ export default function App() {
             <Route path="/UsuarioVolver" element={<UsuarioList />} />
 
             <Route path="/PresupuestoAceptar/:id/:habilitado" element={<PresupuestoAccept />} /> 
+            <Route path="/PresupuestoCopy/:id" element={<PresupuestoCopy />} /> 
             <Route path="/PresupuestoVolver" element={<PresupuestoList />} />
             <Route path="/PresupuestoAdd" element={<PresupuestoAdd />} />
             <Route path="/PresupuestoEdit/:id" element={<PresupuestoEdit />} />

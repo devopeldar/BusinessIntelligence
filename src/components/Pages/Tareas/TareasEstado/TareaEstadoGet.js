@@ -25,6 +25,7 @@ export default function TareaEstadoGet() {
             descripcion: tareaestado.descripcion,
             esEstadoFinal: tareaestado.esEstadoFinal,
             activo: tareaestado.activo,
+            observaciones : tareaestado.observaciones
         }));
 
         setRows(data);
@@ -38,13 +39,28 @@ export default function TareaEstadoGet() {
     fetchData();
   }, []);
 
+  const Observaciones = ({ description }) => (
+    <MDBox lineHeight={1} textAlign="right">
+      <MDTypography
+        display="block"
+        variant="caption"
+        color="dark"
+        fontWeight="medium"
+      >
+        {description}
+      </MDTypography>
+     
+    </MDBox>
+  );
+
+
   return {
     columns: [
       //{ Header: "ID Estado Tarea", accessor: "idTareaEstado", align: "left" },
       { Header: "Descripcion", accessor: "descripcion", width: "45%", align: "left" },
       { Header: "Estado Final", accessor: "esEstadoFinal", align: "center" },
       { Header: "Activo", accessor: "activo", align: "center" },
-      { Header: "Acciones", accessor: "action", align: "center" },
+      { Header: "Observaciones", accessor: "observaciones", align: "center" },
     ],
     rows: rows.map((tareaestado) => ({
        
@@ -109,15 +125,20 @@ export default function TareaEstadoGet() {
           )}
         </MDBox>
       ),
-      action: (
-        <MDTypography variant="caption" color="text" fontWeight="medium">
-          <Link to={`../../TareaEstado/TareaEstadoEdit/${tareaestado.idTareaEstado}`}>
-            <MDButton variant="text" color="dark">
-              <PencilSquare color="blue" />
-            </MDButton>
-          </Link>
-        </MDTypography>
+      observaciones: (
+        <Observaciones
+        description={tareaestado.observaciones}
+        />
       ),
+      // action: (
+      //   <MDTypography variant="caption" color="text" fontWeight="medium">
+      //     <Link to={`../../TareaEstado/TareaEstadoEdit/${tareaestado.idTareaEstado}`}>
+      //       <MDButton variant="text" color="dark">
+      //         <PencilSquare color="blue" />
+      //       </MDButton>
+      //     </Link>
+      //   </MDTypography>
+      // ),
 
     })),
   };

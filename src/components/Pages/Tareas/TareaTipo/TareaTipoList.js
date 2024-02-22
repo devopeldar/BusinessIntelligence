@@ -43,6 +43,7 @@ function TareaTipoList() {
       </MDTypography>
     </MDBox>
   );
+
   const Vencimientos = ({ title, description }) => (
     <MDBox lineHeight={1} textAlign="left">
       <MDTypography
@@ -97,6 +98,7 @@ function TareaTipoList() {
               // description={"Vencimiento Legal: " + tareatipo.vencimientoslegal}
             />
           ),
+         
     
           activo: (
             <MDBox ml={-1}>

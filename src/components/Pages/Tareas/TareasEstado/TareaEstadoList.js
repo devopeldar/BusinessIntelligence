@@ -49,7 +49,7 @@ function TareaEstadoList() {
               </MDBox>
               <MDBox pt={3}  py={3}
                 px={2}>
-              <MDButton
+              {/* <MDButton
                     onClick={() => {
                       handleAdd();
                     }}
@@ -59,7 +59,7 @@ function TareaEstadoList() {
                     text="contained"
                   >
                     Agregar
-                  </MDButton>
+                  </MDButton> */}
                 <DataTable
                   table={{ columns, rows }}
                   isSorted={false}

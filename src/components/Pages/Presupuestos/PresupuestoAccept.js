@@ -90,12 +90,12 @@ const PresupuestoAccept = () => {
           }
         );
         const data = response.data;
-
+        console.log(data);
         setObservaciones(data.observaciones);
         setPresupuestoxTareasTipos(data.presupuestoxTareasTipos);
 
         setIdCliente(data.idCliente);
-        setIdDepartamento(data.idDepartamento);
+        //setIdDepartamento(data.idDepartamento);
         let newRows = [];
         let i = 0;
 
@@ -245,8 +245,9 @@ const PresupuestoAccept = () => {
           variant="caption"
           color="text"
           fontWeight="medium"
+          width="10"
         >
-          {item.nombre}
+         Tipo Tarea: {item.nombre}
         </MDTypography>
       ),
       vencimientoDias: (
@@ -257,7 +258,29 @@ const PresupuestoAccept = () => {
           color="text"
           fontWeight="medium"
         >
-          {item.vencimientoDias}
+          Venc. Dias {item.vencimientoDias}
+        </MDTypography>
+      ),
+      fechavencimientoLegalFormateada: (
+        <MDTypography
+          component="a"
+          href="#"
+          variant="caption"
+          color="text"
+          fontWeight="medium"
+        >
+          Venc. Legal {item.fechavencimientoLegalFormateada}
+        </MDTypography>
+      ),
+      nombreDepartamento: (
+        <MDTypography
+          component="a"
+          href="#"
+          variant="caption"
+          color="text"
+          fontWeight="medium"
+        >
+          Depto: {item.nombreDepartamento}
         </MDTypography>
       ),
     };
@@ -362,7 +385,7 @@ const PresupuestoAccept = () => {
 
   return (
     <BasicLayout image={bgImage}>
-      <Card style={{ width: "150%", marginT: "-35px" }}>
+      <Card style={{ width: "190%", marginT: "-35px" }}>
         <MDBox
           variant="gradient"
           bgColor="info"
@@ -380,7 +403,7 @@ const PresupuestoAccept = () => {
           </MDTypography>
           <MDTypography display="block" variant="button" color="white" my={1}>
             Puede Aceptar el Presupuesto o bien modificar el mismo ante un
-            cambio que haya surgido
+            cambio que haya surgido. Esta accion generara las tareas correspondientes
           </MDTypography>
         </MDBox>
         <MDBox pt={4} pb={3} px={3}>
@@ -388,13 +411,12 @@ const PresupuestoAccept = () => {
             <MDBox
               mb={2}
               style={{
-                display: "flex",
+                width: "75%",
                 gap: "16px",
-                flexDirection: "row",
                 height: "100%", // Asegura que el contenedor principal ocupe el alto completo
               }}
             >
-              <div style={{ flex: 1, marginT: "-35px" }}>
+             
                 <MDBox mb={2}>
                   <Autocomplete
                     onChange={handleAutocompleteIDClienteChange}
@@ -414,27 +436,7 @@ const PresupuestoAccept = () => {
                     )}
                   />
                 </MDBox>
-                <MDBox mb={2}>
-                  <Autocomplete
-                    onChange={handleAutocompleteDeptoChange}
-                    options={elementsDepto}
-                    value={selectedValueDepartamentos || null}
-                    disabled={!controlHabilitado}
-                    getOptionLabel={(option) =>
-                      option.nombre || "Seleccione Departamento"
-                    }
-                    getOptionDisabled={(option) => option.activo === false}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Seleccione Departamento"
-                        variant="outlined"
-                      />
-                    )}
-                    style={{ flex: 1 }} // Añade esta línea
-                  />
-                </MDBox>
-
+                
                 <MDBox mb={2}>
                   <MDInput
                     type="text"
@@ -448,10 +450,9 @@ const PresupuestoAccept = () => {
                     fullWidth
                   />
                 </MDBox>
-              </div>
-              <div style={{ flex: 2, marginT: "-35px" }}>
+             
                 <MDBox mb={2}>
-                  <Card>
+                  <Card style={{ width: "120%" }}>
                     <MDBox
                       variant="gradient"
                       bgColor="info"
@@ -471,54 +472,26 @@ const PresupuestoAccept = () => {
                         endIcon={<Task />}
                       >
                         Tipos de Tarea del Presupuesto
+                       
                       </MDTypography>
                     </MDBox>
-                    <MDBox mb={2} style={{ display: "flex", gap: "16px" }}>
-                      <TableContainer component={Paper}>
+                    <MDBox mb={2}>
+                    <TableContainer component={Paper}>
                         <Table>
-                          <TableHead>
-                            <TableRow>
-                              <TableCell>
-                                <MDTypography
-                                  component="a"
-                                  href="#"
-                                  variant="caption"
-                                  color="text"
-                                  fontWeight="medium"
-                                >
-                                  Tipo Tarea
-                                </MDTypography>
-                              </TableCell>
-                              <TableCell>
-                                <MDTypography
-                                  component="a"
-                                  href="#"
-                                  variant="caption"
-                                  color="text"
-                                  fontWeight="medium"
-                                  textAlign="right"
-                                  style={{
-                                    marginLeft: "10px",
-                                    marginRight: "8px",
-                                  }}
-                                >
-                                  Vencimiento Días
-                                </MDTypography>
-                              </TableCell>
-                              {/* Agrega más títulos para otras columnas si es necesario */}
-                            </TableRow>
-                          </TableHead>
+                        
                           <TableBody>
                             {presupuestoxtareastiposUpdate.map((item) => (
                               <TableRow key={item.id}>
-                                <TableCell>{item.nombreTareaTipo}</TableCell>
+                                <TableCell >{item.nombreTareaTipo}</TableCell>
                                 <TableCell>{item.vencimientoDias}</TableCell>
+                                <TableCell>{item.fechavencimientoLegalFormateada}</TableCell>
+                                <TableCell>{item.nombreDepartamento}</TableCell>
                               </TableRow>
                             ))}
                           </TableBody>
                         </Table>
                       </TableContainer>
-                    </MDBox>{" "}
+                    </MDBox>
                   </Card>
                   <MDBox mb={2}>
                     <Card>
@@ -528,7 +501,7 @@ const PresupuestoAccept = () => {
                         borderRadius="lg"
                         coloredShadow="warning"
                         mx={2}
-                        mt={0}
+                        mt={2}
                         p={1}
                         mb={1}
                         textAlign="center"
@@ -625,7 +598,7 @@ const PresupuestoAccept = () => {
                     </Card>
                   </MDBox>
                 </MDBox>
-              </div>
+             
             </MDBox>
             <MDBox mt={1} mb={1}>
               <MDButton

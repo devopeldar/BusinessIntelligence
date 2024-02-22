@@ -45,7 +45,6 @@ const PresupuestoEdit = () => {
   const [mensaje, setMensaje] = useState("");
   const history = useNavigate();
   const [grabando, setGrabando] = useState(false);
-  const [controlHabilitado, setControlHabilitado] = useState(false);
   const [exito, setExito] = useState(false);
 
   const [elementsclientes, setElementsCliente] = useState([]);
@@ -120,12 +119,7 @@ const PresupuestoEdit = () => {
 
         setPresupuestoxtareastiposUpdate(newRows);
 
-        if (habilitado === "1") {
-          setControlHabilitado(true);
-        } else {
-          setControlHabilitado(false);
-        }
-
+       
         setPresupuesto(data);
       } catch (error) {
         console.error("Error:", error);
@@ -205,13 +199,13 @@ const PresupuestoEdit = () => {
         })),
         idUsuario: localStorage.getItem("iduserlogueado"),
       };
-      console.log("request", request);
+
       setGrabando(true); // Inicia la grabación
       setnombreboton("Volver");
       setExito(true);
       setMensaje("");
       // Aquí realizas la llamada a tu API para actualizar el Presupuesto con los nuevos datos
-      const response = await fetch(API_URL + `/PresupuestoModificacion`, {
+      const response = await fetch(API_URL + `/PresupuestoAlta`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -431,11 +425,10 @@ console.log("newRow",newRow)
         >
           <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
             {/*  {!controlHabilitado ? "Cambio de Roles" : "Editar Presupuesto"} */}
-            Editar Presupuesto
+            Duplicando Presupuesto
           </MDTypography>
           <MDTypography display="block" variant="button" color="white" my={1}>
-            Puede Aceptar el Presupuesto o bien modificar el mismo ante un
-            cambio que haya surgido
+            Puede utilizar el siguiente presupuesto como modelo de uno nuevo
           </MDTypography>
         </MDBox>
         <MDBox pt={4} pb={3} px={3}>
@@ -457,7 +450,7 @@ console.log("newRow",newRow)
                     getOptionLabel={(option) =>
                       option.nombre || "Seleccione Cliente"
                     }
-                    disabled={!controlHabilitado}
+               
                     getOptionDisabled={(option) => option.activo === false}
                     renderInput={(params) => (
                       <TextField
@@ -528,7 +521,6 @@ console.log("newRow",newRow)
                           onChange={handleAutocompleteDeptoChange}
                           options={elementsDepto}
                           value={selectedValueDepartamentos || null}
-                          
                           getOptionLabel={(option) =>
                             option.nombre || "Seleccione Departamento"
                           }

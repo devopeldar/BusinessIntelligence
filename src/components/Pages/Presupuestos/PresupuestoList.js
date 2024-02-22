@@ -250,7 +250,7 @@ function PresupuestoList() {
                   fontWeight="medium"
                 >
                   <Link
-                    to={`../PresupuestoEdit/${Presupuesto.idPresupuesto}`}
+                    to={`../PresupuestoCopy/${Presupuesto.idPresupuesto}`}
                   >
                     <CopyAll
                       fontSize="large"
