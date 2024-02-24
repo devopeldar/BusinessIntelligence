@@ -13,16 +13,12 @@ import { Link, useNavigate } from "react-router-dom";
 import {
     Checklist,
     Filter,
-    NoteAlt,
 } from "@mui/icons-material";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Cliente from "../../Utils/cliente";
 import { addMonths, startOfMonth } from "date-fns";
 import axios from "axios";
 import API_URL from "../../../config";
-import MDBadge from "../../controls/MDBadge";
-import Departamento from "../../Utils/departamento";
 import TipoTarea from "../../Utils/tipoTarea";
 import Meses from "../../Utils/Meses";
 import Anios from "../../Utils/Anios";
@@ -51,13 +47,7 @@ function VencimientosList() {
         anios[0]
     );
     
-    const today = new Date();
-    const firstDayOfMonth = startOfMonth(today);
-    const firstDayOfNextMonth = startOfMonth(addMonths(today, 1));
-    const [selectedDateFrom, setSelectedDateFrom] =
-        React.useState(firstDayOfMonth);
-    const [selectedDateTo, setSelectedDateTo] =
-        React.useState(firstDayOfNextMonth);
+
     useEffect(() => {
         fetchDataTareas();
     }, []);

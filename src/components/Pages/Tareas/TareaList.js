@@ -85,7 +85,7 @@ if (filtroEstadoCookie !== null) {const filtroEstadoObjeto = JSON.parse(filtroEs
 
   const [selectedValuEestado, setSelectedValueEstado] = useState(selectedEstadoInitialValue);
 
-  let selectedTipoFechaInitialValue = clientes[0];
+  let selectedTipoFechaInitialValue = fechasfiltro[0];
   
   const filtroTipoFechaCookie = getCookie("FILTROTIPOFECHA");
 if (filtroTipoFechaCookie !== null) {const filtroTipoFechaObjeto = JSON.parse(filtroTipoFechaCookie);  selectedTipoFechaInitialValue = filtroTipoFechaObjeto;}
@@ -128,15 +128,13 @@ let selectedDateToInitialValue = firstDayOfNextMonth;
 
 // Verificamos si existe la cookie
 const filtroFechaDesdeCookie = getCookie("FILTROFECHADESDE");
-if (filtroFechaDesdeCookie !== null) {
-  selectedDateFromInitialValue = new Date(filtroFechaDesdeCookie);
-}
+if (filtroFechaDesdeCookie !== null) {selectedDateFromInitialValue = new Date(filtroFechaDesdeCookie);}
 
   const [selectedDateFrom, setSelectedDateFrom] = React.useState(selectedDateFromInitialValue);
 
   
   const filtroFechaHastaCookie = getCookie("FILTROFECHAHASTA");
-if (filtroFechaDesdeCookie !== null) {
+if (filtroFechaHastaCookie !== null) {
   selectedDateToInitialValue = new Date(filtroFechaHastaCookie);
 }
 
@@ -243,7 +241,7 @@ if (filtroFechaDesdeCookie !== null) {
         fechaHasta: selectedDateTo ? selectedDateTo : firstDayOfNextMonth,
         roles:nombreusuario
       };
-      console.log("requsuario", requsuario);
+
       const response = await axios.post(
         API_URL + "/TareaListarTodo",
         requsuario,
@@ -491,20 +489,26 @@ if (filtroFechaDesdeCookie !== null) {
 
   const handlePDF = () => {
     setEsPDF(true);
-    /// fetchData();
+    fetchData();
   };
 
   // Función para generar el PDF
   const generatePDF = (data) => {
-    const doc = new jsPDF();
-
-    const columns = ["ID Tarea", "Nombre", "Contacto", "Teléfono", "Email"]; // Ajusta las columnas según tus datos
+    const doc = new jsPDF('l', 'mm', 'a4');
+    console.log("Tareas " ,data);
+    const columns = [ "Cliente", "Departamento", "Tarea", "Estado", "Fecha Creacion", "Venc. Legal", "Tiempo Detenido", "Tiempo Transcurrido", "Roles"]; // Ajusta las columnas según tus datos
     const rows = data.map((item) => [
-      item.idTarea.toString(),
-      item.nombre,
-      item.contacto,
-      item.telefono,
-      item.email,
+    
+      item.clienteNombre,
+      item.departamentoNombre,
+      item.tareaTipoNombre,
+      item.estadoDescripcion,
+      formatDate(item.fechaCreacion),
+      formatDate(item.fechaVencimientoLegal) ,
+      item.tiempoDetenido,
+      item.tiempoTranscurrido ,
+      item.roles 
+      
       // Añade más datos según tu estructura JSON
     ]);
 
@@ -519,14 +523,40 @@ if (filtroFechaDesdeCookie !== null) {
       });
     };
 
+    const didParseCell = (data) => {
+      if (data.section === 'body' && data.column.index === 3) { // Comprueba si es la columna "Estado"
+          if (data.cell.raw === 'FINAL - Optimo') { // Si el valor es '1', establece el color de fondo verde
+              data.cell.styles.fillColor = [0, 255, 0]; // Verde
+          } else if (data.cell.raw === 'SIN INICIAR') { // Si el valor es '3', establece el color de fondo rojo
+              data.cell.styles.fillColor = [192, 192, 192]; // gris
+            } else if (data.cell.raw === 'Pendientes del Cliente' || data.cell.raw === 'Tarea en proceso normal') { // Si el valor es '3', establece el color de fondo rojo
+              data.cell.styles.fillColor = [255, 255, 0]; // amarillo
+            } else if (data.cell.raw === 'FINAL - Critico por el Estudio' || data.cell.raw === 'FINAL - Critico por Cliente y Estudio' || data.cell.raw === 'FINAL - Critico por el Cliente') { // Si el valor es '3', establece el color de fondo rojo
+              data.cell.styles.fillColor = [255, 0, 0]; // rojo
+            } else if (data.cell.raw === 'INICIADO') { // Si el valor es '3', establece el color de fondo rojo
+              data.cell.styles.fillColor = [173, 216, 230]; // azul claro
+          }
+      }
+  };
+
     const options = {
       startY: 10,
       margin: { horizontal: 10 },
       headStyles: { fillColor: [51, 122, 183], textColor: 255 },
       bodyStyles: { textColor: 0 },
-      columnStyles: { 0: { cellWidth: 30 } }, // Ajusta el ancho de la primera columna si es necesario
+      columnStyles: { 0: { cellWidth: 30 }, 1: { cellWidth: 35 }, 2: { cellWidth: 40 }, 3: { cellWidth: 20 }, 4: { cellWidth: 23 }, 5: { cellWidth: 23 }, 6: { cellWidth: 20 },  7: { cellWidth: 20 }, 8: { cellWidth: 60 } }, // Ajusta el ancho de las columnas según sea necesario
       theme: "grid",
-    };
+      didParseCell : didParseCell,
+  };
+
+    // const options = {
+    //   startY: 10,
+    //   margin: { horizontal: 10 },
+    //   headStyles: { fillColor: [51, 122, 183], textColor: 255 },
+    //   bodyStyles: { textColor: 0 },
+    //   columnStyles: { 0: { cellWidth: 30 } }, // Ajusta el ancho de la primera columna si es necesario
+    //   theme: "grid",
+    // };
 
     doc.autoTable(columns, rows, options, header);
 
@@ -540,12 +570,23 @@ if (filtroFechaDesdeCookie !== null) {
 
   const handleExcel = () => {
     setEsPDF(false);
-    // fetchData();
+    fetchData();
   };
 
   const fetchData = async () => {
     try {
-      const response = await axios.post(API_URL + "/TareaListar", {
+      const requsuario = {
+        idUsuario: localStorage.getItem("iduserlogueado"),
+        idTareaEstado: selectedValuEestado?.idTareaEstado || 0,
+        idCliente: selectedValueCliente?.idCliente || 0,
+        idDepartamento: selectedValueDepartamentos?.idDepartamento || 0,
+        IDTareaTipo: selectedValueTipoTarea?.idTareaTipo || 0,
+        CampoFiltroFecha: selectedValueFechaFiltro?.campo || "",
+        fechaDesde: selectedDateFrom ? selectedDateFrom : firstDayOfMonth,
+        fechaHasta: selectedDateTo ? selectedDateTo : firstDayOfNextMonth,
+        roles:nombreusuario
+      };
+      const response = await axios.post(API_URL + "/TareaListarTodo", requsuario,{
         headers: {
           accept: "application/json",
         },
@@ -554,9 +595,9 @@ if (filtroFechaDesdeCookie !== null) {
       setTareas(response.data);
 
       if (espdf === true) {
-        //  exportToExcel(); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
+        generateAndDownloadPDF();//  exportToExcel(); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
       } else {
-        generateAndDownloadPDF();
+        exportToExcel();
       }
     } catch (ex) {
       console.log(ex);
@@ -571,31 +612,99 @@ if (filtroFechaDesdeCookie !== null) {
 
     // Definir el encabezado de las columnas
     const headers = [
-      "Razon Social",
-      "Contacto",
-      "Teléfono",
-      "Email",
-      "Cuit",
-      "Descripción IVA",
-      "Activo",
+      "Cliente", "Departamento", "Tarea", "Estado", "Fecha Creacion", "Venc. Legal", "Tiempo Detenido", "Tiempo Transcurrido", "Roles"
     ];
 
     // Agregar el encabezado a la hoja de cálculo
-    worksheet.addRow(headers);
+    const headerRow =worksheet.addRow(headers);
+    headerRow.eachCell((cell) => {
+      cell.fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: "CCCCCC" } // Gris claro
+      };
+    });
     console.log("Tareas " + Tareas);
     // Agregar los datos al archivo Excel
-    Tareas.forEach((row) => {
+    Tareas.forEach((item) => {
       const rowData = [
-        row.nombre,
-        row.contacto,
-        row.telefono,
-        row.email,
-        row.cuit,
-        row.descripcionIVA,
-        row.activo,
+        item.clienteNombre,
+      item.departamentoNombre,
+      item.tareaTipoNombre,
+      item.estadoDescripcion,
+      formatDate(item.fechaCreacion),
+      formatDate(item.fechaVencimientoLegal) ,
+      item.tiempoDetenido,
+      item.tiempoTranscurrido ,
+      item.roles 
+      
       ];
 
-      worksheet.addRow(rowData);
+     
+      const row = worksheet.addRow(rowData);
+      //worksheet.addRow(rowData);
+
+    //   if (data.section === 'body' && data.column.index === 3) { // Comprueba si es la columna "Estado"
+    //     if (data.cell.raw === 'FINAL - Optimo') { // Si el valor es '1', establece el color de fondo verde
+    //         data.cell.styles.fillColor = [0, 255, 0]; // Verde
+    //     } else if (data.cell.raw === 'SIN INICIAR') { // Si el valor es '3', establece el color de fondo rojo
+    //         data.cell.styles.fillColor = [192, 192, 192]; // gris
+    //       } else if (data.cell.raw === 'FINAL - Critico por el Cliente') { // Si el valor es '3', establece el color de fondo rojo
+    //         data.cell.styles.fillColor = [255, 255, 0]; // amarillo
+    //       } else if (data.cell.raw === 'FINAL - Critico por el Estudio' || data.cell.raw === 'FINAL - Critico por Cliente y Estudio') { // Si el valor es '3', establece el color de fondo rojo
+    //         data.cell.styles.fillColor = [255, 0, 0]; // rojo
+    //       } else if (data.cell.raw === 'INICIADO') { // Si el valor es '3', establece el color de fondo rojo
+    //         data.cell.styles.fillColor = [173, 216, 230]; // rojo
+    //     }
+    // }
+
+      // Cambiar el color de fondo de la celda según el valor de estadoDescripcion
+      if ( item.estadoDescripcion === "Pendientes del Cliente" || item.estadoDescripcion === "Tarea en proceso normal") {
+        row.getCell(4).fill = {
+          type: "pattern",
+          pattern: "solid",
+          fgColor: { argb: "FFFF00" } // Amarillo
+        };
+      } else if (item.estadoDescripcion === "FINAL - Optimo" || item.estadoDescripcion === "FINAL - Puede Mejorar") {
+        row.getCell(4).fill = {
+          type: "pattern",
+          pattern: "solid",
+          fgColor: { argb: "00FF00" } // Verde
+        };
+      } else if (item.estadoDescripcion === "FINAL - Critico por el Cliente" || item.estadoDescripcion === "FINAL - Critico por el Estudio" || item.estadoDescripcion==='FINAL - Critico por Cliente y Estudio') {
+        row.getCell(4).fill = {
+          type: "pattern",
+          pattern: "solid",
+          fgColor: { argb: "FF0000" } // Rojo
+        };
+      } else if (item.estadoDescripcion === "SIN INICIAR" ) {
+        row.getCell(4).fill = {
+          type: "pattern",
+          pattern: "solid",
+          fgColor: { argb: "CCCCCC" } // gris
+        };
+      } else if ( item.estadoDescripcion==='INICIADO') {
+        row.getCell(4).fill = {
+          type: "pattern",
+          pattern: "solid",
+          fgColor: { argb: "ADD8E6" } // gris
+        };
+        
+      }
+
+
+    });
+
+    // Ajustar el ancho de las columnas según el contenido
+    worksheet.columns.forEach((column, index) => {
+      let maxLength = 0;
+      column.eachCell({ includeEmpty: true }, (cell) => {
+        const columnLength = cell.value ? cell.value.toString().length : 10;
+        if (columnLength > maxLength) {
+          maxLength = columnLength;
+        }
+      });
+      column.width = maxLength < 10 ? 10 : maxLength + 2; // Establecer el ancho mínimo de la columna
     });
 
     // Generar el archivo Excel y descargarlo

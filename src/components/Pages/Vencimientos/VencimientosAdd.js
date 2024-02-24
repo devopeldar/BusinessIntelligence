@@ -6,13 +6,6 @@ import {
     Alert,
     Autocomplete,
     Card,
-    IconButton,
-    Paper,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableRow,
     TextField,
 } from "@mui/material";
 import MDBox from "../../controls/MDBox";
@@ -24,8 +17,8 @@ import { useNavigate } from "react-router-dom";
 import MDProgress from "../../controls/MDProgress";
 import { AlertTitle } from "@mui/material";
 import MDButton from "../../controls/MDButton";
-import { PersonFillAdd, Save } from "react-bootstrap-icons";
-import { Delete, ExitToApp } from "@mui/icons-material";
+import { Save } from "react-bootstrap-icons";
+import { ExitToApp } from "@mui/icons-material";
 import axios from "axios";
 
 const VencimientosAdd = () => {
@@ -72,8 +65,7 @@ const VencimientosAdd = () => {
         console.log("chk :" + event);
         // Verifica si el tipo de campo es un checkbox (para campos booleanos)
         const newValue = type === "checkbox" ? checked : value;
-        console.log("name ", name);
-
+        
         setShowprogrees(1);
         setFormData({
             ...formData,
@@ -117,7 +109,6 @@ const VencimientosAdd = () => {
                 },
             });
 
-            console.log("response " + response.data);
             setElementsTareaTipo(response.data);
         };
         GetTareaTipo();
@@ -130,7 +121,6 @@ const VencimientosAdd = () => {
                     accept: "application/json",
                 },
             });
-            console.log("response " + response.data);
             setElementsCliente(response.data);
         };
         GetCliente();
