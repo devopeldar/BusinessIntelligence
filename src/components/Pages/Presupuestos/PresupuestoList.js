@@ -48,7 +48,7 @@ function PresupuestoList() {
 
 
 
-  let selectedEstadoInitialValue = estadosino[0];
+  let selectedEstadoInitialValue = estadosino[1];
   
   const filtroEstadoCookie = getCookie("FILTROPRESUPUESTOESTADO");
   if (filtroEstadoCookie !== null) {const filtroEstadoObjeto = JSON.parse(filtroEstadoCookie);  selectedEstadoInitialValue = filtroEstadoObjeto;}
@@ -64,12 +64,12 @@ function PresupuestoList() {
   const [selectedValueCliente, setSelectedValueCliente] = useState(selectedClienteInitialValue);
   
   
-  let selectedDeptoInitialValue = departamentos[0];
+  // let selectedDeptoInitialValue = departamentos[0];
 
-  const filtroDeptoCookie = getCookie("FILTROPRESUPUESTODEPTO");
-  if (filtroDeptoCookie !== null) {const filtroDeptoObjeto = JSON.parse(filtroDeptoCookie);  selectedDeptoInitialValue = filtroDeptoObjeto;}
+  // const filtroDeptoCookie = getCookie("FILTROPRESUPUESTODEPTO");
+  // if (filtroDeptoCookie !== null) {const filtroDeptoObjeto = JSON.parse(filtroDeptoCookie);  selectedDeptoInitialValue = filtroDeptoObjeto;}
 
-  const [selectedValueDepartamento, setSelectedValueDepartamento] = useState(selectedDeptoInitialValue);
+  // const [selectedValueDepartamento, setSelectedValueDepartamento] = useState(selectedDeptoInitialValue);
 
     let selectedDateFromInitialValue = firstDayOfMonth;
     let selectedDateToInitialValue = firstDayOfNextMonth;
@@ -129,10 +129,10 @@ function PresupuestoList() {
     setSelectedValueCliente(value);
     setCookie("FILTROPRESUPUESTOCLIENTE", JSON.stringify(value), 1400) 
   };
-  const handleAutocompleteDeptoChange = (event, value) => {
-    setSelectedValueDepartamento(value);
-    setCookie("FILTROPRESUPUESTODEPTO", JSON.stringify(value), 1400) 
-  };
+  // const handleAutocompleteDeptoChange = (event, value) => {
+  //   setSelectedValueDepartamento(value);
+  //   setCookie("FILTROPRESUPUESTODEPTO", JSON.stringify(value), 1400) 
+  // };
   const handleAutocompleteAceptadoChange = (event, value) => {
     setSelectedValueAceptado(value);
     setCookie("FILTROPRESUPUESTOESTADO", JSON.stringify(value), 1400) 
@@ -196,7 +196,7 @@ function PresupuestoList() {
       const requsuario = {
         //idUsuario: localStorage.getItem("iduserlogueado"),
         idCliente: selectedValueCliente?.idCliente || 0,
-        idDepartamento: selectedValueDepartamento?.idDepartamento || 0,
+        idDepartamento: 0,
         aceptado: selectedValueAceptado?.valor || false,
         fechaDesde: selectedDateFrom ? selectedDateFrom : firstDayOfMonth,
         fechaHasta: selectedDateTo ? selectedDateTo : firstDayOfNextMonth,
@@ -430,7 +430,7 @@ function PresupuestoList() {
                       )}
                     />
                   </MDBox>
-                  <MDBox mb={2} mt={3} mr={2}>
+                  {/* <MDBox mb={2} mt={3} mr={2}>
                     <Autocomplete
                       options={departamentos}
                       getOptionLabel={(option) =>
@@ -450,7 +450,7 @@ function PresupuestoList() {
                         />
                       )}
                     />
-                  </MDBox>
+                  </MDBox> */}
                   <MDBox mb={2} mt={3} mr={2}>
                     <Autocomplete
                       options={estadosino}

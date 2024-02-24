@@ -9,7 +9,7 @@ import BasicLayout from "../../layauots/BasicLayout";
 import { Card } from "react-bootstrap";
 
 import { PersonFillAdd, Save } from "react-bootstrap-icons";
-import { Delete, ExitToApp } from "@mui/icons-material";
+import { Delete, Edit, ExitToApp } from "@mui/icons-material";
 
 import {
   Alert,
@@ -45,29 +45,37 @@ const PresupuestoEdit = () => {
   const [mensaje, setMensaje] = useState("");
   const history = useNavigate();
   const [grabando, setGrabando] = useState(false);
+  const [editando, setEditando] = useState(false);
+  const [idItem, setIDItem] = useState(0);
+  const [IDItemModificado, setIDItemModificado] = useState(0);
   const [exito, setExito] = useState(false);
 
   const [elementsclientes, setElementsCliente] = useState([]);
   const [elementsDepto, setElementsDepto] = useState([]);
-  const [selectedValueDepartamentos, setSelectedValueDepartamentos] = useState(
-    []
-  );
+  const [selectedValueDepartamentos, setSelectedValueDepartamentos] = useState([]);
   const [idDepartamento, setIdDepartamento] = useState(0);
   const [selectedValueCliente, setSelectedValueCliente] = useState([]);
 
   const [elementsTareasTipos, setElementsTareasTipos] = useState([]);
   const [vencimientoDias, setVencimientoDias] = useState(0);
-  const [selectedValueTareasTipos, setSelectedValueTareasTipos] = useState({
-    idTareaTipo: "",
-  });
+  const [selectedValueTareasTipos, setSelectedValueTareasTipos] = useState([]);
+  const [vencimientolegal, setVencimientolegal] = useState(new Date());
 
   const handleVolver = () => {
     history("/PresupuestoVolver"); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
   };
 
+  const convertirFormatoFecha = (fecha) => {
+    const fechaObj = new Date(fecha);
+    const año = fechaObj.getFullYear();
+    const mes = String(fechaObj.getMonth() + 1).padStart(2, '0');
+    const dia = String(fechaObj.getDate()).padStart(2, '0');
+    return `${año}-${mes}-${dia}`;
+  };
+
   const [formData, setFormData] = useState({
 
-    fechaVencimientoLegal: new Date(),
+    fechaVencimientoLegal: "",
   });
 
   const handleInputChange = (event) => {
@@ -82,6 +90,12 @@ const PresupuestoEdit = () => {
       [name]: newValue,
     });
   };
+ useEffect(() => {
+    setFormData({
+      ...formData,
+      fechaVencimientoLegal: convertirFormatoFecha(vencimientolegal)
+    });
+  }, [vencimientolegal]); // Ejecuta solo una vez al cargar el componente
 
   useEffect(() => {
     setidPresupuesto(id);
@@ -107,7 +121,7 @@ const PresupuestoEdit = () => {
         setPresupuestoxTareasTipos(data.presupuestoxTareasTipos);
 
         setIdCliente(data.idCliente);
-        setIdDepartamento(data.idDepartamento);
+        //setIdDepartamento(data.idDepartamento);
         let newRows = [];
         let i = 0;
         console.log("presupuestoxtareastipos", presupuestoxtareastipos.length);
@@ -187,6 +201,7 @@ const PresupuestoEdit = () => {
         setExito(false);
         return;
       }
+      console.log("presupuestoxtareastiposUpdate", presupuestoxtareastiposUpdate)
       const request = {
         idPresupuesto: id,
         idCliente: selectedValueCliente.idCliente,
@@ -231,6 +246,32 @@ const PresupuestoEdit = () => {
       setnombreboton("Cancelar");
       console.log("Error en la solicitud:" + error);
     }
+  };
+
+  const EditarDatos = (item)=> {
+    console.log("item", item);
+    setIDItemModificado(presupuestoxtareastiposUpdate.length + 1);
+    setIDItem(item.id);
+    eliminarItemUpdate(idItem);
+    
+    setEditando(true);
+    
+    setVencimientoDias(item.vencimientoDiasValor);
+    setVencimientolegal(item.fechaVencimientoLegalvalor);
+
+      const defaultValueId = item.idDepartamento; // ID del elemento que deseas seleccionar por defectoa asd asd asd asd a sdasd asd asd
+      const defaultValue = elementsDepto.find(
+        (item) => item.idDepartamento === defaultValueId
+      );
+    setSelectedValueDepartamentos(defaultValue);
+    
+    const defaultValueIdTT = item.idTareaTipo; // ID del elemento que deseas seleccionar por defectoa asd asd asd asd a sdasd asd asd
+    const defaultValueTT = elementsTareasTipos.find(
+      (item) => item.idTareaTipo === defaultValueIdTT
+    );
+
+    setSelectedValueTareasTipos(defaultValueTT);
+
   };
   const CargarDatos = (item, index) => {
     const newRow = {
@@ -302,8 +343,22 @@ const PresupuestoEdit = () => {
 
   const handleAddTareaTipo = () => {
     if (selectedValueTareasTipos.idTareaTipo !== "") {
+      let idTemp=0;
+      console.log("editando",editando)
+     
+      if(editando===true)
+      {
+        //console.log("presupuestoxtareastiposUpdate.length",presupuestoxtareastiposUpdate.length)
+        idTemp = IDItemModificado;
+       
+         console.log("idTemp",idTemp)
+      }else{
+        idTemp = presupuestoxtareastiposUpdate.length + 1;
+      }
       const newRow = {
-        id: presupuestoxtareastiposUpdate.length + 1,
+       
+        
+        id: idTemp,
         idPresupuesto: id,
         idTareaTipo: selectedValueTareasTipos.idTareaTipo,
         nombreTareaTipo: (
@@ -354,21 +409,39 @@ const PresupuestoEdit = () => {
           idDepartamento: selectedValueDepartamentos.idDepartamento,
           fechaVencimientoLegalvalor:formData.fechaVencimientoLegal
       };
+      if(editando===true)
+      {
+        
+        setEditando(false);
+      }
+      console.log("idItem",idItem)
+      console.log("newRow",newRow)
+      console.log("presupuestoxtareastiposUpdate",presupuestoxtareastiposUpdate)
       const TareaTipoExistente = presupuestoxtareastiposUpdate.find(
         (item) => item.idTareaTipo === selectedValueTareasTipos.idTareaTipo
       );
-console.log("newRow",newRow)
+
       if (!TareaTipoExistente) {
         setPresupuestoxtareastiposUpdate((prevDatos) => [...prevDatos, newRow]);
       }
+     
     }
   };
+
 
   const handleAutocompleteIDClienteChange = (event, value) => {
     setSelectedValueCliente(value);
   };
   const handleAutocompleteDeptoChange = (event, value) => {
     setSelectedValueDepartamentos(value);
+  };
+
+  const eliminarItemUpdate = (id) => {
+  
+    setPresupuestoxtareastiposUpdate(prevDatos => {
+      const newData = prevDatos.filter(item => item.id !== id);
+      return newData;
+    });
   };
   const eliminarItem = (id) => {
     const newData = presupuestoxtareastiposUpdate.filter(
@@ -393,7 +466,7 @@ console.log("newRow",newRow)
             textAlign="center"
           >
             <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-              Cargando Datos Presupeusto...
+              Cargando Datos Presupuesto...
             </MDTypography>
           </MDBox>
         </Card>
@@ -503,7 +576,8 @@ console.log("newRow",newRow)
                         <Autocomplete
                           onChange={handleAutocompleteTareaTipoChange}
                           options={elementsTareasTipos}
-                          getOptionLabel={(option) => option.nombre}
+                          value={selectedValueTareasTipos || null}
+                          getOptionLabel={(option) => option.nombre || "Seleccione Tipo de Tarea"}
                           getOptionDisabled={(option) =>
                             option.activo === false
                           }
@@ -553,7 +627,7 @@ console.log("newRow",newRow)
                             required
                             label="Vencimiento legal"
                             variant="standard"
-                            value={formData.fechaVencimientoLegal}
+                            value={formData.fechaVencimientoLegal || vencimientolegal}
                             onChange={handleInputChange}
                             fullWidth
                           />
@@ -597,6 +671,15 @@ console.log("newRow",newRow)
                                     <Delete color="error" />
                                   </IconButton>
                                 </TableCell>
+                                <TableCell>
+                                  <IconButton
+                                    aria-label="Editar"
+                                    onClick={() => EditarDatos(item)}
+                                  >
+                                    <Edit color="info" />
+                                  </IconButton>
+                                </TableCell>
+                                
                               </TableRow>
                             ))}
                           </TableBody>
