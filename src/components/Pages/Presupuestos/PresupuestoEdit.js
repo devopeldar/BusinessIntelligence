@@ -399,7 +399,7 @@ console.log("newRow",newRow)
             textAlign="center"
           >
             <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-              Cargando Datos Presupeusto...
+              Cargando Datos Presupuesto...
             </MDTypography>
           </MDBox>
         </Card>
