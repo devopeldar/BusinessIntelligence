@@ -9,7 +9,7 @@ import BasicLayout from "../../layauots/BasicLayout";
 import { Card } from "react-bootstrap";
 
 import { PersonFillAdd, Save } from "react-bootstrap-icons";
-import { Delete, ExitToApp } from "@mui/icons-material";
+import { Cancel, Delete, Edit, ExitToApp } from "@mui/icons-material";
 
 import {
   Alert,
@@ -35,7 +35,9 @@ const PresupuestoEdit = () => {
   const [Presupuesto, setPresupuesto] = useState(null);
   const [idPresupuesto, setidPresupuesto] = useState("");
   const [idCliente, setIdCliente] = useState(0);
-
+  const [editando, setEditando] = useState(false);
+  const [idItem, setIDItem] = useState(0);
+  const [IDItemModificado, setIDItemModificado] = useState(0);
   const [observaciones, setObservaciones] = useState("");
   const [presupuestoxtareastipos, setPresupuestoxTareasTipos] = useState([]);
   const [presupuestoxtareastiposUpdate, setPresupuestoxtareastiposUpdate] =
@@ -58,17 +60,23 @@ const PresupuestoEdit = () => {
 
   const [elementsTareasTipos, setElementsTareasTipos] = useState([]);
   const [vencimientoDias, setVencimientoDias] = useState(0);
-  const [selectedValueTareasTipos, setSelectedValueTareasTipos] = useState({
-    idTareaTipo: "",
-  });
-
+  const [selectedValueTareasTipos, setSelectedValueTareasTipos] = useState([]);
+  const [vencimientolegal, setVencimientolegal] = useState(new Date());
   const handleVolver = () => {
     history("/PresupuestoVolver"); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
   };
 
+  const convertirFormatoFecha = (fecha) => {
+    const fechaObj = new Date(fecha);
+    const año = fechaObj.getFullYear();
+    const mes = String(fechaObj.getMonth() + 1).padStart(2, '0');
+    const dia = String(fechaObj.getDate()).padStart(2, '0');
+    return `${año}-${mes}-${dia}`;
+  };
+
   const [formData, setFormData] = useState({
 
-    fechaVencimientoLegal: new Date(),
+    fechaVencimientoLegal: "",
   });
 
   const handleInputChange = (event) => {
@@ -83,6 +91,14 @@ const PresupuestoEdit = () => {
       [name]: newValue,
     });
   };
+
+  useEffect(() => {
+    setFormData({
+      ...formData,
+      fechaVencimientoLegal: convertirFormatoFecha(vencimientolegal)
+    });
+  }, [vencimientolegal]); // Ejecuta solo una vez al cargar el componente
+
 
   useEffect(() => {
     setidPresupuesto(id);
@@ -108,11 +124,10 @@ const PresupuestoEdit = () => {
         setPresupuestoxTareasTipos(data.presupuestoxTareasTipos);
 
         setIdCliente(data.idCliente);
-        setIdDepartamento(data.idDepartamento);
+
         let newRows = [];
         let i = 0;
-        console.log("presupuestoxtareastipos", presupuestoxtareastipos.length);
-
+    
         data.presupuestoxTareasTipos.forEach((item, index) => {
           i = i + 1;
           newRows.push(CargarDatos(item, i));
@@ -177,11 +192,11 @@ const PresupuestoEdit = () => {
       });
       setElementsDepto(response.data);
 
-      const defaultValueId = idDepartamento; // ID del elemento que deseas seleccionar por defectoa asd asd asd asd a sdasd asd asd
-      const defaultValue = response.data.find(
-        (item) => item.idDepartamento === defaultValueId
-      );
-      setSelectedValueDepartamentos(defaultValue);
+      // const defaultValueId = idDepartamento; // ID del elemento que deseas seleccionar por defectoa asd asd asd asd a sdasd asd asd
+      // const defaultValue = response.data.find(
+      //   (item) => item.idDepartamento === defaultValueId
+      // );
+      // setSelectedValueDepartamentos(defaultValue);
     };
     GetDepartamento();
   }, [Presupuesto]);
@@ -205,7 +220,7 @@ const PresupuestoEdit = () => {
         })),
         idUsuario: localStorage.getItem("iduserlogueado"),
       };
-      console.log("request", request);
+      
       setGrabando(true); // Inicia la grabación
       setnombreboton("Volver");
       setExito(true);
@@ -306,10 +321,71 @@ const PresupuestoEdit = () => {
     return fechaFormateada;
   }
 
+  const EditarDatos = (item)=> {
+    console.log("item", item);
+    setIDItemModificado(item.id);
+    setIDItem(item.id);
+    
+    
+    setEditando(true);
+    
+    setVencimientoDias(item.vencimientoDiasValor);
+    setVencimientolegal(item.fechaVencimientoLegalvalor);
+
+      const defaultValueId = item.idDepartamento; // ID del elemento que deseas seleccionar por defectoa asd asd asd asd a sdasd asd asd
+      const defaultValue = elementsDepto.find(
+        (item) => item.idDepartamento === defaultValueId
+      );
+    setSelectedValueDepartamentos(defaultValue);
+    
+    const defaultValueIdTT = item.idTareaTipo; // ID del elemento que deseas seleccionar por defectoa asd asd asd asd a sdasd asd asd
+    const defaultValueTT = elementsTareasTipos.find(
+      (item) => item.idTareaTipo === defaultValueIdTT
+    );
+    console.log("defaultValueTT", defaultValueTT);
+    setSelectedValueTareasTipos(defaultValueTT);
+
+  };
+
+  const handleCancelTareaTipo = () => {
+
+    setEditando(false);
+    setIDItemModificado(0);
+    setSelectedValueTareasTipos(null);
+    setSelectedValueDepartamentos(null);
+    setVencimientoDias(0);
+  };
+
+
   const handleAddTareaTipo = () => {
+    if(selectedValueTareasTipos == null)
+    {
+      return;
+    }
+    if(selectedValueDepartamentos == null)
+    {
+      return;
+    }
     if (selectedValueTareasTipos.idTareaTipo !== "") {
+      let idTemp=0;
+
+      if(editando===true)
+      {
+       
+        const newData = presupuestoxtareastiposUpdate.filter(item => item.id !== idItem);
+        setPresupuestoxtareastiposUpdate([]);
+        
+          idTemp = IDItemModificado * -1;
+
+          setPresupuestoxtareastiposUpdate(newData);
+
+      }else{
+        idTemp = presupuestoxtareastiposUpdate.length + 1;
+      }
+
+
       const newRow = {
-        id: presupuestoxtareastiposUpdate.length + 1,
+        id: idTemp,
         idPresupuesto: id,
         idTareaTipo: selectedValueTareasTipos.idTareaTipo,
         nombreTareaTipo: (
@@ -360,13 +436,27 @@ const PresupuestoEdit = () => {
           idDepartamento: selectedValueDepartamentos.idDepartamento,
           fechaVencimientoLegalvalor:formData.fechaVencimientoLegal
       };
-      const TareaTipoExistente = presupuestoxtareastiposUpdate.find(
-        (item) => item.idTareaTipo === selectedValueTareasTipos.idTareaTipo
-      );
-console.log("newRow",newRow)
-      if (!TareaTipoExistente) {
+
+      if(editando===false)
+      {
+        const TareaTipoExistente = presupuestoxtareastiposUpdate.find(
+          (item) => item.idTareaTipo === selectedValueTareasTipos.idTareaTipo
+        );
+
+        if (!TareaTipoExistente) {
+          setPresupuestoxtareastiposUpdate((prevDatos) => [...prevDatos, newRow]);
+        }
+      }else {
         setPresupuestoxtareastiposUpdate((prevDatos) => [...prevDatos, newRow]);
       }
+      if(editando===true)
+      {
+        setEditando(false);
+      }
+      setIDItemModificado(0);
+      setSelectedValueTareasTipos(null);
+      setSelectedValueDepartamentos(null);
+      setVencimientoDias(0);
     }
   };
 
@@ -510,7 +600,8 @@ console.log("newRow",newRow)
                         <Autocomplete
                           onChange={handleAutocompleteTareaTipoChange}
                           options={elementsTareasTipos}
-                          getOptionLabel={(option) => option.nombre}
+                          value={selectedValueTareasTipos || null}
+                          getOptionLabel={(option) => option.nombre || "Seleccione Tipo de Tarea"}
                           getOptionDisabled={(option) =>
                             option.activo === false
                           }
@@ -566,7 +657,7 @@ console.log("newRow",newRow)
                             fullWidth
                           />
                       </MDBox>
-                      <MDBox mb={2} mr={6} ml={6}>
+                      <MDBox mb={2} mr={6} ml={6} display="flex" justifyContent="space-between">
                         <MDButton
                           onClick={() => {
                             handleAddTareaTipo();
@@ -577,6 +668,18 @@ console.log("newRow",newRow)
                           fullWidth
                         >
                           Agregar Tipo de Tarea
+                        </MDButton>
+                        <MDButton
+                          onClick={() => {
+                            handleCancelTareaTipo();
+                          }}
+                          style={{ display: editando ? 'block' : 'none' }}
+                          variant="gradient"
+                          color="warning"
+                          endIcon={<Cancel />}
+                          fullWidth
+                        >
+                          Cancelar Edicion
                         </MDButton>
                       </MDBox>
 
@@ -603,6 +706,14 @@ console.log("newRow",newRow)
                                     onClick={() => eliminarItem(item.id)}
                                   >
                                     <Delete color="error" />
+                                  </IconButton>
+                                </TableCell>
+                                <TableCell>
+                                  <IconButton
+                                    aria-label="Editar"
+                                    onClick={() => EditarDatos(item)}
+                                  >
+                                    <Edit color="info" />
                                   </IconButton>
                                 </TableCell>
                               </TableRow>

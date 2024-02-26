@@ -185,11 +185,11 @@ const PresupuestoEdit = () => {
       });
       setElementsDepto(response.data);
 
-      const defaultValueId = idDepartamento; // ID del elemento que deseas seleccionar por defectoa asd asd asd asd a sdasd asd asd
-      const defaultValue = response.data.find(
-        (item) => item.idDepartamento === defaultValueId
-      );
-      setSelectedValueDepartamentos(defaultValue);
+      // const defaultValueId = idDepartamento; // ID del elemento que deseas seleccionar por defectoa asd asd asd asd a sdasd asd asd
+      // const defaultValue = response.data.find(
+      //   (item) => item.idDepartamento === defaultValueId
+      // );
+      // setSelectedValueDepartamentos(defaultValue);
     };
     GetDepartamento();
   }, [Presupuesto]);
@@ -340,24 +340,6 @@ const PresupuestoEdit = () => {
   
     return fechaFormateada;
   }
-
-  const actualizarItem = (id, newData) => {
-    // Encuentra el índice del elemento que deseas actualizar
-    const index = presupuestoxtareastiposUpdate.findIndex(item => item.id === id);
-    
-    if (index !== -1) {
-      // Actualiza el elemento específico
-      const newArray = [...presupuestoxtareastiposUpdate];
-      newArray[index] = { ...newArray[index], ...newData };
-      
-      // Establece el nuevo array como el estado
-      setPresupuestoxtareastiposUpdate(newArray);
-    }
-  };
-
-
-  
-
   const handleCancelTareaTipo = () => {
 
     setEditando(false);
@@ -376,23 +358,20 @@ const PresupuestoEdit = () => {
     {
       return;
     }
-    console.log("selectedValueTareasTipos", selectedValueTareasTipos);
+
     if (selectedValueTareasTipos.idTareaTipo !== "" ) {
       let idTemp=0;
-      console.log("editando",editando)
-     
+
       if(editando===true)
       {
        
         const newData = presupuestoxtareastiposUpdate.filter(item => item.id !== idItem);
         setPresupuestoxtareastiposUpdate([]);
-        console.log("presupuestoxtareastiposUpdate1111", presupuestoxtareastiposUpdate);
-        console.log("presupuestoxtareastiposUpdate22222", newData);
+        
           idTemp = IDItemModificado * -1;
-          console.log("idTemp",idTemp)
+
           setPresupuestoxtareastiposUpdate(newData);
-          //setPresupuestoxtareastiposUpdate(newData);
-        console.log("presupuestoxtareastiposUpdate3333",presupuestoxtareastiposUpdate)
+
       }else{
         idTemp = presupuestoxtareastiposUpdate.length + 1;
       }
@@ -450,13 +429,8 @@ const PresupuestoEdit = () => {
           idDepartamento: selectedValueDepartamentos.idDepartamento,
           fechaVencimientoLegalvalor:formData.fechaVencimientoLegal
       };
-      if(editando===true)
-      {
-        
-        setEditando(false);
-      }
-      console.log("idItem",idItem)
-      console.log("newRow",newRow)
+      
+
       if(editando===false)
       {
         const TareaTipoExistente = presupuestoxtareastiposUpdate.find(
@@ -468,6 +442,11 @@ const PresupuestoEdit = () => {
         }
       }else {
         setPresupuestoxtareastiposUpdate((prevDatos) => [...prevDatos, newRow]);
+      }
+      if(editando===true)
+      {
+        
+        setEditando(false);
       }
       setIDItemModificado(0);
       setSelectedValueTareasTipos(null);
@@ -484,37 +463,6 @@ const PresupuestoEdit = () => {
   const handleAutocompleteDeptoChange = (event, value) => {
     setSelectedValueDepartamentos(value);
   };
-
-
-  const eliminarItemUpdate = (id, callback) => {
-    setPresupuestoxtareastiposUpdate(prevDatos => {
-      const newData = prevDatos.filter(item => item.id !== id);
-      callback(); // Llama a la función de retorno de llamada después de actualizar el estado
-      return newData;
-    });
-  };
-
-
-
-  // const eliminarItemUpdate = (id) => {
-  
-
-  //   const newArray = [...presupuestoxtareastiposUpdate];
-  //   console.log("newArray",newArray)
-  //   console.log("presupuestoxtareastiposUpdate1",presupuestoxtareastiposUpdate)
-  //   setPresupuestoxtareastiposUpdate(null);
-  //   console.log("presupuestoxtareastiposUpdate2",presupuestoxtareastiposUpdate)
-
-
-  //   setPresupuestoxtareastiposUpdate(prevDatos => {
-  //     const newData = newArray.filter(item => item.id !== id);
-  //     console.log("newData",newData)
-
-
-  //     return newData;
-  //   });
-  // };
-
 
   const eliminarItem = (id) => {
     const newData = presupuestoxtareastiposUpdate.filter(
