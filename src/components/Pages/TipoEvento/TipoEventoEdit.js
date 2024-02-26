@@ -127,13 +127,14 @@ const TipoEventoEdit = () => {
             setExito(true);
             setMensaje('');
             // Aquí realizas la llamada a tu API para actualizar el TipoEvento con los nuevos datos
-
+            let origenAcceso = "web";
+            let usuario =  localStorage.getItem('userlogueado');    
             const response = await fetch(API_URL + `/EventoTipoModificacion`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ idEventoTipo, descripcion, idTareaEstado, activo, enviaMail, detiene,estado,observaciones }),
+                body: JSON.stringify({ idEventoTipo, descripcion, idTareaEstado, activo, enviaMail, detiene,estado,observaciones, usuario, origenAcceso }),
             });
 
 
@@ -275,6 +276,7 @@ const TipoEventoEdit = () => {
                                 required
                                 label="Observaciones"
                                 variant="standard"
+                                multiline={true}
                                 value={observaciones}
                                 onChange={(e) => setObservaciones(e.target.value)}
                                 fullWidth

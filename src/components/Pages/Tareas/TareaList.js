@@ -13,6 +13,7 @@ import {
   BuildingFillAdd,
   FileExcel,
   FilePdf,
+  FilePdfFill,
   Stop,
 } from "react-bootstrap-icons";
 import { Link, useNavigate } from "react-router-dom";
@@ -409,7 +410,15 @@ if (filtroFechaHastaCookie !== null) {
                 />
               </Link>
             </MDTypography>
-
+            <MDTypography variant="caption" color="text" fontWeight="medium">
+              <Link to={`../TareaDocumentacionList/${Tarea.idTarea}`}>
+                <FilePdfFill
+                  fontSize="large"
+                  color="danger"
+                  titleAccess="Subir Archivos"
+                />
+              </Link>
+            </MDTypography>
           </MDBox>
         );
 
