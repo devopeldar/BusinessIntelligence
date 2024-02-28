@@ -48,7 +48,7 @@ routesnew = [
     title: "Tareas",
     key: "tareas",
     icon: <People />,
-    visible: false,
+    visible: true,
     codigoPermiso: 100,
   },
   {
@@ -58,7 +58,7 @@ routesnew = [
     icon: <Task />,
     route: "components/Pages/Tarea",
     component: <TareaList />,
-    visible: false,
+    visible: true,
     codigoPermiso: 101,
     //visible: retrievedPermissions.USUARIOS?.valor || false
   },
@@ -154,7 +154,7 @@ routesnew = [
     key: "seguridad",
     title: "Seguridad",
     icon: <KeyFill />,
-    visible: false,
+    visible: true,
     codigoPermiso: 400,
   },
   {
@@ -196,7 +196,7 @@ routesnew = [
     icon: <KeyFill />,
     route: "/CambiarContrasenia",
     component: <CambiarContrasenia />,
-    visible: false,
+    visible: true,
     codigoPermiso: 404,
   },
   {
@@ -206,7 +206,7 @@ routesnew = [
     icon: <Close />,
     route: "/Closesession",
     component: <CloseSession handleCloseSession={handleCloseSession} />,
-    visible: false,
+    visible: true,
     codigoPermiso: 999,
   },
 ];

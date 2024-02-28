@@ -89,6 +89,7 @@ import VencimientosEdit from "./components/Pages/Vencimientos/VencimientosEdit";
 import VencimientosList from "./components/Pages/Vencimientos/VencimientosList";
 import VencimientosAdd from "./components/Pages/Vencimientos/VencimientosAdd";
 import TareaDocumentacionList from "./components/Pages/Tareas/TareasDocumentacion/TareaDocumentacionList";
+import TareaDocumentacionDelete from "./components/Pages/Tareas/TareasDocumentacion/TareaDocumentacionDelete";
 
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
@@ -338,7 +339,9 @@ export default function App() {
             <Route path="/VencimientosAdd" element={<VencimientosAdd />} />
            
             <Route path="/TareaDocumentacionList/:id" element={<TareaDocumentacionList />} />
-
+            <Route path="/TareaDocumentacionDelete/:id" element={<TareaDocumentacionDelete />} /> 
+            <Route path="/TareaDocumentacionVolver" element={<TareaDocumentacionList />} />
+            
             {/* 
 
 
