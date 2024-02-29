@@ -17,6 +17,7 @@ import API_URL from "../../../../config";
 import MDInput from "../../../controls/MDInput";
 import { styled } from '@mui/material/styles';
 import { CloudDownload, DeleteForever, ExitToApp, Save } from "@mui/icons-material";
+import MDSnackbar from "../../../controls/MDSnackbar";
 
 
 function TareaDocumentacionList() {
@@ -29,6 +30,37 @@ function TareaDocumentacionList() {
   const [columns, setColumns] = useState([]);
   const [rows, setRows] = useState([]);
   const [descripcion, setDescripcion] = useState("");
+  const [dateTime, setDateTime] = useState("");
+  
+  const [successSB, setSuccessSB] = useState(false);
+  const closeSuccessSB = () => setSuccessSB(false);
+  const [errorSB, setErrorSB] = useState(false);
+  const closeErrorSB = () => setErrorSB(false);
+  const closeSuccessSBPrev = () => setSuccessSBPrev(false);
+  const [successSBPrev, setSuccessSBPrev] = useState(false);
+  useEffect(() => {
+    const obtenerFechaHoraActual = () => {
+      const fechaHoraActual = new Date();
+      const fechaFormateada = obtenerFechaFormateada(fechaHoraActual);
+      setDateTime(fechaFormateada);
+    };
+
+    obtenerFechaHoraActual();
+  }, []);
+
+  const obtenerFechaFormateada = (fecha) => {
+    const options = {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false,
+    };
+
+    return fecha.toLocaleString("es-ES", options);
+  };
 
   useEffect(() => {
     fetchData();
@@ -217,6 +249,7 @@ function TareaDocumentacionList() {
 
   const handleUpload = async () => {
     try {
+      setSuccessSBPrev(true);
       const formData = new FormData();
       console.log("idTarea", id)
       formData.append('file', selectedFile);
@@ -235,8 +268,14 @@ function TareaDocumentacionList() {
       const filePath = response.data.filePath;
       fetchData();
       // Aquí puedes guardar la ruta del archivo en tu base de datos
+      setSuccessSB(true);
+      setErrorSB(false);
+      setSuccessSBPrev(false);
       console.log('Ruta del archivo guardada:', filePath);
     } catch (error) {
+      setSuccessSB(false);
+      setErrorSB(true);
+      setSuccessSBPrev(false);
       console.error('Error al subir el archivo:', error);
     }
   };
@@ -343,6 +382,7 @@ function TareaDocumentacionList() {
                   </MDButton>
                   </MDBox>
             </MDBox>
+           
               <MDBox pt={3}  py={3}
                 px={2}>
                 
@@ -384,6 +424,38 @@ function TareaDocumentacionList() {
                   noEndBorder
                   pagination={{color:"info", variant:"gradient"}}
                 /> 
+                 <MDSnackbar
+                    color="success"
+                    icon="notifications"
+                    title="Task Manager"
+                    content="Archivo subido exitosamente"
+                    dateTime={dateTime}
+                    open={successSB}
+                    onClose={closeSuccessSB}
+                    close={closeSuccessSB}
+                  />
+                  <MDSnackbar
+                      color="error"
+                      icon="warning"
+                      title="Aviso"
+                      content="Error al subir archivo"
+                      dateTime={dateTime}
+                      open={errorSB}
+                      onClose={closeErrorSB}
+                      close={closeErrorSB}
+
+                  />
+                   <MDSnackbar
+                    color="info"
+                    icon="notifications"
+                    title="Task Manager"
+                    content="Subiendo Archivo ....."
+                    dateTime={dateTime}
+                    open={successSBPrev}
+                    ti
+                    onClose={closeSuccessSBPrev}
+                    close={closeSuccessSBPrev}
+                  />
               </MDBox>
             </Card>
           </Grid>
