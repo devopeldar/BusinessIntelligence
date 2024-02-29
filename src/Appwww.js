@@ -90,6 +90,7 @@ import VencimientosList from "./components/Pages/Vencimientos/VencimientosList";
 import VencimientosAdd from "./components/Pages/Vencimientos/VencimientosAdd";
 import TareaDocumentacionList from "./components/Pages/Tareas/TareasDocumentacion/TareaDocumentacionList";
 import TareaDocumentacionDelete from "./components/Pages/Tareas/TareasDocumentacion/TareaDocumentacionDelete";
+import CambiarContrasenia from "./components/authentication/CambiarContrasenia";
 
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
@@ -118,9 +119,9 @@ export default function App() {
 
   const [isLoggedIn, setIsLoggedIn] = useState(initialAuthState);
   const [shouldReload, setShouldReload] = useState(false);
-  //const rutasVisibles = routes.filter(route => route.visible === true);
-  const [routesVisible, setRoutesVisible] = useState(routes);
-
+  
+  //const [routesVisible, setRoutesVisible] = useState(routes);
+  const routesVisible = routes.filter(route => route.visible === true);
   const navigate = useNavigate();
   // Cache for the rtl
   useMemo(() => {
@@ -168,13 +169,13 @@ export default function App() {
     // Lógica para reconstruir las rutas basadas en el estado de autenticación (isLoggedIn)
     const updatedRoutes = routes.filter((route) => route.visible === true);
     console.log("updatedRoutes ", updatedRoutes);
-    setRoutesVisible(updatedRoutes);
+    //setRoutesVisible(updatedRoutes);
     if (shouldReload) {
       
       window.location.reload();
       setShouldReload(false); // Restablece shouldReload a false después de la recarga
     }
-  }, [isLoggedIn, shouldReload]);
+  }, [ shouldReload]);
 
   const handleConfiguratorOpen = () =>
     setOpenConfigurator(dispatch, !openConfigurator);
@@ -191,6 +192,7 @@ export default function App() {
   }, [pathname]);
 
   const getRoutes = (allRoutes) =>
+  
     allRoutes.map((route) => {
       if (route.collapse) {
         return getRoutes(route.collapse);
@@ -203,6 +205,7 @@ export default function App() {
             path={route.route}
             element={route.component}
             key={route.key}
+            visible={route.visible}
           />
         );
       }
@@ -245,7 +248,10 @@ export default function App() {
 
           <Routes>
             {getRoutes(routesVisible)}
-
+            <Route
+              path="/"
+              element={<ConfirmacionIngreso />}
+            />
             <Route
               path="/ConfirmacionActivacionCuenta"
               element={<ConfirmacionActivacionCuenta />}
@@ -274,7 +280,7 @@ export default function App() {
             <Route path="/Perfil/PerfilEdit/:id" element={<PerfilEdit />} />
             <Route path="/Perfil/Perfiles" element={<Perfiles />} />
             <Route path="/PerfilesVolver" element={<Perfiles />} />
-
+            <Route path="/Perfiles" element={<Perfiles />} />
             <Route path="/DepartamentoAdd" element={<DepartamentoAdd />} />
             <Route
               path="/Departamento/DepartamentoEdit/:id"
@@ -291,6 +297,7 @@ export default function App() {
             <Route path="/TareaEstado" element={<TareaEstadoList />} />
             <Route path="/TareaEstadoVolver" element={<TareaEstadoList />} />
 
+            <Route path="/TareasTipo" element={<TareaTipoList />} />
             <Route path="/TareaTipoVolver" element={<TareaTipoList />} />
             <Route path="/TareaTipoAdd" element={<TareaTipoAdd />} />
             <Route
@@ -305,7 +312,7 @@ export default function App() {
 
             <Route path="/ClienteEdit/:id" element={<ClienteEdit />} />
             <Route path="/ClienteAdd" element={<ClienteAdd />} />
-            <Route path="/Cliente" element={<ClienteList />} />
+            <Route path="/Clientes" element={<ClienteList />} />
             <Route path="/ClienteVolver" element={<ClienteList />} />
 
             <Route path="/TareaEdit/:id" element={<TareaList />} />
@@ -327,21 +334,25 @@ export default function App() {
 
             <Route path="/UsuarioEdit/:id" element={<UsuarioEdit />} />
             <Route path="/UsuarioVolver" element={<UsuarioList />} />
+            <Route path="/Usuarios" element={<UsuarioList />} />
 
             <Route path="/PresupuestoAceptar/:id/:habilitado" element={<PresupuestoAccept />} /> 
             <Route path="/PresupuestoCopy/:id" element={<PresupuestoCopy />} /> 
             <Route path="/PresupuestoVolver" element={<PresupuestoList />} />
             <Route path="/PresupuestoAdd" element={<PresupuestoAdd />} />
             <Route path="/PresupuestoEdit/:id" element={<PresupuestoEdit />} />
-
+            <Route path="/Presupuestos" element={<PresupuestoList />} />
             <Route path="/VencimientosEdit/:id" element={<VencimientosEdit />} /> 
             <Route path="/VencimientosVolver" element={<VencimientosList />} />
             <Route path="/VencimientosAdd" element={<VencimientosAdd />} />
-           
+            <Route path="/Vencimientos" element={<VencimientosList />} />
+            
             <Route path="/TareaDocumentacionList/:id" element={<TareaDocumentacionList />} />
             <Route path="/TareaDocumentacionDelete/:id" element={<TareaDocumentacionDelete />} /> 
             <Route path="/TareaDocumentacionVolver" element={<TareaDocumentacionList />} />
             
+            <Route path="/CambiarContrasenia" element={<CambiarContrasenia />} />
+        
             {/* 
 
 
