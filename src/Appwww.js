@@ -120,8 +120,9 @@ export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(initialAuthState);
   const [shouldReload, setShouldReload] = useState(false);
   
-  //const [routesVisible, setRoutesVisible] = useState(routes);
-  const routesVisible = routes.filter(route => route.visible === true);
+
+  const routesVisible =  routes.filter(route => route.visible === true);
+  //let routesVisible =[]; routesVisible =  await routes.filter(route => route.visible === true);
   const navigate = useNavigate();
   // Cache for the rtl
   useMemo(() => {
@@ -155,12 +156,8 @@ export default function App() {
     localStorage.setItem('isActivarCuenta', 'false');
     localStorage.setItem('isForgotPassword', 'false');
     setShouldReload(true);
-    navigate("/ConfirmacionIngreso");
+    navigate("/");
   };
-
-  // const updatedRoutes = routes.filter((route) => route.visible === true);
-  // setRoutesVisible(updatedRoutes);
-  //   console.log("updatedRoutes ", updatedRoutes);
 
   // Almacena el estado de autenticación en localStorage cuando cambie
   useEffect(() => {
@@ -169,7 +166,7 @@ export default function App() {
     // Lógica para reconstruir las rutas basadas en el estado de autenticación (isLoggedIn)
     const updatedRoutes = routes.filter((route) => route.visible === true);
     console.log("updatedRoutes ", updatedRoutes);
-    //setRoutesVisible(updatedRoutes);
+
     if (shouldReload) {
       
       window.location.reload();
@@ -372,6 +369,8 @@ export default function App() {
               routes={routesVisible}
               onMouseEnter={handleOnMouseEnter}
               onMouseLeave={handleOnMouseLeave}
+              visible={false}
+              
             />
             <Configurator />
             {configsButton}

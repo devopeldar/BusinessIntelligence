@@ -4,8 +4,19 @@ import { Card } from '@mui/material';
 import MDBox from '../controls/MDBox';
 import MDTypography from '../controls/MDTypography';
 import bgImage from "../../assets/images/bg-sign-up-cover.jpeg";
+import { useNavigate } from 'react-router-dom';
 const ConfirmacionIngreso = () => {
+//   const [shouldReload, setShouldReload] = useState(true);
+//   useEffect(() => {
+//     if (shouldReload) {
+      
+//       window.location.reload();
+//       setShouldReload(false); // Restablece shouldReload a false después de la recarga
+//     }
 
+// }, [shouldReload]);
+const navigate = useNavigate();
+navigate("/");
   return (
     <BasicLayout image={bgImage}>
       <Card>

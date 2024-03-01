@@ -34,6 +34,7 @@ import {
   Filter,
   PeopleAltTwoTone,
   NoteAlt,
+  PictureAsPdf,
 } from "@mui/icons-material";
 import MDProgress from "../../controls/MDProgress";
 import EstadoTarea from "../../Utils/estadoTarea";
@@ -412,9 +413,9 @@ if (filtroFechaHastaCookie !== null) {
             </MDTypography>
             <MDTypography variant="caption" color="text" fontWeight="medium">
               <Link to={`../TareaDocumentacionList/${Tarea.idTarea}`}>
-                <FilePdfFill
+                <PictureAsPdf
                   fontSize="large"
-                  color="danger"
+                  color="primary"
                   titleAccess="Subir Archivos"
                 />
               </Link>

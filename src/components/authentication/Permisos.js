@@ -20,6 +20,7 @@ const Permisos = () => {
   const { id } = useParams();
   const [mantenimientotareas, setMantenimientoTareas] = useState(false);
   const [departamentos, setDepartamentos] = useState(false);
+  const [presupuestos, setPresupuestos] = useState(false);
   const [tareas, setTareas] = useState(false);
   const [estadotarea, setEstadoTarea] = useState(false);
   const [tipodetareas, setTipoDeTareas] = useState(false);
@@ -74,6 +75,10 @@ const Permisos = () => {
 
         const TIPOSDETAREAS = data.some(item => item.codigoPermiso === itemsMenu.TIPOSDETAREAS.valor);
         setTipoDeTareas(TIPOSDETAREAS);
+
+        const PRESUPUESTOS = data.some(item => item.codigoPermiso === itemsMenu.PRESUPUESTO.valor);
+        setPresupuestos(PRESUPUESTOS);
+
 
         const EVENTOS = data.some(item => item.codigoPermiso === itemsMenu.EVENTOS.valor);
         setMnuEventos(EVENTOS);
@@ -132,6 +137,7 @@ const Permisos = () => {
       if (mnueventos || (evento || tipoevento)) { agregarItem(itemsMenu.EVENTO); }
       if (evento === true) { agregarItem(itemsMenu.EVENTOS); }
       if (tipoevento === true) { agregarItem(itemsMenu.TIPOSDEEVENTOS); }
+      if (presupuestos === true) { agregarItem(itemsMenu.PRESUPUESTO); }
 
       console.log("listaPerfilPermisoRef ", listaPerfilPermisoRef);
 
@@ -175,7 +181,7 @@ const Permisos = () => {
     setDepartamentos(event.target.checked);
     setEstadoTarea(event.target.checked);
     setTipoDeTareas(event.target.checked);
-
+    setPresupuestos(event.target.checked);
   };
   const HandleMnuSeguridad = (event) => {
 
@@ -241,7 +247,7 @@ const Permisos = () => {
 
               <Checkbox name="tareas"
                 onChange={(e) => HandleMnuTarea(e)}
-                checked={tareas || (tipodetareas || estadotarea || mantenimientotareas || departamentos)}
+                checked={tareas || (tipodetareas || estadotarea || mantenimientotareas || departamentos || presupuestos)}
 
               />
 
@@ -315,6 +321,21 @@ const Permisos = () => {
                 sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
               >
                 &nbsp;&nbsp;Estado de Tarea
+              </MDTypography>
+            </MDBox>
+            <MDBox sx={{ ml: 5 }}>
+              <Checkbox name="presupuesto"
+                onChange={(e) => setPresupuestos(e.target.checked)}
+                checked={presupuestos}
+
+              />
+              <MDTypography
+                variant="button"
+                fontWeight="regular"
+                color="text"
+                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
+              >
+                &nbsp;&nbsp;Presupuesto
               </MDTypography>
             </MDBox>
             <MDBox>

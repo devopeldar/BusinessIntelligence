@@ -4,6 +4,7 @@ const itemsMenu = {
     TIPOSDETAREAS: { valor: 102, descripcion: "Tipos de Tareas" },
     DEPARTAMENTOS: { valor: 103, descripcion: "Departamentos" },
     ESTADOSDETAREA: { valor: 104, descripcion: "Estado de Tarea" },
+    PRESUPUESTO: { valor: 105, descripcion: "Presupuestos" },
     EVENTO: { valor: 200, descripcion: "Evento"},
     EVENTOS: { valor: 201, descripcion: "Eventos"},
     TIPOSDEEVENTOS: { valor: 202, descripcion: "Tipos de Evento"},
@@ -17,17 +18,3 @@ const itemsMenu = {
   };
   
   export default itemsMenu;
-  //100 Tarea
-    //101 Tareas
-    //102 Tipos de Tareas
-    //103 DEpartamentos
-    //104 Estados de Tareas    
-  //200 Eventos
-    //Eventos 201
-    //Tipos de Eventos 202
-  //300 Clientes
-    //301 Mantenimiento Clientes
-  //400 Seguridad
-    //401 Usuarios
-    //402 Perfiles
-    //403 Roles

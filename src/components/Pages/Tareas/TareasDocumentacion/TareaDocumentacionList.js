@@ -313,7 +313,7 @@ function TareaDocumentacionList() {
                       handleVolver();
                     }}
                     variant="gradient"
-                    color="warning"
+                    color="info"
                     endIcon={<ExitToApp />}
                     text="contained"
                   >
@@ -386,35 +386,7 @@ function TareaDocumentacionList() {
               <MDBox pt={3}  py={3}
                 px={2}>
                 
-              {/* <MDButton
-                    onClick={() => {
-                      handleAdd();
-                    }}
-                    variant="gradient"
-                    color="success"
-                    endIcon={<BuildingFillAdd />}
-                    text="contained"
-                  >
-                    Agregar
-                  </MDButton> */}
-                   {/* <DataGridPremium
-                    rows={rows}
-                    columns={columns}
-                    // slots={{
-                    //   toolbar: CustomToolbar,
-                    // }}
-                  /> */}
-                    {/* <MDButton
-                      onClick={() => {
-                        handlePDF();
-                      }}
-                      variant="gradient"
-                      color="error"
-                      endIcon={<FilePdf />}
-                      text="contained"
-                    >
-                      PDF
-                    </MDButton> */}
+            
                  <DataTable
                   table={{ columns, rows }}
                   isSorted={false}
