@@ -287,6 +287,8 @@ if (filtroFechaHastaCookie !== null) {
             tareaTipoNombre={Tarea.tareaTipoNombre}
             estadoDescripcion={Tarea.estadoDescripcion}
             observaciones={Tarea.observaciones}
+             estado = {Tarea.estado}
+            
           />
         );
         const roles = (
@@ -309,6 +311,8 @@ if (filtroFechaHastaCookie !== null) {
             fechaFinalizacion={Tarea.fechaFinalizacion}
             tiempoDetenido={Tarea.tiempoDetenido}
             tiempoTranscurrido={Tarea.tiempoTranscurrido}
+            progres={Tarea.porcentajeTrascurrido}
+            color={color}
           />
         );
         
@@ -437,7 +441,7 @@ if (filtroFechaHastaCookie !== null) {
 
       setColumns([
         // { Header: "ID Tarea", accessor: "idTarea", align: "left" },
-        { Header: "", width: "10%", accessor: "estado", align: "left" },
+        // { Header: "", width: "10%", accessor: "estado", align: "left" },
         {
           Header: "Descripcion",
           accessor: "descripcion",
@@ -446,11 +450,11 @@ if (filtroFechaHastaCookie !== null) {
         },
         { Header: "Roles", width: "15%", accessor: "roles", align: "left" },
         { Header: "Fechas", accessor: "fecha", align: "left" },
-        {
-          Header: "Porc. Transcurrido",
-          accessor: "porctranscurrido",
-          align: "left",
-        },
+        // {
+        //   Header: "Porc. Transcurrido",
+        //   accessor: "porctranscurrido",
+        //   align: "left",
+        // },
         { Header: "Acciones", accessor: "action", align: "center" },
       ]);
     } catch (ex) {
@@ -743,15 +747,30 @@ if (filtroFechaHastaCookie !== null) {
     tareaTipoCodigo,
     tareaTipoNombre,
     estadoDescripcion,
-    observaciones,
+    observaciones,estado
   }) => (
+    
     <MDBox lineHeight={1} textAlign="left">
+       <MDBox ml={-1}>
+           
+          </MDBox>
       <MDTypography
         display="block"
         variant="caption"
         color="dark"
         fontWeight="bold"
       >
+         {estado === 1 || estado === 2 ? (
+              <PlayArrow color="success" fontSize="large" />
+            ) : estado === 3 ? (
+              <Pause color="error" fontSize="large" />
+            ) : estado === 0 ? (
+              <PlayArrow color="warning" fontSize="large" />
+            ) : estado === 4 ? (
+              <DoneAll color="success" fontSize="large" />
+            ) : (
+              <Stop color="info" fontSize="large" />
+            )}
         {cliente}
       </MDTypography>
       <MDTypography
@@ -809,7 +828,7 @@ if (filtroFechaHastaCookie !== null) {
     fechaVencimientoLegal,
     fechaFinalizacion,
     tiempoDetenido,
-    tiempoTranscurrido,
+    tiempoTranscurrido,progres,color
   }) => (
     <MDBox lineHeight={1} textAlign="left">
       <MDTypography
@@ -872,6 +891,16 @@ if (filtroFechaHastaCookie !== null) {
       >
         Tiempo Detenido :{tiempoDetenido}{" "}
       </MDTypography>
+      <MDBox width="100%" ml="auto">
+      <MDBox >
+        <MDProgress
+          label={true}
+          variant="gradient"
+          color={color}
+          value={progres}
+        />
+      </MDBox>
+    </MDBox>
     </MDBox>
   );
 

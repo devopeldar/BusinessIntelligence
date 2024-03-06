@@ -372,9 +372,9 @@ export default function App() {
               visible={false}
               
             />
-            <Configurator />
+            {/* <Configurator />
             {configsButton}
-            {layout === "vr" && <Configurator />}
+            {layout === "vr" && <Configurator />} */}
           </>
         </ThemeProvider>
       ) : (

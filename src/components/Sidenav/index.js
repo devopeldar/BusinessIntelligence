@@ -31,6 +31,8 @@ import {
   setTransparentSidenav,
   setWhiteSidenav,
 } from "../../context";
+import { Close } from "@mui/icons-material";
+import { CloseButton } from "react-bootstrap";
 
 function Sidenav({ color, brand, brandName, routes, ...rest }) {
   const [controller, dispatch] = useMaterialUIController();
@@ -145,13 +147,16 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
           p={1.625}
           onClick={closeSidenav}
           sx={{ cursor: "pointer" }}
+          
         >
+          
           <MDTypography variant="h6" color="secondary">
-            <Icon sx={{ fontWeight: "bold" }}>close</Icon>
+            <CloseButton/>
+            
           </MDTypography>
         </MDBox>
         <MDBox display="flex" alignItems="center">
-          {brand && <MDBox component="img" src={brand} alt="Brand" width="2rem" />}
+          {brand && <MDBox component="img" src={brand} alt="Brand" width="1rem" />}
           <MDBox
             width={!brandName && "100%"}
             sx={(theme) => sidenavLogoLabel(theme, { miniSidenav })}

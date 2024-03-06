@@ -32,7 +32,7 @@ import {
   setMiniSidenav,
   setOpenConfigurator,
 } from "../../../context";
-import { Home, Settings } from "@mui/icons-material";
+import { Home, Menu, Settings } from "@mui/icons-material";
 import MDTypography from "../MDTypography";
 
 function DashboardNavbar({ absolute, light, isMini }) {
@@ -136,18 +136,18 @@ function DashboardNavbar({ absolute, light, isMini }) {
                 {/* <Icon sx={iconsStyle} fontSize="medium">
                   {miniSidenav ? "menu_open" : "menu"}
                 </Icon> */}
-                <Settings />
+                <Menu />
               </IconButton>
-              <IconButton
+              {/* <IconButton
                 size="small"
                 disableRipple
                 color="inherit"
                 sx={navbarIconButton}
                 onClick={handleConfiguratorOpen}
               >
-                {/* <Icon sx={iconsStyle}>settings</Icon> */}
+               
                 <Settings />
-              </IconButton>
+              </IconButton> */}
 
               {/* <IconButton
                 size="small"
