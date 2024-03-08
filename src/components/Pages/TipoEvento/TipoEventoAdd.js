@@ -88,7 +88,7 @@ const TipoEventoAdd = () => {
   useEffect(() => {
     const GetEstadosTareas = async () => {
 
-      const response = await axios.post(API_URL + "/TareaEstadoListar", {
+      const response = await axios.post(API_URL + "/TareaEstadoListarNoSistema", {
         headers: {
           accept: "application/json",
         },

@@ -39,6 +39,12 @@ const EventoTareaAdd = () => {
   const [loading, setLoading] = useState(false);
   //const [idEventoTipo, setIdEventoTipo] = useState(0);
   const [idTarea, setIdTarea] = useState(0);
+  const [nombrecliente, setNombrecliente] = useState("");
+  const [tareatipo, setTareaTipo] = useState("");
+  const [tareaestado, setTareaEstado] = useState("");
+  const [observaciones, setObservaciones] = useState("");
+  const [depto, setDepto] = useState("");
+
   const handleVolver = () => {
     history("/TareaListVolver"); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
   };
@@ -89,6 +95,41 @@ const EventoTareaAdd = () => {
     };
     GetEventoTipo();
   }, [id]);
+
+
+  useEffect(() => {
+    setIdTarea(id);
+    // Aquí realizas la llamada a tu API para obtener el TipoEvento específico por su ID
+    const GetTareaByID = async () => {
+      const reqTarea = {
+        idTarea: id
+      };
+      const response = await axios.post(API_URL + "/TareaGetByID",reqTarea, {
+        headers: {
+          accept: "application/json",
+        },
+      });
+
+      const res = await response.data;
+      if (res.rdoAccion) {
+        setNombrecliente(res.clienteNombre);
+        setTareaTipo(res.tareaTipoNombre);
+        setTareaEstado(res.estadoDescripcion);
+        setObservaciones(res.observaciones);
+        setDepto(res.departamentoNombre);
+      } else {
+        setNombrecliente("No Encontrado");
+        setTareaTipo("----------");
+        setTareaEstado("----------");
+        setObservaciones("----------");
+        setDepto("----------");
+      }
+    
+    };
+    GetTareaByID();
+  }, [id]);
+
+
 
   const handleSubmit = (event) => {
     setGrabando(false); // Inicia la grabación
@@ -198,6 +239,36 @@ const EventoTareaAdd = () => {
 
         <MDBox pt={4} pb={3} px={3}>
           <MDBox component="form" role="form">
+            <MDBox
+              variant="gradient"
+              bgColor="info"
+              borderRadius="lg"
+              coloredShadow="info"
+              mx={2}
+              mt={-3}
+              p={3}
+              mb={1}
+              textAlign="center"
+            >
+              <MDTypography variant="h6" fontWeight="medium" color="white" mt={1}>
+                Tarea modificada [ {idTarea} ]
+              </MDTypography>
+              <MDTypography display="block" variant="button" color="white" my={1} textAlign="left">
+                Cliente: {nombrecliente}
+              </MDTypography>
+              {/* <MDTypography display="block" variant="button" color="white" my={1} textAlign="left">
+                Departamento: {depto}
+              </MDTypography> */}
+              <MDTypography display="block" variant="button" color="white" my={1} textAlign="left">
+                Tipo Tarea: {tareatipo}
+              </MDTypography>
+              <MDTypography display="block" variant="button" color="white" my={1} textAlign="left">
+                Estado Tarea: {tareaestado}
+              </MDTypography>
+              {/* <MDTypography display="block" variant="button" color="white" my={1} textAlign="left">
+                Observaciones: {observaciones}
+              </MDTypography> */}
+            </MDBox> 
             <MDBox mb={2}>
               <Autocomplete
                 options={elements}

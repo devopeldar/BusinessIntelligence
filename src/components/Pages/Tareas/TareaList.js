@@ -79,6 +79,12 @@ if (filtroNombreUsuarioCookie !== null) {const filtroNombreUsuarioObjeto = filtr
   const [nombreusuario, setNombreUsuario] = useState(nombreusuarioValue);
 
 
+  let idTareaValue = "0";
+  const filtroIdTareaCookie = getCookie("FILTRONROTAREA");
+if (filtroIdTareaCookie !== null) {const filtroidTarea = filtroIdTareaCookie;  idTareaValue = filtroidTarea;}
+
+  const [idTarea, setIdTarea] = useState(idTareaValue);
+
 
   let selectedEstadoInitialValue = estados[0];
   
@@ -235,6 +241,7 @@ if (filtroFechaHastaCookie !== null) {
       const requsuario = {
         idUsuario: localStorage.getItem("iduserlogueado"),
         idTareaEstado: selectedValuEestado?.idTareaEstado || 0,
+        idTarea: idTarea,
         idCliente: selectedValueCliente?.idCliente || 0,
         idDepartamento: selectedValueDepartamentos?.idDepartamento || 0,
         IDTareaTipo: selectedValueTipoTarea?.idTareaTipo || 0,
@@ -288,6 +295,7 @@ if (filtroFechaHastaCookie !== null) {
             estadoDescripcion={Tarea.estadoDescripcion}
             observaciones={Tarea.observaciones}
              estado = {Tarea.estado}
+             IDTarea = {Tarea.idTarea}
             
           />
         );
@@ -584,15 +592,16 @@ if (filtroFechaHastaCookie !== null) {
 
   const handleExcel = () => {
     setEsPDF(false);
-    fetchData();
+    fetchDataExcel();
   };
 
-  const fetchData = async () => {
+  const fetchDataExcel = async () => {
     try {
       const requsuario = {
         idUsuario: localStorage.getItem("iduserlogueado"),
         idTareaEstado: selectedValuEestado?.idTareaEstado || 0,
         idCliente: selectedValueCliente?.idCliente || 0,
+        idTarea: idTarea,
         idDepartamento: selectedValueDepartamentos?.idDepartamento || 0,
         IDTareaTipo: selectedValueTipoTarea?.idTareaTipo || 0,
         CampoFiltroFecha: selectedValueFechaFiltro?.campo || "",
@@ -608,11 +617,39 @@ if (filtroFechaHastaCookie !== null) {
 
       setTareas(response.data);
 
-      if (espdf === true) {
-        generateAndDownloadPDF();//  exportToExcel(); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
-      } else {
-        exportToExcel();
-      }
+ 
+      exportToExcel();
+ 
+    } catch (ex) {
+      console.log(ex);
+    }
+  };
+
+  const fetchData = async () => {
+    try {
+      const requsuario = {
+        idUsuario: localStorage.getItem("iduserlogueado"),
+        idTareaEstado: selectedValuEestado?.idTareaEstado || 0,
+        idCliente: selectedValueCliente?.idCliente || 0,
+        idTarea: idTarea,
+        idDepartamento: selectedValueDepartamentos?.idDepartamento || 0,
+        IDTareaTipo: selectedValueTipoTarea?.idTareaTipo || 0,
+        CampoFiltroFecha: selectedValueFechaFiltro?.campo || "",
+        fechaDesde: selectedDateFrom ? selectedDateFrom : firstDayOfMonth,
+        fechaHasta: selectedDateTo ? selectedDateTo : firstDayOfNextMonth,
+        roles:nombreusuario
+      };
+      const response = await axios.post(API_URL + "/TareaListarTodo", requsuario,{
+        headers: {
+          accept: "application/json",
+        },
+      });
+
+      setTareas(response.data);
+
+
+      generateAndDownloadPDF();//  exportToExcel(); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
+     
     } catch (ex) {
       console.log(ex);
     }
@@ -747,7 +784,7 @@ if (filtroFechaHastaCookie !== null) {
     tareaTipoCodigo,
     tareaTipoNombre,
     estadoDescripcion,
-    observaciones,estado
+    observaciones,estado, IDTarea
   }) => (
     
     <MDBox lineHeight={1} textAlign="left">
@@ -771,7 +808,7 @@ if (filtroFechaHastaCookie !== null) {
             ) : (
               <Stop color="info" fontSize="large" />
             )}
-        {cliente}
+       {"["}{IDTarea}{"] - "} {cliente}
       </MDTypography>
       <MDTypography
         display="block"
@@ -1000,7 +1037,28 @@ if (filtroFechaHastaCookie !== null) {
                     >
                       PDF
                     </MDButton>
-                    <MDBox mb={2} mt={3} style={{ display: "flex" }}>
+                    <MDBox mb={2} mt={3} >
+                    <MDBox>
+                      <MDInput
+                        type="text"
+                        name="idTarea"
+                        label="Nro Tarea"
+                        variant="standard"
+                        value={idTarea}
+                        onChange={(e) => setIdTarea(e.target.value)}
+                      />
+                  </MDBox>
+                  <MDBox mb={2}>
+                      <MDInput
+                        type="text"
+                        name="usuario"
+                        label="Roles"
+                        variant="standard"
+                        value={nombreusuario}
+                        onChange={(e) => setNombreUsuario(e.target.value)}
+                      />
+                  </MDBox>
+                  <MDBox mb={2} mt={3} style={{ display: "flex" }}>
                       <MDBox mb={2} mt={3} mr={2}>
                         <Autocomplete
                           options={estados}
@@ -1010,6 +1068,9 @@ if (filtroFechaHastaCookie !== null) {
                           }
                           getOptionSelected={(option, value) =>
                             option.idTareaEstado === value.idTareaEstado
+                          }
+                          isOptionEqualToValue={(option, value) =>
+                            option.descripcion === value.descripcion
                           }
                           value={selectedValuEestado || null}
                           onChange={handleAutocompleteEstadoChange}
@@ -1032,6 +1093,9 @@ if (filtroFechaHastaCookie !== null) {
                           getOptionSelected={(option, value) =>
                             option.idCliente === value.idCliente
                           }
+                          isOptionEqualToValue={(option, value) =>
+                            option.nombre === value.nombre
+                          }
                           value={selectedValueCliente || null}
                           onChange={handleAutocompleteClienteChange}
                           renderInput={(params) => (
@@ -1052,6 +1116,9 @@ if (filtroFechaHastaCookie !== null) {
                           }
                           getOptionSelected={(option, value) =>
                             option.idDepartamento === value.idDepartamento
+                          }
+                          isOptionEqualToValue={(option, value) =>
+                            option.nombre === value.nombre
                           }
                           value={selectedValueDepartamentos || null}
                           onChange={handleAutocompleteDeptoChange}
@@ -1074,6 +1141,9 @@ if (filtroFechaHastaCookie !== null) {
                           getOptionSelected={(option, value) =>
                             option.idTareaTipo === value.idTareaTipo
                           }
+                          isOptionEqualToValue={(option, value) =>
+                            option.nombre === value.nombre
+                          }
                           value={selectedValueTipoTarea || null}
                           onChange={handleAutocompleteTipoTareaChange}
                           renderInput={(params) => (
@@ -1086,18 +1156,9 @@ if (filtroFechaHastaCookie !== null) {
                           )}
                         />
                       </MDBox>
-
+                      </MDBox>
                     </MDBox>
-                    <MDBox mb={2}>
-                      <MDInput
-                        type="text"
-                        name="usuario"
-                        label="Roles"
-                        variant="standard"
-                        value={nombreusuario}
-                        onChange={(e) => setNombreUsuario(e.target.value)}
-                      />
-                  </MDBox>
+                    
                     <MDBox mb={2} mt={3} style={{ display: "block" }}>
                       <MDBox mb={2} mt={3} style={{ display: "block" }}>
                         <Autocomplete

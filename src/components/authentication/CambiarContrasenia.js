@@ -75,6 +75,7 @@ const CambiarContrasenia = () => {
 
   const handleInputChange = (event) => {
     // Maneja los cambios en los campos del formulario
+    setGrabando(false);
     setShowprogrees(1);
     const { name, value } = event.target;
     setFormData({
@@ -85,24 +86,7 @@ const CambiarContrasenia = () => {
 
   const handleSubmit = (event) => {
     setGrabando(false); // Inicia la grabación
-    // const timer = setInterval(() => {
-
-    //   setProgress((oldProgress) => {
-    //     if (oldProgress === 100) {
-
-    //       clearInterval(timer);
-    //       return 0;
-    //     }
-    //     if (showprogrees === 0) {
-
-    //       clearInterval(timer);
-    //       return 0;
-    //     }
-
-    //     const diff = Math.floor(Math.random() * 10);
-    //     return Math.min(oldProgress + diff, 100);
-    //   });
-    // }, 1000);
+   
     procesarFormulario(formData);
   };
   const procesarFormulario = async (data) => {

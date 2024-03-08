@@ -308,7 +308,26 @@ const Registrarme = ({ handleLogin }) => {
             >
               Registrarse
             </MDButton>
+            <MDBox
+              variant="gradient"
+              bgColor="warning"
+              borderRadius="lg"
+              coloredShadow="success"
+              mx={0}
+              mt={1}
+              p={1}
+              mb={1}
+              textAlign="center"
+            >
+          <MDTypography variant="h6" fontWeight="medium" color="white" mt={1}>
+              IMPORTANTE!!
+            </MDTypography>
+            <MDTypography display="block" variant="button" color="white" my={1}>
+              Al Registrarte recibiras un correo electrónico
+              a tu casilla indicando los pasos para poder activar tu cuenta.
+            </MDTypography>
           </MDBox>
+        </MDBox>
           <MDBox mt={3} mb={1} textAlign="center">
             <MDTypography variant="button" color="text">
               Ya tienes una cuenta?{" "}
