@@ -3,7 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import DashboardLayout from "../../controls/DashboardLayout";
 import DashboardNavbar from "../../controls/DashboardNavbar";
 import MDBox from "../../controls/MDBox";
-import { Autocomplete, Grid, TextField } from "@mui/material";
+import { Autocomplete, Grid, TextField, Tooltip } from "@mui/material";
 import { Card } from "react-bootstrap";
 import MDTypography from "../../controls/MDTypography";
 import MDButton from "../../controls/MDButton";
@@ -356,7 +356,7 @@ if (filtroFechaHastaCookie !== null) {
                   color="text"
                   fontWeight="medium"
                 >
-                  <Link to={`../Delete/${Tarea.idTarea}`}>
+                  <Link to={`../EventoTareaDelete/${Tarea.idTarea}/2`}>
                     <Delete
                       fontSize="large"
                       color="error"
@@ -992,6 +992,7 @@ if (filtroFechaHastaCookie !== null) {
                   direction="row"
                 >
                   <Grid item>
+                  <Tooltip title="Agregar Tarea">
                     <MDButton
                       onClick={() => {
                         handleAdd();
@@ -1003,6 +1004,7 @@ if (filtroFechaHastaCookie !== null) {
                     >
                       Agregar
                     </MDButton>
+                    </Tooltip>
                     <MDButton
                       onClick={() => {
                         handleFilter();

@@ -9,7 +9,7 @@ import BasicLayout from "../../layauots/BasicLayout";
 import { Card } from "react-bootstrap";
 
 import { PersonFillAdd, Save } from "react-bootstrap-icons";
-import { Delete, ExitToApp } from "@mui/icons-material";
+import { Delete, DeleteForever, ExitToApp } from "@mui/icons-material";
 
 import {
     Alert,
@@ -30,7 +30,7 @@ import MDTypography from "../../controls/MDTypography";
 import MDButton from "../../controls/MDButton";
 
 
-const EventoTareaEdit = () => {
+const EventoTareaDelete = () => {
     const { id, habilitado } = useParams(); // Obtener el parámetro de la URL (el ID del Tarea a editar)
     const [Tarea, setTarea] = useState(null);
     const [idTarea, setidTarea] = useState("");
@@ -47,7 +47,7 @@ const EventoTareaEdit = () => {
     const [mensaje, setMensaje] = useState("");
     const history = useNavigate();
     const [grabando, setGrabando] = useState(false);
-    const [controlHabilitado, setControlHabilitado] = useState(false);
+    const [controlHabilitado, setControlHabilitado] = useState(true);
     const [exito, setExito] = useState(false);
 
     const [elementsclientes, setElementsCliente] = useState([]);
@@ -112,12 +112,9 @@ const EventoTareaEdit = () => {
                 });
 
                 setRolesxTareaUpdate(newRows);
-                if (habilitado === "1") {
-                    setControlHabilitado(true);
-                } else {
-                    setControlHabilitado(false);
-                }
-
+                
+                setControlHabilitado(false);
+                
                 setTarea(data);
             } catch (error) {
                 console.error("Error:", error);
@@ -221,16 +218,6 @@ const EventoTareaEdit = () => {
             }
             const request = {
                 idTarea: id,
-                idTareaTipo: selectedValueTipoTarea.idTareaTipo,
-                idCliente: selectedValueCliente.idCliente,
-                idDepartamento: selectedValueDepartamentos.idDepartamento,
-                vencimientoDias: vencimientoDias,
-                fechaVencimientoLegal: fechaVencimientoLegal,
-                observaciones: observaciones,
-                tareaxRoles: rolesxTareaUpdate.map(item => ({
-                    idUsuario: item.idUsuario,
-                    idRol: item.idRol
-                })),
                 idUsuario: localStorage.getItem('iduserlogueado')
             };
             console.log("formData Tarea" + JSON.stringify(request))
@@ -241,7 +228,7 @@ const EventoTareaEdit = () => {
             setExito(true);
             setMensaje("");
             // Aquí realizas la llamada a tu API para actualizar el Tarea con los nuevos datos
-            const response = await fetch(API_URL + `/TareaModificacion`, {
+            const response = await fetch(API_URL + `/TareaEliminar`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -393,6 +380,7 @@ const EventoTareaEdit = () => {
        </Card>
    </BasicLayout>
     }
+
     return (
         <BasicLayout image={bgImage}>
             <Card style={{ width: "158%" }}>
@@ -408,10 +396,10 @@ const EventoTareaEdit = () => {
                     textAlign="center"
                 >
                     <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-                        {!controlHabilitado ? "Cambio de Roles" : "Editar Tarea"}
+                        Eliminar Tarea
                     </MDTypography>
                     <MDTypography display="block" variant="button" color="white" my={1}>
-                        {!controlHabilitado ? "Solo podra modificar los Roles de la tarea" : "Un Tarea especifica las tareas que tienen que cumplir los encargados de las mismas"}
+                        Al continuar el sistema eliminara la tarea.
                     </MDTypography>
                 </MDBox>
                 <MDBox pt={4} pb={3} px={3}>
@@ -544,49 +532,7 @@ const EventoTareaEdit = () => {
                                             </MDTypography>
                                         </MDBox>
                                         <MDBox mb={2}>
-                                            <MDBox mb={2} mr={4} ml={4}>
-                                                <Autocomplete
-                                                    onChange={handleAutocompleteUserChange}
-                                                    options={elementsUsuario}
-                                                    getOptionLabel={(option) => option.nombre}
-                                                    getOptionDisabled={(option) => option.activo === false}
-                                                    renderInput={(params) => (
-                                                        <TextField
-                                                            {...params}
-                                                            label="Seleccione Usuario"
-                                                            variant="outlined"
-                                                        />
-                                                    )}
-                                                />
-                                            </MDBox>
-                                            <MDBox mb={2} mr={4} ml={4}>
-                                                <Autocomplete
-                                                    onChange={handleAutocompleteRolChange}
-                                                    options={elementsRol}
-                                                    getOptionLabel={(option) => option.descripcion}
-                                                    getOptionDisabled={(option) => option.activo === false}
-                                                    renderInput={(params) => (
-                                                        <TextField
-                                                            {...params}
-                                                            label="Seleccione Rol"
-                                                            variant="outlined"
-                                                        />
-                                                    )}
-                                                />
-                                            </MDBox>
-                                            <MDBox mb={2} mr={6} ml={6}>
-                                                <MDButton
-                                                    onClick={() => {
-                                                        handleAddRol();
-                                                    }}
-                                                    variant="gradient"
-                                                    color="info"
-                                                    endIcon={<PersonFillAdd />}
-                                                    fullWidth
-                                                >
-                                                    Agregar Rol
-                                                </MDButton>
-                                            </MDBox>
+                                            
 
                                             <TableContainer component={Paper}>
                                                 <Table>
@@ -605,14 +551,7 @@ const EventoTareaEdit = () => {
                                                                     {item.idRol}
                                                                 </TableCell>
                                                                 <TableCell>{item.nombreRol}</TableCell>
-                                                                <TableCell>
-                                                                    <IconButton
-                                                                        aria-label="Eliminar"
-                                                                        onClick={() => eliminarItem(item.id)}
-                                                                    >
-                                                                        <Delete color="error" />
-                                                                    </IconButton>
-                                                                </TableCell>
+                                                               
                                                             </TableRow>
                                                         ))
                                                         }
@@ -631,11 +570,11 @@ const EventoTareaEdit = () => {
                                     }}
                                     variant="gradient"
                                     color="info"
-                                    endIcon={<Save />}
+                                    endIcon={<DeleteForever />}
                                     disabled={grabando}
                                     fullWidth
                                 >
-                                    Grabar
+                                    Eliminar Tarea
                                 </MDButton>
                             </MDBox>
                             <MDBox mt={2} mb={1}>
@@ -665,4 +604,4 @@ const EventoTareaEdit = () => {
     );
 };
 
-export default EventoTareaEdit;
+export default EventoTareaDelete;

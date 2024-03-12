@@ -23,6 +23,7 @@ import {
 } from "@mui/material";
 import bgImage from "../../../assets/images/bg-sign-up-cover.jpeg";
 import MDProgress from "../../controls/MDProgress";
+import MDSnackbar from "../../controls/MDSnackbar";
 
 const EventoTareaAdd = () => {
   const { id } = useParams(); // Obtener el parámetro de la URL (el ID del TipoEvento a editar)
@@ -44,9 +45,38 @@ const EventoTareaAdd = () => {
   const [tareaestado, setTareaEstado] = useState("");
   const [observaciones, setObservaciones] = useState("");
   const [depto, setDepto] = useState("");
+  const closeSuccessSBPrev = () => setSuccessSBPrev(false);
+  const [successSBPrev, setSuccessSBPrev] = useState(false);
+
+  const [dateTime, setDateTime] = useState("");
+
 
   const handleVolver = () => {
     history("/TareaListVolver"); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
+  };
+
+  useEffect(() => {
+    const obtenerFechaHoraActual = () => {
+      const fechaHoraActual = new Date();
+      const fechaFormateada = obtenerFechaFormateada(fechaHoraActual);
+      setDateTime(fechaFormateada);
+    };
+
+    obtenerFechaHoraActual();
+  }, []);
+
+  const obtenerFechaFormateada = (fecha) => {
+    const options = {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false,
+    };
+
+    return fecha.toLocaleString("es-ES", options);
   };
 
   const handleInputChange = (event) => {
@@ -129,10 +159,66 @@ const EventoTareaAdd = () => {
     GetTareaByID();
   }, [id]);
 
+  // const handleSubmit = async (event) => {
+  //   setGrabando(true); // Inicia la grabación
+  
+  //   let progress = 0; // Inicializa el progreso
+  //   const incrementoTotal = 100; // Incremento total necesario para alcanzar el 100%
+  //   const duracion = 10000; // Duración total de la animación en milisegundos (en este caso, 10 segundos)
+  //   const intervalo = 100; // Intervalo de actualización en milisegundos (en este caso, cada 0.1 segundo)
+  
+  //   const totalIteraciones = duracion / intervalo; // Número total de iteraciones
+  //   const incrementoPorIteracion = incrementoTotal / totalIteraciones; // Incremento por iteración
+  
+  //   const timer = setInterval(() => {
+  //     setProgress((oldProgress) => {
+  //       const newProgress = oldProgress + incrementoPorIteracion;
+  //       setProgress((prevProgress) => (prevProgress >= 100 ? 0 : prevProgress + 10));
+  //       return Math.min(newProgress, 100);
+  //     });
+  //   }, intervalo);
+  
+  //   try {
+  //     // Llama a la función para procesar el formulario
+  //     await procesarFormulario(formData);
+  //   } catch (error) {
+  //     console.error('Error al procesar el formulario:', error);
+  //   } finally {
+  //     // Independientemente de dónde esté el progreso cuando se complete el formulario, establecerá explícitamente el progreso en 100%
+  //     clearInterval(timer); // Limpia el temporizador
+  //     setProgress(100); // Establece el progreso en 100%
+  //     setGrabando(false); // Finaliza la grabación en caso de error
+  //   }
+  // };
 
-
-  const handleSubmit = (event) => {
+  // const handleSubmit = async (event) => {
+  //   setGrabando(true); // Inicia la grabación
+  
+  //   let progress = 0; // Inicializa el progreso
+  //   const timer = setInterval(() => {
+  //     setProgress(progress); // Actualiza el progreso
+  //     if (progress === 100) {
+  //       clearInterval(timer);
+  //       setGrabando(false); // Finaliza la grabación cuando el progreso alcanza el 100%
+  //     } else {
+  //       progress = Math.min(progress + 10, 100);
+  //     }
+  //   }, 1000);
+  
+  //   try {
+  //     // Llama a la función para procesar el formulario
+  //     await procesarFormulario(formData);
+  //   } catch (error) {
+  //     console.error('Error al procesar el formulario:', error);
+  //   } finally {
+  //     clearInterval(timer); // Limpia el temporizador
+  //     setGrabando(false); // Finaliza la grabación en caso de error
+  //   }
+  // };
+  const handleSubmit = async (event) => {
     setGrabando(false); // Inicia la grabación
+    setLoading(true);
+   
     const timer = setInterval(() => {
       setProgress((oldProgress) => {
         if (oldProgress === 100) {
@@ -144,17 +230,27 @@ const EventoTareaAdd = () => {
           return 0;
         }
 
-        const diff = Math.floor(Math.random() * 10);
-        return Math.min(oldProgress + diff, 100);
+        // const diff = Math.floor(Math.random() * 10);
+        // return Math.min(oldProgress + diff, 100);
+        setProgress((prevProgress) => (prevProgress >= 100 ? 0 : prevProgress + 10));
       });
-    }, 1000);
-    procesarFormulario(formData);
+    }, 800);
+   // procesarFormulario(formData);
+
+    // Proceso de espera simulado para mostrar el progreso antes de procesar el formulario
+  await new Promise((resolve) => setTimeout(resolve, 800));
+
+  // Llama a la función para procesar el formulario dentro del temporizador
+  //timer; // Mantener el temporizador en ejecución
+  await procesarFormulario(formData);
+
+
   };
 
   const procesarFormulario = async (data) => {
     try {
-      setLoading(true);
-
+      
+      setSuccessSBPrev(true);
       data.idEventoTipo = selectedValue.idEventoTipo;
       data.idTarea = idTarea;
       data.idUsuario = localStorage.getItem('iduserlogueado');
@@ -183,6 +279,7 @@ const EventoTareaAdd = () => {
             setMensaje("El Evento ha sido Registrado exitosamente!");
             setGrabando(true);
             setExito(true);
+            setSuccessSBPrev(false);
           } else {
             // Manejar errores si la respuesta no es exitosa
             setMensaje(res.rdoAccionDesc);
@@ -205,6 +302,7 @@ const EventoTareaAdd = () => {
       setLoading(false);
       setShowprogrees(0);
       setProgress(100);
+      
     }
   };
 
@@ -354,6 +452,16 @@ const EventoTareaAdd = () => {
               </MDButton>
             </MDBox>
           </MDBox>
+          <MDSnackbar
+                    color="info"
+                    icon="notifications"
+                    title="Task Manager"
+                    content="Grabando evento....."
+                    dateTime={dateTime}
+                    open={successSBPrev}
+                    onClose={closeSuccessSBPrev}
+                    close={closeSuccessSBPrev}
+                  />
           <MDBox mt={4} mb={1}>
             <MDProgress
               color="success"

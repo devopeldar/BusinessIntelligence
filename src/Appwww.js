@@ -91,6 +91,7 @@ import VencimientosAdd from "./components/Pages/Vencimientos/VencimientosAdd";
 import TareaDocumentacionList from "./components/Pages/Tareas/TareasDocumentacion/TareaDocumentacionList";
 import TareaDocumentacionDelete from "./components/Pages/Tareas/TareasDocumentacion/TareaDocumentacionDelete";
 import CambiarContrasenia from "./components/authentication/CambiarContrasenia";
+import EventoTareaDelete from "./components/Pages/Tareas/EventoTareaDelete";
 
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
@@ -119,9 +120,10 @@ export default function App() {
 
   const [isLoggedIn, setIsLoggedIn] = useState(initialAuthState);
   const [shouldReload, setShouldReload] = useState(false);
-  
+  const [routesVisible, setRoutesVisible] = useState([]);
 
-  const routesVisible =  routes.filter(route => route.visible === true);
+  //const routesVisible =  routes.filter(route => route.visible === true);
+  console.log("routesVisible ", routesVisible);
   //let routesVisible =[]; routesVisible =  await routes.filter(route => route.visible === true);
   const navigate = useNavigate();
   // Cache for the rtl
@@ -165,6 +167,7 @@ export default function App() {
 
     // Lógica para reconstruir las rutas basadas en el estado de autenticación (isLoggedIn)
     const updatedRoutes = routes.filter((route) => route.visible === true);
+    setRoutesVisible(updatedRoutes);
     console.log("updatedRoutes ", updatedRoutes);
 
     if (shouldReload) {
@@ -313,6 +316,7 @@ export default function App() {
             <Route path="/ClienteVolver" element={<ClienteList />} />
 
             <Route path="/TareaEdit/:id" element={<TareaList />} />
+            <Route path="/EventoTareaDelete/:id/:habilitado" element={<EventoTareaDelete />} />
             <Route path="/TareaAdd" element={<TareaAdd />} />
             <Route path="/Tarea" element={<TareaList />} />
             <Route path="/TareaVolver" element={<TareaList />} />
