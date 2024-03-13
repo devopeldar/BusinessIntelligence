@@ -122,7 +122,7 @@ export default function App() {
   const [shouldReload, setShouldReload] = useState(false);
   const [routesVisible, setRoutesVisible] = useState([]);
 
-  //const routesVisible =  routes.filter(route => route.visible === true);
+  //setRoutesVisible(routes.filter(route => route.visible === true));
   console.log("routesVisible ", routesVisible);
   //let routesVisible =[]; routesVisible =  await routes.filter(route => route.visible === true);
   const navigate = useNavigate();
