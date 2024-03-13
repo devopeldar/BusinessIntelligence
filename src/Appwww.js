@@ -169,7 +169,7 @@ export default function App() {
     const updatedRoutes = routes.filter((route) => route.visible === true);
     setRoutesVisible(updatedRoutes);
     console.log("updatedRoutes ", updatedRoutes);
-
+    console.log("Primero");
     if (shouldReload) {
       
       window.location.reload();
@@ -177,18 +177,28 @@ export default function App() {
     }
   }, [ shouldReload]);
 
+  useEffect(() => {
+    // Lógica para reconstruir las rutas basadas en el estado de autenticación (isLoggedIn)
+    const updatedRoutes = routes.filter((route) => route.visible === true);
+    setRoutesVisible(updatedRoutes);
+    console.log("Ultimo");
+  }, [ ]);
+
+
   const handleConfiguratorOpen = () =>
     setOpenConfigurator(dispatch, !openConfigurator);
 
   // Setting the dir attribute for the body element
   useEffect(() => {
     document.body.setAttribute("dir", direction);
+    console.log("22222 ", "2222");
   }, [direction]);
 
   // Setting page scroll to 0 when changing the route
   useEffect(() => {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
+    console.log("sssss ", "sssssss");
   }, [pathname]);
 
   const getRoutes = (allRoutes) =>

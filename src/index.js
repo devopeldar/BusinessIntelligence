@@ -29,6 +29,7 @@ import App from "./Appwww";
 
 // Material Dashboard 2 React Context Provider
 import { MaterialUIControllerProvider } from "./context";
+import { colors } from "@mui/material";
 
 const container = document.getElementById("root");
 const root = createRoot(container);

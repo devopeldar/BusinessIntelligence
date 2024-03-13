@@ -31,7 +31,6 @@ import {
   setTransparentSidenav,
   setWhiteSidenav,
 } from "../../context";
-import { Close } from "@mui/icons-material";
 import { CloseButton } from "react-bootstrap";
 
 function Sidenav({ color, brand, brandName, routes, ...rest }) {
