@@ -5,6 +5,8 @@ import MDBox from '../controls/MDBox';
 import MDTypography from '../controls/MDTypography';
 import bgImage from "../../assets/images/bg-sign-up-cover.jpeg";
 import { useNavigate } from 'react-router-dom';
+import DashboardLayout from '../controls/DashboardLayout';
+import DashboardNavbar from '../controls/DashboardNavbar';
 const ConfirmacionIngreso = () => {
 
 const navigate = useNavigate();
@@ -12,17 +14,16 @@ useEffect(() => {
   navigate("/");
 }, []);
   return (
-    <BasicLayout image={bgImage}>
+    <DashboardLayout >
+    <DashboardNavbar />
+    
       <Card>
         <MDBox
           variant="gradient"
           bgColor="info"
           borderRadius="lg"
           coloredShadow="success"
-          mx={2}
-          mt={-3}
-          p={3}
-          mb={1}
+      
           textAlign="center"
         >
           <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
@@ -44,8 +45,8 @@ useEffect(() => {
         </MDBox>
         */}
       </Card>
-    </BasicLayout >
-   
+    
+    </DashboardLayout>
   );
 };
 

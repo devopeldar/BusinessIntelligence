@@ -25,6 +25,10 @@ import CloseSession from "./components/authentication/CloseSession";
 import PresupuestoList from "./components/Pages/Presupuestos/PresupuestoList";
 import VencimientosList from "./components/Pages/Vencimientos/VencimientosList";
 
+
+
+const routesPermisos = () => {
+  
 const handleCloseSession = () => {
  
   localStorage.setItem("isRegister", "false");
@@ -36,6 +40,7 @@ const handleCloseSession = () => {
   // console.log("rutasVisibles ", rutasVisibles);
   // getRoutes(rutasVisibles)
 };
+
 let routesnew = [];
 
 let routes = [];
@@ -249,7 +254,7 @@ console.log("idperfil" , reqPermisosxPerfil);
     return routes;
     // Llamar a cualquier otra función o realizar operaciones adicionales aquí después de actualizar 'routes'
   } catch (error) {
-    console.error("Error 222:", error);
+    console.error("Error:", error);
   }
 };
 
@@ -259,5 +264,5 @@ console.log("idperfil" , reqPermisosxPerfil);
   routesnew = routes.filter(route => route.visible === true);
   
 })();
-
-export default routesnew;
+};
+export default routesPermisos;

@@ -92,6 +92,7 @@ import TareaDocumentacionList from "./components/Pages/Tareas/TareasDocumentacio
 import TareaDocumentacionDelete from "./components/Pages/Tareas/TareasDocumentacion/TareaDocumentacionDelete";
 import CambiarContrasenia from "./components/authentication/CambiarContrasenia";
 import EventoTareaDelete from "./components/Pages/Tareas/EventoTareaDelete";
+import routesPermisos from "./routesPermisos";
 
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
@@ -121,9 +122,9 @@ export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(initialAuthState);
   const [shouldReload, setShouldReload] = useState(false);
   const [routesVisible, setRoutesVisible] = useState([]);
-
+  const [isLoading, setIsLoading] = useState(true);
   //setRoutesVisible(routes.filter(route => route.visible === true));
-  console.log("routesVisible ", routesVisible);
+  //console.log("routesVisible ", routesVisible);
   //let routesVisible =[]; routesVisible =  await routes.filter(route => route.visible === true);
   const navigate = useNavigate();
   // Cache for the rtl
@@ -160,29 +161,51 @@ export default function App() {
     setShouldReload(true);
     navigate("/");
   };
+ useEffect(() => {
+ 
+  }, []); // Se ejecuta solo una vez al montar el componente
+
+
+  // useEffect(() => {
+  //   localStorage.setItem("isLoggedIn", isLoggedIn);
+
+  //   const fetchRoutes = async () => {
+  //     const loadedRoutes =  await routes.filter((route) => route.visible === true);
+  //     console.log("loadedRoutes ", loadedRoutes);
+  //     setRoutesVisible(loadedRoutes);
+  //     //setRoutesVisible((prevDatos) => [...prevDatos, loadedRoutes]);
+  //     console.log("routesVisible ", routesVisible);
+  //   };
+
+  //   fetchRoutes();
+  // }, [routes]); // Se ejecuta solo una vez al montar el componente
 
   // Almacena el estado de autenticación en localStorage cuando cambie
-  useEffect(() => {
+  useEffect( () => {
     localStorage.setItem("isLoggedIn", isLoggedIn);
 
     // Lógica para reconstruir las rutas basadas en el estado de autenticación (isLoggedIn)
     const updatedRoutes = routes.filter((route) => route.visible === true);
     setRoutesVisible(updatedRoutes);
-    console.log("updatedRoutes ", updatedRoutes);
-    console.log("Primero");
+      // Indica que la carga ha terminado
+      setIsLoading(false);
+   
     if (shouldReload) {
       
       window.location.reload();
       setShouldReload(false); // Restablece shouldReload a false después de la recarga
     }
-  }, [ shouldReload]);
+  }, [routes, shouldReload]);
 
-  useEffect(() => {
-    // Lógica para reconstruir las rutas basadas en el estado de autenticación (isLoggedIn)
-    const updatedRoutes = routes.filter((route) => route.visible === true);
-    setRoutesVisible(updatedRoutes);
-    console.log("Ultimo");
-  }, [ ]);
+  // const fetchRoutes = async () => {
+  //       const loadedRoutes =  await routes.filter((route) => route.visible === true);
+  //       console.log("loadedRoutes ", loadedRoutes);
+  //       setRoutesVisible(loadedRoutes);
+  //       //setRoutesVisible((prevDatos) => [...prevDatos, loadedRoutes]);
+  //       console.log("routesVisible ", routesVisible);
+
+  //       return loadedRoutes;
+  //     };
 
 
   const handleConfiguratorOpen = () =>
@@ -202,7 +225,7 @@ export default function App() {
   }, [pathname]);
 
   const getRoutes = (allRoutes) =>
-  
+ 
     allRoutes.map((route) => {
       if (route.collapse) {
         return getRoutes(route.collapse);
@@ -219,7 +242,7 @@ export default function App() {
           />
         );
       }
-
+      console.log("Segundo");
       return null;
     });
 
@@ -247,6 +270,15 @@ export default function App() {
       <Settings />
     </MDBox>
   );
+
+  if (isLoading) {
+    // Muestra un indicador de carga mientras se cargan las rutas
+    console.log("tercero");
+    setTimeout(() => {
+      setIsLoading(false); // Finaliza la simulación de carga después de 2 segundos
+    }, 5000);
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
@@ -372,6 +404,7 @@ export default function App() {
           </Routes>
 
           <>
+
             <Sidenav
               color={sidenavColor}
               brand={

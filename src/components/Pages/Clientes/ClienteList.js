@@ -76,10 +76,22 @@ function ClienteList() {
     const [nombrecliente   , setNombreCliente] = useState(nombreCValue);
 
     
-
     useEffect(() => {
+   
         fetchData();
       }, []);
+
+      
+
+
+    useEffect(() => {
+      if (nombrecliente.length >= 5) {
+        fetchData();
+      }
+      if (email.length >= 5) {
+        fetchData();
+      }
+      }, [nombrecliente,email]);
 
       
 
@@ -412,7 +424,7 @@ function ClienteList() {
                                             >
                                             Filtrar
                                         </MDButton>
-                                        <MDButton
+                                        {/* <MDButton
                                             onClick={() => {
                                                 handleExcel();
                                             }}
@@ -435,7 +447,7 @@ function ClienteList() {
                                             text="contained"
                                         >
                                             PDF
-                                        </MDButton>
+                                        </MDButton> */}
 
                                         <MDBox pt={3} py={3} px={2} style={{ display: "flex" }}>
                                         <Grid>

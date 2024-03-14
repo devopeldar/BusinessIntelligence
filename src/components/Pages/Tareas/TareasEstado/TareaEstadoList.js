@@ -139,7 +139,7 @@ function TareaEstadoList() {
                     //   toolbar: CustomToolbar,
                     // }}
                   /> */}
-                    <MDButton
+                    {/* <MDButton
                       onClick={() => {
                         handlePDF();
                       }}
@@ -149,7 +149,7 @@ function TareaEstadoList() {
                       text="contained"
                     >
                       PDF
-                    </MDButton>
+                    </MDButton> */}
                 <DataTable
                   table={{ columns, rows }}
                   isSorted={false}
