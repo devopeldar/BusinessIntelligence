@@ -285,16 +285,15 @@ const TareaAdd = () => {
           return;
         }
 
-      //request.idTareaTipo = selectedValueTareaTipo.idTareaTipo;
-      // request.idCliente = selectedValueCliente.idCliente;
-      // request.idDepartamento = selectedValueDepto.idDepartamento;
       request.vencimientoDias = vencimientodiasTT;
       request.tareaxRoles = data.map((item) => ({
         idUsuario: item.idUsuario,
         idRol: item.idRol,
       }));
       request.idUsuario = localStorage.getItem("iduserlogueado");
-      console.log("formData Tarea" + JSON.stringify(formData));
+      request.usuario = localStorage.getItem("userlogueado");
+      request.origenAcceso = "web";
+
       validationSchema
         .validate(request)
         .then(async (validatedData) => {

@@ -218,7 +218,9 @@ const EventoTareaDelete = () => {
             }
             const request = {
                 idTarea: id,
-                idUsuario: localStorage.getItem('iduserlogueado')
+                idUsuario: localStorage.getItem('iduserlogueado'),
+                usuario: localStorage.getItem("userlogueado"),
+                origenAcceso: "web"
             };
             console.log("formData Tarea" + JSON.stringify(request))
 

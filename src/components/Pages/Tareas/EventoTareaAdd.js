@@ -24,6 +24,7 @@ import {
 import bgImage from "../../../assets/images/bg-sign-up-cover.jpeg";
 import MDProgress from "../../controls/MDProgress";
 import MDSnackbar from "../../controls/MDSnackbar";
+import obtenerFechaFormateada from "../../Utils/fechas";
 
 const EventoTareaAdd = () => {
   const { id } = useParams(); // Obtener el parámetro de la URL (el ID del TipoEvento a editar)
@@ -45,10 +46,14 @@ const EventoTareaAdd = () => {
   const [tareaestado, setTareaEstado] = useState("");
   const [observaciones, setObservaciones] = useState("");
   const [depto, setDepto] = useState("");
+  const closeSuccessSB = () => setSuccessSB(false);
+  const [successSB, setSuccessSB] = useState(false);
   const closeSuccessSBPrev = () => setSuccessSBPrev(false);
   const [successSBPrev, setSuccessSBPrev] = useState(false);
+  const [errorSB, setErrorSB] = useState(false);
 
-  const [dateTime, setDateTime] = useState("");
+ const [dateTime, setDateTime] = useState("");
+  const closeErrorSB = () => setErrorSB(false);
 
 
   const handleVolver = () => {
@@ -65,19 +70,6 @@ const EventoTareaAdd = () => {
     obtenerFechaHoraActual();
   }, []);
 
-  const obtenerFechaFormateada = (fecha) => {
-    const options = {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: false,
-    };
-
-    return fecha.toLocaleString("es-ES", options);
-  };
 
   const handleInputChange = (event) => {
     const { name, value, type, checked } = event.target;
@@ -254,6 +246,8 @@ const EventoTareaAdd = () => {
       data.idEventoTipo = selectedValue.idEventoTipo;
       data.idTarea = idTarea;
       data.idUsuario = localStorage.getItem('iduserlogueado');
+      data.usuario= localStorage.getItem("userlogueado");
+      data.origenAcceso = "web";
       validationSchema
         .validate(data)
         .then(async (validatedData) => {
@@ -279,8 +273,13 @@ const EventoTareaAdd = () => {
             setMensaje("El Evento ha sido Registrado exitosamente!");
             setGrabando(true);
             setExito(true);
+            setSuccessSB(true);
             setSuccessSBPrev(false);
+            setErrorSB(false);
           } else {
+            setSuccessSB(false);
+            setErrorSB(true);
+            setSuccessSBPrev(false);
             // Manejar errores si la respuesta no es exitosa
             setMensaje(res.rdoAccionDesc);
             setExito(false);
@@ -289,6 +288,9 @@ const EventoTareaAdd = () => {
         })
         .catch((error) => {
           console.log("Errores de validación:", error.message);
+          setSuccessSB(false);
+          setErrorSB(true);
+          setSuccessSBPrev(false);
           setExito(false);
           setMensaje(error.message);
           setShowprogrees(0);
@@ -453,15 +455,44 @@ const EventoTareaAdd = () => {
             </MDBox>
           </MDBox>
           <MDSnackbar
-                    color="info"
-                    icon="notifications"
-                    title="Task Manager"
-                    content="Grabando evento....."
-                    dateTime={dateTime}
-                    open={successSBPrev}
-                    onClose={closeSuccessSBPrev}
-                    close={closeSuccessSBPrev}
-                  />
+              color="info"
+              icon="notifications"
+              title="Task Manager"
+              content="Grabando evento....."
+              dateTime={dateTime}
+              open={successSBPrev}
+              notify={true}
+              error={false}
+              onClose={closeSuccessSBPrev}
+              close={closeSuccessSBPrev}
+            />
+             <MDSnackbar
+                color="success"
+                icon="check"
+                title="Task Manager"
+                notify={false}
+                error={false}
+                seconds={5000}
+                content="Evento Agregado exitosamente"
+                dateTime={dateTime}
+                open={successSB}
+                onClose={closeSuccessSB}
+                close={closeSuccessSB}
+              />
+              <MDSnackbar
+                  color="error"
+                  icon="warning"
+                  title="Task Manager"
+                  seconds={5000}
+                  notify={false}
+                  error={true}
+                  content="Error al cargar evento "
+                  dateTime={dateTime}
+                  open={errorSB}
+                  onClose={closeErrorSB}
+                  close={closeErrorSB}
+
+              />
           <MDBox mt={4} mb={1}>
             <MDProgress
               color="success"

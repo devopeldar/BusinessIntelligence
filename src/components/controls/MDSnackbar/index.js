@@ -32,9 +32,10 @@ import MDSnackbarIconRoot from "../MDSnackbar/MDSnackbarIconRoot";
 
 // Material Dashboard 2 React context
 import { useMaterialUIController } from "../../../context";
-import { Close, Notifications } from "@mui/icons-material";
+import { Check, Close, Error, Notifications } from "@mui/icons-material";
+import { CircularProgress } from "@mui/material";
 
-function MDSnackbar({ color, icon, title, dateTime, content, close, bgWhite, ...rest }) {
+function MDSnackbar({ color, icon, title, dateTime, content, close, bgWhite,seconds,notify,error, ...rest }) {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
 
@@ -56,10 +57,14 @@ function MDSnackbar({ color, icon, title, dateTime, content, close, bgWhite, ...
     dividerColor = true;
   }
 
+  if(seconds === null){
+    seconds =5000;
+  }
+  
   return (
     <Snackbar
       TransitionComponent={Fade}
-      autoHideDuration={5000}
+      autoHideDuration={seconds}
       anchorOrigin={{
         vertical: "bottom",
         horizontal: "right",
@@ -93,7 +98,14 @@ function MDSnackbar({ color, icon, title, dateTime, content, close, bgWhite, ...
         >
           <MDBox display="flex" alignItems="center" lineHeight={0}>
             <MDSnackbarIconRoot fontSize="small" ownerState={{ color, bgWhite }}>
-              <Notifications/>
+            {notify ? ( // Supongamos que tienes una variable isLoading que indica si se está cargando o no
+                <CircularProgress size={15} color="white" /> // Puedes ajustar el tamaño según lo necesites
+              ) : (
+                (error ? (<Error color="white" />)
+                
+                :(<Check color="white" />))
+                
+              )}
             </MDSnackbarIconRoot>
             <MDTypography
               variant="button"

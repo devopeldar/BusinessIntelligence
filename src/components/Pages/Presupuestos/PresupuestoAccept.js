@@ -30,6 +30,8 @@ import MDBox from "../../controls/MDBox";
 import MDInput from "../../controls/MDInput";
 import MDTypography from "../../controls/MDTypography";
 import MDButton from "../../controls/MDButton";
+import obtenerFechaFormateada from "../../Utils/fechas";
+import MDSnackbar from "../../controls/MDSnackbar";
 
 const PresupuestoAccept = () => {
   const { id, habilitado } = useParams(); // Obtener el parámetro de la URL (el ID del Presupuesto a editar)
@@ -67,6 +69,14 @@ const PresupuestoAccept = () => {
   const [idDepartamento, setIdDepartamento] = useState(0);
   const [rolesxTareaUpdate, setRolesxTareaUpdate] = useState([]);
   const [selectedValueRol, setSelectedValueRol] = useState(elementsRol[0]);
+  const closeSuccessSB = () => setSuccessSB(false);
+  const [successSB, setSuccessSB] = useState(false);
+  const closeSuccessSBPrev = () => setSuccessSBPrev(false);
+  const [successSBPrev, setSuccessSBPrev] = useState(false);
+  const [errorSB, setErrorSB] = useState(false);
+
+ const [dateTime, setDateTime] = useState("");
+  const closeErrorSB = () => setErrorSB(false);
   const handleVolver = () => {
     history("/PresupuestoVolver"); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
   };
@@ -134,6 +144,16 @@ const PresupuestoAccept = () => {
   }, []);
 
   useEffect(() => {
+    const obtenerFechaHoraActual = () => {
+      const fechaHoraActual = new Date();
+      const fechaFormateada = obtenerFechaFormateada(fechaHoraActual);
+      setDateTime(fechaFormateada);
+    };
+
+    obtenerFechaHoraActual();
+  }, []);
+
+  useEffect(() => {
     const GetUsuario = async () => {
       const response = await axios.post(API_URL + "/UsuarioListar", {
         headers: {
@@ -195,6 +215,8 @@ const PresupuestoAccept = () => {
         idPresupuesto: id,
         observaciones:observaciones,
         idUsuario: localStorage.getItem("iduserlogueado"),
+        usuario: localStorage.getItem("userlogueado"),
+        origenAcceso: "web",
         tareaxRoles: rolesxTareaUpdate.map((item) => ({
           idUsuario: item.idUsuario,
           idRol: item.idRol,
@@ -205,6 +227,7 @@ const PresupuestoAccept = () => {
       setnombreboton("Volver");
       setExito(true);
       setMensaje("");
+      setSuccessSBPrev(true);
       // Aquí realizas la llamada a tu API para actualizar el Presupuesto con los nuevos datos
       const response = await fetch(API_URL + `/PresupuestoAceptar`, {
         method: "POST",
@@ -217,8 +240,14 @@ const PresupuestoAccept = () => {
 
       if (res.rdoAccion) {
         // Manejar respuesta exitosa
+        setSuccessSB(true);
+        setSuccessSBPrev(false);
+        setErrorSB(false);
         setMensaje("¡Datos actualizados exitosamente!");
       } else {
+        setSuccessSB(false);
+        setErrorSB(true);
+        setSuccessSBPrev(false);
         // Manejar errores si la respuesta no es exitosa
         setMensaje(res.rdoAccionDesc);
         setGrabando(false); // Inicia la grabación
@@ -230,6 +259,9 @@ const PresupuestoAccept = () => {
       setGrabando(false); // Inicia la grabación
       setExito(false);
       setnombreboton("Cancelar");
+      setSuccessSB(false);
+      setErrorSB(true);
+      setSuccessSBPrev(false);
       console.log("Error en la solicitud:" + error);
     }
   };
@@ -627,6 +659,47 @@ const PresupuestoAccept = () => {
                 {nombreboton}
               </MDButton>
             </MDBox>
+            <MDSnackbar
+                    color="info"
+                    icon="notifications"
+                    notify={true}
+                    error={false}
+                    title="Task Manager"
+                    content="Aceptando Presupuesto y generando tareas....."
+                    dateTime={dateTime}
+                    seconds={15000}
+                    open={successSBPrev}
+                    onClose={closeSuccessSBPrev}
+                    close={closeSuccessSBPrev}
+                  />
+                  {/* </MDButton> */}
+                  <MDSnackbar
+                    color="success"
+                    icon="check"
+                    title="Task Manager"
+                    notify={false}
+                    error={false}
+                    seconds={5000}
+                    content="Presupuesto Aceptado exitosamente"
+                    dateTime={dateTime}
+                    open={successSB}
+                    onClose={closeSuccessSB}
+                    close={closeSuccessSB}
+                  />
+                  <MDSnackbar
+                      color="error"
+                      icon="warning"
+                      title="Task Manager"
+                      seconds={5000}
+                      notify={false}
+                      error={true}
+                      content="Error al Aceptar Presupuesto "
+                      dateTime={dateTime}
+                      open={errorSB}
+                      onClose={closeErrorSB}
+                      close={closeErrorSB}
+
+                  />
           </MDBox>
           {mensaje !== "" && (
             <Alert severity={exito ? "success" : "error"}>

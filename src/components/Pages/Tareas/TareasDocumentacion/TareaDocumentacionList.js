@@ -397,6 +397,8 @@ function TareaDocumentacionList() {
                   pagination={{color:"info", variant:"gradient"}}
                 /> 
                  <MDSnackbar
+                    notify={false}
+                    error={false}
                     color="success"
                     icon="notifications"
                     title="Task Manager"
@@ -409,7 +411,9 @@ function TareaDocumentacionList() {
                   <MDSnackbar
                       color="error"
                       icon="warning"
-                      title="Aviso"
+                      title="Task Manager"
+                      notify={false}
+                      error={true}
                       content="Error al subir archivo"
                       dateTime={dateTime}
                       open={errorSB}
@@ -421,10 +425,11 @@ function TareaDocumentacionList() {
                     color="info"
                     icon="notifications"
                     title="Task Manager"
+                    notify={true}
+                    error={false}
                     content="Subiendo Archivo ....."
                     dateTime={dateTime}
                     open={successSBPrev}
-                    ti
                     onClose={closeSuccessSBPrev}
                     close={closeSuccessSBPrev}
                   />

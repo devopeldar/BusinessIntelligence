@@ -46,6 +46,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { startOfMonth, addMonths } from 'date-fns';
 import MDInput from "../../controls/MDInput";
+import obtenerFechaFormateada from "../../Utils/fechas";
 function TareaList() {
   //const { columns, rows } = TareaGet();
   const [columns, setColumns] = useState([]);
@@ -191,6 +192,8 @@ if (filtroFechaHastaCookie !== null) {
     obtenerFechaHoraActual();
   }, []);
 
+ 
+  
   const handleAutocompleteEstadoChange = (event, value) => {
     setSelectedValueEstado(value);
     setCookie("FILTROESTADO", JSON.stringify(value), 1400) 
@@ -212,19 +215,7 @@ if (filtroFechaHastaCookie !== null) {
     setSelectedValueDepartamentos(value);
     setCookie("FILTRODEPTO", JSON.stringify(value), 1400) 
   };
-  const obtenerFechaFormateada = (fecha) => {
-    const options = {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: false,
-    };
-
-    return fecha.toLocaleString("es-ES", options);
-  };
+ 
 
   const handleAdd = () => {
     history("/TareaAdd"); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
@@ -478,6 +469,8 @@ if (filtroFechaHastaCookie !== null) {
       const reqtarea = {
         idUsuario: localStorage.getItem("iduserlogueado"),
         idTarea: idTarea,
+        usuario: localStorage.getItem("userlogueado"),
+        origenAcceso: "web",
       };
 
       const response = await axios.post(API_URL + "/EventoIniciar", reqtarea, {
@@ -1239,6 +1232,8 @@ if (filtroFechaHastaCookie !== null) {
                   />
                   <MDSnackbar
                     color="info"
+                    notify={true}
+                    error={false}
                     icon="notifications"
                     title="Task Manager"
                     content="Iniciando Tarea....."
@@ -1250,7 +1245,9 @@ if (filtroFechaHastaCookie !== null) {
                   {/* </MDButton> */}
                   <MDSnackbar
                     color="success"
-                    icon="notifications"
+                    icon="check"
+                    notify={false}
+                    error={false}
                     title="Task Manager"
                     content="Tarea iniciada exitosamente"
                     dateTime={dateTime}
@@ -1261,7 +1258,9 @@ if (filtroFechaHastaCookie !== null) {
                   <MDSnackbar
                       color="error"
                       icon="warning"
-                      title="Aviso"
+                      notify={false}
+                      error={true}
+                      title="Task Manager"
                       content="Error al iniciar tarea"
                       dateTime={dateTime}
                       open={errorSB}
