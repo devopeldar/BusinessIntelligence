@@ -122,7 +122,7 @@ function TareaTipoList() {
     
           action: (
             <MDTypography variant="caption" color="text" fontWeight="medium">
-              <Link to={`../../TareaTipo/TareaTipoEdit/${tareatipo.idTareatipo}`}>
+              <Link to={`../../TareaTipo/TareaTipoEdit/${tareatipo.idTareaTipo}`}>
                 <MDButton variant="text" color="dark">
                   <PencilSquare color="blue" />
                 </MDButton>

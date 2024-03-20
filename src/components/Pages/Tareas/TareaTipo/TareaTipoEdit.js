@@ -104,7 +104,7 @@ const TareaTipoEdit = () => {
       <Card style={{ width: "157%" }}>
         <MDBox
           variant="gradient"
-          bgColor="warning"
+          bgColor="info"
           borderRadius="lg"
           coloredShadow="primary"
           mx={2}
@@ -114,7 +114,7 @@ const TareaTipoEdit = () => {
           textAlign="center"
         >
           <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-            Cargando Tipos de eventos...
+            Cargando Tipos de Tarea...
           </MDTypography>
         </MDBox>
 
@@ -127,7 +127,7 @@ const TareaTipoEdit = () => {
       <Card style={{ width: "157%" }}>
         <MDBox
           variant="gradient"
-          bgColor="warning"
+          bgColor="info"
           borderRadius="lg"
           coloredShadow="success"
           mx={2}
@@ -225,7 +225,7 @@ const TareaTipoEdit = () => {
                   handleSubmit();
                 }}
                 variant="gradient"
-                color="warning"
+                color="info"
                 endIcon={<Save />}
                 disabled={grabando}
                 fullWidth
@@ -238,7 +238,7 @@ const TareaTipoEdit = () => {
                   handleVolver();
                 }}
                 variant="gradient"
-                color="warning"
+                color="info"
                 endIcon={<ExitToApp />}
 
                 fullWidth
