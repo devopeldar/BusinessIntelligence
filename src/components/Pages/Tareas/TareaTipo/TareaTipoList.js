@@ -123,7 +123,8 @@ function TareaTipoList() {
             accept: "application/json",
           },
         });
-
+        console.log("response " + response.json);
+        //setTareasTipo(response.data);
         const data = response.data.map((tareatipo) => ({
 
           nombre: (
@@ -133,10 +134,16 @@ function TareaTipoList() {
             />
           ),
     
+          descripcion: (
+            <MDTypography variant="caption" color="text" fontWeight="medium">
+            { tareatipo.descripcion}
+          </MDTypography>
+           
+          ),
           vencimientos: (
             <Vencimientos
-              title={"Dias Habilies para Vencimiento: " + tareatipo.vencimientosdias}
-              // description={"Vencimiento Legal: " + tareatipo.vencimientoslegal}
+              title={"Dias Habilies para Vencimiento: " + tareatipo.vencimientoDias}
+              description={"Vencimiento Legal: " + tareatipo.vencimientoLegal}
             />
           ),
          
@@ -176,6 +183,7 @@ function TareaTipoList() {
         setColumns([
           // { Header: "ID Tipo Tarea", accessor: "idtareatipo", align: "left" },
            { Header: "Nombre",  accessor: "nombre", width: "45%", align: "left" },
+           { Header: "Descripcion", accessor: "descripcion", align: "left" },
            { Header: "Vencimientos", accessor: "vencimientos", align: "center" },
            { Header: "Activo", accessor: "activo", align: "center" },
            { Header: "Acciones", accessor: "action", align: "center" },

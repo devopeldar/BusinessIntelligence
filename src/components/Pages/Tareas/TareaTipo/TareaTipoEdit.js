@@ -76,11 +76,11 @@ const TareaTipoEdit = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ idTareaTipo, nombre, activo }),
+        body: JSON.stringify({ idTareaTipo, nombre, activo, codigo, vencimientoDias,vencimientoLegal,descripcion }),
       });
       const res = await response.json();
 
-      console.log(res.rdoAccion);
+     // console.log(res.rdoAccion);
       // Manejar la lógica después de actualizar el TareaTipo
       if (res.rdoAccion) {
         // Manejar respuesta exitosa
