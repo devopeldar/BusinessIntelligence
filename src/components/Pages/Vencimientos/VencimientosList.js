@@ -8,9 +8,10 @@ import { Card } from "react-bootstrap";
 import MDTypography from "../../controls/MDTypography";
 import MDButton from "../../controls/MDButton";
 import DataTable from "../../controls/Tables/DataTable";
-import { BuildingFillAdd } from "react-bootstrap-icons";
+import { BuildingFillAdd, PencilSquare } from "react-bootstrap-icons";
 import { Link, useNavigate } from "react-router-dom";
 import {
+    Add,
     Checklist,
     Filter,
 } from "@mui/icons-material";
@@ -28,6 +29,11 @@ function VencimientosList() {
     const handleAdd = () => {
         history("/VencimientosAdd"); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
     };
+
+    const handleAddMasivo = () => {
+        history("/VencimientosAddMasivo"); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
+    };
+    
     const [columns, setColumns] = useState([]);
     const [rows, setRows] = useState([]);
     const [error, setError] = useState([]);
@@ -36,17 +42,60 @@ function VencimientosList() {
     const tareastipos = TipoTarea();
     const meses = Object.values(Meses);
     const anios = Object.values(Anios);
-    const [selectedValueCliente, setSelectedValueCliente] = useState(clientes[0]);
-    const [selectedValueTareaTipo, setSelectedValueTareaTipo] = useState(
-        tareastipos[0]
-    );
-    const [selectedValueMes, setSelectedValueMes] = useState(
-        meses[0]
-    );
-    const [selectedValueAnio, setSelectedValueAnio] = useState(
-        anios[0]
-    );
-    
+ 
+    let selectedValueMesValue = new Date().getMonth()+ 1;
+  const filtroMesCookie = getCookie("FILTROVTOMES");
+    if (filtroMesCookie !== null) {const filtroMesObjeto = JSON.parse(filtroMesCookie);  selectedValueMesValue = filtroMesObjeto;}
+
+  const [selectedValueMes, setSelectedValueMes] = useState(selectedValueMesValue);
+
+  let selectedValueAnioValue = anios[0];
+
+  const filtroAnioCookie = getCookie("FILTROVTOANIO");
+    if (filtroAnioCookie !== null) {const filtroAnioObjeto = JSON.parse(filtroAnioCookie);  selectedValueAnioValue = filtroAnioObjeto;}
+
+  const [selectedValueAnio, setSelectedValueAnio] = useState(selectedValueAnioValue);
+
+
+
+  let selectedValueTareaTipoValue = tareastipos[0];
+
+  const filtroTareaTipoCookie = getCookie("FILTROVTOTAREATIPO");
+    if (filtroTareaTipoCookie !== null) {const filtroTareaTipoObjeto = JSON.parse(filtroTareaTipoCookie);  selectedValueTareaTipoValue = filtroTareaTipoObjeto;}
+
+  const [selectedValueTareaTipo, setSelectedValueTareaTipo] = useState(selectedValueTareaTipoValue);
+
+  let selectedValueClienteValue = clientes[0];
+
+  const filtroClienteCookie = getCookie("FILTROVTOCLIENTE");
+    if (filtroClienteCookie !== null) {const filtroClienteObjeto = JSON.parse(filtroClienteCookie);  selectedValueClienteValue = filtroClienteObjeto;}
+
+  const [selectedValueCliente, setSelectedValueCliente] = useState(selectedValueClienteValue);
+
+
+
+  function setCookie(name, value, minutes) {
+    const expires = new Date();
+    expires.setTime(expires.getTime() + minutes * 60 * 1000);
+  
+    // Formatea la cookie con el nombre, el valor y la fecha de vencimiento
+    document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+  }
+  
+  function getCookie(name) {
+    const cookieName = `${name}=`;
+    const cookies = document.cookie.split(';');
+  
+    // Busca la cookie por su nombre
+    for (let i = 0; i < cookies.length; i++) {
+      let cookie = cookies[i].trim();
+      if (cookie.indexOf(cookieName) === 0) {
+        return cookie.substring(cookieName.length, cookie.length);
+      }
+    }
+    return null; // Retorna null si no se encuentra la cookie
+  }
+
 
     useEffect(() => {
         fetchDataTareas();
@@ -58,15 +107,19 @@ function VencimientosList() {
 
     const handleAutocompleteClienteChange = (event, value) => {
         setSelectedValueCliente(value);
+        setCookie("FILTROVTOCLIENTE", JSON.stringify(value), 1400) 
     };
     const handleAutocompleteTareaTipoChange = (event, value) => {
         setSelectedValueTareaTipo(value);
+        setCookie("FILTROVTOTAREATIPO", JSON.stringify(value), 1400) 
     };
     const handleAutocompleteMesChange = (event, value) => {
         setSelectedValueMes(value);
+        setCookie("FILTROVTOMES", JSON.stringify(value), 1400) 
     };
     const handleAutocompleteAnioChange = (event, value) => {
         setSelectedValueAnio(value);
+        setCookie("FILTROVTOANIO", JSON.stringify(value), 1400) 
     };
     
     const Nombre = ({ cliente, nombreTipoTarea }) => (
@@ -120,7 +173,7 @@ function VencimientosList() {
                 }
             );
 
-            console.log("response.data", response.data)
+            
             const data = response.data.map((Vencimiento) => {
                 const clienteNombre = (
                     <Nombre
@@ -175,11 +228,7 @@ function VencimientosList() {
                             <Link
                                 to={`../VencimientosEdit/${Vencimiento.idVencimientosLegales}`}
                             >
-                                <Checklist
-                                    fontSize="large"
-                                    color="success"
-                                    titleAccess="Editar Vencimiento"
-                                />
+                                 <PencilSquare color="blue" fontSize="large" />
                             </Link>
                         </MDTypography>
 
@@ -251,6 +300,17 @@ function VencimientosList() {
                                         text="contained"
                                     >
                                         Agregar
+                                    </MDButton>
+                                    <MDButton
+                                        onClick={() => {
+                                            handleAddMasivo();
+                                        }}
+                                        variant="gradient"
+                                        color="primary"
+                                        endIcon={<Add />}
+                                        text="contained"
+                                    >
+                                        Agregar x Terminacion CUIT
                                     </MDButton>
                                     <MDButton
                                         onClick={() => {
@@ -385,7 +445,7 @@ function VencimientosList() {
                                 </MDBox>
                                 <DataTable
                                     table={{ columns, rows }}
-                                    isSorted={true}
+                                    isSorted={false}
                                     entriesPerPage={true}
                                     showTotalEntries={true}
                                     canSearch={false}

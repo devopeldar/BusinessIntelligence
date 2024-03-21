@@ -18,8 +18,11 @@ import ExcelJS from 'exceljs';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import MDBadge from '../../controls/MDBadge';
-import { Filter1 } from '@mui/icons-material';
+import { Delete, Filter1 } from '@mui/icons-material';
 import MDInput from '../../controls/MDInput';
+import MDSnackbar from '../../controls/MDSnackbar';
+import obtenerFechaFormateada from '../../Utils/fechas';
+
 function ClienteList() {
 
     const [columns, setColumns] = useState([]);
@@ -29,10 +32,33 @@ function ClienteList() {
     const history = useNavigate();
     const [Clientes, setClientes] = useState([]);
     const [espdf, setEsPDF] = useState(false);
+    const closeSuccessSB = () => setSuccessSB(false);
+    const [successSB, setSuccessSB] = useState(false);
+    const closeSuccessSBPrev = () => setSuccessSBPrev(false);
+    const [successSBPrev, setSuccessSBPrev] = useState(false);
+
+    const [dateTime, setDateTime] = useState("");
+
+    const [errorSB, setErrorSB] = useState(false);
+    // const openErrorSB = () => setErrorSB(true);
+    const closeErrorSB = () => setErrorSB(false);
+
+    const [mensajeerror, setMensajeError] = useState("Error al intentar Eliminar el cliente");
     const handleAdd = () => {
         history('/ClienteAdd'); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
     };
 
+    useEffect(() => {
+      const obtenerFechaHoraActual = () => {
+        const fechaHoraActual = new Date();
+        const fechaFormateada = obtenerFechaFormateada(fechaHoraActual);
+        setDateTime(fechaFormateada);
+      };
+    
+      obtenerFechaHoraActual();
+    }, []);
+
+    
     function setCookie(name, value, minutes) {
       const expires = new Date();
       expires.setTime(expires.getTime() + minutes * 60 * 1000);
@@ -83,7 +109,46 @@ function ClienteList() {
 
       
 
+      const handleEliminar = async (idcliente) => {
+        try
+        {
+          setSuccessSBPrev(true);
+          const reqCliente = {
+            idCliente: idcliente,
+            usuario: localStorage.getItem("userlogueado"),
+            origenAcceso: "web",
+          };
+        const response = await axios.post(API_URL + `/ClienteEliminar` ,reqCliente, {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+          }
+        });
 
+          const res = await response.data;
+          console.log("res:", res);
+          if (res.rdoAccion) {
+            setSuccessSB(true);
+            setSuccessSBPrev(false);
+            setErrorSB(false);
+            fetchData();
+          } else {
+              // Manejar errores si la respuesta no es exitosa
+              setMensajeError(res.rdoAccionDesc);
+              setSuccessSB(false);
+              setErrorSB(true);
+              setSuccessSBPrev(false);
+              
+          }
+   
+        }
+        catch(error) {
+          console.log("Errores de Proceso:", error.message);
+          setSuccessSB(false);
+          setErrorSB(true);
+          setSuccessSBPrev(false);
+      };
+    };
     useEffect(() => {
       if (nombrecliente.length >= 5) {
         fetchData();
@@ -175,13 +240,27 @@ function ClienteList() {
                     </MDBox>
                   ),
                   action: (
-                    <MDTypography variant="caption" color="text" fontWeight="medium">
-                      <Link to={`../ClienteEdit/${Cliente.idCliente}`}>
-                        <MDButton variant="text" color="dark">
-                          <PencilSquare color="blue" />
+                    <MDBox ml={-1}>
+                      <MDTypography variant="caption" color="text" fontWeight="medium">
+                        <Link to={`../ClienteEdit/${Cliente.idCliente}`}>
+                          <MDButton variant="text" color="dark">
+                            <PencilSquare color="blue" />
+                          </MDButton>
+                        </Link>
+                      </MDTypography>
+
+                      <MDTypography variant="caption" color="text" fontWeight="medium">
+                      
+                        <MDButton variant="text" color="dark"
+                        onClick={() => {
+                          handleEliminar(Cliente.idCliente);
+                      }}>
+                          
+                          <Delete color="error" />
                         </MDButton>
-                      </Link>
+                      
                     </MDTypography>
+                  </MDBox>
                   ),
             
             
@@ -298,18 +377,7 @@ function ClienteList() {
             });
 
             setClientes(response.data);
-            // const data = response.data.map((Cliente) => ({
-            //     idCliente: Cliente.idCliente,
-            //     nombre: Cliente.nombre,
-            //     activo: Cliente.activo,
-            //     contacto: Cliente.contacto,
-            //     telefono: Cliente.telefono,
-            //     email: Cliente.email,
-            //     cuit: Cliente.cuit,
-            //     observaciones: Cliente.observaciones,
-            //     tipoIVA: Cliente.tipoIVA,
-            //     descripcionIVA: Cliente.descripcionIVA
-            // }));
+          
             if (espdf === true) {
                 exportToExcel(); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
 
@@ -486,6 +554,44 @@ function ClienteList() {
                                         showTotalEntries={true}
                                         canSearch={false}
                                         pagination={{ color: "secondary", variant: "gradient" }}
+                                    />
+                                    <MDSnackbar
+                                      color="info"
+                                      notify={true}
+                                      error={false}
+                                      icon="notifications"
+                                      title="Task Manager"
+                                      content="Eliminando Cliente....."
+                                      dateTime={dateTime}
+                                      open={successSBPrev}
+                                      onClose={closeSuccessSBPrev}
+                                      close={closeSuccessSBPrev}
+                                    />
+                                    {/* </MDButton> */}
+                                    <MDSnackbar
+                                      color="success"
+                                      icon="check"
+                                      notify={false}
+                                      error={false}
+                                      title="Task Manager"
+                                      content="Cliente eliminado exitosamente"
+                                      dateTime={dateTime}
+                                      open={successSB}
+                                      onClose={closeSuccessSB}
+                                      close={closeSuccessSB}
+                                    />
+                                    <MDSnackbar
+                                        color="error"
+                                        icon="warning"
+                                        notify={false}
+                                        error={true}
+                                        title="Task Manager"
+                                        content={mensajeerror}
+                                        dateTime={dateTime}
+                                        open={errorSB}
+                                        onClose={closeErrorSB}
+                                        close={closeErrorSB}
+                                        autoHideDuration={null}
                                     />
                                 </Grid>
                             </MDBox>

@@ -93,6 +93,7 @@ import TareaDocumentacionDelete from "./components/Pages/Tareas/TareasDocumentac
 import CambiarContrasenia from "./components/authentication/CambiarContrasenia";
 import EventoTareaDelete from "./components/Pages/Tareas/EventoTareaDelete";
 import routesPermisos from "./routesPermisos";
+import VencimientosAddMasivo from "./components/Pages/Vencimientos/VencimientosAddMasivo";
 
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
@@ -388,6 +389,7 @@ export default function App() {
             <Route path="/VencimientosEdit/:id" element={<VencimientosEdit />} /> 
             <Route path="/VencimientosVolver" element={<VencimientosList />} />
             <Route path="/VencimientosAdd" element={<VencimientosAdd />} />
+            <Route path="/VencimientosAddMasivo" element={<VencimientosAddMasivo />} />
             <Route path="/Vencimientos" element={<VencimientosList />} />
             
             <Route path="/TareaDocumentacionList/:id" element={<TareaDocumentacionList />} />

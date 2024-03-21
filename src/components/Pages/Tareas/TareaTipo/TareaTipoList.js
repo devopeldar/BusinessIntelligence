@@ -12,10 +12,10 @@ import DataTable from "../../../controls/Tables/DataTable";
 import MDButton from "../../../controls/MDButton";
 import { Link, useNavigate } from 'react-router-dom';
 import { BuildingFillAdd, PencilSquare } from "react-bootstrap-icons";
-import TareasTipoGet from "./TareaTipoGet";
 import API_URL from "../../../../config";
 import axios from "axios";
 import MDBadge from "../../../controls/MDBadge";
+import MDInput from "../../../controls/MDInput";
 
 
 
@@ -27,6 +27,41 @@ function TareaTipoList() {
   const handleAdd = () => {
     history('/TareaTipoAdd'); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
   };
+
+  function setCookie(name, value, minutes) {
+    const expires = new Date();
+    expires.setTime(expires.getTime() + minutes * 60 * 1000);
+  
+    // Formatea la cookie con el nombre, el valor y la fecha de vencimiento
+    document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+  }
+  
+  function getCookie(name) {
+    const cookieName = `${name}=`;
+    const cookies = document.cookie.split(';');
+  
+    // Busca la cookie por su nombre
+    for (let i = 0; i < cookies.length; i++) {
+      let cookie = cookies[i].trim();
+      if (cookie.indexOf(cookieName) === 0) {
+        return cookie.substring(cookieName.length, cookie.length);
+      }
+    }
+    return null; // Retorna null si no se encuentra la cookie
+  }
+
+  function deleteCookie(name) {
+    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+  }
+
+  let nombreCValue ="";
+
+  const filtronombreCCookie = getCookie("FILTROTIPOTAREANOMBRETT");
+  if (filtronombreCCookie !== null) {const filtronombreCObjeto = filtronombreCCookie;  nombreCValue = filtronombreCObjeto;}
+
+  const [nombre, setNombre] = useState(nombreCValue);
+
+
 
   const Nombre = ({ title, description }) => (
     <MDBox lineHeight={1} textAlign="left">
@@ -66,25 +101,31 @@ function TareaTipoList() {
   );
 
   useEffect(() => {
+    if (nombre.length >= 3 || nombre.length === 0) {
+      fetchData();
+    }
+    }, [nombre]
+  );
+
+
+  useEffect(() => {
     fetchData();
   }, []);
 
     const fetchData = async () => {
+      setCookie("FILTROTIPOTAREANOMBRETT", nombre, 1400) 
       try {
-        const response = await axios.post(API_URL + "/TareaTipoListar", {
+        const reqTipoTarea = {
+          nombre:nombre
+        };
+        const response = await axios.post(API_URL + "/TareaTipoListar",reqTipoTarea, {
           headers: {
             accept: "application/json",
           },
         });
-        console.log("response " + response.json);
-        //setTareasTipo(response.data);
+
         const data = response.data.map((tareatipo) => ({
-          // idTareatipo: tareatipo.idTareaTipo,
-          // nombre: tareatipo.nombre,
-          // codigo: tareatipo.codigo,
-          // activo: tareatipo.activo,
-          // vencimientosdias: tareatipo.vencimientoDias,
-          // vencimientoslegal: tareatipo.vencimientoLegal,
+
           nombre: (
             <Nombre
               title={tareatipo.nombre}
@@ -99,7 +140,6 @@ function TareaTipoList() {
             />
           ),
          
-    
           activo: (
             <MDBox ml={-1}>
               {tareatipo.activo ? (
@@ -174,8 +214,8 @@ function TareaTipoList() {
                  
                 </MDTypography>
               </MDBox>
-              <MDBox pt={3}  py={3}
-                px={2}>
+              <MDBox pt={3} py={3} px={2}>
+                                <Grid container justifyContent="space-between" alignItems="center" direction="row">
               <MDButton
                     onClick={() => {
                       handleAdd();
@@ -187,6 +227,25 @@ function TareaTipoList() {
                   >
                     Agregar
                   </MDButton>
+                  <MDBox pt={3} py={3} px={2} style={{ display: "flex" }}>
+                    <Grid>
+                    <MDTypography variant="h9" color="info">
+                        Filtros
+                        </MDTypography>
+                        <MDBox mb={2}>
+                            <MDInput
+                                type="text"
+                                name="nombre"
+                                label="Tipo Tarea"
+                                variant="standard"
+                                value={nombre}
+                                onChange={(e) => setNombre(e.target.value)}
+                                
+                            />
+                        </MDBox>
+                        </Grid>
+
+                    </MDBox>
                 <DataTable
                   table={{ columns, rows }}
                   isSorted={false}
@@ -196,6 +255,7 @@ function TareaTipoList() {
                   noEndBorder
                   pagination={{color:"info", variant:"gradient"}}
                 />
+                </Grid>
               </MDBox>
             </Card>
           </Grid>
