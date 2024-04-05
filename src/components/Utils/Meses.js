@@ -5,12 +5,12 @@ const Meses = {
     ABRIL: { valor: 4, descripcion: "ABRIL" },
     MAYO: { valor: 5, descripcion: "MAYO" },
     JUNIO: { valor: 6, descripcion: "JUNIO" },
-    JULIO: { valor: 6, descripcion: "JULIO" },
-    AGOSTO: { valor: 6, descripcion: "AGOSTO" },
-    SEPTIEMBRE: { valor: 6, descripcion: "SEPTIEMBRE" },
-    OCTUBRE: { valor: 6, descripcion: "OCTUBRE" },
-    NOVIEMBRE: { valor: 6, descripcion: "NOVIEMBRE" },
-    DICIEMBRE: { valor: 6, descripcion: "DICIEMBRE" }
+    JULIO: { valor: 7, descripcion: "JULIO" },
+    AGOSTO: { valor: 8, descripcion: "AGOSTO" },
+    SEPTIEMBRE: { valor: 9, descripcion: "SEPTIEMBRE" },
+    OCTUBRE: { valor: 10, descripcion: "OCTUBRE" },
+    NOVIEMBRE: { valor: 11, descripcion: "NOVIEMBRE" },
+    DICIEMBRE: { valor: 12, descripcion: "DICIEMBRE" }
   };
   
   export default Meses;

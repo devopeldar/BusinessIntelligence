@@ -301,7 +301,7 @@ const TareaAdd = () => {
           setnombreboton("Volver");
           setExito(true);
           setMensaje("");
-
+          console.log("formData:", formData);
           const response = await fetch(API_URL + "/TareaAltaDTO", {
             method: "POST",
             headers: {
