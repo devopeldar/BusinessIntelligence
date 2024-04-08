@@ -72,6 +72,14 @@ function TareaList() {
   const departamentos = Departamento();
   const fechasfiltro = Object.values(FechasFiltro);
 
+  const [btnIniciar, setbtnIniciar] = useState(false);
+  const [btnModificar, setbtnModificar] = useState(false);
+  const [btnEliminar, setbtnEliminar] = useState(false);
+  const [btnVerTraking, setbtnVerTraking] = useState(false);
+  const [btnCargaEvento, setbtnCargaEvento] = useState(false);
+  const [btnModificarRol, setbtnModificarRol] = useState(false);
+  const [btnSubirArchivo, setbtnSubirArchivo] = useState(false);
+
   let nombreusuarioValue = "";
   
   const filtroNombreUsuarioCookie = getCookie("FILTRONOMBREUSUARIO");
@@ -252,9 +260,20 @@ if (filtroFechaHastaCookie !== null) {
         }
       );
 
+      console.log("data", response.data);
       const data = response.data.map((Tarea) => {
         let color = "info"; // Valor por defecto
 
+      
+          setbtnIniciar( Tarea.tareaccion && Tarea.tareaccion.some((accion) => accion.idTareaAccion === 1)); // Ejemplo para el botón de iniciar
+          setbtnCargaEvento(Tarea.tareaccion && Tarea.tareaccion.some((accion) => accion.idTareaAccion === 5)); // Ejemplo para el botón de iniciar
+          setbtnModificar(Tarea.tareaccion && Tarea.tareaccion.some((accion) => accion.idTareaAccion === 3)); // Ejemplo para el botón de iniciar
+          setbtnModificarRol(Tarea.tareaccion && Tarea.tareaccion.some((accion) => accion.idTareaAccion === 7)); // Ejemplo para el botón de iniciar
+          setbtnVerTraking(Tarea.tareaccion && Tarea.tareaccion.some((accion) => accion.idTareaAccion === 4)); // Ejemplo para el botón de iniciar
+          setbtnSubirArchivo(Tarea.tareaccion && Tarea.tareaccion.some((accion) => accion.idTareaAccion === 6)); // Ejemplo para el botón de iniciar
+          setbtnEliminar(Tarea.tareaccion && Tarea.tareaccion.some((accion) => accion.idTareaAccion === 2)); // Ejemplo para el botón de iniciar
+   
+     
         if (Tarea.porcentajeTrascurrido < 20) {
           color = "error";
         } else if (Tarea.porcentajeTrascurrido > 60) {
@@ -323,13 +342,16 @@ if (filtroFechaHastaCookie !== null) {
         );
 
         const action = (
+        
           <MDBox ml={2}>
             {Tarea.estado === 0 && (
               <>
+              {btnIniciar && (
                 <MDTypography
                   variant="caption"
                   color="text"
                   fontWeight="medium"
+                  
                 >
                   <Link onClick={() => HandleIniciar(Tarea.idTarea)}>
                     {/* <MDButton variant="text" color="dark" onClick={() => HandleIniciar(Tarea.idTarea)}> */}
@@ -338,10 +360,11 @@ if (filtroFechaHastaCookie !== null) {
                       color="success"
                       titleAccess="Iniciar Tarea"
                     />
+                   
                   </Link>
-                  
                 </MDTypography>
-
+              )}
+               {btnEliminar && (
                 <MDTypography
                   variant="caption"
                   color="text"
@@ -355,7 +378,8 @@ if (filtroFechaHastaCookie !== null) {
                     />
                   </Link>
                 </MDTypography>
-
+                )}
+                {btnEliminar && (
                 <MDTypography
                   variant="caption"
                   color="text"
@@ -369,60 +393,67 @@ if (filtroFechaHastaCookie !== null) {
                     />
                   </Link>
                 </MDTypography>
-
+                )}
               </>
 
             )}
 
             {Tarea.estado > 0 && Tarea.estado !== 4 && (
               <MDBox>
-              <MDTypography
-                variant="caption"
-                color="text"
-                fontWeight="medium"
-              >
-                <Link to={`../EventoTareaAdd/${Tarea.idTarea}`}>
-                  <AccessAlarm
-                    fontSize="large"
-                    color="warning"
-                    titleAccess="Agregar Evento a Tarea"
-                  />
-                </Link>
-              </MDTypography>
-
-                <MDTypography
-                variant="caption"
-                color="text"
-                fontWeight="medium"
-              >
-                <Link to={`../EventoTareaEdit/${Tarea.idTarea}/0`}>
-                  <PeopleAltTwoTone
-                    fontSize="large"
-                    color="success"
-                    titleAccess="Cambiar Roles"
-                  />
-                </Link>
-              </MDTypography>
+                {btnCargaEvento && (
+                  <MDTypography
+                    variant="caption"
+                    color="text"
+                    fontWeight="medium"
+                  >
+                    <Link to={`../EventoTareaAdd/${Tarea.idTarea}`}>
+                      <AccessAlarm
+                        fontSize="large"
+                        color="warning"
+                        titleAccess="Agregar Evento a Tarea"
+                      />
+                    </Link>
+                  </MDTypography>
+                )}
+                {btnModificar && (
+                  <MDTypography
+                  variant="caption"
+                  color="text"
+                  fontWeight="medium"
+                >
+                  <Link to={`../EventoTareaEdit/${Tarea.idTarea}/0`}>
+                    <PeopleAltTwoTone
+                      fontSize="large"
+                      color="success"
+                      titleAccess="Cambiar Roles"
+                    />
+                  </Link>
+                </MDTypography>
+                )}
               </MDBox>
             )}
-            <MDTypography variant="caption" color="text" fontWeight="medium">
-              <Link to={`../TareaTraking/${Tarea.idTarea}`}>
-                <SearchOutlined
-                  fontSize="large"
-                  color="info"
-                  titleAccess="Ver traking de Eventos de una Tarea"
-                />
-              </Link>
-            </MDTypography>
-            <MDTypography variant="caption" color="text" fontWeight="medium">
-              <Link to={`../TareaDocumentacionList/${Tarea.idTarea}`}>
-                <PictureAsPdf
-                  fontSize="large"
-                  color="primary"
-                  titleAccess="Subir Archivos"
-                />
-              </Link>
-            </MDTypography>
+            {btnVerTraking && (
+              <MDTypography variant="caption" color="text" fontWeight="medium">
+                <Link to={`../TareaTraking/${Tarea.idTarea}`}>
+                  <SearchOutlined
+                    fontSize="large"
+                    color="info"
+                    titleAccess="Ver traking de Eventos de una Tarea"
+                  />
+                </Link>
+              </MDTypography>
+            )}
+            {btnSubirArchivo && (
+              <MDTypography variant="caption" color="text" fontWeight="medium">
+                <Link to={`../TareaDocumentacionList/${Tarea.idTarea}`}>
+                  <PictureAsPdf
+                    fontSize="large"
+                    color="primary"
+                    titleAccess="Subir Archivos"
+                  />
+                </Link>
+              </MDTypography>
+            )}
           </MDBox>
         );
 
@@ -1061,7 +1092,7 @@ if (filtroFechaHastaCookie !== null) {
                             option.descripcion ||
                             "Selecciona Estado de Progreso"
                           }
-                          getOptionSelected={(option, value) =>
+                          getoptionselected={(option, value) =>
                             option.idTareaEstado === value.idTareaEstado
                           }
                           isOptionEqualToValue={(option, value) =>
@@ -1085,7 +1116,7 @@ if (filtroFechaHastaCookie !== null) {
                           getOptionLabel={(option) =>
                             option.nombre || "Seleccione Cliente"
                           }
-                          getOptionSelected={(option, value) =>
+                          getoptionselected={(option, value) =>
                             option.idCliente === value.idCliente
                           }
                           isOptionEqualToValue={(option, value) =>
@@ -1109,7 +1140,7 @@ if (filtroFechaHastaCookie !== null) {
                           getOptionLabel={(option) =>
                             option.nombre || "Seleccione Departamento"
                           }
-                          getOptionSelected={(option, value) =>
+                          getoptionselected={(option, value) =>
                             option.idDepartamento === value.idDepartamento
                           }
                           isOptionEqualToValue={(option, value) =>
@@ -1133,7 +1164,7 @@ if (filtroFechaHastaCookie !== null) {
                           getOptionLabel={(option) =>
                             option.nombre || "Seleccione Tipo de Tarea"
                           }
-                          getOptionSelected={(option, value) =>
+                          getoptionselected={(option, value) =>
                             option.idTareaTipo === value.idTareaTipo
                           }
                           isOptionEqualToValue={(option, value) =>
@@ -1161,7 +1192,7 @@ if (filtroFechaHastaCookie !== null) {
                           getOptionLabel={(option) =>
                             option.descripcion || "Seleccione Tipo de Fecha"
                           }
-                          getOptionSelected={(option, value) =>
+                          getoptionselected={(option, value) =>
                             option.valor === value.valor
                           }
                           value={selectedValueFechaFiltro || null}
