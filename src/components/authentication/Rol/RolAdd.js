@@ -12,10 +12,12 @@ import { useNavigate } from 'react-router-dom';
 import MDProgress from "../../controls/MDProgress";
 import { AlertTitle, Checkbox } from "@mui/material";
 import MDButton from "../../controls/MDButton";
-import { Save } from "react-bootstrap-icons";
-import { ExitToApp } from "@mui/icons-material";
-
-
+import { Pause, PauseBtnFill, PlayBtn, PlayBtnFill, Save } from "react-bootstrap-icons";
+import { ExitToApp, Favorite, FavoriteBorder } from "@mui/icons-material";
+import { green } from '@mui/material/colors';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import IconCheckMenu from "../../controls/IconCheckMenu";
 const RolAdd = () => {
   const navigate = useNavigate();
 
@@ -24,7 +26,14 @@ const RolAdd = () => {
   const [formData, setFormData] = useState({
     idRol: 0,
     descripcion: "",
-    activo: true
+    activo: true,
+    iniciar: false,
+    eliminar: false,
+    modificar: false,
+    modificarrol: false,
+    subirarchivos: false,
+    vertraking: false,
+    cargaeventos: false,
   });
 
 
@@ -42,10 +51,10 @@ const RolAdd = () => {
   const [loading, setLoading] = useState(false);
 
   const [descripcionboton, setdescripcionboton] = useState("Cancelar");
-
+  const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
   const handleInputChange = (event) => {
     const { name, value, type, checked } = event.target;
-    console.log("chk :" + event)
+   
     // Verifica si el tipo de campo es un checkbox (para campos booleanos)
     const newValue = type === 'checkbox' ? checked : value;
 
@@ -197,6 +206,112 @@ const RolAdd = () => {
               >
                 &nbsp;&nbsp;Activo
               </MDTypography>
+            </MDBox>
+            <MDBox mb={2}>
+            
+            <Checkbox name="btnIniciar"
+                onChange={handleInputChange}
+                checked={formData.iniciar || false}
+
+              />
+             
+                <MDTypography
+                  variant="button"
+                  fontWeight="regular"
+                  color="text"
+                  sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
+                >
+                  &nbsp;&nbsp;Iniciar
+            
+              </MDTypography>
+            
+              <Checkbox name="btnEliminar"
+                onChange={handleInputChange}
+                checked={formData.eliminar || false}
+
+              />
+              <MDTypography
+                variant="button"
+                fontWeight="regular"
+                color="text"
+                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
+              >
+                &nbsp;&nbsp;Eliminar
+              
+              </MDTypography>
+              <Checkbox name="btnModificar"
+                onChange={handleInputChange}
+                checked={formData.modificar || false}
+
+              />
+              <MDTypography
+                variant="button"
+                fontWeight="regular"
+                color="text"
+                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
+              >
+                &nbsp;&nbsp;Modificar
+              
+              </MDTypography>
+              </MDBox>
+            <MDBox mb={2}>
+              <Checkbox name="btnModificarRoles"
+                onChange={handleInputChange}
+                checked={formData.modificarrol || false}
+
+              />
+              <MDTypography
+                variant="button"
+                fontWeight="regular"
+                color="text"
+                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
+              >
+                &nbsp;&nbsp;Mod. Roles
+              
+              </MDTypography>
+              <Checkbox name="btnCargarEvento"
+                onChange={handleInputChange}
+                checked={formData.cargaeventos || false}
+
+              />
+              <MDTypography
+                variant="button"
+                fontWeight="regular"
+                color="text"
+                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
+              >
+                &nbsp;&nbsp;Cargar Eventos
+              
+              </MDTypography>
+              <Checkbox name="btnVerTraking"
+                onChange={handleInputChange}
+                checked={formData.vertraking || false}
+
+              />
+              <MDTypography
+                variant="button"
+                fontWeight="regular"
+                color="text"
+                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
+              >
+                &nbsp;&nbsp;Ver Traking
+              
+              </MDTypography>
+              <Checkbox name="btnEliminar"
+                onChange={handleInputChange}
+                checked={formData.eliminar || false}
+
+              />
+              <MDTypography
+                variant="button"
+                fontWeight="regular"
+                color="text"
+                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
+              >
+                &nbsp;&nbsp;Eliminar
+              
+              </MDTypography>
+
             </MDBox>
             <MDBox mb={1} style={{ display: "flex", gap: "16px" }}>
               <MDButton

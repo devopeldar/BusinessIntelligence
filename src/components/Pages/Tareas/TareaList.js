@@ -13,7 +13,6 @@ import {
   BuildingFillAdd,
   FileExcel,
   FilePdf,
-  FilePdfFill,
   Stop,
 } from "react-bootstrap-icons";
 import { Link, useNavigate } from "react-router-dom";
@@ -54,12 +53,17 @@ function TareaList() {
   const [error, setError] = useState([]);
   const history = useNavigate();
   const [Tareas, setTareas] = useState([]);
+  const [tareasList, setTareasList] = useState([]);
   const [espdf, setEsPDF] = useState(false);
   const closeSuccessSB = () => setSuccessSB(false);
   const [successSB, setSuccessSB] = useState(false);
   const closeSuccessSBPrev = () => setSuccessSBPrev(false);
   const [successSBPrev, setSuccessSBPrev] = useState(false);
 
+  //const [cargaTarea, setcargaTarea] = useState(false);
+  const closecargaTarea = () => setCloseCargaTarea(false);
+  const [cargaTarea, setCloseCargaTarea] = useState(false);
+  
   const [dateTime, setDateTime] = useState("");
 
   const [errorSB, setErrorSB] = useState(false);
@@ -71,14 +75,6 @@ function TareaList() {
   const tipoTarea = TipoTarea();
   const departamentos = Departamento();
   const fechasfiltro = Object.values(FechasFiltro);
-
-  const [btnIniciar, setbtnIniciar] = useState(false);
-  const [btnModificar, setbtnModificar] = useState(false);
-  const [btnEliminar, setbtnEliminar] = useState(false);
-  const [btnVerTraking, setbtnVerTraking] = useState(false);
-  const [btnCargaEvento, setbtnCargaEvento] = useState(false);
-  const [btnModificarRol, setbtnModificarRol] = useState(false);
-  const [btnSubirArchivo, setbtnSubirArchivo] = useState(false);
 
   let nombreusuarioValue = "";
   
@@ -235,6 +231,7 @@ if (filtroFechaHastaCookie !== null) {
 
   const fetchDataTareas = async () => {
     try {
+      setCloseCargaTarea(true);
       deleteCookie("FILTRONOMBREUSUARIO");
       setCookie("FILTRONOMBREUSUARIO", nombreusuario, 1400) 
       const requsuario = {
@@ -260,20 +257,40 @@ if (filtroFechaHastaCookie !== null) {
         }
       );
 
-      console.log("data", response.data);
+      // console.log("data", response.data);
+      // setTareasList(response.data);
+      
+      
+      // // Actualizar el estado de las tareas
+      // setTareasList2(response.data.map((Tarea) => {
+      //   return {
+      //     ...Tarea,
+      //     btnIniciar: Tarea.tareaccion && Tarea.tareaccion.some((accion) => accion.idTareaAccion === 1),
+      //     btnCargaEvento: Tarea.tareaccion && Tarea.tareaccion.some((accion) => accion.idTareaAccion === 5),
+      //     btnModificar: Tarea.tareaccion && Tarea.tareaccion.some((accion) => accion.idTareaAccion === 3),
+      //     btnModificarRol: Tarea.tareaccion && Tarea.tareaccion.some((accion) => accion.idTareaAccion === 7),
+      //     btnVerTraking: Tarea.tareaccion && Tarea.tareaccion.some((accion) => accion.idTareaAccion === 4),
+      //     btnSubirArchivo: Tarea.tareaccion && Tarea.tareaccion.some((accion) => accion.idTareaAccion === 6),
+      //     btnEliminar: Tarea.tareaccion && Tarea.tareaccion.some((accion) => accion.idTareaAccion === 2),
+      //     // Agrega otros indicadores de botones aquí
+           
+      //   };
+        
+      // }));
+
       const data = response.data.map((Tarea) => {
         let color = "info"; // Valor por defecto
 
-      
-          setbtnIniciar( Tarea.tareaccion && Tarea.tareaccion.some((accion) => accion.idTareaAccion === 1)); // Ejemplo para el botón de iniciar
-          setbtnCargaEvento(Tarea.tareaccion && Tarea.tareaccion.some((accion) => accion.idTareaAccion === 5)); // Ejemplo para el botón de iniciar
-          setbtnModificar(Tarea.tareaccion && Tarea.tareaccion.some((accion) => accion.idTareaAccion === 3)); // Ejemplo para el botón de iniciar
-          setbtnModificarRol(Tarea.tareaccion && Tarea.tareaccion.some((accion) => accion.idTareaAccion === 7)); // Ejemplo para el botón de iniciar
-          setbtnVerTraking(Tarea.tareaccion && Tarea.tareaccion.some((accion) => accion.idTareaAccion === 4)); // Ejemplo para el botón de iniciar
-          setbtnSubirArchivo(Tarea.tareaccion && Tarea.tareaccion.some((accion) => accion.idTareaAccion === 6)); // Ejemplo para el botón de iniciar
-          setbtnEliminar(Tarea.tareaccion && Tarea.tareaccion.some((accion) => accion.idTareaAccion === 2)); // Ejemplo para el botón de iniciar
-   
-     
+
+
+          let btnIniciar = Tarea.tareaccion && Tarea.tareaccion.some((accion) => accion.idTareaAccion === 1);
+          let btnCargaEvento = Tarea.tareaccion && Tarea.tareaccion.some((accion) => accion.idTareaAccion === 5);
+          let btnModificar = Tarea.tareaccion && Tarea.tareaccion.some((accion) => accion.idTareaAccion === 3);
+          let btnModificarRol = Tarea.tareaccion && Tarea.tareaccion.some((accion) => accion.idTareaAccion === 7);
+          let btnVerTraking = Tarea.tareaccion && Tarea.tareaccion.some((accion) => accion.idTareaAccion === 4);
+          let btnSubirArchivo = Tarea.tareaccion && Tarea.tareaccion.some((accion) => accion.idTareaAccion === 6);
+          let btnEliminar = Tarea.tareaccion && Tarea.tareaccion.some((accion) => accion.idTareaAccion === 2);
+
         if (Tarea.porcentajeTrascurrido < 20) {
           color = "error";
         } else if (Tarea.porcentajeTrascurrido > 60) {
@@ -379,7 +396,7 @@ if (filtroFechaHastaCookie !== null) {
                   </Link>
                 </MDTypography>
                 )}
-                {btnEliminar && (
+                {btnModificar && (
                 <MDTypography
                   variant="caption"
                   color="text"
@@ -415,7 +432,7 @@ if (filtroFechaHastaCookie !== null) {
                     </Link>
                   </MDTypography>
                 )}
-                {btnModificar && (
+                {btnModificarRol && (
                   <MDTypography
                   variant="caption"
                   color="text"
@@ -487,9 +504,10 @@ if (filtroFechaHastaCookie !== null) {
         // },
         { Header: "Acciones", accessor: "action", align: "center" },
       ]);
+      setCloseCargaTarea(false);
     } catch (ex) {
       setError(ex);
-
+      setCloseCargaTarea(false);
       console.log(error);
     }
   };
@@ -531,6 +549,7 @@ if (filtroFechaHastaCookie !== null) {
 
   useEffect(() => {
     fetchDataTareas();
+
   }, []);
 
   const handlePDF = () => {
@@ -1262,17 +1281,19 @@ if (filtroFechaHastaCookie !== null) {
                     pagination={{ color: "secondary", variant: "gradient" }}
                   />
                   <MDSnackbar
-                    color="info"
+                    color="warning"
                     notify={true}
                     error={false}
                     icon="notifications"
                     title="Task Manager"
-                    content="Iniciando Tarea....."
+                    content="Cargando Tareas....."
                     dateTime={dateTime}
-                    open={successSBPrev}
-                    onClose={closeSuccessSBPrev}
-                    close={closeSuccessSBPrev}
+                    open={cargaTarea}
+                    onClose={closecargaTarea}
+                    close={closecargaTarea}
+                    direction
                   />
+                  
                   {/* </MDButton> */}
                   <MDSnackbar
                     color="success"
@@ -1299,6 +1320,18 @@ if (filtroFechaHastaCookie !== null) {
                       close={closeErrorSB}
 
                   />
+                  <MDSnackbar
+                    color="info"
+                    notify={true}
+                    error={false}
+                    icon="notifications"
+                    title="Task Manager"
+                    content="Iniciando Tarea....."
+                    dateTime={dateTime}
+                    open={successSBPrev}
+                    onClose={closeSuccessSBPrev}
+                    close={closeSuccessSBPrev}
+                  />
                 </Grid>
               </MDBox>
             </Card>
@@ -1309,5 +1342,4 @@ if (filtroFechaHastaCookie !== null) {
     </DashboardLayout >
   );
 }
-
 export default TareaList;
