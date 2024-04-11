@@ -27,13 +27,13 @@ const RolAdd = () => {
     idRol: 0,
     descripcion: "",
     activo: true,
-    iniciar: false,
-    eliminar: false,
-    modificar: false,
-    modificarrol: false,
-    subirarchivos: false,
-    vertraking: false,
-    cargaeventos: false,
+    iniciar:false,
+    eliminar:false,
+    modificar:false,
+    cargaeventos:false,
+    modificarrol:false,
+    vertraking:false,
+    subirarchivos:false
   });
 
 
@@ -51,10 +51,10 @@ const RolAdd = () => {
   const [loading, setLoading] = useState(false);
 
   const [descripcionboton, setdescripcionboton] = useState("Cancelar");
-  const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
+  
   const handleInputChange = (event) => {
     const { name, value, type, checked } = event.target;
-   
+
     // Verifica si el tipo de campo es un checkbox (para campos booleanos)
     const newValue = type === 'checkbox' ? checked : value;
 
@@ -99,7 +99,7 @@ const RolAdd = () => {
           setdescripcionboton("Volver");
           setExito(true);
           setMensaje('');
-
+         
           const response = await fetch(API_URL + "/RolAlta", {
             method: "POST",
             headers: {
@@ -208,10 +208,10 @@ const RolAdd = () => {
               </MDTypography>
             </MDBox>
             <MDBox mb={2}>
-            
-            <Checkbox name="btnIniciar"
+
+            <Checkbox name="iniciar"
                 onChange={handleInputChange}
-                checked={formData.iniciar || false}
+                checked={formData.iniciar}
 
               />
              
@@ -225,9 +225,9 @@ const RolAdd = () => {
             
               </MDTypography>
             
-              <Checkbox name="btnEliminar"
+              <Checkbox name="eliminar"
                 onChange={handleInputChange}
-                checked={formData.eliminar || false}
+                checked={formData.eliminar}
 
               />
               <MDTypography
@@ -239,10 +239,10 @@ const RolAdd = () => {
                 &nbsp;&nbsp;Eliminar
               
               </MDTypography>
-              <Checkbox name="btnModificar"
+              <Checkbox name="modificar"
                 onChange={handleInputChange}
-                checked={formData.modificar || false}
-
+                checked={formData.modificar}
+                
               />
               <MDTypography
                 variant="button"
@@ -255,9 +255,9 @@ const RolAdd = () => {
               </MDTypography>
               </MDBox>
             <MDBox mb={2}>
-              <Checkbox name="btnModificarRoles"
+              <Checkbox name="modificarrol"
                 onChange={handleInputChange}
-                checked={formData.modificarrol || false}
+                checked={formData.modificarrol}
 
               />
               <MDTypography
@@ -267,11 +267,11 @@ const RolAdd = () => {
                 sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
               >
                 &nbsp;&nbsp;Mod. Roles
-              
+             
               </MDTypography>
-              <Checkbox name="btnCargarEvento"
+              <Checkbox name="cargaeventos"
                 onChange={handleInputChange}
-                checked={formData.cargaeventos || false}
+                checked={formData.cargaeventos}
 
               />
               <MDTypography
@@ -283,9 +283,9 @@ const RolAdd = () => {
                 &nbsp;&nbsp;Cargar Eventos
               
               </MDTypography>
-              <Checkbox name="btnVerTraking"
+              <Checkbox name="vertraking"
                 onChange={handleInputChange}
-                checked={formData.vertraking || false}
+                checked={formData.vertraking}
 
               />
               <MDTypography
@@ -297,9 +297,12 @@ const RolAdd = () => {
                 &nbsp;&nbsp;Ver Traking
               
               </MDTypography>
-              <Checkbox name="btnEliminar"
+              </MDBox>
+            <MDBox mb={2}>
+             
+              <Checkbox name="subirarchivos"
                 onChange={handleInputChange}
-                checked={formData.eliminar || false}
+                checked={formData.subirarchivos}
 
               />
               <MDTypography
@@ -308,10 +311,9 @@ const RolAdd = () => {
                 color="text"
                 sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
               >
-                &nbsp;&nbsp;Eliminar
+                &nbsp;&nbsp;Subir Archivos
               
               </MDTypography>
-
             </MDBox>
             <MDBox mb={1} style={{ display: "flex", gap: "16px" }}>
               <MDButton

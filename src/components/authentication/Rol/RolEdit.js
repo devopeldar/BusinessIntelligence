@@ -29,6 +29,15 @@ const RolEdit = () => {
     const history = useNavigate();
     const [grabando, setGrabando] = useState(false);
     const [exito, setExito] = useState(false);
+
+    const [iniciar, setIniciar] = useState(false);
+    const [eliminar, setEliminar] = useState(false);
+    const [modificar, setModificar] = useState(false);
+    const [modificarrol, setModificarRol] = useState(false);
+    const [vertraking, setVerTraking] = useState(false);
+    const [subirarchivos, setSubirArchivo] = useState(false);
+    const [cargaeventos, setCargaEventos] = useState(false);
+
     const handleVolver = () => {
         history("/RolVolver"); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
     };
@@ -48,10 +57,19 @@ const RolEdit = () => {
                     }
                 });
                 const data = response.data;
+               
                 setRol(data);
                 setNombre(data.descripcion);
                 setActivo(data.activo);
                 setRequerido(data.requerido);
+
+                response.data.acciones.forEach((accion) => {
+                    console.error("accion:", accion);
+                    actualizarEstadoPorTareaAccion(accion.tareaAccion, accion.permitido);
+                });
+
+                
+
             } catch (error) {
                 console.error("Error:", error);
             }
@@ -59,6 +77,33 @@ const RolEdit = () => {
         GetRol();
     }, [id]);
 
+
+     const actualizarEstadoPorTareaAccion = (tareaAccion, permitido) => {
+        switch (tareaAccion) {
+            case 1:
+                setIniciar(permitido);
+                break;
+            case 2:
+                setEliminar(permitido);
+                break;
+            case 3:
+                setModificar(permitido);
+                break;
+            case 7:
+                setModificarRol(permitido);
+            case 8:
+                setVerTraking(permitido);
+            case 6:
+                setSubirArchivo(permitido);
+                break;
+            case 5:
+                setCargaEventos(permitido);
+                break;
+            // Agregar más casos según sea necesario
+            default:
+                break;
+        }
+    };
 
     const handleSubmit = async (event) => {
 
@@ -79,7 +124,7 @@ const RolEdit = () => {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ idRol, descripcion, activo, requerido }),
+                body: JSON.stringify({ idRol, descripcion, activo, requerido, iniciar,eliminar,modificar,modificarrol,vertraking,subirarchivos,cargaeventos }),
             });
             const res = await response.json();
 
@@ -103,7 +148,26 @@ const RolEdit = () => {
     };
 
     if (!Rol) {
-        return <div>Cargando Roles...</div>;
+        return <BasicLayout image={bgImage}>
+        <Card style={{    width: "157%" }}>
+           <MDBox
+               variant="gradient"
+               bgColor="warning"
+               borderRadius="lg"
+               coloredShadow="primary"
+               mx={2}
+               mt={-3}
+               p={3}
+               mb={1}
+               textAlign="center"
+           >
+               <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
+                   Cargando Roles...
+               </MDTypography>
+           </MDBox>
+
+       </Card>
+   </BasicLayout>
     }
 
     return (
@@ -174,7 +238,114 @@ const RolEdit = () => {
                                 &nbsp;&nbsp;Activo
                             </MDTypography>
                         </MDBox>
+                        <MDBox mb={2}>
 
+                        <Checkbox name="iniciar"
+                            onChange={(e) => setIniciar(e.target.checked)}
+                            checked={iniciar}
+
+                        />
+                        
+                            <MDTypography
+                            variant="button"
+                            fontWeight="regular"
+                            color="text"
+                            sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
+                            >
+                            &nbsp;&nbsp;Iniciar
+
+                        </MDTypography>
+
+                        <Checkbox name="eliminar"
+                             onChange={(e) => setEliminar(e.target.checked)}
+                            checked={eliminar}
+
+                        />
+                        <MDTypography
+                            variant="button"
+                            fontWeight="regular"
+                            color="text"
+                            sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
+                        >
+                            &nbsp;&nbsp;Eliminar
+                        
+                        </MDTypography>
+                        <Checkbox name="modificar"
+                             onChange={(e) => setModificar(e.target.checked)}
+                            checked={modificar}
+                            
+                        />
+                        <MDTypography
+                            variant="button"
+                            fontWeight="regular"
+                            color="text"
+                            sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
+                        >
+                            &nbsp;&nbsp;Modificar
+                        
+                        </MDTypography>
+                        </MDBox>
+                        <MDBox mb={2}>
+                        <Checkbox name="modificarrol"
+                             onChange={(e) => setModificarRol(e.target.checked)}
+                            checked={modificarrol}
+
+                        />
+                        <MDTypography
+                            variant="button"
+                            fontWeight="regular"
+                            color="text"
+                            sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
+                        >
+                            &nbsp;&nbsp;Mod. Roles
+                        
+                        </MDTypography>
+                        <Checkbox name="cargaeventos"
+                             onChange={(e) => setCargaEventos(e.target.checked)}
+                            checked={cargaeventos}
+
+                        />
+                        <MDTypography
+                            variant="button"
+                            fontWeight="regular"
+                            color="text"
+                            sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
+                        >
+                            &nbsp;&nbsp;Cargar Eventos
+                        
+                        </MDTypography>
+                        <Checkbox name="vertraking"
+                             onChange={(e) => setVerTraking(e.target.checked)}
+                            checked={vertraking}
+
+                        />
+                        <MDTypography
+                            variant="button"
+                            fontWeight="regular"
+                            color="text"
+                            sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
+                        >
+                            &nbsp;&nbsp;Ver Traking
+                        
+                        </MDTypography>
+                        </MDBox>
+                        <MDBox mb={2}>
+                        
+                        <Checkbox name="subirarchivos"
+                             onChange={(e) => setSubirArchivo(e.target.checked)}
+                            checked={subirarchivos}
+
+                        />
+                        <MDTypography
+                            variant="button"
+                            fontWeight="regular"
+                            color="text"
+                            sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
+                        >
+                            &nbsp;&nbsp;Subir Archivos
+                        
+                        </MDTypography>
+                        </MDBox>
 
                         <MDBox mb={1} style={{ display: "flex", gap: "16px" }}>
                             <MDButton
