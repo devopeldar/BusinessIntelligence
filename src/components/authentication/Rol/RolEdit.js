@@ -91,8 +91,10 @@ const RolEdit = () => {
                 break;
             case 7:
                 setModificarRol(permitido);
+                break;
             case 8:
                 setVerTraking(permitido);
+                break;
             case 6:
                 setSubirArchivo(permitido);
                 break;

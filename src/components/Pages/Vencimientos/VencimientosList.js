@@ -12,12 +12,10 @@ import { BuildingFillAdd, PencilSquare } from "react-bootstrap-icons";
 import { Link, useNavigate } from "react-router-dom";
 import {
     Add,
-    Checklist,
     Filter,
 } from "@mui/icons-material";
 import "react-datepicker/dist/react-datepicker.css";
 import Cliente from "../../Utils/cliente";
-import { addMonths, startOfMonth } from "date-fns";
 import axios from "axios";
 import API_URL from "../../../config";
 import TipoTarea from "../../Utils/tipoTarea";
@@ -359,9 +357,13 @@ function VencimientosList() {
                                             getOptionLabel={(option) =>
                                                 option.nombre || "Seleccione Cliente"
                                             }
-                                            getOptionSelected={(option, value) =>
-                                                option.idCliente === value.idCliente
-                                            }
+                                            // getOptionSelected={(option, value) =>
+                                            //     option.idCliente === value.idCliente
+                                            // }
+                                            isOptionEqualToValue={(option, value) => {
+                                                // Aquí defines cómo comparar una opción con un valor
+                                                return option.idCliente === value.idCliente && option.nombre === value.nombre;
+                                              }}
                                             value={selectedValueCliente || null}
                                             onChange={handleAutocompleteClienteChange}
                                             renderInput={(params) => (
@@ -380,9 +382,13 @@ function VencimientosList() {
                                             getOptionLabel={(option) =>
                                                 option.nombre || "Seleccione Tipo Tarea"
                                             }
-                                            getOptionSelected={(option, value) =>
-                                                option.idTareaTipo === value.idTareaTipo
-                                            }
+                                            // getOptionSelected={(option, value) =>
+                                            //     option.idTareaTipo === value.idTareaTipo
+                                            // }
+                                            isOptionEqualToValue={(option, value) => {
+                                                // Aquí defines cómo comparar una opción con un valor
+                                                return option.idTareaTipo === value.idTareaTipo && option.nombre === value.nombre;
+                                              }}
                                             value={selectedValueTareaTipo || null}
                                             onChange={handleAutocompleteTareaTipoChange}
                                             renderInput={(params) => (
@@ -402,9 +408,14 @@ function VencimientosList() {
                                             getOptionLabel={(option) =>
                                                 option.descripcion || "Seleccione Mes"
                                             }
-                                            getOptionSelected={(option, value) =>
-                                                option.mes === value
-                                            }
+                                            // getOptionSelected={(option, value) =>
+                                            //     option.mes === value
+                                            // }
+                                            //(getOptionSelected={(option, value) => option.valor === value.valor}
+                                            isOptionEqualToValue={(option, value) => {
+                                                // Aquí defines cómo comparar una opción con un valor
+                                                return option.valor === value.valor && option.descripcion === value.descripcion;
+                                              }}
                                             value={selectedValueMes || null}
                                             onChange={handleAutocompleteMesChange}
                                             renderInput={(params) => (

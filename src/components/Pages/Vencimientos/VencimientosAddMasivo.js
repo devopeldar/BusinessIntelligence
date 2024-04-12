@@ -12,7 +12,6 @@ import MDBox from "../../controls/MDBox";
 import MDTypography from "../../controls/MDTypography";
 import bgImage from "../../../assets/images/bg-sign-up-cover.jpeg";
 import MDInput from "../../controls/MDInput";
-import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
 import MDProgress from "../../controls/MDProgress";
 import { AlertTitle } from "@mui/material";
@@ -154,6 +153,7 @@ const VencimientosAddMasivo = () => {
             setSuccessSB(true);
             setSuccessSBPrev(false);
             setErrorSB(false);
+            setnombreboton("Volver");
         } else {
             // Manejar errores si la respuesta no es exitosa
             setMensaje(res.rdoAccionDesc);

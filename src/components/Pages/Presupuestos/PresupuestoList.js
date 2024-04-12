@@ -415,7 +415,7 @@ function PresupuestoList() {
                       getOptionLabel={(option) =>
                         option.nombre || "Seleccione Cliente"
                       }
-                      getOptionSelected={(option, value) =>
+                      getoptionselected={(option, value) =>
                         option.idCliente === value.idCliente
                       }
                       value={selectedValueCliente || null}

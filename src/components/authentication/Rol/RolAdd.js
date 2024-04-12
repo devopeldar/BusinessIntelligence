@@ -12,12 +12,9 @@ import { useNavigate } from 'react-router-dom';
 import MDProgress from "../../controls/MDProgress";
 import { AlertTitle, Checkbox } from "@mui/material";
 import MDButton from "../../controls/MDButton";
-import { Pause, PauseBtnFill, PlayBtn, PlayBtnFill, Save } from "react-bootstrap-icons";
-import { ExitToApp, Favorite, FavoriteBorder } from "@mui/icons-material";
-import { green } from '@mui/material/colors';
-import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
-import BookmarkIcon from '@mui/icons-material/Bookmark';
-import IconCheckMenu from "../../controls/IconCheckMenu";
+import { Save } from "react-bootstrap-icons";
+import { ExitToApp } from "@mui/icons-material";
+
 const RolAdd = () => {
   const navigate = useNavigate();
 
