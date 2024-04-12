@@ -94,7 +94,7 @@ import CambiarContrasenia from "./components/authentication/CambiarContrasenia";
 import EventoTareaDelete from "./components/Pages/Tareas/EventoTareaDelete";
 import routesPermisos from "./routesPermisos";
 import VencimientosAddMasivo from "./components/Pages/Vencimientos/VencimientosAddMasivo";
-
+import example1 from "./components/Pages/Charts/example1";
 
 import { KeyFill, People, Person } from "react-bootstrap-icons";
 import {
@@ -109,6 +109,8 @@ import {
 } from "@mui/icons-material";
 import axios from "axios";
 import API_URL from "./config";
+import Example from "./components/Pages/Charts/example1";
+import Example1 from "./components/Pages/Charts/example1";
 
 
 export default function App() {
@@ -655,7 +657,7 @@ console.log("idperfilapp" , reqPermisosxPerfil);
             <Route path="/TareaDocumentacionVolver" element={<TareaDocumentacionList />} />
             
             <Route path="/CambiarContrasenia" element={<CambiarContrasenia />} />
-        
+            <Route path="/chart1" element={<Example />} />
             {/* 
 
 
