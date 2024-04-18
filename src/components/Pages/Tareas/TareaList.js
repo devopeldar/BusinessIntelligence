@@ -280,23 +280,64 @@ if (filtroFechaHastaCookie !== null) {
 
       const data = response.data.map((Tarea) => {
         let color = "info"; // Valor por defecto
-
-
-
-          let btnIniciar = Tarea.tareaccion && Tarea.tareaccion.some((accion) => accion.idTareaAccion === 1);
-          let btnCargaEvento = Tarea.tareaccion && Tarea.tareaccion.some((accion) => accion.idTareaAccion === 5);
-          let btnModificar = Tarea.tareaccion && Tarea.tareaccion.some((accion) => accion.idTareaAccion === 3);
-          let btnModificarRol = Tarea.tareaccion && Tarea.tareaccion.some((accion) => accion.idTareaAccion === 7);
-          let btnVerTraking = Tarea.tareaccion && Tarea.tareaccion.some((accion) => accion.idTareaAccion === 4);
-          let btnSubirArchivo = Tarea.tareaccion && Tarea.tareaccion.some((accion) => accion.idTareaAccion === 6);
-          let btnEliminar = Tarea.tareaccion && Tarea.tareaccion.some((accion) => accion.idTareaAccion === 2);
-
-        if (Tarea.porcentajeTrascurrido < 20) {
-          color = "error";
-        } else if (Tarea.porcentajeTrascurrido > 60) {
-          color = "success";
+        let progreslabel = 0;
+        let progress = 0;
+        let colorDesc = "success";
+        let btnIniciar = Tarea.tareaccion && Tarea.tareaccion.some((accion) => accion.idTareaAccion === 1);
+        let btnCargaEvento = Tarea.tareaccion && Tarea.tareaccion.some((accion) => accion.idTareaAccion === 5);
+        let btnModificar = Tarea.tareaccion && Tarea.tareaccion.some((accion) => accion.idTareaAccion === 3);
+        let btnModificarRol = Tarea.tareaccion && Tarea.tareaccion.some((accion) => accion.idTareaAccion === 7);
+        let btnVerTraking = Tarea.tareaccion && Tarea.tareaccion.some((accion) => accion.idTareaAccion === 4);
+        let btnSubirArchivo = Tarea.tareaccion && Tarea.tareaccion.some((accion) => accion.idTareaAccion === 6);
+        let btnEliminar = Tarea.tareaccion && Tarea.tareaccion.some((accion) => accion.idTareaAccion === 2);
+        progreslabel = Tarea.porcentajeTrascurrido;
+       
+        console.log(Tarea);
+        if(Tarea.idTareaEstado === 5 || Tarea.idTareaEstado === 6 || Tarea.idTareaEstado === 10)
+        {
+          colorDesc ="error";
+        }else{
+          if(Tarea.idTareaEstado === 4)
+          {
+            colorDesc ="warning";
+          }
         }
 
+
+        if (Tarea.porcentajeTrascurrido < 75) {
+          color = "turquoise";
+        } else if (Tarea.porcentajeTrascurrido >= 75 && Tarea.porcentajeTrascurrido <= 90 ) {
+          color = "warning";
+        } else if (Tarea.porcentajeTrascurrido >= 91 && Tarea.porcentajeTrascurrido <= 99 ) {
+          color = "error";
+        } else if (Tarea.porcentajeTrascurrido == 100) {
+          color = "success";
+        } else if (Tarea.porcentajeTrascurrido == 101) {
+          Tarea.porcentajeTrascurrido = 100;
+          color = "magenta";
+        } else if (Tarea.porcentajeTrascurrido == 102) {
+          Tarea.porcentajeTrascurrido = 100;
+          color = "maroon";
+        }
+        if(Tarea.estado === 4 )  
+        {
+          progress = 100;
+          if(Tarea.porcentajeTrascurrido > 100){
+            color = "error";
+          }else{
+            color = "success";
+          }
+        
+        }else {
+          if(Tarea.porcentajeTrascurrido > 100){
+            color = "error";
+            progress = 100;
+          }else{
+            
+            progress = Tarea.porcentajeTrascurrido;
+          }
+          
+        }
         const estado = (
           <MDBox ml={-1}>
             {Tarea.estado === 1 || Tarea.estado === 2 ? (
@@ -313,6 +354,7 @@ if (filtroFechaHastaCookie !== null) {
           </MDBox>
         );
 
+       
         const descripcion = (
           <Nombre
             cliente={Tarea.clienteNombre}
@@ -323,6 +365,7 @@ if (filtroFechaHastaCookie !== null) {
             observaciones={Tarea.observaciones}
              estado = {Tarea.estado}
              IDTarea = {Tarea.idTarea}
+             colorDesc={colorDesc}
             
           />
         );
@@ -346,17 +389,18 @@ if (filtroFechaHastaCookie !== null) {
             fechaFinalizacion={Tarea.fechaFinalizacion}
             tiempoDetenido={Tarea.tiempoDetenido}
             tiempoTranscurrido={Tarea.tiempoTranscurrido}
-            progres={Tarea.porcentajeTrascurrido}
+            progres={progress}
             color={color}
+            progreslabel = {progreslabel}
           />
         );
         
-        const porctranscurrido = (
-          <PorcTranscurrido
-            progres={Tarea.porcentajeTrascurrido}
-            color={color}
-          />
-        );
+        // const porctranscurrido = (
+        //   <PorcTranscurrido
+        //     progres={Tarea.porcentajeTrascurrido}
+        //     color={color}
+        //   />
+        // );
 
         const action = (
         
@@ -479,7 +523,7 @@ if (filtroFechaHastaCookie !== null) {
           fecha: fecha,
           roles: roles,
           descripcion: descripcion,
-          porctranscurrido: porctranscurrido,
+          //porctranscurrido: porctranscurrido,
           estado: estado,
           action: action,
         };
@@ -827,7 +871,7 @@ if (filtroFechaHastaCookie !== null) {
     tareaTipoCodigo,
     tareaTipoNombre,
     estadoDescripcion,
-    observaciones,estado, IDTarea
+    observaciones,estado, IDTarea, colorDesc
   }) => (
     
     <MDBox lineHeight={1} textAlign="left">
@@ -872,7 +916,7 @@ if (filtroFechaHastaCookie !== null) {
       <MDTypography
         variant="caption"
         display="block"
-        color="success"
+        color={colorDesc}
         fontWeight="light"
       >
         Estado Tarea :{estadoDescripcion}{" "}
@@ -908,7 +952,7 @@ if (filtroFechaHastaCookie !== null) {
     fechaVencimientoLegal,
     fechaFinalizacion,
     tiempoDetenido,
-    tiempoTranscurrido,progres,color
+    tiempoTranscurrido,progres,color, progreslabel
   }) => (
     <MDBox lineHeight={1} textAlign="left">
       <MDTypography
@@ -978,6 +1022,7 @@ if (filtroFechaHastaCookie !== null) {
           variant="gradient"
           color={color}
           value={progres}
+          valuelabel={progreslabel}
         />
       </MDBox>
     </MDBox>

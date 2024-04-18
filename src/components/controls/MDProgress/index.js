@@ -24,18 +24,20 @@ import MDTypography from "../MDTypography";
 // Custom styles for MDProgress
 import MDProgressRoot from "../MDProgress/MDProgressRoot";
 
-const MDProgress = forwardRef(({ variant, color, value, label, ...rest }, ref) => (
+const MDProgress = forwardRef(({ variant, color, value, label, valuelabel, ...rest }, ref) => (
   <>
+    
     {label && (
+     
       <MDTypography variant="button" fontWeight="medium" color="text">
-        {value}%
+        {valuelabel === null || valuelabel === ''? value : valuelabel}%
       </MDTypography>
     )}
     <MDProgressRoot
       {...rest}
       ref={ref}
       variant="determinate"
-      value={value}
+      value={value > 100 ? 100 : value}
       ownerState={{ color, value, variant }}
     />
   </>
@@ -61,7 +63,56 @@ MDProgress.propTypes = {
     "error",
     "light",
     "dark",
+    "purple",
+    "teal",
+    "cyan",
+    "amber",
+    "lime",
+    "indigo",
+    "deepPurple",
+    "deepOrange",
+    "pink",
+    "brown",
+    "grey",
+    "blueGrey",
+    "limeGreen",
+    "orange",
+    "blue",
+    "green",
+    "red",
+    "yellow",
+    "violet",
+    "turquoise",
+    "magenta",
+    "cyan",
+    "azure",
+    "lavender",
+    "rose",
+    "ivory",
+    "peach",
+    "salmon",
+    "chartreuse",
+    "olive",
+    "mustard",
+    "maroon",
+    "plum",
+    "navy",
+    "steelBlue",
+    "slateGrey",
+    "sienna",
+    "goldenrod",
+    "peru",
+    "thistle",
+    "orchid",
+    "cornflowerBlue",
+    "cadetBlue",
+    "mediumPurple",
+    "darkOrchid",
+    "darkSlateBlue",
+    "saddleBrown",
+    "fireBrick",
   ]),
+
   value: PropTypes.number,
   label: PropTypes.bool,
 };
