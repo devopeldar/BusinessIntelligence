@@ -111,6 +111,7 @@ import axios from "axios";
 import API_URL from "./config";
 import Example from "./components/Pages/Charts/example1";
 import Example1 from "./components/Pages/Charts/example1";
+import GraficoClientes from "./components/Pages/Charts/Clientes/GraficoClientes";
 
 
 export default function App() {
@@ -658,6 +659,11 @@ console.log("idperfilapp" , reqPermisosxPerfil);
             
             <Route path="/CambiarContrasenia" element={<CambiarContrasenia />} />
             <Route path="/chart1" element={<Example />} />
+
+
+            {/* Graficos */}
+            <Route path="/GraficoClientes" element={<GraficoClientes />} />
+            
             {/* 
 
 
