@@ -1,86 +1,37 @@
-import React from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, RadialBarChart, RadialBar, AreaChart, Area, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, RadarChart } from 'recharts';
+import React, { useEffect, useState } from 'react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, AreaChart, Area, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, RadarChart } from 'recharts';
 import MDTypography from '../../../controls/MDTypography';
 import MDBox from '../../../controls/MDBox';
-import { Card, Grid } from '@mui/material';
-import BasicLayout from '../../../layauots/BasicLayout';
-import bgImage from "../../../../assets/images/bg-sign-up-cover.jpeg";
-import {
-  GaugeContainer,
-  GaugeValueArc,
-  GaugeReferenceArc,
-  useGaugeState,
-} from '@mui/x-charts/Gauge';
-import { Gauge, gaugeClasses } from '@mui/x-charts/Gauge';
-import { PieChart, pieArcLabelClasses } from '@mui/x-charts/PieChart';
+import { Autocomplete, Card, Checkbox, Grid, List, ListItem, ListItemIcon, ListItemText, ListSubheader, TextField } from '@mui/material';
 import PageLayout from '../../../layauots/PageLayout';
-import { red } from '@mui/material/colors';
+import PieChartCustom from '../Components/PieChartCustom';
+import { CheckBox } from '@mui/icons-material';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import BarChartCustom from '../Components/BarChartCustom';
+const dataMes = [
+  { label1: 'Enero', value1: 400, titulo: 'Ventas x Mes', label1Nombre: 'Meses', valor1Nombre: 'Cantidad Ventas' },
+  { label1: 'Febrero', value1: 300, titulo: 'Ventas x Mes', label1Nombre: 'Meses', valor1Nombre: 'Cantidad Ventas' },
+  { label1: 'Marzo', value1: 600, titulo: 'Ventas x Mes', label1Nombre: 'Meses', valor1Nombre: 'Cantidad Ventas' },
+  { label1: 'Abril', value1: 200, titulo: 'Ventas x Mes', label1Nombre: 'Meses', valor1Nombre: 'Cantidad Ventas' },
+  { label1: 'Mayo', value1: 700, titulo: 'Ventas x Mes', label1Nombre: 'Meses', valor1Nombre: 'Cantidad Ventas' },
+  { label1: 'Junio', value1: 400, titulo: 'Ventas x Mes', label1Nombre: 'Meses', valor1Nombre: 'Cantidad Ventas' },
+  { label1: 'Julio', value1: 300, titulo: 'Ventas x Mes', label1Nombre: 'Meses', valor1Nombre: 'Cantidad Ventas' }
+];
+
+
+
+
 const data2 = [
-  { name: 'Enero', ventas: 400 },
-  { name: 'Febrero', ventas: 300 },
-  { name: 'Marzo', ventas: 600 },
-  { name: 'Abril', ventas: 200 },
-  { name: 'Mayo', ventas: 700 },
-  { name: 'Junio', ventas: 400 },
-  { name: 'Julio', ventas: 300 },
-  { name: 'Agosto', ventas: 600 },
-  { name: 'Septiembre', ventas: 200 },
-  { name: 'Octubre', ventas: 700 },
+  { name: 'Group A', value: 400 },
+  { name: 'Group B', value: 300 },
+  { name: 'Group C', value: 300 },
+  { name: 'Group D', value: 200 },
+  { name: 'Group E', value: 900 },
+  { name: 'Group F', value: 100 },
+  { name: 'Group G', value: 600 }
 ];
 
-const data = [
-  { id: 0, value: 10, label: 'series A' },
-  { id: 1, value: 15, label: 'series B' },
-  { id: 2, value: 20, label: 'series C' },
-];
-const dataPie = [
-    { name: '18-24', uv: 31.47, pv: 2400, fill: '#8884d8' },
-    { name: '25-29', uv: 26.69, pv: 4567, fill: '#83a6ed' },
-    { name: '30-34', uv: 15.69, pv: 1398, fill: '#8dd1e1' },
-    { name: '35-39', uv: 8.22, pv: 9800, fill: '#82ca9d' },
-    { name: '40-49', uv: 8.63, pv: 3908, fill: '#a4de6c' },
-    { name: '50+', uv: 2.63, pv: 4800, fill: '#d0ed57' },
-    { name: 'unknown', uv: 6.67, pv: 4800, fill: '#ffc658' },
-  ];
-
-  const legendStyle = {
-    top: '50%',
-    right: 0,
-    transform: 'translate(0, -50%)',
-    lineHeight: '24px',
-  };
-
-
-  function GaugePointer() {
-    const { valueAngle, outerRadius, cx, cy } = useGaugeState();
-  
-    if (valueAngle === null) {
-      // No value to display
-      return null;
-    }
-  
-    const target = {
-      x: cx + outerRadius * Math.sin(valueAngle),
-      y: cy - outerRadius * Math.cos(valueAngle),
-    };
-    return (
-      <g>
-        <circle cx={cx} cy={cy} r={5} fill="red" />
-        <path
-          d={`M ${cx} ${cy} L ${target.x} ${target.y}`}
-          stroke="red"
-          strokeWidth={3}
-        />
-      </g>
-    );
-  }
-
-  const settings = {
-    width: 200,
-    height: 200,
-    value: 60,
-  };
-  
   const dataarea = [
     {
       name: 'Page A',
@@ -126,7 +77,6 @@ const dataPie = [
     },
   ];
   
-
   const dataradar = [
     {
       subject: 'Math',
@@ -166,12 +116,28 @@ const dataPie = [
     },
   ];
 
-
-  const size = {
-    width: 400,
-    height: 200,
-  };
 const GraficoClientes = () => {
+  // const [srcpiechart, setSrcPieChart]= useState([]);
+  // const [selectedMonths, setSelectedMonths] = useState([]);
+
+  // const handleMonthChange = (event, selectedValues) => {
+  //   setSelectedMonths(selectedValues);
+  // };
+
+  // const handleToggle = (month) => () => {
+  //   const selectedIndex = selectedMonths.indexOf(month);
+  //   const newSelected = [...selectedMonths];
+
+  //   if (selectedIndex === -1) {
+  //     newSelected.push(month);
+  //   } else {
+  //     newSelected.splice(selectedIndex, 1);
+  //   }
+
+  //   setSelectedMonths(newSelected);
+  // };
+
+
   return (
    
     <PageLayout style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -201,17 +167,9 @@ const GraficoClientes = () => {
       <div style={{ display: 'flex', marginTop: '15px', justifyContent: 'space-between', width: '100%' }}>
         {/* Primer Gráfico */}
         <Card style={{ flex: 1 }}>
-        <ResponsiveContainer width="100%" height={400}>
-            <BarChart width={200} height={300} data={data2}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" style={{ fontFamily: 'Arial', fontWeight: 'bold', fontSize:'10px' }}/>
-              <YAxis style={{ fontFamily: 'Arial', fontWeight: 'bold', fontSize:'10px' }} />
-              <Tooltip style={{ fontFamily: 'Arial', fontWeight: 'bold', fontSize:'10px' }}/>
-              <Legend />
-              <Bar dataKey="ventas" fill="#8884d8" />
-            </BarChart>
-
-          </ResponsiveContainer>
+        <BarChartCustom data={dataMes} namekey={"label1"} datakey={"value1"} title={dataMes[0].titulo} 
+                          mostrarfiltro={true} nameeje={dataMes[0].label1Nombre} 
+                          nameejevertical={dataMes[0].valor1Nombre} observaciones={"sin observaciones por el momento..."}/>
         </Card>
 
         {/* Segundo Gráfico */}
@@ -254,24 +212,9 @@ const GraficoClientes = () => {
           </ResponsiveContainer>
         </Card>
         <Card style={{ flex: 1 }}>
-          <ResponsiveContainer width="100%" height={400}>
-          <PieChart
-              series={[
-                {
-                  arcLabel: (item) => `${item.label} (${item.value})`,
-                  arcLabelMinAngle: 45,
-                  data,
-                },
-              ]}
-              sx={{
-                [`& .${pieArcLabelClasses.root}`]: {
-                  fill: 'white',
-                  fontWeight: 'bold',
-                },
-              }}
-              {...size}
-            />
-          </ResponsiveContainer>
+        
+          <PieChartCustom data={dataMes} namekey={"label1"} datakey={"value1"} title={"ejemplo de grafico de torta"} 
+                          mostrarfiltro={true} observaciones={"sin observaciones por el momento..."}/>
         </Card>
       </div>
       </Card>
