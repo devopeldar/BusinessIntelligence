@@ -1,6 +1,6 @@
 import "./styles.css";
 import React, { useEffect, useState } from "react";
-import { PieChart, Pie, Cell, Tooltip } from "recharts";
+import { PieChart, Pie, Cell, Tooltip, PieLabelRenderProps  } from "recharts";
 import MDBox from "../../../controls/MDBox";
 import MDTypography from "../../../controls/MDTypography";
 import COLORS from "../../../Utils/Colors";
@@ -41,6 +41,20 @@ useEffect(() => {
   
   }, [selectedItems]); // Actualizar cuando cambia la selección de meses
 
+  const renderCustomizedLabel = (props: PieLabelRenderProps) => {
+    const { cx, cy, midAngle, innerRadius, outerRadius, percent, index } = props;
+    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+    const x = cx + radius * Math.cos(-midAngle * (Math.PI / 180));
+    const y = cy + radius * Math.sin(-midAngle * (Math.PI / 180));
+  
+    return (
+      <text x={x} y={y} fill="white" textAnchor="middle" dominantBaseline="central">
+        {props.payload.label1}
+        {`${props.payload.label1}: ${(percent * 100).toFixed(2)}%`}
+      </text>
+    );
+  };
+
   return (
     <>
     <MDBox>
@@ -79,7 +93,7 @@ useEffect(() => {
                     onChange={handleToggle(items)}
                 />
                 <MDTypography variant="body2" style={{ marginLeft: 8 }}>
-                    {items?.[namekey]}
+                    {items?.[namekey]} 
                 </MDTypography>
                 </ListItem>
             );
@@ -87,21 +101,27 @@ useEffect(() => {
         </List>
         </>
     )} 
-    <PieChart width={500} height={400}>
+    <PieChart width={500} height={400} marginTop={50}>
       <Pie
-        data={srcpiechart}
-        innerRadius={60}
-        outerRadius={80}
+        data={srcpiechart} innerRadius= {30}
+        outerRadius= {150}
+        paddingAngle= {5}
+        cornerRadius= {5}
+       
+        cx= {150}
+        cy={200}
+        
         fill="#8884d8"
         dataKey={datakey}
-        paddingAngle={5}
+       //</PieChart>name={props.payload.label1}
         labelLine={false}
+        //label={renderCustomizedLabel}
       >
         {srcpiechart.map((entry, index) => (
           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
         ))}
       </Pie>
-      <Tooltip />
+    
     </PieChart>
     <Stack gap={2}>
         <MDBox sx={{ display: 'flex', gap: 3, flexWrap: 'wrap' }}>

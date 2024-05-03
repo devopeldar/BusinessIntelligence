@@ -4,8 +4,12 @@ import { Tooltip, BarChart, CartesianGrid, XAxis, YAxis, Legend, Bar } from "rec
 import MDBox from "../../../controls/MDBox";
 import MDTypography from "../../../controls/MDTypography";
 import { Checkbox, List, ListItem, Stack } from '@mui/material';
+import { getMultiSectionDigitalClockSectionUtilityClass } from "@mui/x-date-pickers/MultiSectionDigitalClock/multiSectionDigitalClockSectionClasses";
+import COLORS from "../../../Utils/Colors";
+import { axisClasses } from "@mui/x-charts";
 
-export default function BarChartCustom({ data, datakey, title, namekey, mostrarfiltro, observaciones, nameeje, nameejevertical }) {
+export default function BarChartCompostCustom ({ data, datakey, title, namekey, mostrarfiltro, observaciones, 
+                                        nameeje, nameejevertical, datakey2, nameeje2,nameejevertical2 }) {
     
 const [srcpiechart, setSrcPieChart]= useState([]);
 const [selectedItems, setSelectedItems] = useState([]);
@@ -40,6 +44,21 @@ useEffect(() => {
   
   }, [selectedItems]); // Actualizar cuando cambia la selección de meses
 
+  
+const chartSetting = {
+    yAxis: [
+      {
+        label: 'rainfall (mm)',
+      },
+    ],
+    
+    height: 300,
+    sx: {
+      [`& .${axisClasses.directionY} .${axisClasses.label}`]: {
+        transform: 'translateX(-10px)',
+      },
+    },
+  };
   return (
     <>
     <MDBox>
@@ -87,28 +106,29 @@ useEffect(() => {
         </List>
         </>
     )} 
-    <BarChart width={600} height={300} data={srcpiechart}>
+    <BarChart width={600} height={300} data={srcpiechart}
+    {...chartSetting}
+    >
       <CartesianGrid strokeDasharray="3 3" />
       <XAxis dataKey={namekey} style={{ fontFamily: 'Arial', fontWeight: 'bold', fontSize:'10px' }}/>
-      <YAxis style={{ fontFamily: 'Arial', fontWeight: 'bold', fontSize:'10px' }} />
-      {/* <Tooltip label={'ssss'} style={{ fontFamily: 'Arial', fontWeight: 'bold', fontSize:'10px' }}/> */}
-      <Tooltip
+      <YAxis style={{ fontFamily: 'Arial', fontWeight: 'bold', fontSize:'10px' }} />     
+      <Tooltip display={false}
         contentStyle={{ fontFamily: 'Arial', fontWeight: 'bold', fontSize: '10px' }} // Estilo del contenido del tooltip
         formatter={(value, name, props) => {
-            console.log(props)
-            console.log(name)
             return (
                 <div>
-                    
                     <p>{props.payload.label1}</p>
                     <p>{nameejevertical}: {value}</p>
+                    {/* <p>{nameejevertical2}: {value}</p> */}
                 </div>
             );
         }}
         labelStyle={{ display: 'none' }} 
         />
       <Legend />
+      
       <Bar name={nameeje}  dataKey={datakey} fill="#8884d8" />
+      <Bar name={nameeje2} dataKey={datakey2} fill="#0088FE" />
     </BarChart>
     </MDBox>
     <MDBox>

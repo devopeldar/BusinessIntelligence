@@ -112,6 +112,7 @@ import API_URL from "./config";
 import Example from "./components/Pages/Charts/example1";
 import Example1 from "./components/Pages/Charts/example1";
 import GraficoClientes from "./components/Pages/Charts/Clientes/GraficoClientes";
+import GraficoEstadoTareas from "./components/Pages/Charts/EstadoTareas/GraficoEstadoTareas";
 
 
 export default function App() {
@@ -663,6 +664,7 @@ console.log("idperfilapp" , reqPermisosxPerfil);
 
             {/* Graficos */}
             <Route path="/GraficoClientes" element={<GraficoClientes />} />
+            <Route path="/GraficoEstadoTareas" element={<GraficoEstadoTareas />} />
             
             {/* 
 

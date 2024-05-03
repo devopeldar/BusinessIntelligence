@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, AreaChart, Area, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, RadarChart } from 'recharts';
+import { ResponsiveContainer, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, RadarChart } from 'recharts';
 import MDTypography from '../../../controls/MDTypography';
 import MDBox from '../../../controls/MDBox';
-import { Autocomplete, Card, Checkbox, Grid, List, ListItem, ListItemIcon, ListItemText, ListSubheader, TextField } from '@mui/material';
+import { Card, Grid } from '@mui/material';
 import PageLayout from '../../../layauots/PageLayout';
 import PieChartCustom from '../Components/PieChartCustom';
-import { CheckBox } from '@mui/icons-material';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import BarChartCustom from '../Components/BarChartCustom';
+import BarChartCompostCustom from '../Components/BarChartCompostCustom';
 const dataMes = [
   { label1: 'Enero', value1: 400, titulo: 'Ventas x Mes', label1Nombre: 'Meses', valor1Nombre: 'Cantidad Ventas' },
   { label1: 'Febrero', value1: 300, titulo: 'Ventas x Mes', label1Nombre: 'Meses', valor1Nombre: 'Cantidad Ventas' },
@@ -20,7 +18,15 @@ const dataMes = [
 ];
 
 
-
+const dataMesCompuesto = [
+  { label1: 'Enero', value1: 400,value2: -100, titulo: 'Ventas x Mes Comparativo', label1Nombre: 'Meses',valor2Nombre: 'Cantidad Ventas ant', valor1Nombre: 'Cantidad Ventas' },
+  { label1: 'Febrero', value1: 300,value2: 500, titulo: 'Ventas x Mes Comparativo', label1Nombre: 'Meses',valor2Nombre: 'Cantidad Ventas ant', valor1Nombre: 'Cantidad Ventas' },
+  { label1: 'Marzo', value1: 600,value2: 200, titulo: 'Ventas x Mes Comparativo', label1Nombre: 'Meses',valor2Nombre: 'Cantidad Ventas ant', valor1Nombre: 'Cantidad Ventas' },
+  { label1: 'Abril', value1: 200,value2: 700, titulo: 'Ventas x Mes Comparativo', label1Nombre: 'Meses',valor2Nombre: 'Cantidad Ventas ant', valor1Nombre: 'Cantidad Ventas' },
+  { label1: 'Mayo', value1: 700, value2: -300,titulo: 'Ventas x Mes Comparativo', label1Nombre: 'Meses', valor2Nombre: 'Cantidad Ventas ant',valor1Nombre: 'Cantidad Ventas' },
+  { label1: 'Junio', value1: 400, value2: 400,titulo: 'Ventas x Mes Comparativo', label1Nombre: 'Meses',valor2Nombre: 'Cantidad Ventas ant', valor1Nombre: 'Cantidad Ventas' },
+  { label1: 'Julio', value1: 300, value2: 400,titulo: 'Ventas x Mes Comparativo', label1Nombre: 'Meses',valor2Nombre: 'Cantidad Ventas ant', valor1Nombre: 'Cantidad Ventas' }
+];
 
 const data2 = [
   { name: 'Group A', value: 400 },
@@ -117,26 +123,6 @@ const data2 = [
   ];
 
 const GraficoClientes = () => {
-  // const [srcpiechart, setSrcPieChart]= useState([]);
-  // const [selectedMonths, setSelectedMonths] = useState([]);
-
-  // const handleMonthChange = (event, selectedValues) => {
-  //   setSelectedMonths(selectedValues);
-  // };
-
-  // const handleToggle = (month) => () => {
-  //   const selectedIndex = selectedMonths.indexOf(month);
-  //   const newSelected = [...selectedMonths];
-
-  //   if (selectedIndex === -1) {
-  //     newSelected.push(month);
-  //   } else {
-  //     newSelected.splice(selectedIndex, 1);
-  //   }
-
-  //   setSelectedMonths(newSelected);
-  // };
-
 
   return (
    
@@ -187,8 +173,10 @@ const GraficoClientes = () => {
       </div>
       <div style={{ display: 'flex', marginTop: '15px', justifyContent: 'space-between', width: '100%' }}>
       <Card style={{ flex: 1 }}>
-       
-        <ResponsiveContainer width="100%" height="100%">
+      <BarChartCompostCustom data={dataMesCompuesto} namekey={"label1"} datakey={"value1"} datakey2={"value2"} title={dataMesCompuesto[0].titulo} 
+                          mostrarfiltro={true} nameeje={dataMesCompuesto[0].label1Nombre} nameeje2={dataMesCompuesto[0].valor2Nombre} 
+                          nameejevertical={dataMesCompuesto[0].valor1Nombre} nameejevertical2={dataMesCompuesto[0].valor2Nombre} observaciones={"sin observaciones por el momento..."}/>
+        {/* <ResponsiveContainer width="100%" height="100%">
         <AreaChart
           width={500}
           height={400}
@@ -209,7 +197,8 @@ const GraficoClientes = () => {
           <Area type="monotone" dataKey="amt" stackId="1" stroke="#ffc658" fill="#ffc658" />
         </AreaChart>
      
-          </ResponsiveContainer>
+          </ResponsiveContainer> */}
+
         </Card>
         <Card style={{ flex: 1 }}>
         

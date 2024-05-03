@@ -16,11 +16,11 @@ export default function TareaGet() {
   const closeSuccessSB = () => setSuccessSB(false);
   const [successSB, setSuccessSB] = useState(false);
   const [successSBPrev, setSuccessSBPrev] = useState(false);
-
+  const closeErrorSB = () => setErrorSB(false);
   const [dateTime, setDateTime] = useState("");
   const [errorSB, setErrorSB] = useState(false);
   // const openErrorSB = () => setErrorSB(true);
-  const closeErrorSB = () => setErrorSB(false);
+  
   useEffect(() => {
     const obtenerFechaHoraActual = () => {
       const fechaHoraActual = new Date();
@@ -417,9 +417,9 @@ export default function TareaGet() {
                 <MDSnackbar
                   color="error"
                   icon="warning"
-                  title="Material Dashboard"
-                  content="Hello, world! This is a notification message"
-                  dateTime="11 mins ago"
+                  title="Task Manager"
+                  content="Error al iniciar la tarea"
+                  dateTime={dateTime}
                   open={errorSB}
                   onClose={closeErrorSB}
                   close={closeErrorSB}
