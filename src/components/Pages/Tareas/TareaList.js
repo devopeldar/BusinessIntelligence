@@ -922,8 +922,7 @@ if (filtroFechaHastaCookie !== null) {
         Estado Tarea :{estadoDescripcion}{" "}
       </MDTypography>
       <MDTypography
-        component="a"
-        href="#"
+       
         variant="caption"
         color="text"
         fontWeight="bold"

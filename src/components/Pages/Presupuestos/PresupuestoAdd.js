@@ -49,6 +49,13 @@ const PresupuestoAdd = () => {
 
   const [grabando, setGrabando] = useState(false);
 
+  const [elementsUsuario, setElementsUsuario] = useState([]);
+  const [elementsRol, setElementsRol] = useState([]);
+  const [selectedValueUsuario, setSelectedValueUsuario] = useState(
+    elementsUsuario[0]
+  );
+  const [rolesxTareaUpdate, setRolesxTareaUpdate] = useState([]);
+  const [selectedValueRol, setSelectedValueRol] = useState(elementsRol[0]);
   const [elementsCliente, setElementsCliente] = useState([]);
   const [elementsTareaTipo, setElementsTareaTipo] = useState([]);
   const [selectedValueTareaTipo, setSelectedValueTareaTipo] = useState([]);
@@ -57,8 +64,10 @@ const PresupuestoAdd = () => {
   const [selectedValueDepartamentos, setSelectedValueDepartamentos] = useState(
     []
   );
+
+  const [mostrarMensajeroles, setMostrarMensajeroles] = useState(true);
   const [vencimientoDias, setVencimientoDias] = useState(0);
-  const [idDepartamento, setIdDepartamento] = useState(0);
+  //const [idDepartamento, setIdDepartamento] = useState(0);
   const [nombreboton, setnombreboton] = useState("Cancelar");
   const [progress, setProgress] = useState(0);
   const [showprogrees, setShowprogrees] = React.useState(0);
@@ -66,6 +75,8 @@ const PresupuestoAdd = () => {
   const [mensaje, setMensaje] = useState("");
   const [exito, setExito] = useState(false);
   const [data, setData] = useState([]);
+  //const [dataRol, setDataRol] = useState([]);
+
   const handleInputChange = (event) => {
     const { name, value, type, checked } = event.target;
     console.log("chk :" + event);
@@ -78,6 +89,37 @@ const PresupuestoAdd = () => {
       ...formData,
       [name]: newValue,
     });
+  };
+
+  useEffect(() => {
+    const GetRol = async () => {
+      const response = await axios.post(API_URL + "/RolListar", {
+        headers: {
+          accept: "application/json",
+        },
+      });
+
+      setElementsRol(response.data);
+    };
+    GetRol();
+  }, []);
+
+  useEffect(() => {
+    const GetUsuario = async () => {
+      const response = await axios.post(API_URL + "/UsuarioListar", {
+        headers: {
+          accept: "application/json",
+        },
+      });
+
+      setElementsUsuario(response.data);
+    };
+    GetUsuario();
+  }, []);
+
+  const eliminarItemRol = (id) => {
+    const newData = rolesxTareaUpdate.filter((item) => item.id !== id);
+    setRolesxTareaUpdate(newData);
   };
 
   const handleSubmit = (event) => {
@@ -100,13 +142,82 @@ const PresupuestoAdd = () => {
     procesarFormulario(formData);
   };
 
-  // useEffect(() => {
-  //     // Coloca aquí el código que deseas ejecutar al montar el componente
-  //     console.log('El componente se ha montado');
+  const handleAddRol = () => {
+    const newRow = {
+      id: rolesxTareaUpdate.length + 1,
+      idUsuario: selectedValueUsuario.idUsuario,
+      nombreUsuario: (
+        <MDTypography
+          component="a"
+          href="#"
+          variant="caption"
+          color="text"
+          fontWeight="medium"
+        >
+          {selectedValueUsuario.nombre}
+        </MDTypography>
+      ),
+      idRol: selectedValueRol.idRol,
+      nombreRol: (
+        <MDTypography
+          component="a"
+          href="#"
+          variant="caption"
+          color="text"
+          fontWeight="medium"
+        >
+          {selectedValueRol.descripcion}
+        </MDTypography>
+      ),
+    };
+    const usuarioExistente = rolesxTareaUpdate.find(
+      (item) =>
+        item.idUsuario === selectedValueUsuario.idUsuario &&
+        item.idRol === selectedValueRol.idRol
+    );
 
-  //     // Por ejemplo, llamar a una función
-  //     handleLoad();
-  // }, []); // El segundo argumento es un array de dependencias vacío
+    if (!usuarioExistente) {
+      setRolesxTareaUpdate((prevDatos) => [...prevDatos, newRow]);
+    }
+
+  };
+
+  //Hook para validar roles ingresados y dejar continuar la carga
+  useEffect(() => {
+    const GetValidarRoles = async () => {
+      const request = {
+        idRol: 1,
+        acciones: rolesxTareaUpdate
+      };
+
+      const response = await axios.post(API_URL + "/ValidarRoles", request, {
+        headers: {
+          accept: "application/json",
+        },
+
+      });
+
+      //const res = await response.json();
+      console.log("res", response);
+      if (response.data.rdoAccion) {
+        setMostrarMensajeroles(false);
+
+      } else {
+        // Manejar errores si la respuesta no es exitosa
+        setMostrarMensajeroles(true);
+      }
+
+    };
+    GetValidarRoles();
+  }, [rolesxTareaUpdate]);
+
+  const handleAutocompleteUserChange = (event, value) => {
+    setSelectedValueUsuario(value);
+  };
+
+  const handleAutocompleteRolChange = (event, value) => {
+    setSelectedValueRol(value);
+  };
 
   useEffect(() => {
     const GetTareaTipo = async () => {
@@ -144,11 +255,11 @@ const PresupuestoAdd = () => {
       });
       setElementsDepto(response.data);
 
-      const defaultValueId = idDepartamento; // ID del elemento que deseas seleccionar por defectoa asd asd asd asd a sdasd asd asd
-      const defaultValue = response.data.find(
-        (item) => item.idDepartamento === defaultValueId
-      );
-      setSelectedValueDepartamentos(defaultValue);
+      // const defaultValueId = idDepartamento; // ID del elemento que deseas seleccionar por defectoa asd asd asd asd a sdasd asd asd
+      // const defaultValue = response.data.find(
+      //   (item) => item.idDepartamento === defaultValueId
+      // );
+      // setSelectedValueDepartamentos(defaultValue);
     };
     GetDepartamento();
   }, []);
@@ -158,12 +269,10 @@ const PresupuestoAdd = () => {
   };
 
   const handleAddTareaTipo = () => {
-    if(selectedValueTareaTipo == null)
-    {
+    if (selectedValueTareaTipo == null) {
       return;
     }
-    if(selectedValueDepartamentos == null)
-    {
+    if (selectedValueDepartamentos == null) {
       return;
     }
     const newRow = {
@@ -213,10 +322,26 @@ const PresupuestoAdd = () => {
           {formData.fechaVencimientoLegal}
         </MDTypography>
       ),
-
+      rolescargados: (
+        <MDTypography
+          component="a"
+          href="#"
+          variant="caption"
+          color="text"
+          fontWeight="medium"
+        >
+          {rolesxTareaUpdate.map((rol) => (
+            <span key={data.length + 1}>
+            {rol.nombreRol}: {rol.nombreUsuario}
+            <br />
+          </span>
+          ))}
+        </MDTypography>
+      ),
       idDepartamento: selectedValueDepartamentos.idDepartamento,
-      vencimientoDiasValor:vencimientoDias,
-      fechaVencimientoLegalvalor:formData.fechaVencimientoLegal
+      vencimientoDiasValor: vencimientoDias,
+      fechaVencimientoLegalvalor: formData.fechaVencimientoLegal,
+      //rolesasignados: rolesxTareaUpdate
     };
     console.log("newRow", newRow)
     const usuarioExistente = data.find(
@@ -243,11 +368,11 @@ const PresupuestoAdd = () => {
       //request.idDepartamento = selectedValueDepartamentos.idDepartamento;
 
       request.presupuestoxtareastipos = data.map((item) => ({
-  
+
         idTareaTipo: item.idTareaTipo,
         vencimientoDias: item.vencimientoDiasValor,
-        fechaVencimientoLegal : item.fechaVencimientoLegalvalor,
-        idDepartamento : item.idDepartamento
+        fechaVencimientoLegal: item.fechaVencimientoLegalvalor,
+        idDepartamento: item.idDepartamento
       }));
       request.idUsuario = localStorage.getItem("iduserlogueado");
       console.log("formData " + JSON.stringify(formData));
@@ -303,7 +428,7 @@ const PresupuestoAdd = () => {
     setSelectedValueTareaTipo(value);
     try {
       setVencimientoDias(value.vencimientoDias);
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const eliminarItem = (id) => {
@@ -335,17 +460,10 @@ const PresupuestoAdd = () => {
           <MDBox component="form" role="form">
             <MDBox
               mb={2}
-              style={{
-                display: "flex",
-                gap: "16px",
-                flexDirection: "row",
-                height: "100%", // Asegura que el contenedor principal ocupe el alto completo
-              }}
+
             >
-      
-                
-       
-                <MDBox mb={2}>
+
+              <MDBox mb={2}>
                 <MDBox mb={2}>
                   <Autocomplete
                     onChange={handleAutocompleteClienteChange}
@@ -364,8 +482,6 @@ const PresupuestoAdd = () => {
                     )}
                   />
                 </MDBox>
-               
-
                 <MDBox mb={2}>
                   <MDInput
                     type="text"
@@ -378,7 +494,9 @@ const PresupuestoAdd = () => {
                     fullWidth
                   />
                 </MDBox>
-                  <Card>
+
+                <Card>
+                  <div style={{ flex: 1, marginT: "-15px" }}>
                     <MDBox
                       variant="gradient"
                       bgColor="info"
@@ -387,11 +505,19 @@ const PresupuestoAdd = () => {
                       mx={2}
                       mt={0}
                       p={1}
-                      mb={1}
+                      mb={2}
                       textAlign="center"
+
+                      style={{
+                        display: "flex",
+                        gap: "16px",
+                        flexDirection: "row",
+                        width: "100%",
+                        height: "100%", // Asegura que el contenedor principal ocupe el alto completo
+                      }}
                     >
                       <MDTypography
-                        variant="h8"
+                        variant="h5"
                         fontWeight="light"
                         color="white"
                         mt={1}
@@ -399,7 +525,9 @@ const PresupuestoAdd = () => {
                         Tipos de Tarea del Presupuesto
                       </MDTypography>
                     </MDBox>
+
                     <MDBox mb={2}>
+
                       <MDBox mb={2} mr={4} ml={4}>
                         <Autocomplete
                           onChange={handleAutocompleteChangeTareaTipo}
@@ -418,28 +546,28 @@ const PresupuestoAdd = () => {
                               variant="outlined"
                             />
                           )}
-                         
+
                         />
                       </MDBox>
                       <MDBox mb={2} mr={4} ml={4}>
-                      <Autocomplete
-                        onChange={handleAutocompleteDeptoChange}
-                        options={elementsDepto}
-                        value={selectedValueDepartamentos || null}
-                        getOptionLabel={(option) =>
-                          option.nombre || "Seleccione Departamento"
-                        }
-                        getOptionDisabled={(option) => option.activo === false}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            label="Seleccione Departamento"
-                            variant="outlined"
-                          />
-                        )}
-                        style={{ flex: 1 }} // Añade esta línea
-                      />
-                    </MDBox>
+                        <Autocomplete
+                          onChange={handleAutocompleteDeptoChange}
+                          options={elementsDepto}
+                          value={selectedValueDepartamentos || null}
+                          getOptionLabel={(option) =>
+                            option.nombre || "Seleccione Departamento"
+                          }
+                          getOptionDisabled={(option) => option.activo === false}
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              label="Seleccione Departamento"
+                              variant="outlined"
+                            />
+                          )}
+                          style={{ flex: 1 }} // Añade esta línea
+                        />
+                      </MDBox>
                       <MDBox mb={2} mr={4} ml={4}>
                         <MDInput
                           type="text"
@@ -451,68 +579,193 @@ const PresupuestoAdd = () => {
                           onChange={(e) => setVencimientoDias(e.target.value)}
                           fullWidth
                         />
-                         <MDInput
-                            type="date"
-                            name="fechaVencimientoLegal"
-                            required
-                            label="Vencimiento legal"
-                            variant="standard"
-                            value={formData.fechaVencimientoLegal}
-                            onChange={handleInputChange}
-                            fullWidth
-                          />
+                        <MDInput
+                          type="date"
+                          name="fechaVencimientoLegal"
+                          required
+                          label="Vencimiento legal"
+                          variant="standard"
+                          value={formData.fechaVencimientoLegal}
+                          onChange={handleInputChange}
+                          fullWidth
+                        />
                       </MDBox>
 
-            
-                      <MDBox mb={2} mr={6} ml={6}>
-                        <MDButton
-                          onClick={() => {
-                            handleAddTareaTipo();
-                          }}
-                          variant="gradient"
-                          color="info"
-                          endIcon={<PersonFillAdd />}
-                          fullWidth
-                        >
-                          Agregar Tipo de Tarea
-                        </MDButton>
-                      </MDBox>
-                      <TableContainer component={Paper}>
-                        <Table>
-                          <TableBody>
-                            {data.map((item, index) => (
-                              <TableRow key={index}>
-                                <TableCell style={{ display: "none" }}>
-                                  {item.id}
-                                </TableCell>
-                                <TableCell style={{ display: "none" }}>
-                                  {item.idTareaTipo}
-                                </TableCell>
-                                <TableCell style={{ display: "none" }}>
-                                  {item.idDepartamento}
-                                </TableCell>
-                                <TableCell>{item.nombreTareaTipo}</TableCell>
-                                <TableCell>{item.nombredepartamento}</TableCell>
-                                <TableCell>{item.vencimientoDias}</TableCell>
-                                <TableCell>{item.fechaVencimientoLegal}</TableCell>
-                                <TableCell style={{ display: "none" }}>{item.vencimientoDiasValor}</TableCell>
-                                <TableCell>
-                                  <IconButton
-                                    aria-label="Eliminar"
-                                    onClick={() => eliminarItem(item.id)}
-                                  >
-                                    <Delete color="error" />
-                                  </IconButton>
-                                </TableCell>
-                              </TableRow>
-                            ))}
-                          </TableBody>
-                        </Table>
-                      </TableContainer>
                     </MDBox>
-                  </Card>
-                </MDBox>
-          
+                  </div>
+                  <div style={{ flex: 1, marginT: "-35px" }}>
+                    <MDBox mb={2}>
+                      <Card>
+                        <MDBox
+                          variant="gradient"
+                          bgColor="info"
+                          borderRadius="lg"
+                          coloredShadow="info"
+                          mx={2}
+                          mt={0}
+                          p={1}
+                          mb={1}
+                          textAlign="center"
+                        >
+                          <MDTypography
+                            variant="h8"
+                            fontWeight="light"
+                            color="white"
+                            mt={1}
+                          >
+                            Administracion Roles
+                          </MDTypography>
+                        </MDBox>
+                        <MDBox mb={2}>
+                          <MDBox mb={2} mr={4} ml={4}>
+                            <Autocomplete
+                              onChange={handleAutocompleteUserChange}
+                              options={elementsUsuario}
+                              getOptionLabel={(option) => option.nombre}
+                              getOptionDisabled={(option) =>
+                                option.activo === false
+                              }
+                              isOptionEqualToValue={(option, value) =>
+                                option.nombre === value.nombre
+                              }
+                              renderInput={(params) => (
+                                <TextField
+                                  {...params}
+                                  label="Seleccione Usuario"
+                                  variant="outlined"
+                                />
+                              )}
+                            />
+                          </MDBox>
+                          <MDBox mb={2} mr={4} ml={4}>
+                            <Autocomplete
+                              onChange={handleAutocompleteRolChange}
+                              options={elementsRol}
+                              getOptionLabel={(option) => option.descripcion}
+                              getOptionDisabled={(option) =>
+                                option.activo === false
+                              }
+                              isOptionEqualToValue={(option, value) =>
+                                option.descripcion === value.descripcion
+                              }
+                              renderInput={(params) => (
+                                <TextField
+                                  {...params}
+                                  label="Seleccione Rol"
+                                  variant="outlined"
+                                />
+                              )}
+                            />
+                          </MDBox>
+
+                          <MDBox mb={2} mr={6} ml={6}>
+                            <MDButton
+                              onClick={() => {
+                                handleAddRol();
+                              }}
+                              variant="gradient"
+                              color="info"
+                              endIcon={<PersonFillAdd />}
+                              fullWidth
+                            >
+                              Agregar Rol
+                            </MDButton>
+                            <MDTypography
+                              variant="caption"
+                              fontWeight="bold"
+                              color="error"
+                              id="lblmsnroles"
+                              style={{ display: mostrarMensajeroles ? 'block' : 'none' }}
+                            >
+                              *Especifique un encargado para cada rol obligatorio
+                            </MDTypography>
+                          </MDBox>
+                          <TableContainer component={Paper}>
+                            <Table>
+                              <TableBody>
+                                {rolesxTareaUpdate.map((item, index) => (
+                                  <TableRow key={index}>
+                                    <TableCell style={{ display: "none" }}>
+                                      {item.id}
+                                    </TableCell>
+                                    <TableCell style={{ display: "none" }}>
+                                      {item.idUsuario}
+                                    </TableCell>
+                                    <TableCell>{item.nombreUsuario}</TableCell>
+                                    <TableCell style={{ display: "none" }}>
+                                      {item.idRol}
+                                    </TableCell>
+                                    <TableCell>{item.nombreRol}</TableCell>
+                                    <TableCell>
+                                      <IconButton
+                                        aria-label="Eliminar"
+                                        onClick={() => eliminarItemRol(item.id)}
+                                      >
+                                        <Delete color="error" />
+                                      </IconButton>
+                                    </TableCell>
+                                  </TableRow>
+                                ))}
+                              </TableBody>
+                            </Table>
+                          </TableContainer>
+                        </MDBox>
+                      </Card>
+                    </MDBox>
+                  </div>
+                  <MDBox mb={2} mr={6} ml={6}>
+                    <MDButton
+                      onClick={() => {
+                        handleAddTareaTipo();
+                      }}
+                      disabled={mostrarMensajeroles}
+                      variant="gradient"
+                      color="success"
+                      endIcon={<PersonFillAdd />}
+                      fullWidth
+                    >
+                      Agregar Tipo de Tarea
+                    </MDButton>
+                  </MDBox>
+                  <TableContainer component={Paper}>
+                    <Table>
+                      <TableBody>
+                        {data.map((item, index) => (
+                          <TableRow key={index}>
+                            <TableCell style={{ display: "none" }}>
+                              {item.id}
+                            </TableCell>
+                            <TableCell style={{ display: "none" }}>
+                              {item.idTareaTipo}
+                            </TableCell>
+                            <TableCell style={{ display: "none" }}>
+                              {item.idDepartamento}
+                            </TableCell>
+                            <TableCell>{item.nombreTareaTipo}</TableCell>
+                            <TableCell>{item.nombredepartamento}</TableCell>
+                            <TableCell>{item.vencimientoDias}</TableCell>
+                            <TableCell>{item.fechaVencimientoLegal}</TableCell>
+                            <TableCell style={{ display: "none" }}>{item.vencimientoDiasValor}</TableCell>
+                            <TableCell >{item.rolescargados}</TableCell>
+                            <TableCell style={{ display: "none" }}>{item.rolesasignados}</TableCell>
+
+                            <TableCell>
+                              <IconButton
+                                aria-label="Eliminar"
+                                onClick={() => eliminarItem(item.id)}
+                              >
+                                <Delete color="error" />
+                              </IconButton>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+
+                </Card>
+              </MDBox>
+
             </MDBox>
           </MDBox>
           <MDBox mr={2} >
@@ -525,7 +778,7 @@ const PresupuestoAdd = () => {
               endIcon={<Save />}
               disabled={grabando}
               style={{ width: '200px', marginR: '10px' }}
-                          >
+            >
               Grabar
             </MDButton>
 
