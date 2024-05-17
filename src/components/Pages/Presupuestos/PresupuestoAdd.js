@@ -36,10 +36,10 @@ const PresupuestoAdd = () => {
   const [formData, setFormData] = useState({
     observaciones: "",
     idCliente: 0,
-
     idUsuario: 0,
     presupuestoxtareastipos: [],
     fechaVencimientoLegal: new Date(),
+    rolesasignados: [],
   });
 
   const validationSchema = yup.object().shape({
@@ -75,7 +75,9 @@ const PresupuestoAdd = () => {
   const [mensaje, setMensaje] = useState("");
   const [exito, setExito] = useState(false);
   const [data, setData] = useState([]);
+  const [dataToSend, setDataToSend] = useState([]);
   //const [dataRol, setDataRol] = useState([]);
+
 
   const handleInputChange = (event) => {
     const { name, value, type, checked } = event.target;
@@ -198,7 +200,6 @@ const PresupuestoAdd = () => {
       });
 
       //const res = await response.json();
-      console.log("res", response);
       if (response.data.rdoAccion) {
         setMostrarMensajeroles(false);
 
@@ -254,12 +255,6 @@ const PresupuestoAdd = () => {
         },
       });
       setElementsDepto(response.data);
-
-      // const defaultValueId = idDepartamento; // ID del elemento que deseas seleccionar por defectoa asd asd asd asd a sdasd asd asd
-      // const defaultValue = response.data.find(
-      //   (item) => item.idDepartamento === defaultValueId
-      // );
-      // setSelectedValueDepartamentos(defaultValue);
     };
     GetDepartamento();
   }, []);
@@ -275,7 +270,7 @@ const PresupuestoAdd = () => {
     if (selectedValueDepartamentos == null) {
       return;
     }
-    const newRow = {
+   const newRow = {
       id: data.length + 1,
       idTareaTipo: selectedValueTareaTipo.idTareaTipo,
       nombreTareaTipo: (
@@ -332,24 +327,48 @@ const PresupuestoAdd = () => {
         >
           {rolesxTareaUpdate.map((rol) => (
             <span key={data.length + 1}>
-            {rol.nombreRol}: {rol.nombreUsuario}
-            <br />
-          </span>
+              {rol.nombreRol}: {rol.nombreUsuario}
+              <br />
+            </span>
           ))}
         </MDTypography>
       ),
       idDepartamento: selectedValueDepartamentos.idDepartamento,
       vencimientoDiasValor: vencimientoDias,
       fechaVencimientoLegalvalor: formData.fechaVencimientoLegal,
-      //rolesasignados: rolesxTareaUpdate
+     
     };
-    console.log("newRow", newRow)
+
+    
+
+
     const usuarioExistente = data.find(
       (item) => item.idTareaTipo === selectedValueTareaTipo.idTareaTipo
     );
-
+    console.log("newRow0", newRow);
     if (!usuarioExistente) {
       setData((prevDatos) => [...prevDatos, newRow]);
+
+     
+
+      const primitivo = {
+        id: newRow.id,
+        idTareaTipo: newRow.idTareaTipo,
+        nombreTareaTipo: newRow.nombreTareaTipo.props.children,
+        idDepartamento: newRow.idDepartamento,
+        vencimientoDias: newRow.vencimientoDiasValor,
+        fechaVencimientoLegal: newRow.fechaVencimientoLegalvalor,
+        rolesAsignados: rolesxTareaUpdate.map((rol, i) => ({
+          id: i,
+          idUsuario: rol.idUsuario,
+          nombreUsuario: rol.nombreUsuario.props.children,
+          idRol: rol.idRol,
+          nombreRol: rol.nombreRol.props.children
+        }))
+      };
+
+      console.log("primitivo", primitivo);
+      setDataToSend((prevDatos) => [...prevDatos, primitivo]);
     }
   };
 
@@ -364,18 +383,28 @@ const PresupuestoAdd = () => {
     try {
       setLoading(true);
 
+      console.log("data2", data)
       request.idCliente = selectedValueCliente.idCliente;
-      //request.idDepartamento = selectedValueDepartamentos.idDepartamento;
-
-      request.presupuestoxtareastipos = data.map((item) => ({
+      request.presupuestoxtareastipos = dataToSend.map((item, a) => ({
 
         idTareaTipo: item.idTareaTipo,
         vencimientoDias: item.vencimientoDiasValor,
-        fechaVencimientoLegal: item.fechaVencimientoLegalvalor,
-        idDepartamento: item.idDepartamento
+        fechaVencimientoLegal: item.fechavencimientoLegal,
+        idDepartamento: item.idDepartamento,
+        rolesxTipoTarea: item.rolesAsignados.map((item, i) => ({
+          id: i,
+          idUsuario: item.idUsuario,
+          nombreUsuario: item.nombreUsuario,
+          idRol: item.idRol,
+          nombreRol: item.nombreRol
+        }))
+        
       }));
       request.idUsuario = localStorage.getItem("iduserlogueado");
-      console.log("formData " + JSON.stringify(formData));
+      
+
+      console.log("request2", request)
+
       validationSchema
         .validate(request)
         .then(async (validatedData) => {
@@ -383,6 +412,8 @@ const PresupuestoAdd = () => {
           setnombreboton("Volver");
           setExito(true);
           setMensaje("");
+
+          console.log("formData", formData)
 
           const response = await fetch(API_URL + "/PresupuestoAlta", {
             method: "POST",
@@ -556,6 +587,9 @@ const PresupuestoAdd = () => {
                           value={selectedValueDepartamentos || null}
                           getOptionLabel={(option) =>
                             option.nombre || "Seleccione Departamento"
+                          }
+                          isOptionEqualToValue={(option, value) =>
+                            option.nombre === value.nombre
                           }
                           getOptionDisabled={(option) => option.activo === false}
                           renderInput={(params) => (
@@ -768,16 +802,19 @@ const PresupuestoAdd = () => {
 
             </MDBox>
           </MDBox>
-          <MDBox mr={2} >
+          <MDBox mr={2}   style={{ 
+              display: 'flex', 
+              justifyContent: 'flex-end' 
+            }}>
             <MDButton
               onClick={() => {
                 handleSubmit();
               }}
               variant="gradient"
-              color="info"
+              color="success"
               endIcon={<Save />}
               disabled={grabando}
-              style={{ width: '200px', marginR: '10px' }}
+              style={{ width: '200px', marginRight: '10px' }}
             >
               Grabar
             </MDButton>
@@ -787,7 +824,7 @@ const PresupuestoAdd = () => {
                 handleVolver();
               }}
               variant="gradient"
-              color="info"
+              color="error"
               endIcon={<ExitToApp />}
               style={{ width: '200px' }}
             >
