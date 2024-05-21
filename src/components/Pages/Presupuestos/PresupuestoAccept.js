@@ -75,7 +75,7 @@ const PresupuestoAccept = () => {
   const [successSBPrev, setSuccessSBPrev] = useState(false);
   const [errorSB, setErrorSB] = useState(false);
 
- const [dateTime, setDateTime] = useState("");
+  const [dateTime, setDateTime] = useState("");
   const closeErrorSB = () => setErrorSB(false);
   const handleVolver = () => {
     history("/PresupuestoVolver"); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
@@ -130,18 +130,18 @@ const PresupuestoAccept = () => {
     GetPresupuesto();
   }, [id]);
 
-  useEffect(() => {
-    const GetRol = async () => {
-      const response = await axios.post(API_URL + "/RolListar", {
-        headers: {
-          accept: "application/json",
-        },
-      });
+  // useEffect(() => {
+  //   const GetRol = async () => {
+  //     const response = await axios.post(API_URL + "/RolListar", {
+  //       headers: {
+  //         accept: "application/json",
+  //       },
+  //     });
 
-      setElementsRol(response.data);
-    };
-    GetRol();
-  }, []);
+  //     setElementsRol(response.data);
+  //   };
+  //   GetRol();
+  // }, []);
 
   useEffect(() => {
     const obtenerFechaHoraActual = () => {
@@ -153,36 +153,36 @@ const PresupuestoAccept = () => {
     obtenerFechaHoraActual();
   }, []);
 
-  useEffect(() => {
-    const GetUsuario = async () => {
-      const response = await axios.post(API_URL + "/UsuarioListar", {
-        headers: {
-          accept: "application/json",
-        },
-      });
+  // useEffect(() => {
+  //   const GetUsuario = async () => {
+  //     const response = await axios.post(API_URL + "/UsuarioListar", {
+  //       headers: {
+  //         accept: "application/json",
+  //       },
+  //     });
 
-      setElementsUsuario(response.data);
-    };
-    GetUsuario();
-  }, []);
+  //     setElementsUsuario(response.data);
+  //   };
+  //   GetUsuario();
+  // }, []);
 
-  useEffect(() => {
-    const GetDepartamento = async () => {
-      const response = await axios.post(API_URL + "/DepartamentoListar", {
-        headers: {
-          accept: "application/json",
-        },
-      });
-      setElementsDepto(response.data);
+  // useEffect(() => {
+  //   const GetDepartamento = async () => {
+  //     const response = await axios.post(API_URL + "/DepartamentoListar", {
+  //       headers: {
+  //         accept: "application/json",
+  //       },
+  //     });
+  //     setElementsDepto(response.data);
 
-      const defaultValueId = idDepartamento; // ID del elemento que deseas seleccionar por defectoa asd asd asd asd a sdasd asd asd
-      const defaultValue = response.data.find(
-        (item) => item.idDepartamento === defaultValueId
-      );
-      setSelectedValueDepartamentos(defaultValue);
-    };
-    GetDepartamento();
-  }, [Presupuesto]);
+  //     const defaultValueId = idDepartamento; // ID del elemento que deseas seleccionar por defectoa asd asd asd asd a sdasd asd asd
+  //     const defaultValue = response.data.find(
+  //       (item) => item.idDepartamento === defaultValueId
+  //     );
+  //     setSelectedValueDepartamentos(defaultValue);
+  //   };
+  //   GetDepartamento();
+  // }, [Presupuesto]);
 
   useEffect(() => {
     const GetClientes = async () => {
@@ -213,14 +213,11 @@ const PresupuestoAccept = () => {
       }
       const request = {
         idPresupuesto: id,
-        observaciones:observaciones,
+        observaciones: observaciones,
         idUsuario: localStorage.getItem("iduserlogueado"),
         usuario: localStorage.getItem("userlogueado"),
         origenAcceso: "web",
-        tareaxRoles: rolesxTareaUpdate.map((item) => ({
-          idUsuario: item.idUsuario,
-          idRol: item.idRol,
-        })),
+        tareaxRoles: [],
       };
 
       setGrabando(true); // Inicia la grabación
@@ -279,7 +276,7 @@ const PresupuestoAccept = () => {
           fontWeight="medium"
           width="10"
         >
-         Tipo Tarea: {item.nombre}
+          Tipo Tarea: {item.nombre}
         </MDTypography>
       ),
       vencimientoDias: (
@@ -315,6 +312,23 @@ const PresupuestoAccept = () => {
           Depto: {item.nombreDepartamento}
         </MDTypography>
       ),
+      rolesxTipoTarea: (
+        <MDTypography
+          component="a"
+          href="#"
+          variant="caption"
+          color="text"
+          fontWeight="medium"
+        >
+          Roles:
+          {item.rolesxTipoTarea.map((rol) => (
+            <span key={id}>
+              {rol.nombreRol}: {rol.nombreUsuario}
+              <br />
+            </span>
+          ))}
+        </MDTypography>
+      ),
     };
 
     return newRow;
@@ -324,15 +338,15 @@ const PresupuestoAccept = () => {
     setSelectedValueCliente(value);
   };
 
-  const handleAutocompleteDeptoChange = (event, value) => {
-    setSelectedValueDepartamentos(value);
-  };
-  const eliminarItem = (id) => {
-    const newData = presupuestoxtareastiposUpdate.filter(
-      (item) => item.id !== id
-    );
-    setPresupuestoxtareastiposUpdate(newData);
-  };
+  // const handleAutocompleteDeptoChange = (event, value) => {
+  //   setSelectedValueDepartamentos(value);
+  // };
+  // const eliminarItem = (id) => {
+  //   const newData = presupuestoxtareastiposUpdate.filter(
+  //     (item) => item.id !== id
+  //   );
+  //   setPresupuestoxtareastiposUpdate(newData);
+  // };
   //   useEffect(() => {
   //     console.log(
   //       "presupuestoxtareastiposUpdate después de la actualizacióneeeeeeeeeee:",
@@ -363,61 +377,61 @@ const PresupuestoAccept = () => {
     );
   }
 
-  const eliminarItemRol = (id) => {
-    const newData = rolesxTareaUpdate.filter((item) => item.id !== id);
-    setRolesxTareaUpdate(newData);
-  };
+  // const eliminarItemRol = (id) => {
+  //   const newData = rolesxTareaUpdate.filter((item) => item.id !== id);
+  //   setRolesxTareaUpdate(newData);
+  // };
 
-  const handleAddRol = () => {
-    const newRow = {
-      id: rolesxTareaUpdate.length + 1,
-      idUsuario: selectedValueUsuario.idUsuario,
-      nombreUsuario: (
-        <MDTypography
-          component="a"
-          href="#"
-          variant="caption"
-          color="text"
-          fontWeight="medium"
-        >
-          {selectedValueUsuario.nombre}
-        </MDTypography>
-      ),
-      idRol: selectedValueRol.idRol,
-      nombreRol: (
-        <MDTypography
-          component="a"
-          href="#"
-          variant="caption"
-          color="text"
-          fontWeight="medium"
-        >
-          {selectedValueRol.descripcion}
-        </MDTypography>
-      ),
-    };
-    const usuarioExistente = rolesxTareaUpdate.find(
-      (item) =>
-        item.idUsuario === selectedValueUsuario.idUsuario &&
-        item.idRol === selectedValueRol.idRol
-    );
+  // const handleAddRol = () => {
+  //   const newRow = {
+  //     id: rolesxTareaUpdate.length + 1,
+  //     idUsuario: selectedValueUsuario.idUsuario,
+  //     nombreUsuario: (
+  //       <MDTypography
+  //         component="a"
+  //         href="#"
+  //         variant="caption"
+  //         color="text"
+  //         fontWeight="medium"
+  //       >
+  //         {selectedValueUsuario.nombre}
+  //       </MDTypography>
+  //     ),
+  //     idRol: selectedValueRol.idRol,
+  //     nombreRol: (
+  //       <MDTypography
+  //         component="a"
+  //         href="#"
+  //         variant="caption"
+  //         color="text"
+  //         fontWeight="medium"
+  //       >
+  //         {selectedValueRol.descripcion}
+  //       </MDTypography>
+  //     ),
+  //   };
+  //   const usuarioExistente = rolesxTareaUpdate.find(
+  //     (item) =>
+  //       item.idUsuario === selectedValueUsuario.idUsuario &&
+  //       item.idRol === selectedValueRol.idRol
+  //   );
 
-    if (!usuarioExistente) {
-      setRolesxTareaUpdate((prevDatos) => [...prevDatos, newRow]);
-    }
-  };
+  //   if (!usuarioExistente) {
+  //     setRolesxTareaUpdate((prevDatos) => [...prevDatos, newRow]);
+  //   }
+  // };
 
-  const handleAutocompleteUserChange = (event, value) => {
-    setSelectedValueUsuario(value);
-  };
+  // const handleAutocompleteUserChange = (event, value) => {
+  //   setSelectedValueUsuario(value);
+  // };
 
-  const handleAutocompleteRolChange = (event, value) => {
-    setSelectedValueRol(value);
-  };
+  // const handleAutocompleteRolChange = (event, value) => {
+  //   setSelectedValueRol(value);
+  // };
 
   return (
     <BasicLayout image={bgImage}>
-      <Card style={{ width: "190%", marginT: "-35px" }}>
+      <Card style={{ width: "300%", marginT: "-80px", marginLeft:"-300px" }}>
         <MDBox
           variant="gradient"
           bgColor="info"
@@ -448,84 +462,87 @@ const PresupuestoAccept = () => {
                 height: "100%", // Asegura que el contenedor principal ocupe el alto completo
               }}
             >
-             
-                <MDBox mb={2}>
-                  <Autocomplete
-                    onChange={handleAutocompleteIDClienteChange}
-                    options={elementsclientes}
-                    value={selectedValueCliente || null}
-                    getOptionLabel={(option) =>
-                      option.nombre || "Seleccione Cliente"
-                    }
-                    disabled={!controlHabilitado}
-                    getOptionDisabled={(option) => option.activo === false}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Seleccione Cliente"
-                        variant="outlined"
-                      />
-                    )}
-                  />
-                </MDBox>
-                
-                <MDBox mb={2}>
-                  <MDInput
-                    type="text"
-                    name="observaciones"
-                    required
-                    label="Observaciones"
-                    variant="standard"
-                    value={observaciones}
-                    // disabled={!controlHabilitado}
-                    onChange={(e) => setObservaciones(e.target.value)}
-                    fullWidth
-                  />
-                </MDBox>
-             
-                <MDBox mb={2}>
-                  <Card style={{ width: "120%" }}>
-                    <MDBox
-                      variant="gradient"
-                      bgColor="info"
-                      borderRadius="lg"
-                      coloredShadow="warning"
-                      mx={2}
-                      mt={0}
-                      p={1}
-                      mb={1}
-                      textAlign="center"
+
+              <MDBox mb={2}>
+                <Autocomplete
+                  onChange={handleAutocompleteIDClienteChange}
+                  options={elementsclientes}
+                  value={selectedValueCliente || null}
+                  getOptionLabel={(option) =>
+                    option.nombre || "Seleccione Cliente"
+                  }
+                  disabled={!controlHabilitado}
+                  getOptionDisabled={(option) => option.activo === false}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Seleccione Cliente"
+                      variant="outlined"
+                    />
+                  )}
+                />
+              </MDBox>
+
+              <MDBox mb={2}>
+                <MDInput
+                  type="text"
+                  name="observaciones"
+                  required
+                  label="Observaciones"
+                  variant="standard"
+                  value={observaciones}
+                  // disabled={!controlHabilitado}
+                  onChange={(e) => setObservaciones(e.target.value)}
+                  fullWidth
+                />
+              </MDBox>
+
+              <MDBox mb={2}>
+                <Card style={{ width: "132%" }}>
+                  <MDBox
+                    variant="gradient"
+                    bgColor="info"
+                    borderRadius="lg"
+                    coloredShadow="warning"
+                    mx={2}
+                    mt={0}
+                    p={1}
+                    mb={1}
+                    textAlign="center"
+                  >
+                    <MDTypography
+                      variant="h8"
+                      fontWeight="light"
+                      color="white"
+                      mt={1}
+                      endIcon={<Task />}
                     >
-                      <MDTypography
-                        variant="h8"
-                        fontWeight="light"
-                        color="white"
-                        mt={1}
-                        endIcon={<Task />}
-                      >
-                        Tipos de Tarea del Presupuesto
-                       
-                      </MDTypography>
-                    </MDBox>
-                    <MDBox mb={2}>
-                    <TableContainer component={Paper}>
-                        <Table>
-                        
-                          <TableBody>
-                            {presupuestoxtareastiposUpdate.map((item) => (
-                              <TableRow key={item.id}>
-                                <TableCell >{item.nombreTareaTipo}</TableCell>
-                                <TableCell>{item.vencimientoDias}</TableCell>
-                                <TableCell>{item.fechavencimientoLegalFormateada}</TableCell>
-                                <TableCell>{item.nombreDepartamento}</TableCell>
-                              </TableRow>
-                            ))}
-                          </TableBody>
-                        </Table>
-                      </TableContainer>
-                    </MDBox>
-                  </Card>
+                      Tipos de Tarea del Presupuesto
+
+                    </MDTypography>
+                  </MDBox>
                   <MDBox mb={2}>
+                    <TableContainer component={Paper}>
+                      <Table>
+
+                        <TableBody>
+                          {presupuestoxtareastiposUpdate.map((item) => (
+                            <TableRow key={item.id}>
+                              <TableCell >{item.nombreTareaTipo}</TableCell>
+                              <TableCell>{item.vencimientoDias}</TableCell>
+                              <TableCell>{item.fechavencimientoLegalFormateada}</TableCell>
+                              <TableCell>{item.nombreDepartamento}</TableCell>
+                              <TableCell >{item.rolesxTipoTarea}</TableCell>
+                             
+
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </MDBox>
+                </Card>
+                {/* <MDBox mb={2}>
                     <Card>
                       <MDBox
                         variant="gradient"
@@ -628,78 +645,80 @@ const PresupuestoAccept = () => {
                         </TableContainer>
                       </MDBox>
                     </Card>
-                  </MDBox>
-                </MDBox>
-             
+                  </MDBox> */}
+              </MDBox>
+
             </MDBox>
-            <MDBox mt={1} mb={1}>
+            <MDBox mr={2} style={{
+              display: 'flex',
+              justifyContent: 'flex-end'
+            }}>
               <MDButton
                 onClick={() => {
                   handleSubmit();
                 }}
                 variant="gradient"
-                color="info"
+                color="success"
                 endIcon={<Save />}
                 disabled={grabando}
-                fullWidth
+                style={{ width: '200px', marginRight: '10px' }}
               >
-                Aceptar Presupuesto
+                Aceptar Presupeusto
               </MDButton>
-            </MDBox>
-            <MDBox mt={2} mb={1}>
+
               <MDButton
                 onClick={() => {
                   handleVolver();
                 }}
                 variant="gradient"
-                color="info"
+                color="error"
                 endIcon={<ExitToApp />}
-                fullWidth
+                style={{ width: '200px' }}
               >
                 {nombreboton}
               </MDButton>
             </MDBox>
             <MDSnackbar
-                    color="info"
-                    icon="notifications"
-                    notify={true}
-                    error={false}
-                    title="Task Manager"
-                    content="Aceptando Presupuesto y generando tareas....."
-                    dateTime={dateTime}
-                    seconds={15000}
-                    open={successSBPrev}
-                    onClose={closeSuccessSBPrev}
-                    close={closeSuccessSBPrev}
-                  />
-                  {/* </MDButton> */}
-                  <MDSnackbar
-                    color="success"
-                    icon="check"
-                    title="Task Manager"
-                    notify={false}
-                    error={false}
-                    seconds={5000}
-                    content="Presupuesto Aceptado exitosamente"
-                    dateTime={dateTime}
-                    open={successSB}
-                    onClose={closeSuccessSB}
-                    close={closeSuccessSB}
-                  />
-                  <MDSnackbar
-                      color="error"
-                      icon="warning"
-                      title="Task Manager"
-                      seconds={5000}
-                      notify={false}
-                      error={true}
-                      content="Error al Aceptar Presupuesto "
-                      dateTime={dateTime}
-                      open={errorSB}
-                      onClose={closeErrorSB}
-                      close={closeErrorSB}
+              color="info"
+              icon="notifications"
+              notify={true}
+              error={false}
+              title="Task Manager"
+              content="Aceptando Presupuesto y generando tareas....."
+              dateTime={dateTime}
+              seconds={15000}
+              open={successSBPrev}
+              onClose={closeSuccessSBPrev}
+              close={closeSuccessSBPrev}
+            />
+            {/* </MDButton> */}
+            <MDSnackbar
+              color="success"
+              icon="check"
+              title="Task Manager"
+              notify={false}
+              error={false}
+              seconds={5000}
+              content="Presupuesto Aceptado exitosamente"
+              dateTime={dateTime}
+              open={successSB}
+              onClose={closeSuccessSB}
+              close={closeSuccessSB}
+            />
+            <MDSnackbar
+              color="error"
+              icon="warning"
+              title="Task Manager"
+              seconds={5000}
+              notify={false}
+              error={true}
+              content="Error al Aceptar Presupuesto "
+              dateTime={dateTime}
+              open={errorSB}
+              onClose={closeErrorSB}
+              close={closeErrorSB}
 
-                  />
+            />
           </MDBox>
           {mensaje !== "" && (
             <Alert severity={exito ? "success" : "error"}>

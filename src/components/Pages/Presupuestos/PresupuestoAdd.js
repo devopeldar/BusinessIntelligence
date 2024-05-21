@@ -361,9 +361,7 @@ const PresupuestoAdd = () => {
         rolesAsignados: rolesxTareaUpdate.map((rol, i) => ({
           id: i,
           idUsuario: rol.idUsuario,
-          nombreUsuario: rol.nombreUsuario.props.children,
           idRol: rol.idRol,
-          nombreRol: rol.nombreRol.props.children
         }))
       };
 
@@ -385,11 +383,11 @@ const PresupuestoAdd = () => {
 
       console.log("data2", data)
       request.idCliente = selectedValueCliente.idCliente;
+      request.idUsuario = localStorage.getItem("iduserlogueado");
       request.presupuestoxtareastipos = dataToSend.map((item, a) => ({
-
         idTareaTipo: item.idTareaTipo,
-        vencimientoDias: item.vencimientoDiasValor,
-        fechaVencimientoLegal: item.fechavencimientoLegal,
+        vencimientoDias: item.vencimientoDias,
+        fechaVencimientoLegal: item.fechaVencimientoLegal,
         idDepartamento: item.idDepartamento,
         rolesxTipoTarea: item.rolesAsignados.map((item, i) => ({
           id: i,
@@ -400,9 +398,8 @@ const PresupuestoAdd = () => {
         }))
         
       }));
-      request.idUsuario = localStorage.getItem("iduserlogueado");
       
-
+      
       console.log("request2", request)
 
       validationSchema

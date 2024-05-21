@@ -242,9 +242,9 @@ const PresupuestoEdit = () => {
       }
       console.log("presupuestoxtareastiposUpdate", presupuestoxtareastiposUpdate)
       const request = {
-        idPresupuesto: id,
         idCliente: selectedValueCliente.idCliente,
         observaciones: observaciones,
+        idUsuario: localStorage.getItem("iduserlogueado"),
         presupuestoxtareastipos: presupuestoxtareastiposUpdate.map((item) => ({
           idTareaTipo: item.idTareaTipo,
           vencimientoDias: item.vencimientoDiasValor,
@@ -253,15 +253,13 @@ const PresupuestoEdit = () => {
           rolesxTipoTarea: item.rolesAsignados.map((item, i) => ({
             id: i,
             idUsuario: item.idUsuario,
-            nombreUsuario: item.nombreUsuario,
             idRol: item.idRol,
-            nombreRol: item.nombreRol
           }))
 
         })),
-        idUsuario: localStorage.getItem("iduserlogueado"),
-      };
 
+      };
+      console.log("request", request);
       setGrabando(true); // Inicia la grabación
       setnombreboton("Volver");
       setExito(true);
@@ -275,7 +273,7 @@ const PresupuestoEdit = () => {
         body: JSON.stringify(request),
       });
       const res = await response.json();
-
+      console.log("res copy", res);
       if (res.rdoAccion) {
         // Manejar respuesta exitosa
         setMensaje("¡Datos actualizados exitosamente!");
@@ -316,7 +314,7 @@ const PresupuestoEdit = () => {
     const defaultValueTT = elementsTareasTipos.find(
       (item) => item.idTareaTipo === defaultValueIdTT
     );
-    
+
     const rolesAsignados = item.rolesAsignados.map((rol, i) => ({
       id: i,
       idUsuario: rol.idUsuario,
@@ -426,6 +424,7 @@ const PresupuestoEdit = () => {
     setIDItemModificado(0);
     setSelectedValueTareasTipos(null);
     setSelectedValueDepartamentos(null);
+    setRolesxTareaUpdate([]);
     setVencimientoDias(0);
   };
 
@@ -520,9 +519,25 @@ const PresupuestoEdit = () => {
           </MDTypography>
         ),
         idDepartamento: selectedValueDepartamentos.idDepartamento,
-        fechaVencimientoLegalvalor: formData.fechaVencimientoLegal
+        fechaVencimientoLegalvalor: formData.fechaVencimientoLegal,
+        rolesAsignados: rolesxTipoTarea.map((rol, i) => ({
+          id: i,
+          idUsuario: rol.idUsuario,
+          nombreUsuario: rol.nombreUsuario,
+          idRol: rol.idRol,
+          nombreRol: rol.nombreRol
+        }))
       };
 
+      // const primitivo = {
+      //   id: newRow.id,
+      //   idTareaTipo: newRow.idTareaTipo,
+      //   nombreTareaTipo: newRow.nombreTareaTipo.props.children,
+      //   idDepartamento: newRow.idDepartamento,
+      //   vencimientoDias: newRow.vencimientoDiasValor,
+      //   fechaVencimientoLegal: newRow.fechaVencimientoLegalvalor,
+
+      // };
 
       if (editando === false) {
         const TareaTipoExistente = presupuestoxtareastiposUpdate.find(
@@ -944,7 +959,7 @@ const PresupuestoEdit = () => {
                           handleAddTareaTipo();
                         }}
                         variant="gradient"
-                        color="info"
+                        color="success"
                         endIcon={<PersonFillAdd />}
                         fullWidth
                         disabled={mostrarMensajeroles}
@@ -982,7 +997,7 @@ const PresupuestoEdit = () => {
                               <TableCell style={{ display: "none" }}>{item.vencimientoDiasValor}</TableCell>
                               <TableCell>{item.fechavencimientoLegal}</TableCell>
                               <TableCell >{item.rolescargados}</TableCell>
-                            <TableCell style={{ display: "none" }}>{item.rolesasignados}</TableCell>
+                              <TableCell style={{ display: "none" }}>{item.rolesasignados}</TableCell>
                               <TableCell>
                                 <IconButton
                                   aria-label="Eliminar"
@@ -1010,29 +1025,32 @@ const PresupuestoEdit = () => {
               </MDBox>
 
             </MDBox>
-            <MDBox mt={1} mb={1}>
+
+            <MDBox mr={2} style={{
+              display: 'flex',
+              justifyContent: 'flex-end'
+            }}>
               <MDButton
                 onClick={() => {
                   handleSubmit();
                 }}
                 variant="gradient"
-                color="info"
+                color="success"
                 endIcon={<Save />}
                 disabled={grabando}
-                fullWidth
+                style={{ width: '200px', marginRight: '10px' }}
               >
                 Grabar
               </MDButton>
-            </MDBox>
-            <MDBox mt={2} mb={1}>
+
               <MDButton
                 onClick={() => {
                   handleVolver();
                 }}
                 variant="gradient"
-                color="info"
+                color="error"
                 endIcon={<ExitToApp />}
-                fullWidth
+                style={{ width: '200px' }}
               >
                 {nombreboton}
               </MDButton>
