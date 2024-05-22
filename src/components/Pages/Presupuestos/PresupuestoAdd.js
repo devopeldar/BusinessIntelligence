@@ -27,6 +27,7 @@ import MDButton from "../../controls/MDButton";
 import { PersonFillAdd, Save } from "react-bootstrap-icons";
 import { Delete, ExitToApp } from "@mui/icons-material";
 import axios from "axios";
+import getLastDayOfMonth from "../../Utils/ultimodiames";
 
 const PresupuestoAdd = () => {
   const navigate = useNavigate();
@@ -77,7 +78,7 @@ const PresupuestoAdd = () => {
   const [data, setData] = useState([]);
   const [dataToSend, setDataToSend] = useState([]);
   //const [dataRol, setDataRol] = useState([]);
-
+  const [vencimientolegal, setVencimientolegal] = useState(new Date());
 
   const handleInputChange = (event) => {
     const { name, value, type, checked } = event.target;
@@ -221,14 +222,33 @@ const PresupuestoAdd = () => {
   };
 
   useEffect(() => {
+   
+    if (selectedValueDepartamentos?.idDepartamento === 1) {
+      const fechaObj = new Date();
+      const año = fechaObj.getFullYear();
+      const mes = String(fechaObj.getMonth() + 1).padStart(2, '0');
+      const dia =  getLastDayOfMonth(año, mes);
+      const nuevaFecha = `${año}-${mes}-${dia}`
+      setVencimientolegal(nuevaFecha);
+      
+      // Actualiza formData cuando vencimientolegal cambia
+      setFormData(prevFormData => ({
+        ...prevFormData,
+        fechaVencimientoLegal: nuevaFecha
+      }));
+
+    }
+  }, [selectedValueDepartamentos]); 
+
+
+
+  useEffect(() => {
     const GetTareaTipo = async () => {
       const response = await axios.post(API_URL + "/TareaTipoListar", {
         headers: {
           accept: "application/json",
         },
       });
-
-      console.log("response " + response.data);
       setElementsTareaTipo(response.data);
     };
     GetTareaTipo();
@@ -241,7 +261,6 @@ const PresupuestoAdd = () => {
           accept: "application/json",
         },
       });
-      console.log("response " + response.data);
       setElementsCliente(response.data);
     };
     GetCliente();
@@ -374,7 +393,6 @@ const PresupuestoAdd = () => {
     setSelectedValueCliente(value);
   };
   const handleAutocompleteDeptoChange = (event, value) => {
-    console.log("setSelectedValueDepartamentos", value)
     setSelectedValueDepartamentos(value);
   };
   const procesarFormulario = async (request) => {
@@ -616,7 +634,7 @@ const PresupuestoAdd = () => {
                           required
                           label="Vencimiento legal"
                           variant="standard"
-                          value={formData.fechaVencimientoLegal}
+                          value={formData.fechaVencimientoLegal || vencimientolegal}
                           onChange={handleInputChange}
                           fullWidth
                         />

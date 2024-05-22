@@ -29,6 +29,7 @@ import MDBox from "../../controls/MDBox";
 import MDInput from "../../controls/MDInput";
 import MDTypography from "../../controls/MDTypography";
 import MDButton from "../../controls/MDButton";
+import getLastDayOfMonth from "../../Utils/ultimodiames";
 
 const PresupuestoEdit = () => {
   const { id, habilitado } = useParams(); // Obtener el parámetro de la URL (el ID del Presupuesto a editar)
@@ -53,7 +54,6 @@ const PresupuestoEdit = () => {
   const [elementsclientes, setElementsCliente] = useState([]);
   const [elementsDepto, setElementsDepto] = useState([]);
   const [selectedValueDepartamentos, setSelectedValueDepartamentos] = useState([]);
-  const [idDepartamento, setIdDepartamento] = useState(0);
   const [selectedValueCliente, setSelectedValueCliente] = useState([]);
   const [mostrarMensajeroles, setMostrarMensajeroles] = useState(true);
   const [elementsTareasTipos, setElementsTareasTipos] = useState([]);
@@ -136,6 +136,26 @@ const PresupuestoEdit = () => {
     });
   }, [vencimientolegal]); // Ejecuta solo una vez al cargar el componente
 
+
+  useEffect(() => {
+    
+    if (selectedValueDepartamentos?.idDepartamento === 1) {
+      const fechaObj = new Date();
+      const año = fechaObj.getFullYear();
+      const mes = String(fechaObj.getMonth() + 1).padStart(2, '0');
+      const dia =  getLastDayOfMonth(año, mes);
+      const nuevaFecha = `${año}-${mes}-${dia}`
+      setVencimientolegal(nuevaFecha);
+      
+      // Actualiza formData cuando vencimientolegal cambia
+      setFormData(prevFormData => ({
+        ...prevFormData,
+        fechaVencimientoLegal: nuevaFecha
+      }));
+
+    }
+  }, [selectedValueDepartamentos]); 
+
   useEffect(() => {
     setidPresupuesto(id);
     // Aquí realizas la llamada a tu API para obtener el Presupuesto específico por su ID
@@ -160,10 +180,10 @@ const PresupuestoEdit = () => {
         setPresupuestoxTareasTipos(data.presupuestoxTareasTipos);
 
         setIdCliente(data.idCliente);
-        //setIdDepartamento(data.idDepartamento);
+      
         let newRows = [];
         let i = 0;
-        console.log("data", data);
+
 
         data.presupuestoxTareasTipos.forEach((item, index) => {
           i = i + 1;
@@ -188,8 +208,6 @@ const PresupuestoEdit = () => {
           accept: "application/json",
         },
       });
-
-      console.log("response " + response.data);
       setElementsTareasTipos(response.data);
     };
     GetTareaTipo();
@@ -224,11 +242,6 @@ const PresupuestoEdit = () => {
       });
       setElementsDepto(response.data);
 
-      // const defaultValueId = idDepartamento; // ID del elemento que deseas seleccionar por defectoa asd asd asd asd a sdasd asd asd
-      // const defaultValue = response.data.find(
-      //   (item) => item.idDepartamento === defaultValueId
-      // );
-      // setSelectedValueDepartamentos(defaultValue);
     };
     GetDepartamento();
   }, [Presupuesto]);
@@ -240,7 +253,7 @@ const PresupuestoEdit = () => {
         setExito(false);
         return;
       }
-      console.log("presupuestoxtareastiposUpdate", presupuestoxtareastiposUpdate)
+
       const request = {
         idCliente: selectedValueCliente.idCliente,
         observaciones: observaciones,
@@ -259,7 +272,7 @@ const PresupuestoEdit = () => {
         })),
 
       };
-      console.log("request", request);
+
       setGrabando(true); // Inicia la grabación
       setnombreboton("Volver");
       setExito(true);
@@ -315,6 +328,7 @@ const PresupuestoEdit = () => {
       (item) => item.idTareaTipo === defaultValueIdTT
     );
 
+    setSelectedValueTareasTipos(defaultValueTT);
     const rolesAsignados = item.rolesAsignados.map((rol, i) => ({
       id: i,
       idUsuario: rol.idUsuario,
@@ -323,7 +337,7 @@ const PresupuestoEdit = () => {
       nombreRol: rol.nombreRol
     }))
     setRolesxTareaUpdate(rolesAsignados);
-    setSelectedValueTareasTipos(defaultValueTT);
+
 
   };
   const CargarDatos = (item, index) => {
@@ -452,8 +466,6 @@ const PresupuestoEdit = () => {
         idTemp = presupuestoxtareastiposUpdate.length + 1;
       }
       const newRow = {
-
-
         id: idTemp,
         idPresupuesto: id,
         idTareaTipo: selectedValueTareasTipos.idTareaTipo,
