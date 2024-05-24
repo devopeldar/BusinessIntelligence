@@ -9,7 +9,7 @@ import BasicLayout from "../../layauots/BasicLayout";
 import { Card } from "react-bootstrap";
 
 import { PersonFillAdd, Save } from "react-bootstrap-icons";
-import { Cancel, Delete, Edit, ExitToApp } from "@mui/icons-material";
+import { Cancel, CheckCircle, Delete, Edit, ExitToApp, Warning } from "@mui/icons-material";
 
 import {
   Alert,
@@ -23,6 +23,7 @@ import {
   TableRow,
   TextField,
   Table,
+  InputAdornment,
 } from "@mui/material";
 import bgImage from "../../../assets/images/bg-sign-up-cover.jpeg";
 import MDBox from "../../controls/MDBox";
@@ -30,6 +31,8 @@ import MDInput from "../../controls/MDInput";
 import MDTypography from "../../controls/MDTypography";
 import MDButton from "../../controls/MDButton";
 import getLastDayOfMonth from "../../Utils/ultimodiames";
+import Meses from "../../Utils/Meses";
+import Anios from "../../Utils/Anios";
 
 const PresupuestoEdit = () => {
   const { id, habilitado } = useParams(); // Obtener el parámetro de la URL (el ID del Presupuesto a editar)
@@ -46,11 +49,12 @@ const PresupuestoEdit = () => {
   const [mensaje, setMensaje] = useState("");
   const history = useNavigate();
   const [grabando, setGrabando] = useState(false);
+  const [cargado, setCargado] = useState(false);
   const [editando, setEditando] = useState(false);
   const [idItem, setIDItem] = useState(0);
   const [IDItemModificado, setIDItemModificado] = useState(0);
   const [exito, setExito] = useState(false);
-
+  const [mostraradvertencia, setMostrarAdvertencia] = useState();
   const [elementsclientes, setElementsCliente] = useState([]);
   const [elementsDepto, setElementsDepto] = useState([]);
   const [selectedValueDepartamentos, setSelectedValueDepartamentos] = useState([]);
@@ -73,11 +77,20 @@ const PresupuestoEdit = () => {
     history("/PresupuestoVolver"); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
   };
 
+  const [selectedValueMes, setSelectedValueMes] = useState();
+  const [selectedValueAnio, setSelectedValueAnio] = useState();
+
+  const meses = Object.values(Meses);
+  const anios = Object.values(Anios);
+
   const convertirFormatoFecha = (fecha) => {
+    if (!fecha) {
+      return ''; // Devuelve una cadena vacía o cualquier otro valor predeterminado
+    }
     const fechaObj = new Date(fecha);
-    const año = fechaObj.getFullYear();
-    const mes = String(fechaObj.getMonth() + 1).padStart(2, '0');
-    const dia = String(fechaObj.getDate()).padStart(2, '0');
+    const año = fechaObj.getUTCFullYear();
+    const mes = String(fechaObj.getUTCMonth() + 1).padStart(2, '0');
+    const dia = String(fechaObj.getUTCDate()).padStart(2, '0');
     return `${año}-${mes}-${dia}`;
   };
 
@@ -90,6 +103,28 @@ const PresupuestoEdit = () => {
     const newData = rolesxTipoTarea.filter((item) => item.id !== id);
     setRolesxTareaUpdate(newData);
   };
+
+  useEffect(() => {
+    const SetMesyAnio = async () => {
+
+      const defaultValueMesID = new Date().getMonth() + 1; // ID del elemento que deseas seleccionar por defecto
+      const defaultValueMes = meses.find(
+        (item) => item.valor === defaultValueMesID
+      );
+      console.log("defaultValueMes :", defaultValueMes);
+      setSelectedValueMes(defaultValueMes);
+
+      const defaultValueId = new Date().getFullYear(); // ID del elemento que deseas seleccionar por defecto
+      const defaultValueAnio = anios.find(
+        (item) => item.valor === defaultValueId
+      );
+      console.log("defaultValueAnio :", defaultValueAnio);
+      setSelectedValueAnio(defaultValueAnio);
+
+
+    };
+    SetMesyAnio();
+  }, []);
 
   useEffect(() => {
     const GetRol = async () => {
@@ -119,17 +154,16 @@ const PresupuestoEdit = () => {
 
   const handleInputChange = (event) => {
     const { name, value, type, checked } = event.target;
-    console.log("chk :" + event);
+
     // Verifica si el tipo de campo es un checkbox (para campos booleanos)
     const newValue = type === "checkbox" ? checked : value;
-    console.log("name ", name);
-
     setFormData({
       ...formData,
       [name]: newValue,
     });
   };
   useEffect(() => {
+
     setFormData({
       ...formData,
       fechaVencimientoLegal: convertirFormatoFecha(vencimientolegal)
@@ -138,15 +172,15 @@ const PresupuestoEdit = () => {
 
 
   useEffect(() => {
-    
+
     if (selectedValueDepartamentos?.idDepartamento === 1) {
       const fechaObj = new Date();
       const año = fechaObj.getFullYear();
       const mes = String(fechaObj.getMonth() + 1).padStart(2, '0');
-      const dia =  getLastDayOfMonth(año, mes);
+      const dia = getLastDayOfMonth(año, mes);
       const nuevaFecha = `${año}-${mes}-${dia}`
       setVencimientolegal(nuevaFecha);
-      
+
       // Actualiza formData cuando vencimientolegal cambia
       setFormData(prevFormData => ({
         ...prevFormData,
@@ -154,19 +188,32 @@ const PresupuestoEdit = () => {
       }));
 
     }
-  }, [selectedValueDepartamentos]); 
+  }, [selectedValueDepartamentos]);
 
   useEffect(() => {
     setidPresupuesto(id);
     // Aquí realizas la llamada a tu API para obtener el Presupuesto específico por su ID
-    const GetPresupuesto = async () => {
+    const GetVencimientoLegalTipoTarea = async () => {
       try {
+
+        if (!('idCliente' in selectedValueCliente)) {
+
+          return;
+        }
+        if (!('idTareaTipo' in selectedValueTareasTipos)) {
+
+          return;
+        }
+
         const reqPresupuesto = {
-          idPresupuesto: id,
+          mes: selectedValueMes.valor,
+          anio: selectedValueAnio.valor,
+          idCliente: selectedValueCliente.idCliente,
+          idTareaTipo: selectedValueTareasTipos.idTareaTipo
         };
 
         const response = await axios.post(
-          API_URL + `/PresupuestoGetByID`,
+          API_URL + `/VencimientosLegalesListar`,
           reqPresupuesto,
           {
             headers: {
@@ -175,31 +222,92 @@ const PresupuestoEdit = () => {
           }
         );
         const data = response.data;
+        console.log("data:", data);
+        // Verifica si `data` tiene datos cargados
+        if (data.length > 0) {
 
-        setObservaciones(data.observaciones);
-        setPresupuestoxTareasTipos(data.presupuestoxTareasTipos);
+          var fecha = convertirFormatoFecha(data[0].fechaVencimientoLegal);
 
-        setIdCliente(data.idCliente);
-      
-        let newRows = [];
-        let i = 0;
+          setVencimientolegal(fecha);
+          setMostrarAdvertencia(false);
+        } else {
+          // Maneja el caso en que `data` no tiene datos cargados
+
+          setVencimientolegal("");
+          setMostrarAdvertencia(true);
+        }
+      } catch (error) {
+        setMostrarAdvertencia(true);
+        console.error("Error:", error);
+      }
+    };
+    GetVencimientoLegalTipoTarea();
+  }, [selectedValueCliente, selectedValueMes, selectedValueAnio, selectedValueTareasTipos]);
 
 
-        data.presupuestoxTareasTipos.forEach((item, index) => {
-          i = i + 1;
-          newRows.push(CargarDatos(item, i));
-        });
 
-        setPresupuestoxtareastiposUpdate(newRows);
+  useEffect(() => {
+    setidPresupuesto(id);
+    // Aquí realizas la llamada a tu API para obtener el Presupuesto específico por su ID
+    const GetPresupuesto = async () => {
+      try {
+        if (cargado === true) {
+           return;
+        }
+        else{
+          const reqPresupuesto = {
+            idPresupuesto: id,
+            mesVenc: selectedValueMes.valor,
+            anioVenc: selectedValueAnio.valor
+          };
+  
+          const response = await axios.post(
+            API_URL + `/PresupuestoGetByIDForCopy`,
+            reqPresupuesto,
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+          const data = response.data;
+  
+          setObservaciones(data.observaciones);
+          setPresupuestoxTareasTipos(data.presupuestoxTareasTipos);
+  
+          setIdCliente(data.idCliente);
+  
+          let newRows = [];
+          let i = 0;
+  
+  
+          data.presupuestoxTareasTipos.forEach((item, index) => {
+            i = i + 1;
+            newRows.push(CargarDatos(item, i));
+          });
+  
+          console.log("newRows:", newRows);
+          setPresupuestoxtareastiposUpdate(newRows);
+  
+  
+          setPresupuesto(data);
+          setCargado(true);
+        }
+        
 
-
-        setPresupuesto(data);
       } catch (error) {
         console.error("Error:", error);
       }
     };
     GetPresupuesto();
-  }, [id]);
+  }, [id, selectedValueMes, selectedValueAnio]);
+
+  const handleAutocompleteMesChange = (event, value) => {
+    setSelectedValueMes(value);
+  };
+  const handleAutocompleteAnioChange = (event, value) => {
+    setSelectedValueAnio(value);
+  };
 
   useEffect(() => {
     const GetTareaTipo = async () => {
@@ -408,6 +516,7 @@ const PresupuestoEdit = () => {
         </MDTypography>
       ),
       fechaVencimientoLegalvalor: item.fechavencimientoLegal,
+      fechavencimientoLegalFormateada: item.fechavencimientoLegalFormateada,
       idDepartamento: item.idDepartamento,
       //rolesasignados: item.rolesxTipoTarea,
       rolesAsignados: item.rolesxTipoTarea.map((rol, i) => ({
@@ -693,7 +802,14 @@ const PresupuestoEdit = () => {
       setVencimientoDias(value.vencimientoDias);
     } catch (error) { }
   };
-
+  const getIcon = () => {
+    if (mostraradvertencia === true) {
+      return <Warning color="warning" />;
+    } else {
+      return <CheckCircle color="success" />;
+    }
+    return null;
+  };
 
   return (
     <BasicLayout image={bgImage}>
@@ -729,6 +845,61 @@ const PresupuestoEdit = () => {
             >
 
               <MDBox mb={2}>
+                <MDBox mb={2} mt={3} mr={2} display="flex" alignItems="center" spacing={4}>
+                  <Autocomplete
+                    options={meses}
+                    getOptionLabel={(option) =>
+                      option.descripcion || "Seleccione Mes"
+                    }
+                    // getOptionSelected={(option, value) =>
+                    //     option.mes === value
+                    // }
+                    //(getOptionSelected={(option, value) => option.valor === value.valor}
+                    isOptionEqualToValue={(option, value) => {
+                      // Aquí defines cómo comparar una opción con un valor
+                      return option.valor === value.valor && option.descripcion === value.descripcion;
+                    }}
+                    value={selectedValueMes || null}
+                    onChange={handleAutocompleteMesChange}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Seleccione Mes"
+                        variant="outlined"
+                        fontSize="small"
+                        style={{ width: `200px` }}
+                      />
+                    )}
+                  />
+
+
+                  <Autocomplete
+                    options={anios}
+                    getOptionLabel={(option) =>
+                      option.descripcion || "Seleccione Año"
+                    }
+                    // getOptionSelected={(option, value) =>
+                    //   option.anio === value
+                    // }
+                    isOptionEqualToValue={(option, value) => {
+                      // Aquí defines cómo comparar una opción con un valor
+                      return option.valor === value.valor && option.descripcion === value.descripcion;
+                    }}
+                    value={selectedValueAnio || null}
+                    onChange={handleAutocompleteAnioChange}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Seleccione Año"
+                        variant="outlined"
+                        fontSize="small"
+                        style={{ width: `150px` }}
+                      />
+                    )}
+                  />
+
+                </MDBox>
+
                 <Autocomplete
                   onChange={handleAutocompleteIDClienteChange}
                   options={elementsclientes}
@@ -736,7 +907,9 @@ const PresupuestoEdit = () => {
                   getOptionLabel={(option) =>
                     option.nombre || "Seleccione Cliente"
                   }
-
+                  isOptionEqualToValue={(option, value) =>
+                    option.nombre === value.nombre
+                  }
                   getOptionDisabled={(option) => option.activo === false}
                   renderInput={(params) => (
                     <TextField
@@ -794,6 +967,9 @@ const PresupuestoEdit = () => {
                         getOptionDisabled={(option) =>
                           option.activo === false
                         }
+                        isOptionEqualToValue={(option, value) =>
+                          option.nombre === value.nombre
+                        }
                         renderInput={(params) => (
                           <TextField
                             {...params}
@@ -812,6 +988,9 @@ const PresupuestoEdit = () => {
                           option.nombre || "Seleccione Departamento"
                         }
                         getOptionDisabled={(option) => option.activo === false}
+                        isOptionEqualToValue={(option, value) =>
+                          option.nombre === value.nombre
+                        }
                         renderInput={(params) => (
                           <TextField
                             {...params}
@@ -843,6 +1022,13 @@ const PresupuestoEdit = () => {
                         value={formData.fechaVencimientoLegal || vencimientolegal}
                         onChange={handleInputChange}
                         fullWidth
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position="start">
+                              {getIcon()}
+                            </InputAdornment>
+                          ),
+                        }}
                       />
                     </MDBox>
                     <div style={{ flex: 1, marginT: "-35px" }}>
@@ -1003,6 +1189,15 @@ const PresupuestoEdit = () => {
                               <TableCell style={{ display: "none" }}>
                                 {item.idTareaTipo}
                               </TableCell>
+                              <TableCell>
+                                {
+                                  // console.log("item", item)
+                                  item.fechavencimientoLegal.props.children === 'Fecha no disponible' && (
+                                    <Warning color="warning" />
+                                  )
+                                }
+                              </TableCell>
+
                               <TableCell>{item.nombreTareaTipo}</TableCell>
                               <TableCell>{item.nombredepartamento}</TableCell>
                               <TableCell>{item.vencimientoDias}</TableCell>
@@ -1076,7 +1271,7 @@ const PresupuestoEdit = () => {
           )}
         </MDBox>
       </Card>
-    </BasicLayout>
+    </BasicLayout >
   );
 };
 
