@@ -861,6 +861,7 @@ const PresupuestoEdit = () => {
                     }}
                     value={selectedValueMes || null}
                     onChange={handleAutocompleteMesChange}
+                    disabled
                     renderInput={(params) => (
                       <TextField
                         {...params}
@@ -887,6 +888,7 @@ const PresupuestoEdit = () => {
                     }}
                     value={selectedValueAnio || null}
                     onChange={handleAutocompleteAnioChange}
+                    disabled
                     renderInput={(params) => (
                       <TextField
                         {...params}

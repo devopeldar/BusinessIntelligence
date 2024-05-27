@@ -7,6 +7,7 @@ import {
   Autocomplete,
   Card,
   IconButton,
+  InputAdornment,
   Paper,
   Table,
   TableBody,
@@ -25,9 +26,11 @@ import MDProgress from "../../controls/MDProgress";
 import { AlertTitle } from "@mui/material";
 import MDButton from "../../controls/MDButton";
 import { PersonFillAdd, Save } from "react-bootstrap-icons";
-import { Delete, ExitToApp } from "@mui/icons-material";
+import { CheckCircle, Delete, ExitToApp, Warning } from "@mui/icons-material";
 import axios from "axios";
 import getLastDayOfMonth from "../../Utils/ultimodiames";
+import Meses from "../../Utils/Meses";
+import Anios from "../../Utils/Anios";
 
 const PresupuestoAdd = () => {
   const navigate = useNavigate();
@@ -60,6 +63,7 @@ const PresupuestoAdd = () => {
   const [elementsCliente, setElementsCliente] = useState([]);
   const [elementsTareaTipo, setElementsTareaTipo] = useState([]);
   const [selectedValueTareaTipo, setSelectedValueTareaTipo] = useState([]);
+  
   const [selectedValueCliente, setSelectedValueCliente] = useState([]);
   const [elementsDepto, setElementsDepto] = useState([]);
   const [selectedValueDepartamentos, setSelectedValueDepartamentos] = useState(
@@ -80,13 +84,48 @@ const PresupuestoAdd = () => {
   //const [dataRol, setDataRol] = useState([]);
   const [vencimientolegal, setVencimientolegal] = useState(new Date());
 
+  const [selectedValueMes, setSelectedValueMes] = useState();
+  const [selectedValueAnio, setSelectedValueAnio] = useState();
+  const [mostraradvertencia, setMostrarAdvertencia] = useState();
+  const meses = Object.values(Meses);
+  const anios = Object.values(Anios);
+
+  const convertirFormatoFecha = (fecha) => {
+    if (!fecha) {
+      return ''; // Devuelve una cadena vacía o cualquier otro valor predeterminado
+    }
+    const fechaObj = new Date(fecha);
+    const año = fechaObj.getUTCFullYear();
+    const mes = String(fechaObj.getUTCMonth() + 1).padStart(2, '0');
+    const dia = String(fechaObj.getUTCDate()).padStart(2, '0');
+    return `${año}-${mes}-${dia}`;
+  };
+
+  useEffect(() => {
+
+    setFormData({
+      ...formData,
+      fechaVencimientoLegal: convertirFormatoFecha(vencimientolegal)
+    });
+  }, [vencimientolegal]); // Ejecuta solo una vez al cargar el componente
+
+  
+  const getIcon = () => {
+    if (mostraradvertencia === true) {
+      return <Warning color="warning" />;
+    } else {
+      return <CheckCircle color="success" />;
+    }
+    return null;
+  };
+
+
   const handleInputChange = (event) => {
     const { name, value, type, checked } = event.target;
-    console.log("chk :" + event);
+   
     // Verifica si el tipo de campo es un checkbox (para campos booleanos)
     const newValue = type === "checkbox" ? checked : value;
-    console.log("name ", name);
-
+  
     setShowprogrees(1);
     setFormData({
       ...formData,
@@ -240,6 +279,57 @@ const PresupuestoAdd = () => {
     }
   }, [selectedValueDepartamentos]); 
 
+  useEffect(() => {
+    const GetVencimientoLegalTipoTarea = async () => {
+      try {
+
+        if (!('idCliente' in selectedValueCliente)) {
+
+          return;
+        }
+        if (!('idTareaTipo' in selectedValueTareaTipo)) {
+
+          return;
+        }
+
+        const reqPresupuesto = {
+          mes: selectedValueMes.valor,
+          anio: selectedValueAnio.valor,
+          idCliente: selectedValueCliente.idCliente,
+          idTareaTipo: selectedValueTareaTipo.idTareaTipo
+        };
+
+        const response = await axios.post(
+          API_URL + `/VencimientosLegalesListar`,
+          reqPresupuesto,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const data = response.data;
+        console.log("data:", data);
+        // Verifica si `data` tiene datos cargados
+        if (data.length > 0) {
+
+          var fecha = convertirFormatoFecha(data[0].fechaVencimientoLegal);
+
+          setVencimientolegal(fecha);
+          setMostrarAdvertencia(false);
+        } else {
+          // Maneja el caso en que `data` no tiene datos cargados
+
+          setVencimientolegal("");
+          setMostrarAdvertencia(true);
+        }
+      } catch (error) {
+        setMostrarAdvertencia(true);
+        console.error("Error:", error);
+      }
+    };
+    GetVencimientoLegalTipoTarea();
+  }, [selectedValueCliente, selectedValueMes, selectedValueAnio, selectedValueTareaTipo]);
 
 
   useEffect(() => {
@@ -282,6 +372,7 @@ const PresupuestoAdd = () => {
     navigate("/PresupuestoVolver"); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
   };
 
+  
   const handleAddTareaTipo = () => {
     if (selectedValueTareaTipo == null) {
       return;
@@ -477,6 +568,13 @@ const PresupuestoAdd = () => {
     } catch (error) { }
   };
 
+  const handleAutocompleteMesChange = (event, value) => {
+    setSelectedValueMes(value);
+  };
+  const handleAutocompleteAnioChange = (event, value) => {
+    setSelectedValueAnio(value);
+  };
+
   const eliminarItem = (id) => {
     const newData = data.filter((item) => item.id !== id);
     setData(newData);
@@ -510,6 +608,62 @@ const PresupuestoAdd = () => {
             >
 
               <MDBox mb={2}>
+              <MDBox mb={2} mt={3} mr={2} display="flex" alignItems="center" spacing={4}>
+                  <Autocomplete
+                    options={meses}
+                    getOptionLabel={(option) =>
+                      option.descripcion || "Seleccione Mes"
+                    }
+                    // getOptionSelected={(option, value) =>
+                    //     option.mes === value
+                    // }
+                    //(getOptionSelected={(option, value) => option.valor === value.valor}
+                    isOptionEqualToValue={(option, value) => {
+                      // Aquí defines cómo comparar una opción con un valor
+                      return option.valor === value.valor && option.descripcion === value.descripcion;
+                    }}
+                    value={selectedValueMes || null}
+                    onChange={handleAutocompleteMesChange}
+                    
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Seleccione Mes"
+                        variant="outlined"
+                        fontSize="small"
+                        style={{ width: `200px` }}
+                      />
+                    )}
+                  />
+
+
+                  <Autocomplete
+                    options={anios}
+                    getOptionLabel={(option) =>
+                      option.descripcion || "Seleccione Año"
+                    }
+                    // getOptionSelected={(option, value) =>
+                    //   option.anio === value
+                    // }
+                    isOptionEqualToValue={(option, value) => {
+                      // Aquí defines cómo comparar una opción con un valor
+                      return option.valor === value.valor && option.descripcion === value.descripcion;
+                    }}
+                    value={selectedValueAnio || null}
+                    onChange={handleAutocompleteAnioChange}
+                    
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Seleccione Año"
+                        variant="outlined"
+                        fontSize="small"
+                        style={{ width: `150px` }}
+                      />
+                    )}
+                  />
+
+                </MDBox>
                 <MDBox mb={2}>
                   <Autocomplete
                     onChange={handleAutocompleteClienteChange}
@@ -637,6 +791,13 @@ const PresupuestoAdd = () => {
                           value={formData.fechaVencimientoLegal || vencimientolegal}
                           onChange={handleInputChange}
                           fullWidth
+                          InputProps={{
+                            endAdornment: (
+                              <InputAdornment position="start">
+                                {getIcon()}
+                              </InputAdornment>
+                            ),
+                          }}
                         />
                       </MDBox>
 
