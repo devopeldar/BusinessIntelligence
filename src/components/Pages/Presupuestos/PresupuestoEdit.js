@@ -559,6 +559,14 @@ const PresupuestoEdit = () => {
 
 
   const handleAddRol = () => {
+    if (!('idUsuario' in selectedValueUsuario)) {
+
+      return;
+    }
+    if (!('idRol' in selectedValueRol)) {
+
+      return;
+    }
     const newRow = {
       id: rolesxTipoTarea.length + 1,
       idUsuario: selectedValueUsuario.idUsuario,

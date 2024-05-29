@@ -684,6 +684,14 @@ const PresupuestoEdit = () => {
   };
 
   const handleAddRol = () => {
+    if (!('idUsuario' in selectedValueUsuario)) {
+
+      return;
+    }
+    if (!('idRol' in selectedValueRol)) {
+
+      return;
+    }
     const newRow = {
       id: rolesxTipoTarea.length + 1,
       idUsuario: selectedValueUsuario.idUsuario,
@@ -851,10 +859,6 @@ const PresupuestoEdit = () => {
                     getOptionLabel={(option) =>
                       option.descripcion || "Seleccione Mes"
                     }
-                    // getOptionSelected={(option, value) =>
-                    //     option.mes === value
-                    // }
-                    //(getOptionSelected={(option, value) => option.valor === value.valor}
                     isOptionEqualToValue={(option, value) => {
                       // Aquí defines cómo comparar una opción con un valor
                       return option.valor === value.valor && option.descripcion === value.descripcion;
@@ -862,6 +866,7 @@ const PresupuestoEdit = () => {
                     value={selectedValueMes || null}
                     onChange={handleAutocompleteMesChange}
                     disabled
+                    style={{display:'none'}}
                     renderInput={(params) => (
                       <TextField
                         {...params}
@@ -879,9 +884,6 @@ const PresupuestoEdit = () => {
                     getOptionLabel={(option) =>
                       option.descripcion || "Seleccione Año"
                     }
-                    // getOptionSelected={(option, value) =>
-                    //   option.anio === value
-                    // }
                     isOptionEqualToValue={(option, value) => {
                       // Aquí defines cómo comparar una opción con un valor
                       return option.valor === value.valor && option.descripcion === value.descripcion;
@@ -889,6 +891,7 @@ const PresupuestoEdit = () => {
                     value={selectedValueAnio || null}
                     onChange={handleAutocompleteAnioChange}
                     disabled
+                    style={{display:'none'}}
                     renderInput={(params) => (
                       <TextField
                         {...params}
@@ -1164,7 +1167,7 @@ const PresupuestoEdit = () => {
                         fullWidth
                         disabled={mostrarMensajeroles}
                       >
-                        Agregar Tipo de Tarea
+                        Confirmar Cambios
                       </MDButton>
                       <MDButton
                         onClick={() => {

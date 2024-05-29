@@ -24,3 +24,9 @@ yarn-error.log*
 
 # Ignorar la carpeta node_modules
 node_modules/
+
+# # Nginx config
+# nginx.conf
+
+# # config.js
+# config.js

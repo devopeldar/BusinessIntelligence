@@ -102,6 +102,29 @@ const PresupuestoAdd = () => {
   };
 
   useEffect(() => {
+    const SetMesyAnio = async () => {
+
+      const defaultValueMesID = new Date().getMonth() + 1; // ID del elemento que deseas seleccionar por defecto
+      const defaultValueMes = meses.find(
+        (item) => item.valor === defaultValueMesID
+      );
+      console.log("defaultValueMes :", defaultValueMes);
+      setSelectedValueMes(defaultValueMes);
+
+      const defaultValueId = new Date().getFullYear(); // ID del elemento que deseas seleccionar por defecto
+      const defaultValueAnio = anios.find(
+        (item) => item.valor === defaultValueId
+      );
+      console.log("defaultValueAnio :", defaultValueAnio);
+      setSelectedValueAnio(defaultValueAnio);
+
+
+    };
+    SetMesyAnio();
+  }, []);
+
+  
+  useEffect(() => {
 
     setFormData({
       ...formData,
@@ -185,6 +208,16 @@ const PresupuestoAdd = () => {
   };
 
   const handleAddRol = () => {
+
+    if (!('idUsuario' in selectedValueUsuario)) {
+
+      return;
+    }
+    if (!('idRol' in selectedValueRol)) {
+
+      return;
+    }
+
     const newRow = {
       id: rolesxTareaUpdate.length + 1,
       idUsuario: selectedValueUsuario.idUsuario,
@@ -624,7 +657,7 @@ const PresupuestoAdd = () => {
                     }}
                     value={selectedValueMes || null}
                     onChange={handleAutocompleteMesChange}
-                    
+                    style={{display:'none'}}
                     renderInput={(params) => (
                       <TextField
                         {...params}
@@ -651,7 +684,7 @@ const PresupuestoAdd = () => {
                     }}
                     value={selectedValueAnio || null}
                     onChange={handleAutocompleteAnioChange}
-                    
+                    style={{display:'none'}}
                     renderInput={(params) => (
                       <TextField
                         {...params}
@@ -934,7 +967,7 @@ const PresupuestoAdd = () => {
                       endIcon={<PersonFillAdd />}
                       fullWidth
                     >
-                      Agregar Tipo de Tarea
+                      Confirmar Cambios de Tarea
                     </MDButton>
                   </MDBox>
                   <TableContainer component={Paper}>
