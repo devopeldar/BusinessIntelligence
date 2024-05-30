@@ -194,8 +194,8 @@ function PresupuestoList() {
   const fetchDataTareas = async () => {
     try {
       const requsuario = {
-        //idUsuario: localStorage.getItem("iduserlogueado"),
         idCliente: selectedValueCliente?.idCliente || 0,
+        idUsuario:localStorage.getItem("iduserlogueado"),
         idDepartamento: 0,
         aceptado: selectedValueAceptado?.valor || false,
         fechaDesde: selectedDateFrom ? selectedDateFrom : firstDayOfMonth,

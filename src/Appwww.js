@@ -111,6 +111,8 @@ import axios from "axios";
 import API_URL from "./config";
 import Example from "./components/Pages/Charts/example1";
 import Example1 from "./components/Pages/Charts/example1";
+import GraficoClientes from "./components/Pages/Charts/Clientes/GraficoClientes";
+import GraficoEstadoTareas from "./components/Pages/Charts/EstadoTareas/GraficoEstadoTareas";
 
 
 export default function App() {
@@ -335,7 +337,7 @@ const GetPermisos = async () => {
     const reqPermisosxPerfil = {
       idperfil: localStorage.getItem("idPerfil"),
     };
-console.log("idperfilapp" , reqPermisosxPerfil);
+
     const response = await axios.post(
       API_URL + `/PerfilxPermisoListar`,
       reqPermisosxPerfil,
@@ -346,7 +348,7 @@ console.log("idperfilapp" , reqPermisosxPerfil);
       }
     );
     const permisosBaseDatos = response.data;
-    console.log("permisosBaseDatosAPP" , permisosBaseDatos);
+
     if(permisosBaseDatos != null){
       // Aquí se realiza cualquier operación o lógica que dependa de los permisos recuperados
       
@@ -366,7 +368,7 @@ console.log("idperfilapp" , reqPermisosxPerfil);
         return route;
       });
     }
-    console.log("routes" , routes);
+
     return routes;
     // Llamar a cualquier otra función o realizar operaciones adicionales aquí después de actualizar 'routes'
   } catch (error) {
@@ -658,6 +660,12 @@ console.log("idperfilapp" , reqPermisosxPerfil);
             
             <Route path="/CambiarContrasenia" element={<CambiarContrasenia />} />
             <Route path="/chart1" element={<Example />} />
+
+
+            {/* Graficos */}
+            <Route path="/GraficoClientes" element={<GraficoClientes />} />
+            <Route path="/GraficoEstadoTareas" element={<GraficoEstadoTareas />} />
+            
             {/* 
 
 

@@ -7,6 +7,7 @@ import {
   Autocomplete,
   Card,
   IconButton,
+  InputAdornment,
   Paper,
   Table,
   TableBody,
@@ -25,8 +26,11 @@ import MDProgress from "../../controls/MDProgress";
 import { AlertTitle } from "@mui/material";
 import MDButton from "../../controls/MDButton";
 import { PersonFillAdd, Save } from "react-bootstrap-icons";
-import { Delete, ExitToApp } from "@mui/icons-material";
+import { CheckCircle, Delete, ExitToApp, Warning } from "@mui/icons-material";
 import axios from "axios";
+import getLastDayOfMonth from "../../Utils/ultimodiames";
+import Meses from "../../Utils/Meses";
+import Anios from "../../Utils/Anios";
 
 const PresupuestoAdd = () => {
   const navigate = useNavigate();
@@ -36,10 +40,10 @@ const PresupuestoAdd = () => {
   const [formData, setFormData] = useState({
     observaciones: "",
     idCliente: 0,
-
     idUsuario: 0,
     presupuestoxtareastipos: [],
     fechaVencimientoLegal: new Date(),
+    rolesasignados: [],
   });
 
   const validationSchema = yup.object().shape({
@@ -49,16 +53,26 @@ const PresupuestoAdd = () => {
 
   const [grabando, setGrabando] = useState(false);
 
+  const [elementsUsuario, setElementsUsuario] = useState([]);
+  const [elementsRol, setElementsRol] = useState([]);
+  const [selectedValueUsuario, setSelectedValueUsuario] = useState(
+    elementsUsuario[0]
+  );
+  const [rolesxTareaUpdate, setRolesxTareaUpdate] = useState([]);
+  const [selectedValueRol, setSelectedValueRol] = useState(elementsRol[0]);
   const [elementsCliente, setElementsCliente] = useState([]);
   const [elementsTareaTipo, setElementsTareaTipo] = useState([]);
   const [selectedValueTareaTipo, setSelectedValueTareaTipo] = useState([]);
+  
   const [selectedValueCliente, setSelectedValueCliente] = useState([]);
   const [elementsDepto, setElementsDepto] = useState([]);
   const [selectedValueDepartamentos, setSelectedValueDepartamentos] = useState(
     []
   );
+
+  const [mostrarMensajeroles, setMostrarMensajeroles] = useState(true);
   const [vencimientoDias, setVencimientoDias] = useState(0);
-  const [idDepartamento, setIdDepartamento] = useState(0);
+  //const [idDepartamento, setIdDepartamento] = useState(0);
   const [nombreboton, setnombreboton] = useState("Cancelar");
   const [progress, setProgress] = useState(0);
   const [showprogrees, setShowprogrees] = React.useState(0);
@@ -66,18 +80,111 @@ const PresupuestoAdd = () => {
   const [mensaje, setMensaje] = useState("");
   const [exito, setExito] = useState(false);
   const [data, setData] = useState([]);
+  const [dataToSend, setDataToSend] = useState([]);
+  //const [dataRol, setDataRol] = useState([]);
+  const [vencimientolegal, setVencimientolegal] = useState(new Date());
+
+  const [selectedValueMes, setSelectedValueMes] = useState();
+  const [selectedValueAnio, setSelectedValueAnio] = useState();
+  const [mostraradvertencia, setMostrarAdvertencia] = useState();
+  const meses = Object.values(Meses);
+  const anios = Object.values(Anios);
+
+  const convertirFormatoFecha = (fecha) => {
+    if (!fecha) {
+      return ''; // Devuelve una cadena vacía o cualquier otro valor predeterminado
+    }
+    const fechaObj = new Date(fecha);
+    const año = fechaObj.getUTCFullYear();
+    const mes = String(fechaObj.getUTCMonth() + 1).padStart(2, '0');
+    const dia = String(fechaObj.getUTCDate()).padStart(2, '0');
+    return `${año}-${mes}-${dia}`;
+  };
+
+  useEffect(() => {
+    const SetMesyAnio = async () => {
+
+      const defaultValueMesID = new Date().getMonth() + 1; // ID del elemento que deseas seleccionar por defecto
+      const defaultValueMes = meses.find(
+        (item) => item.valor === defaultValueMesID
+      );
+      console.log("defaultValueMes :", defaultValueMes);
+      setSelectedValueMes(defaultValueMes);
+
+      const defaultValueId = new Date().getFullYear(); // ID del elemento que deseas seleccionar por defecto
+      const defaultValueAnio = anios.find(
+        (item) => item.valor === defaultValueId
+      );
+      console.log("defaultValueAnio :", defaultValueAnio);
+      setSelectedValueAnio(defaultValueAnio);
+
+
+    };
+    SetMesyAnio();
+  }, []);
+
+  
+  useEffect(() => {
+
+    setFormData({
+      ...formData,
+      fechaVencimientoLegal: convertirFormatoFecha(vencimientolegal)
+    });
+  }, [vencimientolegal]); // Ejecuta solo una vez al cargar el componente
+
+  
+  const getIcon = () => {
+    if (mostraradvertencia === true) {
+      return <Warning color="warning" />;
+    } else {
+      return <CheckCircle color="success" />;
+    }
+    return null;
+  };
+
+
   const handleInputChange = (event) => {
     const { name, value, type, checked } = event.target;
-    console.log("chk :" + event);
+   
     // Verifica si el tipo de campo es un checkbox (para campos booleanos)
     const newValue = type === "checkbox" ? checked : value;
-    console.log("name ", name);
-
+  
     setShowprogrees(1);
     setFormData({
       ...formData,
       [name]: newValue,
     });
+  };
+
+  useEffect(() => {
+    const GetRol = async () => {
+      const response = await axios.post(API_URL + "/RolListar", {
+        headers: {
+          accept: "application/json",
+        },
+      });
+
+      setElementsRol(response.data);
+    };
+    GetRol();
+  }, []);
+
+  useEffect(() => {
+    const GetUsuario = async () => {
+      const response = await axios.post(API_URL + "/UsuarioListar", {
+        headers: {
+          accept: "application/json",
+        },
+      });
+
+      setElementsUsuario(response.data);
+    };
+    GetUsuario();
+  }, []);
+
+  const eliminarItemRol = (id) => {
+    const newData = rolesxTareaUpdate.filter((item) => item.id !== id);
+    setRolesxTareaUpdate(newData);
   };
 
   const handleSubmit = (event) => {
@@ -100,13 +207,163 @@ const PresupuestoAdd = () => {
     procesarFormulario(formData);
   };
 
-  // useEffect(() => {
-  //     // Coloca aquí el código que deseas ejecutar al montar el componente
-  //     console.log('El componente se ha montado');
+  const handleAddRol = () => {
 
-  //     // Por ejemplo, llamar a una función
-  //     handleLoad();
-  // }, []); // El segundo argumento es un array de dependencias vacío
+    if (!('idUsuario' in selectedValueUsuario)) {
+
+      return;
+    }
+    if (!('idRol' in selectedValueRol)) {
+
+      return;
+    }
+
+    const newRow = {
+      id: rolesxTareaUpdate.length + 1,
+      idUsuario: selectedValueUsuario.idUsuario,
+      nombreUsuario: (
+        <MDTypography
+          component="a"
+          href="#"
+          variant="caption"
+          color="text"
+          fontWeight="medium"
+        >
+          {selectedValueUsuario.nombre}
+        </MDTypography>
+      ),
+      idRol: selectedValueRol.idRol,
+      nombreRol: (
+        <MDTypography
+          component="a"
+          href="#"
+          variant="caption"
+          color="text"
+          fontWeight="medium"
+        >
+          {selectedValueRol.descripcion}
+        </MDTypography>
+      ),
+    };
+    const usuarioExistente = rolesxTareaUpdate.find(
+      (item) =>
+        item.idUsuario === selectedValueUsuario.idUsuario &&
+        item.idRol === selectedValueRol.idRol
+    );
+
+    if (!usuarioExistente) {
+      setRolesxTareaUpdate((prevDatos) => [...prevDatos, newRow]);
+    }
+
+  };
+
+  //Hook para validar roles ingresados y dejar continuar la carga
+  useEffect(() => {
+    const GetValidarRoles = async () => {
+      const request = {
+        idRol: 1,
+        acciones: rolesxTareaUpdate
+      };
+
+      const response = await axios.post(API_URL + "/ValidarRoles", request, {
+        headers: {
+          accept: "application/json",
+        },
+
+      });
+
+      //const res = await response.json();
+      if (response.data.rdoAccion) {
+        setMostrarMensajeroles(false);
+
+      } else {
+        // Manejar errores si la respuesta no es exitosa
+        setMostrarMensajeroles(true);
+      }
+
+    };
+    GetValidarRoles();
+  }, [rolesxTareaUpdate]);
+
+  const handleAutocompleteUserChange = (event, value) => {
+    setSelectedValueUsuario(value);
+  };
+
+  const handleAutocompleteRolChange = (event, value) => {
+    setSelectedValueRol(value);
+  };
+
+  useEffect(() => {
+   
+    if (selectedValueDepartamentos?.idDepartamento === 1) {
+      const fechaObj = new Date();
+      const año = fechaObj.getFullYear();
+      const mes = String(fechaObj.getMonth() + 1).padStart(2, '0');
+      const dia =  getLastDayOfMonth(año, mes);
+      const nuevaFecha = `${año}-${mes}-${dia}`
+      setVencimientolegal(nuevaFecha);
+      
+      // Actualiza formData cuando vencimientolegal cambia
+      setFormData(prevFormData => ({
+        ...prevFormData,
+        fechaVencimientoLegal: nuevaFecha
+      }));
+
+    }
+  }, [selectedValueDepartamentos]); 
+
+  useEffect(() => {
+    const GetVencimientoLegalTipoTarea = async () => {
+      try {
+
+        if (!('idCliente' in selectedValueCliente)) {
+
+          return;
+        }
+        if (!('idTareaTipo' in selectedValueTareaTipo)) {
+
+          return;
+        }
+
+        const reqPresupuesto = {
+          mes: selectedValueMes.valor,
+          anio: selectedValueAnio.valor,
+          idCliente: selectedValueCliente.idCliente,
+          idTareaTipo: selectedValueTareaTipo.idTareaTipo
+        };
+
+        const response = await axios.post(
+          API_URL + `/VencimientosLegalesListar`,
+          reqPresupuesto,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const data = response.data;
+        console.log("data:", data);
+        // Verifica si `data` tiene datos cargados
+        if (data.length > 0) {
+
+          var fecha = convertirFormatoFecha(data[0].fechaVencimientoLegal);
+
+          setVencimientolegal(fecha);
+          setMostrarAdvertencia(false);
+        } else {
+          // Maneja el caso en que `data` no tiene datos cargados
+
+          setVencimientolegal("");
+          setMostrarAdvertencia(true);
+        }
+      } catch (error) {
+        setMostrarAdvertencia(true);
+        console.error("Error:", error);
+      }
+    };
+    GetVencimientoLegalTipoTarea();
+  }, [selectedValueCliente, selectedValueMes, selectedValueAnio, selectedValueTareaTipo]);
+
 
   useEffect(() => {
     const GetTareaTipo = async () => {
@@ -115,8 +372,6 @@ const PresupuestoAdd = () => {
           accept: "application/json",
         },
       });
-
-      console.log("response " + response.data);
       setElementsTareaTipo(response.data);
     };
     GetTareaTipo();
@@ -129,7 +384,6 @@ const PresupuestoAdd = () => {
           accept: "application/json",
         },
       });
-      console.log("response " + response.data);
       setElementsCliente(response.data);
     };
     GetCliente();
@@ -143,12 +397,6 @@ const PresupuestoAdd = () => {
         },
       });
       setElementsDepto(response.data);
-
-      const defaultValueId = idDepartamento; // ID del elemento que deseas seleccionar por defectoa asd asd asd asd a sdasd asd asd
-      const defaultValue = response.data.find(
-        (item) => item.idDepartamento === defaultValueId
-      );
-      setSelectedValueDepartamentos(defaultValue);
     };
     GetDepartamento();
   }, []);
@@ -157,16 +405,15 @@ const PresupuestoAdd = () => {
     navigate("/PresupuestoVolver"); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
   };
 
+  
   const handleAddTareaTipo = () => {
-    if(selectedValueTareaTipo == null)
-    {
+    if (selectedValueTareaTipo == null) {
       return;
     }
-    if(selectedValueDepartamentos == null)
-    {
+    if (selectedValueDepartamentos == null) {
       return;
     }
-    const newRow = {
+   const newRow = {
       id: data.length + 1,
       idTareaTipo: selectedValueTareaTipo.idTareaTipo,
       nombreTareaTipo: (
@@ -213,18 +460,56 @@ const PresupuestoAdd = () => {
           {formData.fechaVencimientoLegal}
         </MDTypography>
       ),
-
+      rolescargados: (
+        <MDTypography
+          component="a"
+          href="#"
+          variant="caption"
+          color="text"
+          fontWeight="medium"
+        >
+          {rolesxTareaUpdate.map((rol) => (
+            <span key={data.length + 1}>
+              {rol.nombreRol}: {rol.nombreUsuario}
+              <br />
+            </span>
+          ))}
+        </MDTypography>
+      ),
       idDepartamento: selectedValueDepartamentos.idDepartamento,
-      vencimientoDiasValor:vencimientoDias,
-      fechaVencimientoLegalvalor:formData.fechaVencimientoLegal
+      vencimientoDiasValor: vencimientoDias,
+      fechaVencimientoLegalvalor: formData.fechaVencimientoLegal,
+     
     };
-    console.log("newRow", newRow)
+
+    
+
+
     const usuarioExistente = data.find(
       (item) => item.idTareaTipo === selectedValueTareaTipo.idTareaTipo
     );
-
+    console.log("newRow0", newRow);
     if (!usuarioExistente) {
       setData((prevDatos) => [...prevDatos, newRow]);
+
+     
+
+      const primitivo = {
+        id: newRow.id,
+        idTareaTipo: newRow.idTareaTipo,
+        nombreTareaTipo: newRow.nombreTareaTipo.props.children,
+        idDepartamento: newRow.idDepartamento,
+        vencimientoDias: newRow.vencimientoDiasValor,
+        fechaVencimientoLegal: newRow.fechaVencimientoLegalvalor,
+        rolesAsignados: rolesxTareaUpdate.map((rol, i) => ({
+          id: i,
+          idUsuario: rol.idUsuario,
+          idRol: rol.idRol,
+        }))
+      };
+
+      console.log("primitivo", primitivo);
+      setDataToSend((prevDatos) => [...prevDatos, primitivo]);
     }
   };
 
@@ -232,25 +517,33 @@ const PresupuestoAdd = () => {
     setSelectedValueCliente(value);
   };
   const handleAutocompleteDeptoChange = (event, value) => {
-    console.log("setSelectedValueDepartamentos", value)
     setSelectedValueDepartamentos(value);
   };
   const procesarFormulario = async (request) => {
     try {
       setLoading(true);
 
+      console.log("data2", data)
       request.idCliente = selectedValueCliente.idCliente;
-      //request.idDepartamento = selectedValueDepartamentos.idDepartamento;
-
-      request.presupuestoxtareastipos = data.map((item) => ({
-  
-        idTareaTipo: item.idTareaTipo,
-        vencimientoDias: item.vencimientoDiasValor,
-        fechaVencimientoLegal : item.fechaVencimientoLegalvalor,
-        idDepartamento : item.idDepartamento
-      }));
       request.idUsuario = localStorage.getItem("iduserlogueado");
-      console.log("formData " + JSON.stringify(formData));
+      request.presupuestoxtareastipos = dataToSend.map((item, a) => ({
+        idTareaTipo: item.idTareaTipo,
+        vencimientoDias: item.vencimientoDias,
+        fechaVencimientoLegal: item.fechaVencimientoLegal,
+        idDepartamento: item.idDepartamento,
+        rolesxTipoTarea: item.rolesAsignados.map((item, i) => ({
+          id: i,
+          idUsuario: item.idUsuario,
+          nombreUsuario: item.nombreUsuario,
+          idRol: item.idRol,
+          nombreRol: item.nombreRol
+        }))
+        
+      }));
+      
+      
+      console.log("request2", request)
+
       validationSchema
         .validate(request)
         .then(async (validatedData) => {
@@ -258,6 +551,8 @@ const PresupuestoAdd = () => {
           setnombreboton("Volver");
           setExito(true);
           setMensaje("");
+
+          console.log("formData", formData)
 
           const response = await fetch(API_URL + "/PresupuestoAlta", {
             method: "POST",
@@ -303,7 +598,14 @@ const PresupuestoAdd = () => {
     setSelectedValueTareaTipo(value);
     try {
       setVencimientoDias(value.vencimientoDias);
-    } catch (error) {}
+    } catch (error) { }
+  };
+
+  const handleAutocompleteMesChange = (event, value) => {
+    setSelectedValueMes(value);
+  };
+  const handleAutocompleteAnioChange = (event, value) => {
+    setSelectedValueAnio(value);
   };
 
   const eliminarItem = (id) => {
@@ -335,17 +637,66 @@ const PresupuestoAdd = () => {
           <MDBox component="form" role="form">
             <MDBox
               mb={2}
-              style={{
-                display: "flex",
-                gap: "16px",
-                flexDirection: "row",
-                height: "100%", // Asegura que el contenedor principal ocupe el alto completo
-              }}
+
             >
-      
-                
-       
-                <MDBox mb={2}>
+
+              <MDBox mb={2}>
+              <MDBox mb={2} mt={3} mr={2} display="flex" alignItems="center" spacing={4}>
+                  <Autocomplete
+                    options={meses}
+                    getOptionLabel={(option) =>
+                      option.descripcion || "Seleccione Mes"
+                    }
+                    // getOptionSelected={(option, value) =>
+                    //     option.mes === value
+                    // }
+                    //(getOptionSelected={(option, value) => option.valor === value.valor}
+                    isOptionEqualToValue={(option, value) => {
+                      // Aquí defines cómo comparar una opción con un valor
+                      return option.valor === value.valor && option.descripcion === value.descripcion;
+                    }}
+                    value={selectedValueMes || null}
+                    onChange={handleAutocompleteMesChange}
+                    style={{display:'none'}}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Seleccione Mes"
+                        variant="outlined"
+                        fontSize="small"
+                        style={{ width: `200px` }}
+                      />
+                    )}
+                  />
+
+
+                  <Autocomplete
+                    options={anios}
+                    getOptionLabel={(option) =>
+                      option.descripcion || "Seleccione Año"
+                    }
+                    // getOptionSelected={(option, value) =>
+                    //   option.anio === value
+                    // }
+                    isOptionEqualToValue={(option, value) => {
+                      // Aquí defines cómo comparar una opción con un valor
+                      return option.valor === value.valor && option.descripcion === value.descripcion;
+                    }}
+                    value={selectedValueAnio || null}
+                    onChange={handleAutocompleteAnioChange}
+                    style={{display:'none'}}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Seleccione Año"
+                        variant="outlined"
+                        fontSize="small"
+                        style={{ width: `150px` }}
+                      />
+                    )}
+                  />
+
+                </MDBox>
                 <MDBox mb={2}>
                   <Autocomplete
                     onChange={handleAutocompleteClienteChange}
@@ -364,8 +715,6 @@ const PresupuestoAdd = () => {
                     )}
                   />
                 </MDBox>
-               
-
                 <MDBox mb={2}>
                   <MDInput
                     type="text"
@@ -378,7 +727,9 @@ const PresupuestoAdd = () => {
                     fullWidth
                   />
                 </MDBox>
-                  <Card>
+
+                <Card>
+                  <div style={{ flex: 1, marginT: "-15px" }}>
                     <MDBox
                       variant="gradient"
                       bgColor="info"
@@ -387,11 +738,19 @@ const PresupuestoAdd = () => {
                       mx={2}
                       mt={0}
                       p={1}
-                      mb={1}
+                      mb={2}
                       textAlign="center"
+
+                      style={{
+                        display: "flex",
+                        gap: "16px",
+                        flexDirection: "row",
+                        width: "100%",
+                        height: "100%", // Asegura que el contenedor principal ocupe el alto completo
+                      }}
                     >
                       <MDTypography
-                        variant="h8"
+                        variant="h5"
                         fontWeight="light"
                         color="white"
                         mt={1}
@@ -399,7 +758,9 @@ const PresupuestoAdd = () => {
                         Tipos de Tarea del Presupuesto
                       </MDTypography>
                     </MDBox>
+
                     <MDBox mb={2}>
+
                       <MDBox mb={2} mr={4} ml={4}>
                         <Autocomplete
                           onChange={handleAutocompleteChangeTareaTipo}
@@ -418,28 +779,31 @@ const PresupuestoAdd = () => {
                               variant="outlined"
                             />
                           )}
-                         
+
                         />
                       </MDBox>
                       <MDBox mb={2} mr={4} ml={4}>
-                      <Autocomplete
-                        onChange={handleAutocompleteDeptoChange}
-                        options={elementsDepto}
-                        value={selectedValueDepartamentos || null}
-                        getOptionLabel={(option) =>
-                          option.nombre || "Seleccione Departamento"
-                        }
-                        getOptionDisabled={(option) => option.activo === false}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            label="Seleccione Departamento"
-                            variant="outlined"
-                          />
-                        )}
-                        style={{ flex: 1 }} // Añade esta línea
-                      />
-                    </MDBox>
+                        <Autocomplete
+                          onChange={handleAutocompleteDeptoChange}
+                          options={elementsDepto}
+                          value={selectedValueDepartamentos || null}
+                          getOptionLabel={(option) =>
+                            option.nombre || "Seleccione Departamento"
+                          }
+                          isOptionEqualToValue={(option, value) =>
+                            option.nombre === value.nombre
+                          }
+                          getOptionDisabled={(option) => option.activo === false}
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              label="Seleccione Departamento"
+                              variant="outlined"
+                            />
+                          )}
+                          style={{ flex: 1 }} // Añade esta línea
+                        />
+                      </MDBox>
                       <MDBox mb={2} mr={4} ml={4}>
                         <MDInput
                           type="text"
@@ -451,81 +815,216 @@ const PresupuestoAdd = () => {
                           onChange={(e) => setVencimientoDias(e.target.value)}
                           fullWidth
                         />
-                         <MDInput
-                            type="date"
-                            name="fechaVencimientoLegal"
-                            required
-                            label="Vencimiento legal"
-                            variant="standard"
-                            value={formData.fechaVencimientoLegal}
-                            onChange={handleInputChange}
-                            fullWidth
-                          />
+                        <MDInput
+                          type="date"
+                          name="fechaVencimientoLegal"
+                          required
+                          label="Vencimiento legal"
+                          variant="standard"
+                          value={formData.fechaVencimientoLegal || vencimientolegal}
+                          onChange={handleInputChange}
+                          fullWidth
+                          InputProps={{
+                            endAdornment: (
+                              <InputAdornment position="start">
+                                {getIcon()}
+                              </InputAdornment>
+                            ),
+                          }}
+                        />
                       </MDBox>
 
-            
-                      <MDBox mb={2} mr={6} ml={6}>
-                        <MDButton
-                          onClick={() => {
-                            handleAddTareaTipo();
-                          }}
-                          variant="gradient"
-                          color="info"
-                          endIcon={<PersonFillAdd />}
-                          fullWidth
-                        >
-                          Agregar Tipo de Tarea
-                        </MDButton>
-                      </MDBox>
-                      <TableContainer component={Paper}>
-                        <Table>
-                          <TableBody>
-                            {data.map((item, index) => (
-                              <TableRow key={index}>
-                                <TableCell style={{ display: "none" }}>
-                                  {item.id}
-                                </TableCell>
-                                <TableCell style={{ display: "none" }}>
-                                  {item.idTareaTipo}
-                                </TableCell>
-                                <TableCell style={{ display: "none" }}>
-                                  {item.idDepartamento}
-                                </TableCell>
-                                <TableCell>{item.nombreTareaTipo}</TableCell>
-                                <TableCell>{item.nombredepartamento}</TableCell>
-                                <TableCell>{item.vencimientoDias}</TableCell>
-                                <TableCell>{item.fechaVencimientoLegal}</TableCell>
-                                <TableCell style={{ display: "none" }}>{item.vencimientoDiasValor}</TableCell>
-                                <TableCell>
-                                  <IconButton
-                                    aria-label="Eliminar"
-                                    onClick={() => eliminarItem(item.id)}
-                                  >
-                                    <Delete color="error" />
-                                  </IconButton>
-                                </TableCell>
-                              </TableRow>
-                            ))}
-                          </TableBody>
-                        </Table>
-                      </TableContainer>
                     </MDBox>
-                  </Card>
-                </MDBox>
-          
+                  </div>
+                  <div style={{ flex: 1, marginT: "-35px" }}>
+                    <MDBox mb={2}>
+                      <Card>
+                        <MDBox
+                          variant="gradient"
+                          bgColor="info"
+                          borderRadius="lg"
+                          coloredShadow="info"
+                          mx={2}
+                          mt={0}
+                          p={1}
+                          mb={1}
+                          textAlign="center"
+                        >
+                          <MDTypography
+                            variant="h8"
+                            fontWeight="light"
+                            color="white"
+                            mt={1}
+                          >
+                            Administracion Roles
+                          </MDTypography>
+                        </MDBox>
+                        <MDBox mb={2}>
+                          <MDBox mb={2} mr={4} ml={4}>
+                            <Autocomplete
+                              onChange={handleAutocompleteUserChange}
+                              options={elementsUsuario}
+                              getOptionLabel={(option) => option.nombre}
+                              getOptionDisabled={(option) =>
+                                option.activo === false
+                              }
+                              isOptionEqualToValue={(option, value) =>
+                                option.nombre === value.nombre
+                              }
+                              renderInput={(params) => (
+                                <TextField
+                                  {...params}
+                                  label="Seleccione Usuario"
+                                  variant="outlined"
+                                />
+                              )}
+                            />
+                          </MDBox>
+                          <MDBox mb={2} mr={4} ml={4}>
+                            <Autocomplete
+                              onChange={handleAutocompleteRolChange}
+                              options={elementsRol}
+                              getOptionLabel={(option) => option.descripcion}
+                              getOptionDisabled={(option) =>
+                                option.activo === false
+                              }
+                              isOptionEqualToValue={(option, value) =>
+                                option.descripcion === value.descripcion
+                              }
+                              renderInput={(params) => (
+                                <TextField
+                                  {...params}
+                                  label="Seleccione Rol"
+                                  variant="outlined"
+                                />
+                              )}
+                            />
+                          </MDBox>
+
+                          <MDBox mb={2} mr={6} ml={6}>
+                            <MDButton
+                              onClick={() => {
+                                handleAddRol();
+                              }}
+                              variant="gradient"
+                              color="info"
+                              endIcon={<PersonFillAdd />}
+                              fullWidth
+                            >
+                              Agregar Rol
+                            </MDButton>
+                            <MDTypography
+                              variant="caption"
+                              fontWeight="bold"
+                              color="error"
+                              id="lblmsnroles"
+                              style={{ display: mostrarMensajeroles ? 'block' : 'none' }}
+                            >
+                              *Especifique un encargado para cada rol obligatorio
+                            </MDTypography>
+                          </MDBox>
+                          <TableContainer component={Paper}>
+                            <Table>
+                              <TableBody>
+                                {rolesxTareaUpdate.map((item, index) => (
+                                  <TableRow key={index}>
+                                    <TableCell style={{ display: "none" }}>
+                                      {item.id}
+                                    </TableCell>
+                                    <TableCell style={{ display: "none" }}>
+                                      {item.idUsuario}
+                                    </TableCell>
+                                    <TableCell>{item.nombreUsuario}</TableCell>
+                                    <TableCell style={{ display: "none" }}>
+                                      {item.idRol}
+                                    </TableCell>
+                                    <TableCell>{item.nombreRol}</TableCell>
+                                    <TableCell>
+                                      <IconButton
+                                        aria-label="Eliminar"
+                                        onClick={() => eliminarItemRol(item.id)}
+                                      >
+                                        <Delete color="error" />
+                                      </IconButton>
+                                    </TableCell>
+                                  </TableRow>
+                                ))}
+                              </TableBody>
+                            </Table>
+                          </TableContainer>
+                        </MDBox>
+                      </Card>
+                    </MDBox>
+                  </div>
+                  <MDBox mb={2} mr={6} ml={6}>
+                    <MDButton
+                      onClick={() => {
+                        handleAddTareaTipo();
+                      }}
+                      disabled={mostrarMensajeroles}
+                      variant="gradient"
+                      color="success"
+                      endIcon={<PersonFillAdd />}
+                      fullWidth
+                    >
+                      Confirmar Cambios de Tarea
+                    </MDButton>
+                  </MDBox>
+                  <TableContainer component={Paper}>
+                    <Table>
+                      <TableBody>
+                        {data.map((item, index) => (
+                          <TableRow key={index}>
+                            <TableCell style={{ display: "none" }}>
+                              {item.id}
+                            </TableCell>
+                            <TableCell style={{ display: "none" }}>
+                              {item.idTareaTipo}
+                            </TableCell>
+                            <TableCell style={{ display: "none" }}>
+                              {item.idDepartamento}
+                            </TableCell>
+                            <TableCell>{item.nombreTareaTipo}</TableCell>
+                            <TableCell>{item.nombredepartamento}</TableCell>
+                            <TableCell>{item.vencimientoDias}</TableCell>
+                            <TableCell>{item.fechaVencimientoLegal}</TableCell>
+                            <TableCell style={{ display: "none" }}>{item.vencimientoDiasValor}</TableCell>
+                            <TableCell >{item.rolescargados}</TableCell>
+                            <TableCell style={{ display: "none" }}>{item.rolesasignados}</TableCell>
+
+                            <TableCell>
+                              <IconButton
+                                aria-label="Eliminar"
+                                onClick={() => eliminarItem(item.id)}
+                              >
+                                <Delete color="error" />
+                              </IconButton>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+
+                </Card>
+              </MDBox>
+
             </MDBox>
           </MDBox>
-          <MDBox mr={2} >
+          <MDBox mr={2}   style={{ 
+              display: 'flex', 
+              justifyContent: 'flex-end' 
+            }}>
             <MDButton
               onClick={() => {
                 handleSubmit();
               }}
               variant="gradient"
-              color="info"
+              color="success"
               endIcon={<Save />}
               disabled={grabando}
-              style={{ width: '200px', marginR: '10px' }}
-                          >
+              style={{ width: '200px', marginRight: '10px' }}
+            >
               Grabar
             </MDButton>
 
@@ -534,7 +1033,7 @@ const PresupuestoAdd = () => {
                 handleVolver();
               }}
               variant="gradient"
-              color="info"
+              color="error"
               endIcon={<ExitToApp />}
               style={{ width: '200px' }}
             >
