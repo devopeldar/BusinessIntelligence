@@ -209,6 +209,8 @@ const PresupuestoAdd = () => {
 
   const handleAddRol = () => {
 
+    console.log("selectedValueUsuario", selectedValueUsuario)
+    if(!selectedValueUsuario || !selectedValueRol ) {return;};
     if (!('idUsuario' in selectedValueUsuario)) {
 
       return;

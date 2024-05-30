@@ -27,6 +27,7 @@ node_modules/
 
 # # Nginx config
  nginx.conf
-
+package-lock.json
+package.json
 # # config.js
 # config.js
