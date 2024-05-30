@@ -659,12 +659,12 @@ const GetPermisos = async () => {
             <Route path="/TareaDocumentacionVolver" element={<TareaDocumentacionList />} />
             
             <Route path="/CambiarContrasenia" element={<CambiarContrasenia />} />
-            <Route path="/chart1" element={<Example />} />
+            {/* <Route path="/chart1" element={<Example />} /> */}
 
 
             {/* Graficos */}
-            <Route path="/GraficoClientes" element={<GraficoClientes />} />
-            <Route path="/GraficoEstadoTareas" element={<GraficoEstadoTareas />} />
+            {/* <Route path="/GraficoClientes" element={<GraficoClientes />} />
+            <Route path="/GraficoEstadoTareas" element={<GraficoEstadoTareas />} /> */}
             
             {/* 
 
