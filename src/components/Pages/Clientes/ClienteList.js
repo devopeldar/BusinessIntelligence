@@ -10,7 +10,6 @@ import MDTypography from '../../controls/MDTypography';
 import MDButton from '../../controls/MDButton';
 import DataTable from '../../controls/Tables/DataTable';
 import { BuildingFillAdd, FileExcel, FilePdf, Filter, PencilSquare } from 'react-bootstrap-icons';
-import ClienteGet from './ClienteGet';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import API_URL from '../../../config';
