@@ -72,7 +72,6 @@ const PresupuestoEdit = () => {
   const [rolesxTipoTarea, setRolesxTareaUpdate] = useState([]);
   const [selectedValueRol, setSelectedValueRol] = useState(elementsRol[0]);
   const [data, setData] = useState([]);
-  const [dataToSend, setDataToSend] = useState([]);
   const handleVolver = () => {
     history("/PresupuestoVolver"); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
   };
@@ -122,7 +121,7 @@ const PresupuestoEdit = () => {
 
     };
     SetMesyAnio();
-  }, []);
+  });
 
   useEffect(() => {
     const GetRol = async () => {
@@ -135,7 +134,7 @@ const PresupuestoEdit = () => {
       setElementsRol(response.data);
     };
     GetRol();
-  }, []);
+  });
 
   useEffect(() => {
     const GetUsuario = async () => {
@@ -148,7 +147,7 @@ const PresupuestoEdit = () => {
       setElementsUsuario(response.data);
     };
     GetUsuario();
-  }, []);
+  });
 
   const handleInputChange = (event) => {
     const { name, value, type, checked } = event.target;
@@ -220,7 +219,7 @@ const PresupuestoEdit = () => {
           }
         );
         const data = response.data;
-        console.log("data:", data);
+
         // Verifica si `data` tiene datos cargados
         if (data.length > 0) {
 
@@ -317,7 +316,7 @@ const PresupuestoEdit = () => {
       setElementsTareasTipos(response.data);
     };
     GetTareaTipo();
-  }, []);
+  });
 
   useEffect(() => {
     const GetClientes = async () => {

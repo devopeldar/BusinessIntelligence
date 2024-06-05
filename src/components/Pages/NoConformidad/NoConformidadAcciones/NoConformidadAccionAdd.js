@@ -11,7 +11,7 @@ import MDInput from "../../../controls/MDInput";
 import * as yup from "yup";
 import { useNavigate } from 'react-router-dom';
 import MDProgress from "../../../controls/MDProgress";
-import { AlertTitle, Checkbox } from "@mui/material";
+import { AlertTitle } from "@mui/material";
 import MDButton from "../../../controls/MDButton";
 import { Save } from "react-bootstrap-icons";
 import { ExitToApp } from "@mui/icons-material";

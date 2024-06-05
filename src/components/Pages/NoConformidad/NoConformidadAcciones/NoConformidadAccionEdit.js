@@ -13,7 +13,7 @@ import MDInput from "../../../controls/MDInput";
 import { Save } from "react-bootstrap-icons";
 import { ExitToApp } from "@mui/icons-material";
 import MDButton from "../../../controls/MDButton";
-import { Alert, AlertTitle, Autocomplete, Checkbox, TextField } from "@mui/material";
+import { Alert, AlertTitle, Autocomplete, TextField } from "@mui/material";
 import bgImage from "../../../../assets/images/bg-sign-up-cover.jpeg";
 
 const NoConformidadAccionEdit = () => {

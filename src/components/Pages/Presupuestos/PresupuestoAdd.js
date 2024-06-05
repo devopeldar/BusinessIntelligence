@@ -376,7 +376,7 @@ const PresupuestoAdd = () => {
       setElementsTareaTipo(response.data);
     };
     GetTareaTipo();
-  }, []);
+  });
 
   useEffect(() => {
     const GetCliente = async () => {
@@ -388,7 +388,7 @@ const PresupuestoAdd = () => {
       setElementsCliente(response.data);
     };
     GetCliente();
-  }, []);
+  });
 
   useEffect(() => {
     const GetDepartamento = async () => {
@@ -400,7 +400,7 @@ const PresupuestoAdd = () => {
       setElementsDepto(response.data);
     };
     GetDepartamento();
-  }, []);
+  });
 
   const handleVolver = () => {
     navigate("/PresupuestoVolver"); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
