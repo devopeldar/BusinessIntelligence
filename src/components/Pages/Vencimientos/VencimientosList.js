@@ -12,6 +12,7 @@ import { BuildingFillAdd, PencilSquare } from "react-bootstrap-icons";
 import { Link, useNavigate } from "react-router-dom";
 import {
     Add,
+    Delete,
     Filter,
 } from "@mui/icons-material";
 import "react-datepicker/dist/react-datepicker.css";
@@ -30,6 +31,9 @@ function VencimientosList() {
 
     const handleAddMasivo = () => {
         history("/VencimientosAddMasivo"); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
+    };
+    const handleDeleteMasivo = () => {
+        history("/VencimientosDeleteByCode"); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
     };
     
     const [columns, setColumns] = useState([]);
@@ -120,7 +124,7 @@ function VencimientosList() {
         setCookie("FILTROVTOANIO", JSON.stringify(value), 1400) 
     };
     
-    const Nombre = ({ cliente, nombreTipoTarea }) => (
+    const Nombre = ({ cliente, nombreTipoTarea, codigoCarga }) => (
         <MDBox lineHeight={1} textAlign="left">
             <MDTypography
                 display="block"
@@ -138,6 +142,14 @@ function VencimientosList() {
                 fontWeight="bold"
             >
                 Tipo de Tarea : {nombreTipoTarea}
+            </MDTypography>
+            <MDTypography
+                display="block"
+                variant="caption"
+                color="success"
+                fontWeight="bold"
+            >
+                Codigo de Carga : {codigoCarga}
             </MDTypography>
 
         </MDBox>
@@ -177,7 +189,7 @@ function VencimientosList() {
                     <Nombre
                         cliente={Vencimiento.nombreCliente}
                         nombreTipoTarea={Vencimiento.nombreTipoTarea}
-
+                        codigoCarga = {Vencimiento.codigoCarga}
                     />
                 );
 
@@ -312,6 +324,17 @@ function VencimientosList() {
                                     </MDButton>
                                     <MDButton
                                         onClick={() => {
+                                            handleDeleteMasivo();
+                                        }}
+                                        variant="gradient"
+                                        color="warning"
+                                        endIcon={<Delete />}
+                                        text="contained"
+                                    >
+                                        Eliminar Vencimientos x Cod. Carga
+                                    </MDButton>
+                                    <MDButton
+                                        onClick={() => {
                                             handleFilter();
                                         }}
                                         variant="gradient"
@@ -322,34 +345,7 @@ function VencimientosList() {
                                         Filtrar
                                     </MDButton>
                                 </MDBox>
-                                {/* <MDBox mb={2} mt={3} style={{ display: "block" }}>
-                                    <DatePicker
-                                        style={{ marginRight: "2px" }}
-                                        selected={selectedDateFrom}
-                                        onChange={(date) => setSelectedDateFrom(date)}
-                                        dateFormat="dd/MM/yyyy"
-                                        customInput={
-                                            <TextField variant="outlined" label="Fecha Venc. Desde" />
-                                        }
-                                        isClearable // Agrega un botón para borrar la fecha seleccionada
-                                        showYearDropdown // Muestra un dropdown para seleccionar el año
-                                        yearDropdownItemNumber={10} // Especifica cuántos años mostrar en el dropdown
-                                        scrollableYearDropdown // Permite desplazarse por el dropdown de años
-                                    />
-                                    <DatePicker
-                                        style={{ marginRight: "2px" }}
-                                        selected={selectedDateTo}
-                                        onChange={(date) => setSelectedDateTo(date)}
-                                        dateFormat="dd/MM/yyyy"
-                                        customInput={
-                                            <TextField variant="outlined" label="Fecha Venc. Hasta" />
-                                        }
-                                        isClearable // Agrega un botón para borrar la fecha seleccionada
-                                        showYearDropdown // Muestra un dropdown para seleccionar el año
-                                        yearDropdownItemNumber={10} // Especifica cuántos años mostrar en el dropdown
-                                        scrollableYearDropdown // Permite desplazarse por el dropdown de años
-                                    />
-                                </MDBox> */}
+                               
                                 <MDBox mb={2} mt={3} style={{ display: "flex" }}>
                                     <MDBox mb={2} mt={3} mr={2}>
                                         <Autocomplete

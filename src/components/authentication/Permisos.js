@@ -18,6 +18,10 @@ import { ExitToApp } from '@mui/icons-material';
 const Permisos = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const [mnuauditoria, setMnuAuditoria] = useState(false);
+  const [noConformidad, setNoConformidad] = useState(false);
+  const [tratamientosnoconformidad, setTratamientosNoConformidad] = useState(false);
+
   const [mantenimientotareas, setMantenimientoTareas] = useState(false);
   const [departamentos, setDepartamentos] = useState(false);
   const [presupuestos, setPresupuestos] = useState(false);
@@ -102,6 +106,14 @@ const Permisos = () => {
         const ROLES = data.some(item => item.codigoPermiso === itemsMenu.ROLES.valor);
         setRol(ROLES);
 
+        const AUDITORIA = data.some(item => item.codigoPermiso === itemsMenu.AUDITORIA.valor);
+        setMnuAuditoria(AUDITORIA);
+        const NOCONFORMIDAD = data.some(item => item.codigoPermiso === itemsMenu.NOCONFORMIDAD.valor);
+        setNoConformidad(NOCONFORMIDAD);
+        const TRATAMIENTOSNOCONFORMIDAD = data.some(item => item.codigoPermiso === itemsMenu.TRATAMIENTOSNOCONFORMIDAD.valor);
+        setTratamientosNoConformidad(TRATAMIENTOSNOCONFORMIDAD);
+
+
       } catch (error) {
         console.error("Error:", error);
       }
@@ -138,6 +150,10 @@ const Permisos = () => {
       if (evento === true) { agregarItem(itemsMenu.EVENTOS); }
       if (tipoevento === true) { agregarItem(itemsMenu.TIPOSDEEVENTOS); }
       if (presupuestos === true) { agregarItem(itemsMenu.PRESUPUESTO); }
+
+      if (mnuauditoria ||(noConformidad || tratamientosnoconformidad)) { agregarItem(itemsMenu.AUDITORIA); }
+      if (noConformidad === true) { agregarItem(itemsMenu.NOCONFORMIDAD); }
+      if (tratamientosnoconformidad === true) { agregarItem(itemsMenu.TRATAMIENTOSNOCONFORMIDAD); }
 
       console.log("listaPerfilPermisoRef ", listaPerfilPermisoRef);
 
@@ -205,16 +221,13 @@ const Permisos = () => {
 
   };
 
-  // const handleInputChange = (event) => {
-  //   const { name, value, type, checked } = event.target;
-  //   console.log("chk :" + event)
-  //   // Verifica si el tipo de campo es un checkbox (para campos booleanos)
-  //   const newValue = type === 'checkbox' ? checked : value;
+  const HandleMnuAuditoria = (event) => {
 
-  //   setFormData({
-  //     ...formData,
-  //     [name]: newValue,
-  //   });
+    setMnuAuditoria(event.target.checked)
+    setNoConformidad(event.target.checked);
+    setTratamientosNoConformidad(event.target.checked);
+
+  };
 
   const handleVolver = () => {
     navigate("/PerfilesVolver"); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
@@ -421,6 +434,61 @@ const Permisos = () => {
                 sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
               >
                 &nbsp;&nbsp;Mantenimiento Clientes
+              </MDTypography>
+
+
+            </MDBox>
+            <MDBox>
+
+              <Checkbox name="mnuauditoria"
+                onChange={(e) => HandleMnuAuditoria(e)}
+                checked={mnuauditoria || (noConformidad || tratamientosnoconformidad)}
+
+              />
+
+              <MDTypography
+                variant="button"
+                fontWeight="regular"
+                color="text"
+                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
+              >
+                &nbsp;&nbsp;Auditoria
+              </MDTypography>
+            </MDBox>
+            <MDBox sx={{ ml: 5 }}>
+
+              <Checkbox name="accionesnoconformidad"
+                onChange={(e) => setNoConformidad(e.target.checked)}
+                checked={noConformidad}
+
+              />
+
+              <MDTypography
+                variant="button"
+                fontWeight="regular"
+                color="text"
+                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
+              >
+                &nbsp;&nbsp;Acciones No Conformidad
+              </MDTypography>
+
+
+            </MDBox>
+            <MDBox sx={{ ml: 5 }}>
+
+              <Checkbox name="tratamientosNoConformidad"
+                onChange={(e) => setTratamientosNoConformidad(e.target.checked)}
+                checked={tratamientosnoconformidad}
+
+              />
+
+              <MDTypography
+                variant="button"
+                fontWeight="regular"
+                color="text"
+                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
+              >
+                &nbsp;&nbsp;Tratamientos No Conformidades
               </MDTypography>
 
 

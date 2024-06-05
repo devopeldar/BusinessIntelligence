@@ -209,7 +209,6 @@ const PresupuestoAdd = () => {
 
   const handleAddRol = () => {
 
-    console.log("selectedValueUsuario", selectedValueUsuario)
     if(!selectedValueUsuario || !selectedValueRol ) {return;};
     if (!('idUsuario' in selectedValueUsuario)) {
 
@@ -317,7 +316,7 @@ const PresupuestoAdd = () => {
   useEffect(() => {
     const GetVencimientoLegalTipoTarea = async () => {
       try {
-
+        if(!selectedValueCliente || !selectedValueTareaTipo ) {return;};
         if (!('idCliente' in selectedValueCliente)) {
 
           return;
@@ -483,9 +482,6 @@ const PresupuestoAdd = () => {
       fechaVencimientoLegalvalor: formData.fechaVencimientoLegal,
      
     };
-
-    
-
 
     const usuarioExistente = data.find(
       (item) => item.idTareaTipo === selectedValueTareaTipo.idTareaTipo

@@ -25,25 +25,25 @@ import obtenerFechaFormateada from "../../Utils/fechas";
 const VencimientosAddMasivo = () => {
     const navigate = useNavigate();
 
-     const [terminacionCuit, setTerminacionCuit] = useState(0);
-     const [mes, setMes] = useState(new Date().getMonth()+ 1);
-     const [anio, setAnio] = useState(new Date().getFullYear());
-     const today = new Date();
+    const [terminacionCuit, setTerminacionCuit] = useState("");
+    const [mes, setMes] = useState(new Date().getMonth() + 1);
+    const [anio, setAnio] = useState(new Date().getFullYear());
+    const today = new Date();
     const year = today.getFullYear();
     let month = today.getMonth() + 1; // Agrega 1 para obtener el mes actual
     month = month < 10 ? '0' + month : month; // Agrega un cero delante si es necesario
     const day = getLastDayOfMonth(year, month);
     const formattedDate = `${year}-${month}-${day}`;
-     const [fechaVencimientoLegal, setFechaVencimientoLegal] = useState(formattedDate);
+    const [fechaVencimientoLegal, setFechaVencimientoLegal] = useState(formattedDate);
 
 
     const [grabando, setGrabando] = useState(false);
     const [elementsTareaTipo, setElementsTareaTipo] = useState([]);
- 
+
     const [selectedValueTareaTipo, setSelectedValueTareaTipo] = useState(
         elementsTareaTipo[0]
     );
- 
+
 
     const [nombreboton, setnombreboton] = useState("Cancelar");
     const [progress, setProgress] = useState(0);
@@ -68,15 +68,15 @@ const VencimientosAddMasivo = () => {
 
     useEffect(() => {
         const obtenerFechaHoraActual = () => {
-          const fechaHoraActual = new Date();
-          const fechaFormateada = obtenerFechaFormateada(fechaHoraActual);
-          setDateTime(fechaFormateada);
+            const fechaHoraActual = new Date();
+            const fechaFormateada = obtenerFechaFormateada(fechaHoraActual);
+            setDateTime(fechaFormateada);
         };
-      
-        obtenerFechaHoraActual();
-      }, []);
 
-      
+        obtenerFechaHoraActual();
+    }, []);
+
+
     const handleSubmit = (event) => {
         setGrabando(false); // Inicia la grabación
         const timer = setInterval(() => {
@@ -97,7 +97,7 @@ const VencimientosAddMasivo = () => {
         procesarFormulario();
     };
 
-  
+
     useEffect(() => {
         const GetTareaTipo = async () => {
             const response = await axios.post(API_URL + "/TareaTipoListar", {
@@ -111,7 +111,7 @@ const VencimientosAddMasivo = () => {
         GetTareaTipo();
     }, []);
 
-   const handleVolver = () => {
+    const handleVolver = () => {
         navigate("/VencimientosVolver"); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
     };
 
@@ -120,61 +120,87 @@ const VencimientosAddMasivo = () => {
     };
 
     const procesarFormulario = async () => {
-      
-            setLoading(true);
-            setSuccessSBPrev(true);
-            const reqVencimiento = {
-                TareaTipocol: selectedValueTareaTipo,
-                terminacionCuit: terminacionCuit,
-                fechaVencimientoLegal: fechaVencimientoLegal,
-                mes: mes,
-                anio: anio,
-                origenAcceso: "web"
-              };
-           
-      try{
 
-        console.log("reqVencimiento:", reqVencimiento);
-
-        const response = await axios.post(API_URL + "/VencimientosLegalesAltaMasivo",reqVencimiento, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            }
-        });
-
-        const res = await response.data;
-
-        if (res.rdoAccion) {
-            // Manejar respuesta exitosa
-            setMensaje("El Vencimiento ha sido creado exitosamente!");
-            setGrabando(true);
-            setExito(true);
-            setSuccessSB(true);
+        setSuccessSB(false);
+        setErrorSB(false);
+        setSuccessSBPrev(false);
+        setMensaje("");
+        if (terminacionCuit === "") {
+            setMensaje("Ingrese las terminaciones de Cuit!");
+            setSuccessSB(false);
+            setErrorSB(true);
             setSuccessSBPrev(false);
-            setErrorSB(false);
-            setnombreboton("Volver");
-        } else {
-            // Manejar errores si la respuesta no es exitosa
-            setMensaje(res.rdoAccionDesc);
+            return;
+        }
+        if (mes === "0") {
+            setMensaje("Ingrese nro de mes valido!");
+            setSuccessSB(false);
+            setErrorSB(true);
+            setSuccessSBPrev(false);
+            return;
+        }
+        if (anio === "0") {
+            setMensaje("Ingrese nro de año valido!");
+            setSuccessSB(false);
+            setErrorSB(true);
+            setSuccessSBPrev(false);
+            return;
+        }
+        setLoading(true);
+        setSuccessSBPrev(true);
+        const reqVencimiento = {
+            TareaTipocol: selectedValueTareaTipo,
+            terminacionCuit: terminacionCuit,
+            fechaVencimientoLegal: fechaVencimientoLegal,
+            mes: mes,
+            anio: anio,
+            origenAcceso: "web"
+        };
+
+        try {
+
+            console.log("reqVencimiento:", reqVencimiento);
+
+            const response = await axios.post(API_URL + "/VencimientosLegalesAltaMasivo", reqVencimiento, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            });
+
+            const res = await response.data;
+
+            if (res.rdoAccion) {
+                // Manejar respuesta exitosa
+                setMensaje("El Vencimiento ha sido creado exitosamente!");
+                setGrabando(false);
+                setExito(true);
+                setSuccessSB(true);
+                setSuccessSBPrev(false);
+                setErrorSB(false);
+                //setnombreboton("Volver");
+                setTerminacionCuit("")
+            } else {
+                // Manejar errores si la respuesta no es exitosa
+                setMensaje(res.rdoAccionDesc);
+                setExito(false);
+                setGrabando(false);
+                setSuccessSB(false);
+                setErrorSB(true);
+                setSuccessSBPrev(false);
+            }
+        }
+        catch (error) {
+            console.log("Errores de validación:", error.message);
             setExito(false);
+            setMensaje(error.message);
+            setShowprogrees(0);
             setGrabando(false);
             setSuccessSB(false);
             setErrorSB(true);
             setSuccessSBPrev(false);
-        }
-    }
-    catch(error){
-        console.log("Errores de validación:", error.message);
-        setExito(false);
-        setMensaje(error.message);
-        setShowprogrees(0);
-        setGrabando(false);
-        setSuccessSB(false);
-        setErrorSB(true);
-        setSuccessSBPrev(false);
-    };
-       
+        };
+
     };
 
     return (
@@ -209,44 +235,44 @@ const VencimientosAddMasivo = () => {
                         >
                             <div style={{ flex: 1, marginT: "-35px" }}>
                                 <MDBox mb={2}>
-                                <MDInput
-                                    type="number"
-                                    name="terminacionCuit"
-                                    required
-                                    label="Terminacion de CUIT"
-                                    variant="standard"
-                                    value={terminacionCuit}
-                                    onChange={(e) => setTerminacionCuit(e.target.value)}
-                                    fullWidth
-                                />
+                                    <MDInput
+                                        type="text"
+                                        name="terminacionCuit"
+                                        required
+                                        label="Terminacion de CUIT"
+                                        variant="standard"
+                                        value={terminacionCuit}
+                                        onChange={(e) => setTerminacionCuit(e.target.value)}
+                                        fullWidth
+                                    />
                                 </MDBox>
                                 <MDBox mb={2}>
-                                <Autocomplete
-                                    onChange={handleAutocompleteChangeTareaTipo}
-                                    options={elementsTareaTipo}
-                                    getOptionLabel={(option) => option.nombre}
-                                    getOptionDisabled={(option) => option.activo === false}
-                                    renderInput={(params) => (
-                                        <TextField
-                                            {...params}
-                                            label="Seleccione Tipo de Tarea"
-                                            variant="outlined"
-                                        />
-                                    )}
-                                    multiple  // Habilita la selección múltiple
-                                    style={{ flex: 1 }}
-                                    // Adicionalmente, puedes establecer otras propiedades para controlar el comportamiento de la selección múltiple
-                                    // Por ejemplo:
-                                    defaultValue={[]} // Si deseas iniciar con opciones seleccionadas
-                                    //getOptionSelected={(option, value) => option.idTareaTipo === value.idTareaTipo} // Personaliza la comparación de igualdad
-                                    isOptionEqualToValue={(option, value) =>
-                                        option.nombre === value.nombre
-                                      }
+                                    <Autocomplete
+                                        onChange={handleAutocompleteChangeTareaTipo}
+                                        options={elementsTareaTipo}
+                                        getOptionLabel={(option) => option.nombre}
+                                        getOptionDisabled={(option) => option.activo === false}
+                                        renderInput={(params) => (
+                                            <TextField
+                                                {...params}
+                                                label="Seleccione Tipo de Tarea"
+                                                variant="outlined"
+                                            />
+                                        )}
+                                        multiple  // Habilita la selección múltiple
+                                        style={{ flex: 1 }}
+                                        // Adicionalmente, puedes establecer otras propiedades para controlar el comportamiento de la selección múltiple
+                                        // Por ejemplo:
+                                        defaultValue={[]} // Si deseas iniciar con opciones seleccionadas
+                                        //getOptionSelected={(option, value) => option.idTareaTipo === value.idTareaTipo} // Personaliza la comparación de igualdad
+                                        isOptionEqualToValue={(option, value) =>
+                                            option.nombre === value.nombre
+                                        }
                                     //value={selectedValueTareaTipo} // Si estás controlando las opciones seleccionadas externamente
                                     // onChange={(event, newValue) => {
                                     //     setSelectedOptions(newValue);
                                     // }} // Si deseas controlar las opciones seleccionadas
-                                />
+                                    />
                                 </MDBox>
                                 <MDBox mb={2} style={{ display: "flex", gap: "16px" }}>
                                     <MDInput
@@ -345,7 +371,7 @@ const VencimientosAddMasivo = () => {
                         notify={false}
                         error={true}
                         title="Task Manager"
-                        content={"Error al generar Vencimientos de Clientes"}
+                        content={mensaje}
                         dateTime={dateTime}
                         open={errorSB}
                         onClose={closeErrorSB}
@@ -364,12 +390,12 @@ const VencimientosAddMasivo = () => {
                     ></MDProgress>
                 </MDBox>
 
-                {mensaje !== "" && (
+                {/* {mensaje !== "" && (
                     <Alert severity={exito ? "success" : "error"}>
                         <AlertTitle>{exito ? "Felicitaciones" : "Error"}</AlertTitle>
                         {mensaje}
                     </Alert>
-                )}
+                )} */}
                 {/* </MDBox> */}
             </Card>
         </BasicLayout>

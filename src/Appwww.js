@@ -51,7 +51,7 @@ import PerfilEdit from "./components/authentication/Perfil/PerfilEdit";
 import Perfiles from "./components/authentication/Perfil/Perfiles";
 import TareaTipoList from "./components/Pages/Tareas/TareaTipo/TareaTipoList";
 import TareaEstadoList from "./components/Pages/Tareas/TareasEstado/TareaEstadoList";
-import { Settings } from "@mui/icons-material";
+import { FileDownloadSharp, Settings } from "@mui/icons-material";
 import TareaTipoAdd from "./components/Pages/Tareas/TareaTipo/TareaTipoAdd";
 import TareaTipoEdit from "./components/Pages/Tareas/TareaTipo/TareaTipoEdit";
 import TareaEstadoAdd from "./components/Pages/Tareas/TareasEstado/TareaEstadoAdd";
@@ -94,7 +94,6 @@ import CambiarContrasenia from "./components/authentication/CambiarContrasenia";
 import EventoTareaDelete from "./components/Pages/Tareas/EventoTareaDelete";
 import routesPermisos from "./routesPermisos";
 import VencimientosAddMasivo from "./components/Pages/Vencimientos/VencimientosAddMasivo";
-import example1 from "./components/Pages/Charts/example1";
 
 import { KeyFill, People, Person } from "react-bootstrap-icons";
 import {
@@ -109,10 +108,17 @@ import {
 } from "@mui/icons-material";
 import axios from "axios";
 import API_URL from "./config";
-import Example from "./components/Pages/Charts/example1";
-import Example1 from "./components/Pages/Charts/example1";
-import GraficoClientes from "./components/Pages/Charts/Clientes/GraficoClientes";
-import GraficoEstadoTareas from "./components/Pages/Charts/EstadoTareas/GraficoEstadoTareas";
+
+// import GraficoClientes from "./components/Pages/Charts/Clientes/GraficoClientes";
+// import GraficoEstadoTareas from "./components/Pages/Charts/EstadoTareas/GraficoEstadoTareas";
+import TratamientoNoConformidadListar from "./components/Pages/NoConformidad/TratamientoNoConformidadListar";
+
+import NoConformidadAccionListar from "./components/Pages/NoConformidad/NoConformidadAcciones/NoConformidadAccionListar";
+import NoConformidadAccionEdit from "./components/Pages/NoConformidad/NoConformidadAcciones/NoConformidadAccionEdit";
+import NoConformidadAccionDelete from "./components/Pages/NoConformidad/NoConformidadAcciones/NoConformidadAccionDelete";
+import NoConformidadAccionAdd from "./components/Pages/NoConformidad/NoConformidadAcciones/NoConformidadAccionAdd";
+import TratamientoNoConformidadEdit from "./components/Pages/NoConformidad/TratamientoNoConformidadEdit";
+import VencimientosDeleteByCode from "./components/Pages/Vencimientos/VencimientosDeleteByCode";
 
 
 export default function App() {
@@ -230,6 +236,37 @@ routesnew = [
     component: <VencimientosList />,
     visible: false,
     codigoPermiso: 106,
+  },
+  {
+    type: "title",
+    name: "Auditoria",
+    key: "auditoria",
+    title: "Auditoria",
+    icon: <FileDownloadSharp />,
+    visible: true,
+    codigoPermiso: 600,
+  },
+  {
+    type: "collapse",
+    name: "Acciones No Conformidad",
+    key: "tiposnoconformidad",
+    title: "Acciones No Conformidad",
+    route: "/NoConformidadAccionListar",
+    icon: <FileDownloadSharp />,
+    component: <NoConformidadAccionListar />,
+    visible: false,
+    codigoPermiso: 601,
+  },
+  {
+    type: "collapse",
+    name: "Tratamientos No Conformidad",
+    key: "tratamientosnoconformidad",
+    title: "Tratamientos No Conformidad",
+    route: "/TratamientoNoConformidadListar",
+    icon: <FileDownloadSharp />,
+    component: <TratamientoNoConformidadListar />,
+    visible: false,
+    codigoPermiso: 602,
   },
   {
     type: "title",
@@ -477,7 +514,7 @@ const GetPermisos = async () => {
 
   // Setting the dir attribute for the body element
   useEffect(() => {
-    document.body.setAttribute("dir", direction);
+    document.body.setAttribute("dir", direction.tostrin);
    
   }, [direction]);
 
@@ -652,12 +689,23 @@ const GetPermisos = async () => {
             <Route path="/VencimientosVolver" element={<VencimientosList />} />
             <Route path="/VencimientosAdd" element={<VencimientosAdd />} />
             <Route path="/VencimientosAddMasivo" element={<VencimientosAddMasivo />} />
+            <Route path="/VencimientosDeleteByCode" element={<VencimientosDeleteByCode />} />
             <Route path="/Vencimientos" element={<VencimientosList />} />
             
             <Route path="/TareaDocumentacionList/:id" element={<TareaDocumentacionList />} />
             <Route path="/TareaDocumentacionDelete/:id" element={<TareaDocumentacionDelete />} /> 
             <Route path="/TareaDocumentacionVolver" element={<TareaDocumentacionList />} />
             
+
+            <Route path="/NoConformidadAccionListar" element={<NoConformidadAccionListar />} /> 
+            <Route path="/NoConformidadAccionAdd" element={<NoConformidadAccionAdd />} /> 
+            <Route path="/NoConformidadAccionDelete/:id" element={<NoConformidadAccionDelete />} />
+            <Route path="/NoConformidadAccionEdit/:id" element={<NoConformidadAccionEdit />} />
+            <Route path="/NoConformidadAccionVolver" element={<NoConformidadAccionListar />} /> 
+            
+            <Route path="/TratamientoNoConformidadListar" element={<TratamientoNoConformidadListar />} />
+            <Route path="/TratamientoNoConformidadEdit/:id" element={<TratamientoNoConformidadEdit />} />
+
             <Route path="/CambiarContrasenia" element={<CambiarContrasenia />} />
             {/* <Route path="/chart1" element={<Example />} /> */}
 

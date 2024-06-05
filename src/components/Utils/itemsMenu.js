@@ -15,6 +15,9 @@ const itemsMenu = {
     PERFILES: { valor: 402, descripcion: "Perfiles"},
     ROLES: { valor: 403, descripcion: "Roles"},
     CHANGEPASSWORD: { valor: 404, descripcion: "cambiarcontrasenia"},
+    AUDITORIA: { valor: 600, descripcion: "Auditoria"},
+    NOCONFORMIDAD: { valor: 601, descripcion: "No Conformidad"},
+    TRATAMIENTOSNOCONFORMIDAD: { valor: 602, descripcion: "Tratamientos No Conformidad"},
   };
   
   export default itemsMenu;
