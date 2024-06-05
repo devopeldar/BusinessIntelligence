@@ -101,7 +101,7 @@ function VencimientosList() {
 
     useEffect(() => {
         fetchDataTareas();
-    }, []);
+    });
 
     const handleFilter = () => {
         fetchDataTareas(); // Llamada desde el evento del botón

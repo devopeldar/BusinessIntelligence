@@ -111,14 +111,12 @@ const PresupuestoEdit = () => {
       const defaultValueMes = meses.find(
         (item) => item.valor === defaultValueMesID
       );
-      console.log("defaultValueMes :", defaultValueMes);
       setSelectedValueMes(defaultValueMes);
 
       const defaultValueId = new Date().getFullYear(); // ID del elemento que deseas seleccionar por defecto
       const defaultValueAnio = anios.find(
         (item) => item.valor === defaultValueId
       );
-      console.log("defaultValueAnio :", defaultValueAnio);
       setSelectedValueAnio(defaultValueAnio);
 
 
@@ -357,9 +355,10 @@ const PresupuestoEdit = () => {
   const handleSubmit = async (event) => {
     try {
       if (observaciones === "") {
-        setMensaje("El campo observaciones es obligatorio");
-        setExito(false);
-        return;
+        // setMensaje("El campo observaciones es obligatorio");
+        // setExito(false);
+        // return;
+        setObservaciones("...");
       }
 
       const request = {

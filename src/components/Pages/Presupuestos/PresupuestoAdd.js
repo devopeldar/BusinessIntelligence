@@ -38,7 +38,7 @@ const PresupuestoAdd = () => {
   // const [nombre, setNombre] = useState('');
   // const [activo, setActivo] = useState(false);
   const [formData, setFormData] = useState({
-    observaciones: "",
+    observaciones: "...",
     idCliente: 0,
     idUsuario: 0,
     presupuestoxtareastipos: [],
@@ -47,7 +47,7 @@ const PresupuestoAdd = () => {
   });
 
   const validationSchema = yup.object().shape({
-    observaciones: yup.string().required("El campo Observaciones es requerido"),
+    //observaciones: yup.string().required("El campo Observaciones es requerido"),
     idCliente: yup.string().required("Debe Indicar el Cliente"),
   });
 
@@ -521,7 +521,6 @@ const PresupuestoAdd = () => {
     try {
       setLoading(true);
 
-      console.log("data2", data)
       request.idCliente = selectedValueCliente.idCliente;
       request.idUsuario = localStorage.getItem("iduserlogueado");
       request.presupuestoxtareastipos = dataToSend.map((item, a) => ({
@@ -540,8 +539,6 @@ const PresupuestoAdd = () => {
       }));
       
       
-      console.log("request2", request)
-
       validationSchema
         .validate(request)
         .then(async (validatedData) => {

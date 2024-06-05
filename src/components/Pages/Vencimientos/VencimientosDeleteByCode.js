@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import API_URL from "../../../config";
 import "bootstrap/dist/css/bootstrap.min.css"; // Importa los es../tilos de Bootstrap
 import BasicLayout from "../../layauots/BasicLayout";
 import {
     Alert,
-    Autocomplete,
     Card,
-    TextField,
 } from "@mui/material";
 import MDBox from "../../controls/MDBox";
 import MDTypography from "../../controls/MDTypography";
@@ -19,7 +17,6 @@ import { AlertTitle } from "@mui/material";
 import MDButton from "../../controls/MDButton";
 import { Save } from "react-bootstrap-icons";
 import { ExitToApp } from "@mui/icons-material";
-import axios from "axios";
 
 const VencimientosDeleteByCode = () => {
     const navigate = useNavigate();
@@ -43,7 +40,6 @@ const VencimientosDeleteByCode = () => {
     const [loading, setLoading] = useState(false);
     const [mensaje, setMensaje] = useState("");
     const [exito, setExito] = useState(false);
-    const [data, setData] = useState([]);
     const handleInputChange = (event) => {
         const { name, value, type, checked } = event.target;
         console.log("chk :" + event);

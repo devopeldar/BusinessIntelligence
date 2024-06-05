@@ -3,7 +3,6 @@ import API_URL from "../../../config";
 import "bootstrap/dist/css/bootstrap.min.css"; // Importa los es../tilos de Bootstrap
 import BasicLayout from "../../layauots/BasicLayout";
 import {
-    Alert,
     Autocomplete,
     Card,
     TextField,
@@ -14,7 +13,6 @@ import bgImage from "../../../assets/images/bg-sign-up-cover.jpeg";
 import MDInput from "../../controls/MDInput";
 import { useNavigate } from "react-router-dom";
 import MDProgress from "../../controls/MDProgress";
-import { AlertTitle } from "@mui/material";
 import MDButton from "../../controls/MDButton";
 import { Save } from "react-bootstrap-icons";
 import { ExitToApp } from "@mui/icons-material";
@@ -178,7 +176,7 @@ const VencimientosAddMasivo = () => {
                 setSuccessSB(true);
                 setSuccessSBPrev(false);
                 setErrorSB(false);
-                //setnombreboton("Volver");
+                setnombreboton("Cancelar");
                 setTerminacionCuit("")
             } else {
                 // Manejar errores si la respuesta no es exitosa
