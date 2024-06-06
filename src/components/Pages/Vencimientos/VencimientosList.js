@@ -97,11 +97,13 @@ function VencimientosList() {
     }
     return null; // Retorna null si no se encuentra la cookie
   }
+  useEffect(() => {
+    fetchDataTareas();
+    }, []);
 
-
-    useEffect(() => {
-        fetchDataTareas();
-    });
+    // useEffect(() => {
+    //     fetchDataTareas();
+    // }, []);
 
     const handleFilter = () => {
         fetchDataTareas(); // Llamada desde el evento del botón
@@ -172,7 +174,7 @@ function VencimientosList() {
                 mes: selectedValueMes?.valor || 0,
                 anio: selectedValueAnio?.valor || 2024,
             };
-            console.log(requsuario);
+
             const response = await axios.post(
                 API_URL + "/VencimientosLegalesListar",
                 requsuario,
