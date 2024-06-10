@@ -51,7 +51,7 @@ import PerfilEdit from "./components/authentication/Perfil/PerfilEdit";
 import Perfiles from "./components/authentication/Perfil/Perfiles";
 import TareaTipoList from "./components/Pages/Tareas/TareaTipo/TareaTipoList";
 import TareaEstadoList from "./components/Pages/Tareas/TareasEstado/TareaEstadoList";
-import { FileDownloadSharp, Settings } from "@mui/icons-material";
+import { AdminPanelSettings, AdminPanelSettingsOutlined, FileDownloadSharp, Settings } from "@mui/icons-material";
 import TareaTipoAdd from "./components/Pages/Tareas/TareaTipo/TareaTipoAdd";
 import TareaTipoEdit from "./components/Pages/Tareas/TareaTipo/TareaTipoEdit";
 import TareaEstadoAdd from "./components/Pages/Tareas/TareasEstado/TareaEstadoAdd";
@@ -119,6 +119,7 @@ import NoConformidadAccionDelete from "./components/Pages/NoConformidad/NoConfor
 import NoConformidadAccionAdd from "./components/Pages/NoConformidad/NoConformidadAcciones/NoConformidadAccionAdd";
 import TratamientoNoConformidadEdit from "./components/Pages/NoConformidad/TratamientoNoConformidadEdit";
 import VencimientosDeleteByCode from "./components/Pages/Vencimientos/VencimientosDeleteByCode";
+import TratamientoNoConformidadAuditor from "./components/Pages/NoConformidad/TratamientoNoConformidadAuditor";
 
 
 export default function App() {
@@ -252,7 +253,7 @@ routesnew = [
     key: "tiposnoconformidad",
     title: "Acciones No Conformidad",
     route: "/NoConformidadAccionListar",
-    icon: <FileDownloadSharp />,
+    icon: <AdminPanelSettingsOutlined />,
     component: <NoConformidadAccionListar />,
     visible: false,
     codigoPermiso: 601,
@@ -263,7 +264,7 @@ routesnew = [
     key: "tratamientosnoconformidad",
     title: "Tratamientos No Conformidad",
     route: "/TratamientoNoConformidadListar",
-    icon: <FileDownloadSharp />,
+    icon: <AdminPanelSettings />,
     component: <TratamientoNoConformidadListar />,
     visible: false,
     codigoPermiso: 602,
@@ -705,7 +706,9 @@ const GetPermisos = async () => {
             
             <Route path="/TratamientoNoConformidadListar" element={<TratamientoNoConformidadListar />} />
             <Route path="/TratamientoNoConformidadEdit/:id" element={<TratamientoNoConformidadEdit />} />
-
+            <Route path="/TratamientoNoConformidadAuditor/:id" element={<TratamientoNoConformidadAuditor />} />
+            
+            {/* <Route path="/Prueba" element={<Prueba />} /> */}
             <Route path="/CambiarContrasenia" element={<CambiarContrasenia />} />
             {/* <Route path="/chart1" element={<Example />} /> */}
 
