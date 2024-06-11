@@ -11,7 +11,9 @@ import {
     TableHead,
     TableCell,
     Collapse,
-    CardActions
+    CardActions,
+    Tooltip,
+    Fade
 } from "@mui/material";
 //import { MDBox, MDTypography, MDInput, MDPagination } from "your-md-components";
 
@@ -30,11 +32,12 @@ import axios from "axios";
 import API_URL from "../../../config";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { AdminPanelSettings, AppRegistration, AssignmentTurnedInTwoTone, Filter, FilterAlt, Notes } from "@mui/icons-material";
+import { AdminPanelSettings, AppRegistration, AppsOutage, AssignmentTurnedInTwoTone, Filter, FilterAlt, Notes } from "@mui/icons-material";
 import { startOfMonth } from "date-fns";
 import { addMonths } from "date-fns";
 import DatePicker from "react-datepicker";
 import MDButton from "../../controls/MDButton";
+import EstadoDetalle from "../../Utils/estadoDetalle";
 
 function transformData(data) {
     const result = {};
@@ -198,29 +201,49 @@ function DataTable({ data }) {
                                                             color="text"
                                                             fontWeight="medium"
                                                         >
+
                                                             <Link
-                                                                to={`../TratamientoNoConformidadEdit/${detalle.idNoConformidadDetalle}`}
+                                                                to={`../TratamientoNoConformidadView/${detalle.idNoConformidadDetalle}`}
                                                             >
-                                                                <AppRegistration color="blue" fontSize="large" />
+                                                                <AppsOutage titleAccess="Ver detalles de la no conformidad" color="success" fontSize="large" />
                                                             </Link>
+
                                                         </MDTypography>
 
                                                     </MDBox></DataTableBodyCell>
-                                                    {detalle.usuarioAdministrador && (
                                                     <DataTableBodyCell><MDBox ml={2}>
                                                         <MDTypography
                                                             variant="caption"
                                                             color="text"
                                                             fontWeight="medium"
                                                         >
+
                                                             <Link
-                                                                to={`../TratamientoNoConformidadAuditor/${detalle.idNoConformidadDetalle}`}
+                                                                to={`../TratamientoNoConformidadEdit/${detalle.idNoConformidadDetalle}`}
                                                             >
-                                                                <AdminPanelSettings color="warning" fontSize="large" />
+                                                                <AppRegistration titleAccess="Editar acciones de no conformidad" color="blue" fontSize="large" />
                                                             </Link>
+
                                                         </MDTypography>
 
-                                                    </MDBox></DataTableBodyCell>)}
+                                                    </MDBox></DataTableBodyCell>
+                                                    {detalle.usuarioAdministrador && (
+                                                        <DataTableBodyCell><MDBox ml={2}>
+                                                            <MDTypography
+                                                                variant="caption"
+                                                                color="text"
+                                                                fontWeight="medium"
+                                                            >
+
+                                                                <Link
+                                                                    to={`../TratamientoNoConformidadAuditor/${detalle.idNoConformidadDetalle}`}
+                                                                >
+                                                                    <AdminPanelSettings titleAccess="Modificar estado de la no conformidad" color="warning" fontSize="large" />
+                                                                </Link>
+
+                                                            </MDTypography>
+
+                                                        </MDBox></DataTableBodyCell>)}
                                                 </TableRow>
                                             ))}
                                         </TableBody>
@@ -256,12 +279,12 @@ function DataTable({ data }) {
 function Prueba() {
     const history = useNavigate();
     const [data, setData] = useState([]);
-    
+
     const [error, setError] = useState([]);
 
     const clientes = Cliente();
     const tareastipos = TipoTarea();
-
+    const estadodetalles = EstadoDetalle();
     const today = new Date();
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(today.getDate() - 30);
@@ -287,8 +310,15 @@ function Prueba() {
 
     const [selectedDateTo, setSelectedDateTo] = React.useState(selectedDateToInitialValue);
 
-    let selectedValueTareaTipoValue = tareastipos[0];
+    let selectedValueEstadoDetalleValue = estadodetalles[0];
 
+    const filtroEstadoDetalleCookie = getCookie("FILTROTRATNOCONFORMIDADESTADODETALLE");
+    if (filtroEstadoDetalleCookie !== null) { const filtroEstadoDetalleObjeto = JSON.parse(filtroEstadoDetalleCookie); selectedValueEstadoDetalleValue = filtroEstadoDetalleObjeto; }
+
+    const [selectedValueEstadoDetalle, setSelectedValueEstadoDetalle] = useState(selectedValueEstadoDetalleValue);
+
+
+    let selectedValueTareaTipoValue = tareastipos[0];
     const filtroTareaTipoCookie = getCookie("FILTROTRATNOCONFORMIDADTIPOTAREA");
     if (filtroTareaTipoCookie !== null) { const filtroTareaTipoObjeto = JSON.parse(filtroTareaTipoCookie); selectedValueTareaTipoValue = filtroTareaTipoObjeto; }
 
@@ -304,11 +334,15 @@ function Prueba() {
 
     const handleAutocompleteClienteChange = (event, value) => {
         setSelectedValueCliente(value);
-        setCookie("FILTROVTOCLIENTE", JSON.stringify(value), 1400)
+        setCookie("FILTROTRATNOCONFORMIDADCLIENTE", JSON.stringify(value), 1400)
     };
     const handleAutocompleteTareaTipoChange = (event, value) => {
         setSelectedValueTareaTipo(value);
-        setCookie("FILTROVTOTAREATIPO", JSON.stringify(value), 1400)
+        setCookie("FILTROTRATNOCONFORMIDADTIPOTAREA", JSON.stringify(value), 1400)
+    };
+    const handleAutocompleteEstadoDetalleChange = (event, value) => {
+        setSelectedValueEstadoDetalle(value);
+        setCookie("FILTROTRATNOCONFORMIDADESTADODETALLE", JSON.stringify(value), 1400)
     };
     function setCookie(name, value, minutes) {
         const expires = new Date();
@@ -318,7 +352,7 @@ function Prueba() {
         document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
     }
     const handleFilter = () => {
-        //fetchData(); // Llamada desde el evento del botón
+        fetchData(); // Llamada desde el evento del botón
     };
 
     function getCookie(name) {
@@ -334,7 +368,7 @@ function Prueba() {
         }
         return null; // Retorna null si no se encuentra la cookie
     }
-    
+
     React.useEffect(() => {
         fetchData();
     }, []);
@@ -345,6 +379,7 @@ function Prueba() {
                 idUsuario: localStorage.getItem("iduserlogueado"),
                 idCliente: selectedValueCliente?.idCliente || 0,
                 idTareaTipo: selectedValueTareaTipo?.idTareaTipo || 0,
+                idNoConformidadEstado: selectedValueEstadoDetalle?.idNoConformidadEstado || 0,
                 fechaDesde: selectedDateFrom ? selectedDateFrom : firstDayOfMonth,
                 fechaHasta: selectedDateTo ? selectedDateTo : firstDayOfNextMonth,
             };
@@ -361,13 +396,13 @@ function Prueba() {
             console.log("response", response.data)
             setData(response.data);
 
-            return response.data;    
+            return response.data;
 
         } catch (ex) {
             setError(ex);
 
             console.log(error);
-            return false;    
+            return false;
         }
     }
 
@@ -395,7 +430,7 @@ function Prueba() {
                                 </MDTypography>
                             </MDBox>
                             <MDBox mb={2} mt={3} mr={1} ml={2} pr={10}>
-                                <MDBox style={{ marginBotton:"17px" }} >
+                                <MDBox style={{ marginBotton: "17px" }} >
                                     <MDButton
                                         onClick={() => {
                                             handleFilter();
@@ -408,7 +443,7 @@ function Prueba() {
                                         Filtrar
                                     </MDButton>
                                 </MDBox>
-                                <MDBox style={{ marginTop:"15px", display: "flex" }} >
+                                <MDBox style={{ marginTop: "15px", display: "flex" }} >
                                     <MDBox >
                                         <DatePicker
                                             style={{ marginRight: "5px" }}
@@ -496,7 +531,31 @@ function Prueba() {
                                         )}
                                     />
                                 </MDBox>
-
+                                <MDBox mb={2} mt={3} mr={2}>
+                                    <Autocomplete
+                                        options={estadodetalles}
+                                        getOptionLabel={(option) =>
+                                            option.conformidadEstado || "Seleccione Estado No Conformidad"
+                                        }
+                                        // getOptionSelected={(option, value) =>
+                                        //     option.idTareaTipo === value.idTareaTipo
+                                        // }
+                                        isOptionEqualToValue={(option, value) => {
+                                            // Aquí defines cómo comparar una opción con un valor
+                                            return option.idNoConformidadEstado === value.idNoConformidadEstado && option.conformidadEstado === value.conformidadEstado;
+                                        }}
+                                        value={selectedValueEstadoDetalle || null}
+                                        onChange={handleAutocompleteEstadoDetalleChange}
+                                        renderInput={(params) => (
+                                            <TextField
+                                                {...params}
+                                                label="Seleccione  Estado No Conformidad"
+                                                variant="outlined"
+                                                style={{ width: `250px` }}
+                                            />
+                                        )}
+                                    />
+                                </MDBox>
                                 <DataTable isSorted={false}
                                     entriesPerPage={true}
                                     showTotalEntries={true}

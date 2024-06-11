@@ -120,6 +120,7 @@ import NoConformidadAccionAdd from "./components/Pages/NoConformidad/NoConformid
 import TratamientoNoConformidadEdit from "./components/Pages/NoConformidad/TratamientoNoConformidadEdit";
 import VencimientosDeleteByCode from "./components/Pages/Vencimientos/VencimientosDeleteByCode";
 import TratamientoNoConformidadAuditor from "./components/Pages/NoConformidad/TratamientoNoConformidadAuditor";
+import TratamientoNoConformidadView from "./components/Pages/NoConformidad/TratamientoNoConformidadView";
 
 
 export default function App() {
@@ -706,6 +707,7 @@ const GetPermisos = async () => {
             
             <Route path="/TratamientoNoConformidadListar" element={<TratamientoNoConformidadListar />} />
             <Route path="/TratamientoNoConformidadEdit/:id" element={<TratamientoNoConformidadEdit />} />
+            <Route path="/TratamientoNoConformidadView/:id" element={<TratamientoNoConformidadView />} />
             <Route path="/TratamientoNoConformidadAuditor/:id" element={<TratamientoNoConformidadAuditor />} />
             
             {/* <Route path="/Prueba" element={<Prueba />} /> */}

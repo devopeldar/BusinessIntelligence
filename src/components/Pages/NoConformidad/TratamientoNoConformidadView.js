@@ -24,7 +24,7 @@ import {
 import bgImage from "../../../assets/images/bg-sign-up-cover.jpeg";
 
 
-const TratamientoNoConformidadEdit = () => {
+const TratamientoNoConformidadView = () => {
 
   const { id } = useParams(); // Obtener el parámetro de la URL (el ID del Cliente a editar)
   const [NoConformidadDetalle, setNoConformidadDetalle] = useState(null);
@@ -36,7 +36,7 @@ const TratamientoNoConformidadEdit = () => {
   const [observacionesCorrectiva, setObservacionesCorrectiva] = useState("");
   const [observacionesInmediata, setObservacionesInmediata] = useState("");
 
-  const [nombreboton, setnombreboton] = useState("Cancelar");
+  const [nombreboton, setnombreboton] = useState("Volver");
   const [mensaje, setMensaje] = useState("");
   const history = useNavigate();
   const [grabando, setGrabando] = useState(false);
@@ -432,7 +432,7 @@ const TratamientoNoConformidadEdit = () => {
               />
             </MDBox>
             <MDBox mb={1} style={{ display: "flex", gap: "16px" }}>
-              <MDButton
+              {/* <MDButton
                 onClick={() => {
                   handleSubmit();
                 }}
@@ -443,7 +443,7 @@ const TratamientoNoConformidadEdit = () => {
                 fullWidth
               >
                 Grabar
-              </MDButton>
+              </MDButton> */}
 
               <MDButton
                 onClick={() => {
@@ -471,4 +471,4 @@ const TratamientoNoConformidadEdit = () => {
   );
 };
 
-export default TratamientoNoConformidadEdit;
+export default TratamientoNoConformidadView;
