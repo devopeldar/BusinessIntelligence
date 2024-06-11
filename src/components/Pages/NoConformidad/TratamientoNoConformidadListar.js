@@ -256,7 +256,7 @@ function DataTable({ data }) {
 function Prueba() {
     const history = useNavigate();
     const [data, setData] = useState([]);
-    const [rows, setRows] = useState([]);
+    
     const [error, setError] = useState([]);
 
     const clientes = Cliente();

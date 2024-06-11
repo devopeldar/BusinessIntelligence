@@ -13,6 +13,7 @@ import MDInput from "../../controls/MDInput";
 import { Save } from "react-bootstrap-icons";
 import { Email, ExitToApp } from "@mui/icons-material";
 import MDButton from "../../controls/MDButton";
+
 import {
   Alert,
   AlertTitle,
@@ -21,13 +22,13 @@ import {
   TextField,
 } from "@mui/material";
 import bgImage from "../../../assets/images/bg-sign-up-cover.jpeg";
-import SituacionImpositiva from "../../Utils/SituacionImpositiva";
+
 
 const TratamientoNoConformidadEdit = () => {
+
   const { id } = useParams(); // Obtener el parámetro de la URL (el ID del Cliente a editar)
   const [NoConformidadDetalle, setNoConformidadDetalle] = useState(null);
   const [idNoConformidadDetalle, setidNoConformidadDetalle] = useState("");
-  const [activo, setActivo] = useState(false);
   const [elementsCausa, setElementsCausa] = useState([]);
   const [elementsCorrectiva, setElementsCorrectiva] = useState([]);
   const [elementsInmediata, setElementsInmediata] = useState([]);
@@ -44,9 +45,107 @@ const TratamientoNoConformidadEdit = () => {
   const [selectedValueInmediata, setSelectedValueInmediata] = useState("");
   const [selectedValueCorrectiva, setSelectedValueCorrectiva] = useState("");
 
+
   const handleVolver = () => {
-    history("/ClienteVolver"); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
+    history("/TratamientoNoConformidadListar"); // Cambia '/ruta-de-listado' por la ruta real de tu listado de datos
   };
+
+
+  useEffect(() => {
+    const fetchDataCausa = async () => {
+      try {
+        const req = {
+
+          idNoConformidadAccionTipo: 1 //causas
+
+        }
+        const response = await axios.post(API_URL + "/NoConformidadAccionListar", req, {
+          headers: {
+            accept: "application/json",
+          },
+        });
+
+
+        const data = response.data.map((item) => ({
+          idNoConformidadAccion: item.idNoConformidadAccion,
+          accion: item.accion,
+          idNoConformidadAccionTipo: 1
+        }));
+
+        setElementsCausa(data);
+
+      } catch (ex) {
+        console.error(ex);
+      }
+    };
+
+    fetchDataCausa();
+  }, []);
+
+  useEffect(() => {
+    const fetchDataCorrectiva = async () => {
+      try {
+        const req = {
+
+          idNoConformidadAccionTipo: 3 //acciones Correctivas
+
+        }
+        const response = await axios.post(API_URL + "/NoConformidadAccionListar", req, {
+          headers: {
+            accept: "application/json",
+          },
+        });
+
+
+        const data = response.data.map((item) => ({
+          idNoConformidadAccion: item.idNoConformidadAccion,
+          accion: item.accion,
+          idNoConformidadAccionTipo: 2
+        }));
+
+        setElementsCorrectiva(data);
+
+      } catch (ex) {
+        console.error(ex);
+      }
+    };
+
+    fetchDataCorrectiva();
+  }, []);
+
+
+  useEffect(() => {
+    const fetchDataInmediata = async () => {
+      try {
+        const req = {
+
+          idNoConformidadAccionTipo: 2 //acciones Inmediata
+
+        }
+        const response = await axios.post(API_URL + "/NoConformidadAccionListar", req, {
+          headers: {
+            accept: "application/json",
+          },
+        });
+
+
+        const data = response.data.map((item) => ({
+          idNoConformidadAccion: item.idNoConformidadAccion,
+          accion: item.accion,
+          idNoConformidadAccionTipo: 3
+        }));
+
+        setElementsInmediata(data);
+
+
+      } catch (ex) {
+        console.error(ex);
+      }
+    };
+
+    fetchDataInmediata();
+  }, []);
+
 
   useEffect(() => {
     setidNoConformidadDetalle(id);
@@ -54,7 +153,7 @@ const TratamientoNoConformidadEdit = () => {
     const GetNoConformidadDetalleAccion = async () => {
       try {
         const reqNoConformidadDetalleAcciones = {
-          idNoConformidadDetalle: idNoConformidadDetalle,
+          idNoConformidadDetalle: id,
         };
 
         const response = await axios.post(
@@ -67,58 +166,35 @@ const TratamientoNoConformidadEdit = () => {
           }
         );
 
-        //[
-        //   {
-        //     "idNoConformidadDetalleAcciones": 13,
-        //     "idNoConformidadDetalle": 8,
-        //     "idNoConformidadAccionTipo": 1,
-        //     "idNoConformidadAccion": 1,
-        //     "observacion": "observaciones de CAUSA IDTarea 312",
-        //     "rdoAccion": false,
-        //     "rdoAccionDesc": "",
-        //     "accionTipo": "Analisis Causa",
-        //     "accion": "Causa: Cliente no entrega a tiempo documentacion"
-        //   },
-        //   {
-        //     "idNoConformidadDetalleAcciones": 14,
-        //     "idNoConformidadDetalle": 8,
-        //     "idNoConformidadAccionTipo": 2,
-        //     "idNoConformidadAccion": 2,
-        //     "observacion": "observaciones de Accion Inmediata IDTarea 312",
-        //     "rdoAccion": false,
-        //     "rdoAccionDesc": "",
-        //     "accionTipo": "Accion Inmediata",
-        //     "accion": "Accion Inmediata: enviar whatapp o telef"
-        //   },
-        //   {
-        //     "idNoConformidadDetalleAcciones": 15,
-        //     "idNoConformidadDetalle": 8,
-        //     "idNoConformidadAccionTipo": 3,
-        //     "idNoConformidadAccion": 15,
-        //     "observacion": "observaciones de Accion Correctiva IDTarea 312",
-        //     "rdoAccion": false,
-        //     "rdoAccionDesc": "",
-        //     "accionTipo": "Accion Correctiva",
-        //     "accion": "Prueba de Cargas"
-        //   }
-        // ]
+        setNoConformidadDetalle(response.data);
 
+        const data = response.data.map((item, index) => {
+         console.log("item", item)
+          if (item.idNoConformidadAccionTipo === 1) {
+            setObservacionesCausa(item.observacion);
+
+            setSelectedValueCausa(item);
+
+
+          }
+          if (item.idNoConformidadAccionTipo === 3) {
+            setObservacionesCorrectiva(item.observacion);
        
-          setNoConformidadDetalle(data);
-          const data = response.data.map((item) => {
-            if (item.idNoConformidadAccion === 1) {
-              setObservacionesCausa(item.observacion);
-            }
-            if (item.idNoConformidadAccion === 2) {
-              setObservacionesCorrectiva(item.observacion);
-            }
-            if (item.idNoConformidadAccion === 3) {
-              setObservacionesInmediata(item.observacion);
-            }
-          });
-         
-      
-        
+            setSelectedValueCorrectiva(item);
+          }
+          if (item.idNoConformidadAccionTipo === 2) {
+
+            setObservacionesInmediata(item.observacion);
+
+    
+             setSelectedValueInmediata(item);
+          }
+          return item;
+        }
+        );
+
+
+
       } catch (error) {
         console.error("Error:", error);
       }
@@ -148,35 +224,48 @@ const TratamientoNoConformidadEdit = () => {
       setnombreboton("Volver");
       setExito(true);
       setMensaje("");
-      // Aquí realizas la llamada a tu API para actualizar el Cliente con los nuevos datos
 
-      const response = await fetch(API_URL + `/ClienteModificacion`, {
+      var idNoConformidadAccionCausa = selectedValueCausa.idNoConformidadAccion
+      var idNoConformidadAccionCorrectiva = selectedValueCorrectiva.idNoConformidadAccion
+      var idNoConformidadAccionInmediata = selectedValueInmediata.idNoConformidadAccion
+      const reqLista = [
+        {
+            idNoConformidadAccionTipo: 1,
+            idNoConformidadAccion: idNoConformidadAccionCausa,
+            observacion: observacionesCausa
+        },
+        {
+            idNoConformidadAccionTipo: 2,
+            idNoConformidadAccion: idNoConformidadAccionCorrectiva,
+            observacion: observacionesCorrectiva
+        },
+        {
+            idNoConformidadAccionTipo: 3,
+            idNoConformidadAccion: idNoConformidadAccionInmediata,
+            observacion: observacionesInmediata
+        }
+    ];
+      const req = {
+        idNoConformidadDetalle: id,
+        listaAcciones : reqLista,
+    };
+
+      const response = await axios.post(API_URL + `/NoConformidadDetalleAccionesUpdate`,req,  {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          idCliente,
-          nombre,
-          contacto,
-          telefono,
-          email,
-          cuit,
-          tipoIVA,
-          observaciones,
-          activo,
-        }),
       });
 
-      const res = await response.json();
-
-      if (res.rdoAccion) {
+      const res = await response;
+      console.log("res",res);
+      if (res.data.rdoAccion) {
         // Manejar respuesta exitosa
         setMensaje("¡Datos actualizados exitosamente!");
         setGrabando(true);
       } else {
         // Manejar errores si la respuesta no es exitosa
-        setMensaje(res.rdoAccionDesc);
+        setMensaje(res.data.rdoAccionDesc);
         setGrabando(false); // Inicia la grabación
         setnombreboton("Cancelar");
         setExito(false);
@@ -189,6 +278,7 @@ const TratamientoNoConformidadEdit = () => {
       console.log("Error en la solicitud:" + error);
     }
   };
+
   const handleAutocompleteChangeCausa = (event, value) => {
     setSelectedValueCausa(value);
   };
@@ -255,7 +345,7 @@ const TratamientoNoConformidadEdit = () => {
                 // }}
                 options={elementsCausa}
                 value={selectedValueCausa}
-                getOptionLabel={(option) => option.descripcion}
+                getOptionLabel={(option) => option?.accion || "Seleccione Item"}
                 renderInput={(params) => (
                   <TextField
                     {...params}
@@ -277,36 +367,7 @@ const TratamientoNoConformidadEdit = () => {
                 fullWidth
               />
             </MDBox>
-            <MDBox mb={2}>
-              <Autocomplete
-                onChange={handleAutocompleteChangeCorrectiva}
-                // onChange={(event, newValue) => {
-                //     setSelectedValue(newValue);
-                // }}
-                options={elementsCorrectiva}
-                value={selectedValueCorrectiva}
-                getOptionLabel={(option) => option.descripcion}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Seleccione Accion Correctiva"
-                    variant="outlined"
-                  />
-                )}
-              />
-            </MDBox>
-            <MDBox mb={2}>
-              <MDInput
-                type="text"
-                name="observacionesCorrectiva"
-                required
-                label="Observaciones: Accion Correctiva"
-                variant="standard"
-                value={observacionesCorrectiva}
-                onChange={(e) => setObservacionesCorrectiva(e.target.value)}
-                fullWidth
-              />
-            </MDBox>
+            
             <MDBox mb={2}>
               <Autocomplete
                 onChange={handleAutocompleteChangeInmediata}
@@ -315,7 +376,7 @@ const TratamientoNoConformidadEdit = () => {
                 // }}
                 options={elementsInmediata}
                 value={selectedValueInmediata}
-                getOptionLabel={(option) => option.descripcion}
+                getOptionLabel={(option) => option?.accion || "Seleccione Item"}
                 renderInput={(params) => (
                   <TextField
                     {...params}
@@ -337,7 +398,37 @@ const TratamientoNoConformidadEdit = () => {
                 fullWidth
               />
             </MDBox>
-
+            <MDBox mb={2}>
+              <Autocomplete
+                onChange={handleAutocompleteChangeCorrectiva}
+                // onChange={(event, newValue) => {
+                //     setSelectedValue(newValue);
+                // }}
+                options={elementsCorrectiva}
+                value={selectedValueCorrectiva}
+   
+                getOptionLabel={(option) => option?.accion || "Seleccione Item"}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Seleccione Accion Correctiva"
+                    variant="outlined"
+                  />
+                )}
+              />
+            </MDBox>
+            <MDBox mb={2}>
+              <MDInput
+                type="text"
+                name="observacionesCorrectiva"
+                required
+                label="Observaciones: Accion Correctiva"
+                variant="standard"
+                value={observacionesCorrectiva}
+                onChange={(e) => setObservacionesCorrectiva(e.target.value)}
+                fullWidth
+              />
+            </MDBox>
             <MDBox mb={1} style={{ display: "flex", gap: "16px" }}>
               <MDButton
                 onClick={() => {

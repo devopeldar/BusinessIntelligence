@@ -392,7 +392,7 @@ const PresupuestoEdit = () => {
   }
 
   const EditarDatos = (item) => {
-    console.log("item", item);
+
     setIDItemModificado(item.id);
     setIDItem(item.id);
 
