@@ -38,6 +38,7 @@ import { addMonths } from "date-fns";
 import DatePicker from "react-datepicker";
 import MDButton from "../../controls/MDButton";
 import EstadoDetalle from "../../Utils/estadoDetalle";
+import Usuarios from "../../Utils/usuarios";
 
 function transformData(data) {
     const result = {};
@@ -61,7 +62,8 @@ function transformData(data) {
                 conformidadEstado: detalle.conformidadEstado,
                 observaciones: detalle.observaciones,
                 idNoConformidadDetalle: detalle.idNoConformidadDetalle,
-                usuarioAdministrador: detalle.usuarioAdministrador
+                usuarioAdministrador: detalle.usuarioAdministrador,
+                idNoConformidadEstado: detalle.idNoConformidadEstado
             };
 
             result[key].detalletarea.push(detalleTarea);
@@ -144,14 +146,6 @@ function DataTable({ data }) {
         return texto.split('\\\\n');
     }
 
-
-    // mostrarTexto();
-    // const lineas = separarPorSaltosDeLinea(texto);
-    // console.log(lineas);
-
-
-
-
     const renderRow = (row, index) => {
         const isRowExpanded = expandedRows.includes(index);
 
@@ -211,39 +205,40 @@ function DataTable({ data }) {
                                                         </MDTypography>
 
                                                     </MDBox></DataTableBodyCell>
-                                                    <DataTableBodyCell><MDBox ml={2}>
-                                                        <MDTypography
-                                                            variant="caption"
-                                                            color="text"
-                                                            fontWeight="medium"
-                                                        >
+                                                    {detalle.idNoConformidadEstado !== 3 && detalle.idNoConformidadEstado !== 4 && (
+                                                        <>
+                                                            <DataTableBodyCell>
+                                                                <MDBox ml={2}>
+                                                                    <MDTypography
+                                                                        variant="caption"
+                                                                        color="text"
+                                                                        fontWeight="medium"
+                                                                    >
+                                                                        <Link to={`../TratamientoNoConformidadEdit/${detalle.idNoConformidadDetalle}`}>
+                                                                            <AppRegistration titleAccess="Editar acciones de no conformidad" color="blue" fontSize="large" />
+                                                                        </Link>
+                                                                    </MDTypography>
+                                                                </MDBox>
+                                                            </DataTableBodyCell>
 
-                                                            <Link
-                                                                to={`../TratamientoNoConformidadEdit/${detalle.idNoConformidadDetalle}`}
-                                                            >
-                                                                <AppRegistration titleAccess="Editar acciones de no conformidad" color="blue" fontSize="large" />
-                                                            </Link>
+                                                            {detalle.usuarioAdministrador && (
+                                                                <DataTableBodyCell>
+                                                                    <MDBox ml={2}>
+                                                                        <MDTypography
+                                                                            variant="caption"
+                                                                            color="text"
+                                                                            fontWeight="medium"
+                                                                        >
+                                                                            <Link to={`../TratamientoNoConformidadAuditor/${detalle.idNoConformidadDetalle}`}>
+                                                                                <AdminPanelSettings titleAccess="Modificar estado de la no conformidad" color="warning" fontSize="large" />
+                                                                            </Link>
+                                                                        </MDTypography>
+                                                                    </MDBox>
+                                                                </DataTableBodyCell>
+                                                            )}
+                                                        </>
+                                                    )}
 
-                                                        </MDTypography>
-
-                                                    </MDBox></DataTableBodyCell>
-                                                    {detalle.usuarioAdministrador && (
-                                                        <DataTableBodyCell><MDBox ml={2}>
-                                                            <MDTypography
-                                                                variant="caption"
-                                                                color="text"
-                                                                fontWeight="medium"
-                                                            >
-
-                                                                <Link
-                                                                    to={`../TratamientoNoConformidadAuditor/${detalle.idNoConformidadDetalle}`}
-                                                                >
-                                                                    <AdminPanelSettings titleAccess="Modificar estado de la no conformidad" color="warning" fontSize="large" />
-                                                                </Link>
-
-                                                            </MDTypography>
-
-                                                        </MDBox></DataTableBodyCell>)}
                                                 </TableRow>
                                             ))}
                                         </TableBody>
@@ -285,6 +280,7 @@ function Prueba() {
     const clientes = Cliente();
     const tareastipos = TipoTarea();
     const estadodetalles = EstadoDetalle();
+    //const usuarios = Usuarios();
     const today = new Date();
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(today.getDate() - 30);
@@ -331,6 +327,18 @@ function Prueba() {
 
     const [selectedValueCliente, setSelectedValueCliente] = useState(selectedValueClienteValue);
 
+
+    // let selectedValueUsuariosValue = usuarios[0];
+
+    // const filtroUsuarioCookie = getCookie("FILTROTRATNOCONFORMIDADUSUARIO");
+    // if (filtroUsuarioCookie !== null) { const filtroUsuarioObjeto = JSON.parse(filtroUsuarioCookie); selectedValueUsuariosValue = filtroUsuarioObjeto; }
+
+    // const [selectedValueUsuarios, setSelectedValueUsuarios] = useState(selectedValueUsuariosValue);
+
+    // const handleAutocompleteUsuarioChange = (event, value) => {
+    //     setSelectedValueUsuarios(value);
+    //     setCookie("FILTROTRATNOCONFORMIDADUSUARIO", JSON.stringify(value), 1400)
+    // };
 
     const handleAutocompleteClienteChange = (event, value) => {
         setSelectedValueCliente(value);
@@ -481,80 +489,109 @@ function Prueba() {
                                         />
                                     </MDBox>
                                 </MDBox>
-                                <MDBox mb={2} mt={3} mr={2}>
-                                    <Autocomplete
-                                        options={clientes}
-                                        getOptionLabel={(option) =>
-                                            option.nombre || "Seleccione Cliente"
-                                        }
-                                        // getOptionSelected={(option, value) =>
-                                        //     option.idCliente === value.idCliente
-                                        // }
-                                        isOptionEqualToValue={(option, value) => {
-                                            // Aquí defines cómo comparar una opción con un valor
-                                            return option.idCliente === value.idCliente && option.nombre === value.nombre;
-                                        }}
-                                        value={selectedValueCliente || null}
-                                        onChange={handleAutocompleteClienteChange}
-                                        renderInput={(params) => (
-                                            <TextField
-                                                {...params}
-                                                label="Seleccione Cliente"
-                                                variant="outlined"
-                                                style={{ width: `250px` }}
-                                            />
-                                        )}
-                                    />
+                                <MDBox style={{ marginTop: "5px", display: "flex" }} >
+                                    <MDBox mb={2} mt={3} mr={2}>
+                                        <Autocomplete
+                                            options={clientes}
+                                            getOptionLabel={(option) =>
+                                                option.nombre || "Seleccione Cliente"
+                                            }
+                                            // getOptionSelected={(option, value) =>
+                                            //     option.idCliente === value.idCliente
+                                            // }
+                                            isOptionEqualToValue={(option, value) => {
+                                                // Aquí defines cómo comparar una opción con un valor
+                                                return option.idCliente === value.idCliente && option.nombre === value.nombre;
+                                            }}
+                                            value={selectedValueCliente || null}
+                                            onChange={handleAutocompleteClienteChange}
+                                            renderInput={(params) => (
+                                                <TextField
+                                                    {...params}
+                                                    label="Seleccione Cliente"
+                                                    variant="outlined"
+                                                    style={{ width: `250px` }}
+                                                />
+                                            )}
+                                        />
+                                    </MDBox>
+                                    <MDBox mb={2} mt={3} mr={2}>
+                                        <Autocomplete
+                                            options={tareastipos}
+                                            getOptionLabel={(option) =>
+                                                option.nombre || "Seleccione Tipo Tarea"
+                                            }
+                                            // getOptionSelected={(option, value) =>
+                                            //     option.idTareaTipo === value.idTareaTipo
+                                            // }
+                                            isOptionEqualToValue={(option, value) => {
+                                                // Aquí defines cómo comparar una opción con un valor
+                                                return option.idTareaTipo === value.idTareaTipo && option.nombre === value.nombre;
+                                            }}
+                                            value={selectedValueTareaTipo || null}
+                                            onChange={handleAutocompleteTareaTipoChange}
+                                            renderInput={(params) => (
+                                                <TextField
+                                                    {...params}
+                                                    label="Seleccione  Tipo Tarea"
+                                                    variant="outlined"
+                                                    style={{ width: `250px` }}
+                                                />
+                                            )}
+                                        />
+                                    </MDBox>
                                 </MDBox>
-                                <MDBox mb={2} mt={3} mr={2}>
-                                    <Autocomplete
-                                        options={tareastipos}
-                                        getOptionLabel={(option) =>
-                                            option.nombre || "Seleccione Tipo Tarea"
-                                        }
-                                        // getOptionSelected={(option, value) =>
-                                        //     option.idTareaTipo === value.idTareaTipo
-                                        // }
-                                        isOptionEqualToValue={(option, value) => {
-                                            // Aquí defines cómo comparar una opción con un valor
-                                            return option.idTareaTipo === value.idTareaTipo && option.nombre === value.nombre;
-                                        }}
-                                        value={selectedValueTareaTipo || null}
-                                        onChange={handleAutocompleteTareaTipoChange}
-                                        renderInput={(params) => (
-                                            <TextField
-                                                {...params}
-                                                label="Seleccione  Tipo Tarea"
-                                                variant="outlined"
-                                                style={{ width: `250px` }}
-                                            />
-                                        )}
-                                    />
-                                </MDBox>
-                                <MDBox mb={2} mt={3} mr={2}>
-                                    <Autocomplete
-                                        options={estadodetalles}
-                                        getOptionLabel={(option) =>
-                                            option.conformidadEstado || "Seleccione Estado No Conformidad"
-                                        }
-                                        // getOptionSelected={(option, value) =>
-                                        //     option.idTareaTipo === value.idTareaTipo
-                                        // }
-                                        isOptionEqualToValue={(option, value) => {
-                                            // Aquí defines cómo comparar una opción con un valor
-                                            return option.idNoConformidadEstado === value.idNoConformidadEstado && option.conformidadEstado === value.conformidadEstado;
-                                        }}
-                                        value={selectedValueEstadoDetalle || null}
-                                        onChange={handleAutocompleteEstadoDetalleChange}
-                                        renderInput={(params) => (
-                                            <TextField
-                                                {...params}
-                                                label="Seleccione  Estado No Conformidad"
-                                                variant="outlined"
-                                                style={{ width: `250px` }}
-                                            />
-                                        )}
-                                    />
+                                <MDBox style={{ marginTop: "2px", display: "flex" }} >
+                                    <MDBox mb={2} mt={1} mr={2}>
+                                        <Autocomplete
+                                            options={estadodetalles}
+                                            getOptionLabel={(option) =>
+                                                option.conformidadEstado || "Seleccione Estado No Conformidad"
+                                            }
+                                            // getOptionSelected={(option, value) =>
+                                            //     option.idTareaTipo === value.idTareaTipo
+                                            // }
+                                            isOptionEqualToValue={(option, value) => {
+                                                // Aquí defines cómo comparar una opción con un valor
+                                                return option.idNoConformidadEstado === value.idNoConformidadEstado && option.conformidadEstado === value.conformidadEstado;
+                                            }}
+                                            value={selectedValueEstadoDetalle || null}
+                                            onChange={handleAutocompleteEstadoDetalleChange}
+                                            renderInput={(params) => (
+                                                <TextField
+                                                    {...params}
+                                                    label="Seleccione  Estado No Conformidad"
+                                                    variant="outlined"
+                                                    style={{ width: `350px` }}
+                                                />
+                                            )}
+                                        />
+                                    </MDBox>
+                                    {/* <MDBox mb={2} mt={1} mr={2}>
+                                        <Autocomplete
+                                            options={usuarios}
+                                            getOptionLabel={(option) =>
+                                                option.nombre || "Seleccione Usuario"
+                                            }
+                                            // getOptionSelected={(option, value) =>
+                                            //     option.idTareaTipo === value.idTareaTipo
+                                            // }
+                                            isOptionEqualToValue={(option, value) => {
+                                                // Aquí defines cómo comparar una opción con un valor
+                                                return option.idUsuario === value.idUsuario && option.nombre === value.nombre;
+                                            }}
+                                            value={selectedValueUsuarios || null}
+                                            onChange={handleAutocompleteUsuarioChange}
+                                            renderInput={(params) => (
+                                                <TextField
+                                                    {...params}
+                                                    label="Seleccione  Ejecutor"
+                                                    variant="outlined"
+                                                    style={{ width: `250px` }}
+                                                />
+                                            )}
+                                        />
+                                    </MDBox> */}
                                 </MDBox>
                                 <DataTable isSorted={false}
                                     entriesPerPage={true}

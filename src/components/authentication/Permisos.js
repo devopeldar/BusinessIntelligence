@@ -25,6 +25,7 @@ const Permisos = () => {
   const [mantenimientotareas, setMantenimientoTareas] = useState(false);
   const [departamentos, setDepartamentos] = useState(false);
   const [presupuestos, setPresupuestos] = useState(false);
+  const [vencimientos, setVencimientos] = useState(false);
   const [tareas, setTareas] = useState(false);
   const [estadotarea, setEstadoTarea] = useState(false);
   const [tipodetareas, setTipoDeTareas] = useState(false);
@@ -83,6 +84,8 @@ const Permisos = () => {
         const PRESUPUESTOS = data.some(item => item.codigoPermiso === itemsMenu.PRESUPUESTO.valor);
         setPresupuestos(PRESUPUESTOS);
 
+        const VENCIMIENTOS = data.some(item => item.codigoPermiso === itemsMenu.VENCIMIENTOS.valor);
+        setVencimientos(VENCIMIENTOS);
 
         const EVENTOS = data.some(item => item.codigoPermiso === itemsMenu.EVENTOS.valor);
         setMnuEventos(EVENTOS);
@@ -150,13 +153,10 @@ const Permisos = () => {
       if (evento === true) { agregarItem(itemsMenu.EVENTOS); }
       if (tipoevento === true) { agregarItem(itemsMenu.TIPOSDEEVENTOS); }
       if (presupuestos === true) { agregarItem(itemsMenu.PRESUPUESTO); }
-
+      if (vencimientos === true) { agregarItem(itemsMenu.VENCIMIENTOS); }
       if (mnuauditoria ||(noConformidad || tratamientosnoconformidad)) { agregarItem(itemsMenu.AUDITORIA); }
       if (noConformidad === true) { agregarItem(itemsMenu.NOCONFORMIDAD); }
       if (tratamientosnoconformidad === true) { agregarItem(itemsMenu.TRATAMIENTOSNOCONFORMIDAD); }
-
-      console.log("listaPerfilPermisoRef ", listaPerfilPermisoRef);
-
 
       const response = await fetch(API_URL + "/PerfilxPermisoDTOModificacion", {
         method: "POST",
@@ -198,6 +198,7 @@ const Permisos = () => {
     setEstadoTarea(event.target.checked);
     setTipoDeTareas(event.target.checked);
     setPresupuestos(event.target.checked);
+    setVencimientos(event.target.checked);
   };
   const HandleMnuSeguridad = (event) => {
 
@@ -226,7 +227,6 @@ const Permisos = () => {
     setMnuAuditoria(event.target.checked)
     setNoConformidad(event.target.checked);
     setTratamientosNoConformidad(event.target.checked);
-
   };
 
   const handleVolver = () => {
@@ -260,7 +260,7 @@ const Permisos = () => {
 
               <Checkbox name="tareas"
                 onChange={(e) => HandleMnuTarea(e)}
-                checked={tareas || (tipodetareas || estadotarea || mantenimientotareas || departamentos || presupuestos)}
+                checked={tareas || (tipodetareas || estadotarea || mantenimientotareas || departamentos || presupuestos || vencimientos)}
 
               />
 
@@ -349,6 +349,21 @@ const Permisos = () => {
                 sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
               >
                 &nbsp;&nbsp;Presupuesto
+              </MDTypography>
+            </MDBox>
+            <MDBox sx={{ ml: 5 }}>
+              <Checkbox name="vencimiento"
+                onChange={(e) => setVencimientos(e.target.checked)}
+                checked={vencimientos}
+
+              />
+              <MDTypography
+                variant="button"
+                fontWeight="regular"
+                color="text"
+                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
+              >
+                &nbsp;&nbsp;Vencimientos
               </MDTypography>
             </MDBox>
             <MDBox>

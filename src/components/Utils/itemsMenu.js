@@ -5,6 +5,7 @@ const itemsMenu = {
     DEPARTAMENTOS: { valor: 103, descripcion: "Departamentos" },
     ESTADOSDETAREA: { valor: 104, descripcion: "Estado de Tarea" },
     PRESUPUESTO: { valor: 105, descripcion: "Presupuestos" },
+    VENCIMIENTOS:{ valor: 106, descripcion: "Vencimientos" },
     EVENTO: { valor: 200, descripcion: "Evento"},
     EVENTOS: { valor: 201, descripcion: "Eventos"},
     TIPOSDEEVENTOS: { valor: 202, descripcion: "Tipos de Evento"},

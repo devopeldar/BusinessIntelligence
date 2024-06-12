@@ -455,26 +455,6 @@ const GetPermisos = async () => {
  
   }, []); // Se ejecuta solo una vez al montar el componente
 
-  // Almacena el estado de autenticación en localStorage cuando cambie
-  // useEffect( () => {
-  //   localStorage.setItem("isLoggedIn", isLoggedIn);
-    
-  //   // Lógica para reconstruir las rutas basadas en el estado de autenticación (isLoggedIn)
-  //   console.log("Routes ", 111);
-  //   const updatedRoutes = routes.filter((route) => route.visible === true);
-  //   console.log("Routes ", 222);
-  //   setRoutesVisible(updatedRoutes);
-  //     // Indica que la carga ha terminado
-  //     setIsLoading(false);
-  //     console.log("updatedRoutes ", updatedRoutes);
-  //   if (shouldReload) {
-      
-  //     window.location.reload();
-  //     setShouldReload(false); // Restablece shouldReload a false después de la recarga
-  //   }
-  // }, [isLoggedIn, shouldReload]);
-
-
   useEffect(() => {
     const fetchAndUpdateRoutes = async () => {
       try {
@@ -567,20 +547,9 @@ const GetPermisos = async () => {
       sx={{ cursor: "pointer" }}
       onClick={handleConfiguratorOpen}
     >
-      {/* <Icon fontSize="small" color="inherit">
-        settings
-      </Icon> */}
       <Settings />
     </MDBox>
   );
-
-  // if (isLoading) {
-   
-  //   setTimeout(() => {
-  //     setIsLoading(false); // Finaliza la simulación de carga después de 2 segundos
-  //   }, 5000);
-  //   return <div>Loading...</div>;
-  // }
 
   return (
     <>
