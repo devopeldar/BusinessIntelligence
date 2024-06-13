@@ -250,7 +250,7 @@ const TratamientoNoConformidadEdit = () => {
         usuario:localStorage.getItem("nameuserlogueado"),
         listaAcciones : reqLista,
     };
-
+      console.log("reqlkista", req)
       const response = await axios.post(API_URL + `/NoConformidadDetalleAccionesUpdate`,req,  {
         method: "POST",
         headers: {

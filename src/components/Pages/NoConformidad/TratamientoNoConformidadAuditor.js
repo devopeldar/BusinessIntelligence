@@ -172,7 +172,7 @@ const TratamientoNoConformidadAuditor = () => {
       <Card style={{ width: "150%" }}>
         <MDBox
           variant="gradient"
-          bgColor="info"
+          bgColor="secondary"
           borderRadius="lg"
           coloredShadow="info"
           mx={2}
@@ -239,7 +239,7 @@ const TratamientoNoConformidadAuditor = () => {
                 handleSubmit();
               }}
               variant="gradient"
-              color="info"
+              color="secondary"
               endIcon={<Save />}
               disabled={grabando}
               fullWidth
@@ -252,7 +252,7 @@ const TratamientoNoConformidadAuditor = () => {
                 handleVolver();
               }}
               variant="gradient"
-              color="info"
+              color="secondary"
               endIcon={<ExitToApp />}
               fullWidth
             >

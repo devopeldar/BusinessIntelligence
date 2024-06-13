@@ -135,15 +135,15 @@ function DataTable({ data }) {
 
 
     function mostrarTexto(texto) {
-        //const texto = "2024/06/04 16:48:16 Usuario Sistema: El usuario luisgauchat cambio el estado de -Pendiente Ejecutor- a -En Observacion-. \\n2024/06/04 16:48:40 Usuario Sistema: El usuario luisgauchat cambio el estado de -En Observacion- a -Solucionando-. \\n2024/06/04 16:48:40 Usuario luisgauchat: estoy probando. \\n2024/06/04 16:49:15 Usuario luisgauchat: estoy probando de nuevo. \\n2024/06/04 16:50:38 Usuario Sistema: El usuario luisgauchat cambio el estado de -Solucionando- a -Accion Correctiva No Funciono-. \\n2024/06/04 16:50:38 Usuario luisgauchat: estoy probando de nuevo, otra vez. \\n2024/06/04 16:51:22 Usuario luisgauchat: estoy probando de nuevo, otra vez, de nuevo.";
-
         const lineas = separarPorSaltosDeLinea(texto);
-        const textoFormateado = lineas.join('\\\\n'); // Unimos las líneas con saltos de línea
-        return textoFormateado;
+       
+        return lineas.map((linea, index) => (
+            <p key={index}>{linea}</p>
+        ));
     }
 
     function separarPorSaltosDeLinea(texto) {
-        return texto.split('\\\\n');
+        return texto.split('/n');
     }
 
     const renderRow = (row, index) => {
@@ -153,7 +153,7 @@ function DataTable({ data }) {
             <React.Fragment key={index}>
                 {/* <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}> */}
                 <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
-                    <DataTableBodyCell >{row.cliente}</DataTableBodyCell>
+                    <DataTableBodyCell>{row.cliente}</DataTableBodyCell>
                     <DataTableBodyCell>{row.tareatipo}</DataTableBodyCell>
                     <DataTableBodyCell>{row.ejecutor}</DataTableBodyCell>
                     <DataTableBodyCell style={{ width: '50px' }}>
@@ -429,7 +429,7 @@ function Prueba() {
                                 py={3}
                                 px={2}
                                 variant="gradient"
-                                bgColor="info"
+                                bgColor="secondary"
                                 borderRadius="lg"
                                 coloredShadow="info"
                             >
