@@ -202,85 +202,7 @@ const TratamientoNoConformidadView = () => {
     GetNoConformidadDetalleAccion();
   }, [id]);
 
-  const handleSubmit = async (event) => {
-    try {
-      if (observacionesCausa === "") {
-        setMensaje("El campo Observaciones Causa es obligatorio");
-        setExito(false);
-        return;
-      }
-      if (observacionesCorrectiva === "") {
-        setMensaje("El campo Observaciones Correctiva es obligatorio");
-        setExito(false);
-        return;
-      }
-      if (observacionesInmediata === "") {
-        setMensaje("El campo Observaciones Inmediata es obligatorio");
-        setExito(false);
-        return;
-      }
-
-      setGrabando(true); // Inicia la grabación
-      setnombreboton("Volver");
-      setExito(true);
-      setMensaje("");
-
-      var idNoConformidadAccionCausa = selectedValueCausa.idNoConformidadAccion
-      var idNoConformidadAccionCorrectiva = selectedValueCorrectiva.idNoConformidadAccion
-      var idNoConformidadAccionInmediata = selectedValueInmediata.idNoConformidadAccion
-      const reqLista = [
-        {
-            idNoConformidadAccionTipo: 1,
-            idNoConformidadAccion: idNoConformidadAccionCausa,
-            observacion: observacionesCausa
-        },
-        {
-            idNoConformidadAccionTipo: 2,
-            idNoConformidadAccion: idNoConformidadAccionCorrectiva,
-            observacion: observacionesCorrectiva
-        },
-        {
-            idNoConformidadAccionTipo: 3,
-            idNoConformidadAccion: idNoConformidadAccionInmediata,
-            observacion: observacionesInmediata
-        }
-    ];
-      const req = {
-        idNoConformidadDetalle: id,
-        usuario:localStorage.getItem("nameuserlogueado"),
-        listaAcciones : reqLista,
-    };
-
-      const response = await axios.post(API_URL + `/NoConformidadDetalleAccionesUpdate`,req,  {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      const res = await response;
-      console.log("res",res);
-      if (res.data.rdoAccion) {
-        // Manejar respuesta exitosa
-        setMensaje("¡Datos actualizados exitosamente!");
-        setGrabando(true);
-      } else {
-        // Manejar errores si la respuesta no es exitosa
-        setMensaje(res.data.rdoAccionDesc);
-        setGrabando(false); // Inicia la grabación
-        setnombreboton("Cancelar");
-        setExito(false);
-      }
-    } catch (error) {
-      setMensaje("Error en la solicitud:", error);
-      setGrabando(true); // Inicia la grabación
-      setExito(false);
-      setnombreboton("Cancelar");
-      console.log("Error en la solicitud:" + error);
-    }
-  };
-
-  const handleAutocompleteChangeCausa = (event, value) => {
+   const handleAutocompleteChangeCausa = (event, value) => {
     setSelectedValueCausa(value);
   };
   const handleAutocompleteChangeCorrectiva = (event, value) => {
@@ -346,6 +268,7 @@ const TratamientoNoConformidadView = () => {
                 //     setSelectedValue(newValue);
                 // }}
                 options={elementsCausa}
+                disabled={true}
                 value={selectedValueCausa}
                 getOptionLabel={(option) => option?.accion || "Seleccione Item"}
                 renderInput={(params) => (
@@ -361,6 +284,7 @@ const TratamientoNoConformidadView = () => {
               <MDInput
                 type="text"
                 name="observacionesCausa"
+                disabled={true}
                 required
                 label="Observaciones: Causa"
                 variant="standard"
@@ -376,6 +300,7 @@ const TratamientoNoConformidadView = () => {
                 // onChange={(event, newValue) => {
                 //     setSelectedValue(newValue);
                 // }}
+                disabled={true}
                 options={elementsInmediata}
                 value={selectedValueInmediata}
                 getOptionLabel={(option) => option?.accion || "Seleccione Item"}
@@ -393,6 +318,7 @@ const TratamientoNoConformidadView = () => {
                 type="text"
                 name="observacionesInmediata"
                 required
+                disabled={true}
                 label="Observaciones: Accion Inmediata"
                 variant="standard"
                 value={observacionesInmediata}
@@ -408,7 +334,7 @@ const TratamientoNoConformidadView = () => {
                 // }}
                 options={elementsCorrectiva}
                 value={selectedValueCorrectiva}
-   
+                disabled={true}
                 getOptionLabel={(option) => option?.accion || "Seleccione Item"}
                 renderInput={(params) => (
                   <TextField
@@ -423,6 +349,7 @@ const TratamientoNoConformidadView = () => {
               <MDInput
                 type="text"
                 name="observacionesCorrectiva"
+                disabled={true}
                 required
                 label="Observaciones: Accion Correctiva"
                 variant="standard"

@@ -39,6 +39,7 @@ import DatePicker from "react-datepicker";
 import MDButton from "../../controls/MDButton";
 import EstadoDetalle from "../../Utils/estadoDetalle";
 import Usuarios from "../../Utils/usuarios";
+import MDInput from "../../controls/MDInput";
 
 function transformData(data) {
     const result = {};
@@ -328,6 +329,14 @@ function Prueba() {
     const [selectedValueCliente, setSelectedValueCliente] = useState(selectedValueClienteValue);
 
 
+    
+  let idTareaValue = "0";
+  const filtroIdTareaCookie = getCookie("FILTROTRATNOCONFORMIDADNROTAREA");
+if (filtroIdTareaCookie !== null) {const filtroidTarea = filtroIdTareaCookie;  idTareaValue = filtroidTarea;}
+
+  const [idTarea, setIdTarea] = useState(idTareaValue);
+
+
     // let selectedValueUsuariosValue = usuarios[0];
 
     // const filtroUsuarioCookie = getCookie("FILTROTRATNOCONFORMIDADUSUARIO");
@@ -390,6 +399,7 @@ function Prueba() {
                 idNoConformidadEstado: selectedValueEstadoDetalle?.idNoConformidadEstado || 0,
                 fechaDesde: selectedDateFrom ? selectedDateFrom : firstDayOfMonth,
                 fechaHasta: selectedDateTo ? selectedDateTo : firstDayOfNextMonth,
+                idTarea: (idTarea !== null && idTarea !== undefined && idTarea !== '') ? idTarea : 0,
             };
 
             const response = await axios.post(
@@ -450,6 +460,16 @@ function Prueba() {
                                     >
                                         Filtrar
                                     </MDButton>
+                                </MDBox>
+                                <MDBox mt={2}>
+                                    <MDInput
+                                        type="text"
+                                        name="idTarea"
+                                        label="Nro Tarea"
+                                        variant="standard"
+                                        value={idTarea}
+                                        onChange={(e) => setIdTarea(e.target.value)}
+                                    />
                                 </MDBox>
                                 <MDBox style={{ marginTop: "15px", display: "flex" }} >
                                     <MDBox >
