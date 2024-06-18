@@ -17,7 +17,6 @@ const dataMes = [
   { label1: 'Julio', value1: 300, titulo: 'Ventas x Mes', label1Nombre: 'Meses', valor1Nombre: 'Cantidad Ventas' }
 ];
 
-
 const dataMesCompuesto = [
   { label1: 'Enero', value1: 400,value2: -100, titulo: 'Ventas x Mes Comparativo', label1Nombre: 'Meses',valor2Nombre: 'Cantidad Ventas ant', valor1Nombre: 'Cantidad Ventas' },
   { label1: 'Febrero', value1: 300,value2: 500, titulo: 'Ventas x Mes Comparativo', label1Nombre: 'Meses',valor2Nombre: 'Cantidad Ventas ant', valor1Nombre: 'Cantidad Ventas' },

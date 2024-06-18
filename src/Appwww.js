@@ -109,8 +109,8 @@ import {
 import axios from "axios";
 import API_URL from "./config";
 
-// import GraficoClientes from "./components/Pages/Charts/Clientes/GraficoClientes";
-// import GraficoEstadoTareas from "./components/Pages/Charts/EstadoTareas/GraficoEstadoTareas";
+import GraficoClientes from "./components/Pages/Charts/Clientes/GraficoClientes";
+import GraficoEstadoTareas from "./components/Pages/Charts/EstadoTareas/GraficoEstadoTareas";
 import TratamientoNoConformidadListar from "./components/Pages/NoConformidad/TratamientoNoConformidadListar";
 
 import NoConformidadAccionListar from "./components/Pages/NoConformidad/NoConformidadAcciones/NoConformidadAccionListar";
@@ -121,6 +121,7 @@ import TratamientoNoConformidadEdit from "./components/Pages/NoConformidad/Trata
 import VencimientosDeleteByCode from "./components/Pages/Vencimientos/VencimientosDeleteByCode";
 import TratamientoNoConformidadAuditor from "./components/Pages/NoConformidad/TratamientoNoConformidadAuditor";
 import TratamientoNoConformidadView from "./components/Pages/NoConformidad/TratamientoNoConformidadView";
+import GraficoEstadoTareas2 from "./components/Pages/Charts/EstadoTareas/GraficoEstadoTareas2";
 
 
 export default function App() {
@@ -685,9 +686,9 @@ const GetPermisos = async () => {
 
 
             {/* Graficos */}
-            {/* <Route path="/GraficoClientes" element={<GraficoClientes />} />
-            <Route path="/GraficoEstadoTareas" element={<GraficoEstadoTareas />} /> */}
-            
+             <Route path="/GraficoClientes" element={<GraficoClientes />} />
+            <Route path="/GraficoEstadoTareas" element={<GraficoEstadoTareas />} /> 
+            <Route path="/GraficoEstadoTareas2" element={<GraficoEstadoTareas2/>} /> 
             {/* 
 
 

@@ -25,21 +25,21 @@ const handleToggle = (month) => () => {
 };
 
 useEffect( ()=> {
-
+  console.log("data pie:", data);
 setSrcPieChart(data);
 
 },[]);
 
 useEffect(() => {
-   
+  console.log("data pie2:", data);
     const filteredData = data.filter((item) => selectedItems.includes(item));
-  
+    
     if(filteredData.length > 0)
       setSrcPieChart(filteredData);
     else
       setSrcPieChart(data);
   
-  }, [selectedItems]); // Actualizar cuando cambia la selección de meses
+  }, [selectedItems,data ]); // Actualizar cuando cambia la selección de meses
 
   const renderCustomizedLabel = (props: PieLabelRenderProps) => {
     const { cx, cy, midAngle, innerRadius, outerRadius, percent, index } = props;
