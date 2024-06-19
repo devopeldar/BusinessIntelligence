@@ -74,7 +74,7 @@ useEffect(() => {
         <>
         <List>
             <MDBox>
-                <MDTypography variant="body2" style={{ marginLeft: 8, fontWeight: 'bold' }}>
+                <MDTypography variant="body2" style={{ marginLeft: 8, fontWeight: 'bold',fontSize: '10px' }}>
                 Filtros
                 </MDTypography>
             </MDBox>
@@ -92,7 +92,7 @@ useEffect(() => {
                     color="primary"
                     onChange={handleToggle(items)}
                 />
-                <MDTypography variant="body2" style={{ marginLeft: 8 }}>
+                <MDTypography variant="body2" style={{ fontSize: '10px', marginLeft: 8 }}>
                     {items?.[namekey]} 
                 </MDTypography>
                 </ListItem>
@@ -121,7 +121,13 @@ useEffect(() => {
           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
         ))}
       </Pie>
-    
+      <Tooltip
+        formatter={(value, name, props) => {
+          const { payload } = props;
+          return [`${value}`, `${payload.label1}`];
+        }}
+        contentStyle={{ fontSize: '12px', fontFamily: 'Arial' }} // Ajusta el tamaño de la fuente aquí
+      />
     </PieChart>
     <Stack gap={2}>
         <MDBox sx={{ display: 'flex', gap: 3, flexWrap: 'wrap' }}>
@@ -129,7 +135,7 @@ useEffect(() => {
             (srcpiechart[i]?.[namekey] && 
             <Stack key={color} alignItems="center" spacing={1}>
               <MDBox sx={{ width: 20, height: 20, background: color }} />
-              <MDTypography variant="body2" sx={{ opacity: 0.7 }}>
+              <MDTypography variant="body2" sx={{ opacity: 0.7, fontSize: '9px'  }}>
                 {srcpiechart[i]?.[namekey]} {srcpiechart[i]?.[datakey]}
               </MDTypography>
             </Stack>

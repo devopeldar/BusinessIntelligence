@@ -26,8 +26,11 @@ const GraficoEstadoTareas2 = () => {
   const [graficoTextTextInt, setGraficoTextTextInt] = useState([]);
   const [graficoTextIntInt, setGraficoTextIntInt] = useState([]);
   const [graficoTextInt, setGraficoTextInt] = useState([]);
+  const [graficoTextInt2, setGraficoTextInt2] = useState([]);
   const [dateTime, setDateTime] = useState("");
-
+  const [visibleGraphPie, setVisibleGraphPie] = useState(false);
+  const [visibleGraphTTI, setVisibleGraphTTI] = useState(false);
+  const [visibleGraphTII, setVisibleGraphTII] = useState(false);
   const closeSuccessSB = () => setSuccessSB(false);
   const closeErrorSB = () => setErrorSB(false);
 
@@ -49,23 +52,62 @@ const GraficoEstadoTareas2 = () => {
 
         const res = await response.data;
         console.log("res:", res);
-        console.log("res.graficoTextInt:", res.graficoTextInt);
-        //if (res.rdoAccion) {
-        setSuccessSB(true);
-        setSuccessSBPrev(false);
-        setErrorSB(false);
-        // setGraficoTextTextInt(res.graficoTextTextInt);
-        // setGraficoTextIntInt(res.graficoTextIntInt);
-        setGraficoTextInt(...res.graficoTextInt);
-        // console.log("graficoTextTextInt:", graficoTextTextInt);
-        // console.log("graficoTextIntInt:", graficoTextIntInt);
-        console.log("graficoTextInt:", graficoTextInt);
-        // } else {
-        //     setMensajeError(res.rdoAccionDesc);
-        //     setSuccessSB(false);
-        //     setErrorSB(true);
-        //     setSuccessSBPrev(false);
-        // }
+        console.log("res.graficoTextIntInt:", res.graficoTextIntInt);
+        if (res.rdoAccion) {
+          setSuccessSB(true);
+          setSuccessSBPrev(false);
+          setErrorSB(false);
+
+          const dataTI = res.graficoTextInt[1].map((grapPie, index) => ({
+
+            id: index,
+            titulo: grapPie.titulo,
+            label1: grapPie.label1,
+            label1Nombre: grapPie.label1Nombre,
+            valor1: grapPie.valor1,
+            valor1Nombre: grapPie.valor1Nombre,
+
+          }));
+          setGraficoTextInt(dataTI); //PIE
+          if (dataTI.length > 0) { setVisibleGraphPie(true); }
+         
+
+          const dataTII = res.graficoTextIntInt[2].map((grapPie, index) => ({
+
+            id: index,
+            titulo: grapPie.titulo,
+            label1: grapPie.label1,
+            valor1: grapPie.valor1,
+            valor1Nombre: grapPie.valor1Nombre,
+            valor2: grapPie.valor2,
+            valor2Nombre: grapPie.valor2Nombre,
+          }));
+
+          setGraficoTextIntInt(dataTII);
+          if (dataTII.length > 0) { setVisibleGraphTII(true); }
+         
+          const dataTTI = res.graficoTextTextInt[3].map((grapPie, index) => ({
+
+            id: index,
+            titulo: grapPie.titulo,
+            label1: grapPie.label1,
+            label1Nombre: grapPie.label1Nombre,
+            valor1: grapPie.valor1,
+            valor1Nombre: grapPie.valor1Nombre,
+            label2: grapPie.label2,
+            label2Nombre: grapPie.label2Nombre,
+
+          }));
+
+          setGraficoTextTextInt(dataTTI);
+          if (dataTTI.length > 0) { setVisibleGraphTTI(true); }
+
+        } else {
+          setMensajeError(res.rdoAccionDesc);
+          setSuccessSB(false);
+          setErrorSB(true);
+          setSuccessSBPrev(false);
+        }
       } catch (error) {
         console.log("Errores de Proceso:", error.message);
         setSuccessSB(false);
@@ -132,20 +174,24 @@ const GraficoEstadoTareas2 = () => {
                 las tareas
               </MDTypography>
             </MDBox>
-            {/* <div style={{ display: 'flex', marginTop: '15px', justifyContent: 'space-between', width: '100%' }}>
-                            <Card style={{ flex: 1 }}>
-                                <BarChartCustom
-                                    data={graficoTextTextInt}
-                                    namekey={"label1"}
-                                    datakey={"valor1"}
-                                    title={graficoTextTextInt[0]?.titulo}
-                                    mostrarfiltro={true}
-                                    nameeje={graficoTextTextInt[0]?.label1Nombre}
-                                    nameejevertical={graficoTextTextInt[0]?.valor1Nombre}
-                                    observaciones={"sin observaciones por el momento..."}
-                                />
-                            </Card>
-                        </div> */}
+            <div style={{ display: 'flex', marginTop: '15px', justifyContent: 'space-between', width: '100%' }}>
+            {visibleGraphTTI && (
+              <Card style={{ flex: 1 }}>
+                <BarChartCustom
+                  data={graficoTextTextInt}
+                  namekey={"label1"}
+                  datakey={"valor1"}
+                  namekey2={"label2"}
+                  title={graficoTextTextInt[0]?.titulo}
+                  mostrarfiltro={true}
+                  nameeje={graficoTextTextInt[0]?.label1Nombre}
+                  nameeje2={graficoTextTextInt[0]?.label2Nombre}
+                  nameejevertical={graficoTextTextInt[0]?.valor1Nombre}
+                  observaciones={"sin observaciones por el momento..."}
+                />
+              </Card>
+               )}
+            </div>
             <div
               style={{
                 display: "flex",
@@ -154,23 +200,26 @@ const GraficoEstadoTareas2 = () => {
                 width: "100%",
               }}
             >
-              {/* <Card style={{ flex: 1 }}>
-                                <BarChartCompostCustom
-                                    data={graficoTextIntInt}
-                                    namekey={"label1"}
-                                    datakey={"valor1"}
-                                    datakey2={"value2"}
-                                    title={graficoTextIntInt[0]?.titulo}
-                                    mostrarfiltro={true}
-                                    nameeje={graficoTextIntInt[0]?.label1Nombre}
-                                    nameeje2={graficoTextIntInt[0]?.valor2Nombre}
-                                    nameejevertical={graficoTextIntInt[0]?.valor1Nombre}
-                                    nameejevertical2={graficoTextIntInt[0]?.valor2Nombre}
-                                    observaciones={"sin observaciones por el momento..."}
-                                />
-                            </Card> */}
+               {visibleGraphTII && (
               <Card style={{ flex: 1 }}>
-                {graficoTextInt.length > 0 && (
+                <BarChartCompostCustom
+                  data={graficoTextIntInt}
+                  namekey={"label1"}
+                  datakey={"valor1"}
+                  datakey2={"valor2"}
+                  title={graficoTextIntInt[0]?.titulo}
+                  mostrarfiltro={true}
+                  nameeje={graficoTextIntInt[0]?.valor1Nombre}
+                  nameeje2={graficoTextIntInt[0]?.valor2Nombre}
+                  nameejevertical={graficoTextIntInt[0]?.valor1Nombre}
+                  nameejevertical2={graficoTextIntInt[0]?.valor2Nombre}
+                  observaciones={"sin observaciones por el momento..."}
+                />
+              </Card>
+               )}
+              {visibleGraphPie && (
+                <Card style={{ flex: 1 }}>
+
                   <PieChartCustom
                     data={graficoTextInt}
                     namekey={"label1"}
@@ -179,8 +228,8 @@ const GraficoEstadoTareas2 = () => {
                     mostrarfiltro={true}
                     observaciones={"sin observaciones por el momento..."}
                   />
-                )}
-              </Card>
+                </Card>
+              )}
             </div>
           </Card>
         </Grid>

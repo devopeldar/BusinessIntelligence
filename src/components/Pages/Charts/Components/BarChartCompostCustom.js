@@ -79,7 +79,7 @@ const chartSetting = {
         <>
         <List>
             <MDBox>
-                <MDTypography variant="body2" style={{ marginLeft: 8, fontWeight: 'bold' }}>
+                <MDTypography variant="body2" style={{ marginLeft: 8, fontWeight: 'bold', fontSize:'10px' }}>
                 Filtros
                 </MDTypography>
             </MDBox>
@@ -97,7 +97,7 @@ const chartSetting = {
                     color="primary"
                     onChange={handleToggle(items)}
                 />
-                <MDTypography variant="body2" style={{ marginLeft: 8 }}>
+                <MDTypography variant="body2" style={{ marginLeft: 8, fontSize:'10px' }}>
                     {items?.[namekey]}
                 </MDTypography>
                 </ListItem>

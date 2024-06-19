@@ -5,123 +5,128 @@ import MDBox from "../../../controls/MDBox";
 import MDTypography from "../../../controls/MDTypography";
 import { Checkbox, List, ListItem, Stack } from '@mui/material';
 
-export default function BarChartCustom({ data, datakey, title, namekey, mostrarfiltro, observaciones, nameeje, nameejevertical }) {
-    
-const [srcpiechart, setSrcPieChart]= useState([]);
-const [selectedItems, setSelectedItems] = useState([]);
+export default function BarChartCustom({ data, datakey, title, namekey, mostrarfiltro, observaciones, nameeje, nameejevertical, namekey2, nameeje2 }) {
 
-const handleToggle = (month) => () => {
-    const selectedIndex = selectedItems.indexOf(month);
-    const newSelected = [...selectedItems];
+    const [srcpiechart, setSrcPieChart] = useState([]);
+    const [selectedUsers, setSelectedUsers] = useState([]);
+    const [filteredData, setFilteredData] = useState(data);
 
-    if (selectedIndex === -1) {
-        newSelected.push(month);
-    } else {
-        newSelected.splice(selectedIndex, 1);
-    }
+    const handleToggle = (usrselect) => () => {
+        const selectedIndex = selectedUsers.indexOf(usrselect);
+        let newSelectedUsers = [...selectedUsers];
 
-    setSelectedItems(newSelected);
-};
+        if (selectedIndex === -1) {
+            newSelectedUsers.push(usrselect);
+        } else {
+            newSelectedUsers.splice(selectedIndex, 1);
+        }
 
-useEffect( ()=> {
+        setSelectedUsers(newSelectedUsers);
+        filterData(newSelectedUsers);
+    };
 
-setSrcPieChart(data);
+    const filterData = (selectedUsers) => {
+        if (selectedUsers.length === 0) {
+            setFilteredData(data);
+        } else {
+            const newFilteredData = data.filter(item => selectedUsers.includes(item.label1));
+            setFilteredData(newFilteredData);
+        }
+    };
 
-},[]);
+    useEffect(() => {
+        setSrcPieChart(data);
+    }, [data]);
 
-useEffect(() => {
-   
-    const filteredData = data.filter((item) => selectedItems.includes(item));
-  
-    if(filteredData.length > 0)
-      setSrcPieChart(filteredData);
-    else
-      setSrcPieChart(data);
-  
-  }, [selectedItems]); // Actualizar cuando cambia la selección de meses
+    useEffect(() => {
+        const newFilteredData = data.filter((item) => selectedUsers.includes(item.label1));
+        if (newFilteredData.length > 0) {
+            setSrcPieChart(newFilteredData);
+        } else {
+            setSrcPieChart(data);
+        }
+    }, [selectedUsers, data]); // Actualizar cuando cambia la selección de usuarios
 
-  return (
-    <>
-    <MDBox>
-        <MDTypography variant="body2" style={{ marginTop:5, textAlign:'center',  fontWeight: '900' }}>
-            {title}
-        </MDTypography>
-    </MDBox>
-    <MDBox
-      sx={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-evenly',
-        flexWrap: 'wrap',
-      }}
-    >
-   
-    {mostrarfiltro &&(
+    // Filtramos los elementos únicos por la propiedad label1
+    const uniqueUsers = [...new Map(data.map(item => [item.label1, item])).values()];
+
+    return (
         <>
-        <List>
             <MDBox>
-                <MDTypography variant="body2" style={{ marginLeft: 8, fontWeight: 'bold' }}>
-                Filtros
+                <MDTypography variant="body2" style={{ marginTop: 5, textAlign: 'center', fontWeight: '900' }}>
+                    {title}
                 </MDTypography>
             </MDBox>
-            {data.map((items, i) => {
-            const isSelected = selectedItems.indexOf(items) !== -1;
+            <MDBox
+                sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-evenly',
+                    flexWrap: 'wrap',
+                }}
+            >
 
-            return (
-                <ListItem
-             
-                key={items[i]?.[namekey]}
-                onClick={handleToggle(items)}
-                >
-                <Checkbox
-                    checked={isSelected}
-                    color="primary"
-                    onChange={handleToggle(items)}
-                />
-                <MDTypography variant="body2" style={{ marginLeft: 8 }}>
-                    {items?.[namekey]}
+                {mostrarfiltro && (
+                    <>
+                        <List>
+                            <MDBox>
+                                <MDTypography variant="body2" style={{ marginLeft: 8, fontWeight: 'bold',fontSize: '10px' }}>
+                                    Filtros
+                                </MDTypography>
+                            </MDBox>
+                            {uniqueUsers.map((item, index) => {
+                                const isSelected = selectedUsers.indexOf(item.label1) !== -1;
+
+                                return (
+                                    <ListItem
+                                        key={item.label1}
+                                        onClick={handleToggle(item.label1)}
+                                    >
+                                        <Checkbox
+                                            checked={isSelected}
+                                            color="primary"
+                                            onChange={handleToggle(item.label1)}
+                                        />
+                                        <MDTypography variant="body2" style={{fontSize: '10px', marginLeft: 8 }}>
+                                            {item.label1}
+                                        </MDTypography>
+                                    </ListItem>
+                                );
+                            })}
+                        </List>
+                    </>
+                )}
+                <BarChart width={900} height={400} data={filteredData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey={namekey2} style={{ height:'50px', fontFamily: 'Arial', fontWeight: 'bold', fontSize: '7px' }} interval={0} angle={-45} textAnchor="end" />
+                    <YAxis style={{ fontFamily: 'Arial', fontWeight: 'bold', fontSize: '10px' }} />
+                    <Tooltip
+                        contentStyle={{ fontFamily: 'Arial', fontWeight: 'bold', fontSize: '10px' }} // Estilo del contenido del tooltip
+                        formatter={(value, name, props) => {
+                            return (
+                                <div>
+                                    <p>{props.payload.label1}<br />{props.payload.label2}</p>
+                                    <p>{nameejevertical}: {value}</p>
+                                </div>
+                            );
+                        }}
+                        labelStyle={{ display: 'none' }}
+                    />
+                    <Legend />
+                    <Bar key={filteredData.id} name={nameeje2} dataKey={datakey} fill="#82ca9d" />
+                </BarChart>
+            </MDBox>
+            <MDBox>
+                <MDTypography variant="body2" style={{
+                    marginTop: 5,
+                    textAlign: 'center',
+                    fontWeight: '100',
+                    fontStyle: 'italic', // Utiliza 'italic' en lugar de 'oblique' para cursiva
+                    opacity: 0.7, // Controla la transparencia ajustando el valor de 'opacity'
+                }}>
+                    *{observaciones}
                 </MDTypography>
-                </ListItem>
-            );
-            })}
-        </List>
+            </MDBox>
         </>
-    )} 
-    <BarChart width={600} height={300} data={srcpiechart}>
-      <CartesianGrid strokeDasharray="3 3" />
-      <XAxis dataKey={namekey} style={{ fontFamily: 'Arial', fontWeight: 'bold', fontSize:'10px' }}/>
-      <YAxis style={{ fontFamily: 'Arial', fontWeight: 'bold', fontSize:'10px' }} />
-      {/* <Tooltip label={'ssss'} style={{ fontFamily: 'Arial', fontWeight: 'bold', fontSize:'10px' }}/> */}
-      <Tooltip
-        contentStyle={{ fontFamily: 'Arial', fontWeight: 'bold', fontSize: '10px' }} // Estilo del contenido del tooltip
-        formatter={(value, name, props) => {
-            console.log(props)
-            console.log(name)
-            return (
-                <div>
-                    
-                    <p>{props.payload.label1}</p>
-                    <p>{nameejevertical}: {value}</p>
-                </div>
-            );
-        }}
-        labelStyle={{ display: 'none' }} 
-        />
-      <Legend />
-      <Bar name={nameeje}  dataKey={datakey} fill="#8884d8" />
-    </BarChart>
-    </MDBox>
-    <MDBox>
-        <MDTypography variant="body2" style={{
-            marginTop: 5,
-            textAlign: 'center',
-            fontWeight: '100',
-            fontStyle: 'italic', // Utiliza 'italic' en lugar de 'obliqueo' para cursiva
-            opacity: 0.7, // Controla la transparencia ajustando el valor de 'opacity'
-        }}>
-           *{observaciones}
-        </MDTypography>
-    </MDBox>
-    </>
-  );
+    );
 }
