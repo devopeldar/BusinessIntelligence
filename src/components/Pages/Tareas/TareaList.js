@@ -310,12 +310,12 @@ if (filtroFechaHastaCookie !== null) {
           color = "warning";
         } else if (Tarea.porcentajeTrascurrido >= 91 && Tarea.porcentajeTrascurrido <= 99 ) {
           color = "error";
-        } else if (Tarea.porcentajeTrascurrido == 100) {
+        } else if (Tarea.porcentajeTrascurrido === 100) {
           color = "success";
-        } else if (Tarea.porcentajeTrascurrido == 101) {
+        } else if (Tarea.porcentajeTrascurrido === 101) {
           Tarea.porcentajeTrascurrido = 100;
           color = "magenta";
-        } else if (Tarea.porcentajeTrascurrido == 102) {
+        } else if (Tarea.porcentajeTrascurrido === 102) {
           Tarea.porcentajeTrascurrido = 100;
           color = "maroon";
         }
@@ -604,7 +604,7 @@ if (filtroFechaHastaCookie !== null) {
   // Función para generar el PDF
   const generatePDF = (data) => {
     const doc = new jsPDF('l', 'mm', 'a4');
-    console.log("Tareas " ,data);
+
     const columns = [ "Cliente", "Departamento", "Tarea", "Estado", "Fecha Creacion", "Venc. Legal", "Tiempo Detenido", "Tiempo Transcurrido", "Roles"]; // Ajusta las columnas según tus datos
     const rows = data.map((item) => [
     
@@ -762,7 +762,7 @@ if (filtroFechaHastaCookie !== null) {
         fgColor: { argb: "CCCCCC" } // Gris claro
       };
     });
-    console.log("Tareas " + Tareas);
+  
     // Agregar los datos al archivo Excel
     Tareas.forEach((item) => {
       const rowData = [
