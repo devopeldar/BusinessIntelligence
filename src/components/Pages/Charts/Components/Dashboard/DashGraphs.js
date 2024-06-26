@@ -166,7 +166,7 @@ const DashGraphs = () => {
                 color="white"
                 mt={1}
               >
-                Ejemplos de Gráficos de Estados de Tarea
+                Panel de Indicadores
               </MDTypography>
               <MDTypography
                 display="block"
@@ -174,8 +174,7 @@ const DashGraphs = () => {
                 color="white"
                 my={1}
               >
-                Información general acerca de los estado en que se encuentran
-                las tareas
+                Informacion general
               </MDTypography>
             </MDBox>
             <MDBox p={2}>

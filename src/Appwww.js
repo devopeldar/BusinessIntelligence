@@ -49,23 +49,8 @@ import ConfirmacionRecuperoPass from "./components/authentication/ConfirmacionRe
 import PerfilAdd from "./components/authentication/Perfil/PerfilAdd";
 import PerfilEdit from "./components/authentication/Perfil/PerfilEdit";
 import Perfiles from "./components/authentication/Perfil/Perfiles";
-import TareaTipoList from "./components/Pages/Tareas/TareaTipo/TareaTipoList";
-import TareaEstadoList from "./components/Pages/Tareas/TareasEstado/TareaEstadoList";
-import { AdminPanelSettings, AdminPanelSettingsOutlined, FileDownloadSharp, Settings } from "@mui/icons-material";
-import TareaTipoAdd from "./components/Pages/Tareas/TareaTipo/TareaTipoAdd";
-import TareaTipoEdit from "./components/Pages/Tareas/TareaTipo/TareaTipoEdit";
-import TareaEstadoAdd from "./components/Pages/Tareas/TareasEstado/TareaEstadoAdd";
-import TareaEstadoEdit from "./components/Pages/Tareas/TareasEstado/TareaEstadoEdit";
-import DepartamentoList from "./components/Pages/Departamentos/DepartamentoList";
-import DepartamentoAdd from "./components/Pages/Departamentos/DepartamentoAdd";
-import DepartamentoEdit from "./components/Pages/Departamentos/DepartamentoEdit";
-import TipoEventoList from "./components/Pages/TipoEvento/TipoEventoListar";
-import TipoEventoAdd from "./components/Pages/TipoEvento/TipoEventoAdd";
-import TipoEventoEdit from "./components/Pages/TipoEvento/TipoEventoEdit";
-import ClienteList from "./components/Pages/Clientes/ClienteList";
-import ClienteAdd from "./components/Pages/Clientes/ClienteAdd";
-import ClienteEdit from "./components/Pages/Clientes/ClienteEdit";
-import TareaList from "./components/Pages/Tareas/TareaList";
+import { Business, Settings } from "@mui/icons-material";
+
 import SessionChecker from "./SessionChecker";
 import RolList from "./components/authentication/Rol/RolList";
 import ConfirmarCuentaxToken from "./components/authentication/ConfirmarCuentaxToken";
@@ -74,26 +59,10 @@ import RolAdd from "./components/authentication/Rol/RolAdd";
 import RolEdit from "./components/authentication/Rol/RolEdit";
 import Permisos from "./components/authentication/Permisos";
 import CloseSession from "./components/authentication/CloseSession";
-import EventoTareaAdd from "./components/Pages/Tareas/EventoTareaAdd";
-import TareaTrakingList from "./components/Pages/Tareas/TareaTrakingList";
-import TareaAdd from "./components/Pages/Tareas/TareaAdd";
 import UsuarioEdit from "./components/authentication/Usuario/UsuarioEdit";
 import UsuarioList from "./components/authentication/Usuario/UsuarioList";
-import EventoTareaEdit from "./components/Pages/Tareas/EventoTareaEdit";
-import PresupuestoList from "./components/Pages/Presupuestos/PresupuestoList";
-import PresupuestoCopy from "./components/Pages/Presupuestos/PresupuestoCopy";
-import PresupuestoAdd from "./components/Pages/Presupuestos/PresupuestoAdd";
-import PresupuestoEdit from "./components/Pages/Presupuestos/PresupuestoEdit";
-import PresupuestoAccept from "./components/Pages/Presupuestos/PresupuestoAccept";
-import VencimientosEdit from "./components/Pages/Vencimientos/VencimientosEdit";
-import VencimientosList from "./components/Pages/Vencimientos/VencimientosList";
-import VencimientosAdd from "./components/Pages/Vencimientos/VencimientosAdd";
-import TareaDocumentacionList from "./components/Pages/Tareas/TareasDocumentacion/TareaDocumentacionList";
-import TareaDocumentacionDelete from "./components/Pages/Tareas/TareasDocumentacion/TareaDocumentacionDelete";
+
 import CambiarContrasenia from "./components/authentication/CambiarContrasenia";
-import EventoTareaDelete from "./components/Pages/Tareas/EventoTareaDelete";
-import routesPermisos from "./routesPermisos";
-import VencimientosAddMasivo from "./components/Pages/Vencimientos/VencimientosAddMasivo";
 
 import { KeyFill, People, Person } from "react-bootstrap-icons";
 import {
@@ -109,19 +78,6 @@ import {
 import axios from "axios";
 import API_URL from "./config";
 
-import GraficoClientes from "./components/Pages/Charts/Clientes/GraficoClientes";
-import GraficoEstadoTareas from "./components/Pages/Charts/EstadoTareas/GraficoEstadoTareas";
-import TratamientoNoConformidadListar from "./components/Pages/NoConformidad/TratamientoNoConformidadListar";
-
-import NoConformidadAccionListar from "./components/Pages/NoConformidad/NoConformidadAcciones/NoConformidadAccionListar";
-import NoConformidadAccionEdit from "./components/Pages/NoConformidad/NoConformidadAcciones/NoConformidadAccionEdit";
-import NoConformidadAccionDelete from "./components/Pages/NoConformidad/NoConformidadAcciones/NoConformidadAccionDelete";
-import NoConformidadAccionAdd from "./components/Pages/NoConformidad/NoConformidadAcciones/NoConformidadAccionAdd";
-import TratamientoNoConformidadEdit from "./components/Pages/NoConformidad/TratamientoNoConformidadEdit";
-import VencimientosDeleteByCode from "./components/Pages/Vencimientos/VencimientosDeleteByCode";
-import TratamientoNoConformidadAuditor from "./components/Pages/NoConformidad/TratamientoNoConformidadAuditor";
-import TratamientoNoConformidadView from "./components/Pages/NoConformidad/TratamientoNoConformidadView";
-import GraficoEstadoTareas2 from "./components/Pages/Charts/EstadoTareas/GraficoEstadoTareas2";
 import DashGraphs from "./components/Pages/Charts/Components/Dashboard/DashGraphs";
 
 
@@ -173,140 +129,23 @@ export default function App() {
 routesnew = [
   {
     type: "title",
-    name: "Tareas",
-    title: "Tareas",
-    key: "tareas",
-    icon: <People />,
-    visible: false,
+    name: "Paneles",
+    title: "Paneles",
+    key: "paneles",
+    icon: <Business />,
+    visible: true,
     codigoPermiso: 100,
   },
   {
     type: "collapse",
-    name: "Tareas",
-    key: "mantenimientotareas",
+    name: "Panel Indicadores",
+    key: "panelindicadores",
     icon: <Task />,
-    route: "/Tarea",
-    component: <TareaList />,
-    visible: false,
+    route: "/DashGraphs",
+    component: <DashGraphs />,
+    visible: true,
     codigoPermiso: 101,
     //visible: retrievedPermissions.USUARIOS?.valor || false
-  },
-  {
-    type: "collapse",
-    name: "Tipo de Tareas",
-    key: "tipotareas",
-    icon: <TaskAlt />,
-    route: "/TareasTipo",
-    component: <TareaTipoList />,
-    visible: false,
-    codigoPermiso: 102,
-  },
-  {
-    type: "collapse",
-    name: "Departamentos",
-    key: "departamentostareas",
-    icon: <Event />,
-    route: "/Departamentos",
-    component: <DepartamentoList />,
-    visible: false,
-    codigoPermiso: 103,
-  },
-  {
-    type: "collapse",
-    name: "Estados de Tareas",
-    key: "estadotareas",
-    icon: <Event />,
-    route: "/TareaEstado",
-    component: <TareaEstadoList />,
-    visible: false,
-    codigoPermiso: 104,
-  },
-  {
-    type: "collapse",
-    name: "Presupuestos",
-    key: "presupuestos",
-    icon: <Event />,
-    route: "/Presupuestos",
-    component: <PresupuestoList />,
-    visible: false,
-    codigoPermiso: 105,
-  },
-  {
-    type: "collapse",
-    name: "Vencimientos",
-    key: "vencimientos",
-    icon: <DateRange />,
-    route: "/Vencimientos",
-    component: <VencimientosList />,
-    visible: false,
-    codigoPermiso: 106,
-  },
-  {
-    type: "title",
-    name: "Auditoria",
-    key: "auditoria",
-    title: "Auditoria",
-    icon: <FileDownloadSharp />,
-    visible: true,
-    codigoPermiso: 600,
-  },
-  {
-    type: "collapse",
-    name: "Acciones No Conformidad",
-    key: "tiposnoconformidad",
-    title: "Acciones No Conformidad",
-    route: "/NoConformidadAccionListar",
-    icon: <AdminPanelSettingsOutlined />,
-    component: <NoConformidadAccionListar />,
-    visible: false,
-    codigoPermiso: 601,
-  },
-  {
-    type: "collapse",
-    name: "Tratamientos No Conformidad",
-    key: "tratamientosnoconformidad",
-    title: "Tratamientos No Conformidad",
-    route: "/TratamientoNoConformidadListar",
-    icon: <AdminPanelSettings />,
-    component: <TratamientoNoConformidadListar />,
-    visible: false,
-    codigoPermiso: 602,
-  },
-  {
-    type: "title",
-    name: "Eventos",
-    key: "eventos",
-    title: "Eventos",
-    visible: false,
-    codigoPermiso: 200,
-  },
-  {
-    type: "collapse",
-    name: "Tipos de Evento",
-    key: "tiposdeeventos",
-    icon: <EventAvailable />,
-    route: "/TipoEvento",
-    component: <TipoEventoList />,
-    visible: false,
-    codigoPermiso: 201,
-  },
-  {
-    type: "title",
-    name: "Clientes",
-    key: "clientes",
-    title: "Clientes",
-    visible: false,
-    codigoPermiso: 300,
-  },
-  {
-    type: "collapse",
-    name: "Mantenimiento Clientes",
-    key: "mantenimientoclientes",
-    icon: <People />,
-    route: "/Clientes",
-    component: <ClienteList />,
-    visible: false,
-    codigoPermiso: 301,
   },
   {
     type: "title",
@@ -596,46 +435,7 @@ const GetPermisos = async () => {
             <Route path="/Perfil/Perfiles" element={<Perfiles />} />
             <Route path="/PerfilesVolver" element={<Perfiles />} />
             <Route path="/Perfiles" element={<Perfiles />} />
-            <Route path="/DepartamentoAdd" element={<DepartamentoAdd />} />
-            <Route
-              path="/Departamento/DepartamentoEdit/:id"
-              element={<DepartamentoEdit />}
-            />
-            <Route path="/Departamentos" element={<DepartamentoList />} />
-            <Route path="/DepartamentoVolver" element={<DepartamentoList />} />
-
-            <Route
-              path="/TareaEstado/TareaEstadoEdit/:id"
-              element={<TareaEstadoEdit />}
-            />
-            <Route path="/TareaEstadoAdd" element={<TareaEstadoAdd />} />
-            <Route path="/TareaEstado" element={<TareaEstadoList />} />
-            <Route path="/TareaEstadoVolver" element={<TareaEstadoList />} />
-
-            <Route path="/TareasTipo" element={<TareaTipoList />} />
-            <Route path="/TareaTipoVolver" element={<TareaTipoList />} />
-            <Route path="/TareaTipoAdd" element={<TareaTipoAdd />} />
-            <Route
-              path="/TareaTipo/TareaTipoEdit/:id"
-              element={<TareaTipoEdit />}
-            />
-
-            <Route path="/TipoEventoEdit/:id" element={<TipoEventoEdit />} />
-            <Route path="/TipoEventoAdd" element={<TipoEventoAdd />} />
-            <Route path="/TipoEvento" element={<TipoEventoList />} />
-            <Route path="/TipoEventoVolver" element={<TipoEventoList />} />
-
-            <Route path="/ClienteEdit/:id" element={<ClienteEdit />} />
-            <Route path="/ClienteAdd" element={<ClienteAdd />} />
-            <Route path="/Clientes" element={<ClienteList />} />
-            <Route path="/ClienteVolver" element={<ClienteList />} />
-
-            <Route path="/TareaEdit/:id" element={<TareaList />} />
-            <Route path="/EventoTareaDelete/:id/:habilitado" element={<EventoTareaDelete />} />
-            <Route path="/TareaAdd" element={<TareaAdd />} />
-            <Route path="/Tarea" element={<TareaList />} />
-            <Route path="/TareaVolver" element={<TareaList />} />
-
+            
             <Route path="/RolEdit/:id" element={<RolEdit />} />
             <Route path="/RolAdd" element={<RolAdd />} />
             <Route path="/Rol" element={<RolList />} />
@@ -643,59 +443,21 @@ const GetPermisos = async () => {
             <Route path="/Permisos/:id" element={<Permisos />} />
             <Route path="/CloseSession" element={<CloseSession />} />
 
-            <Route path="/EventoTareaEdit/:id/:habilitado" element={<EventoTareaEdit />} />
-            <Route path="/EventoTareaAdd/:id" element={<EventoTareaAdd />} />
-            <Route path="/TareaTraking/:id" element={<TareaTrakingList />} />
-            <Route path="/TareaListVolver" element={<TareaList />} />
-
+           
             <Route path="/UsuarioEdit/:id" element={<UsuarioEdit />} />
             <Route path="/UsuarioVolver" element={<UsuarioList />} />
             <Route path="/Usuarios" element={<UsuarioList />} />
 
-            <Route path="/PresupuestoAceptar/:id/:habilitado" element={<PresupuestoAccept />} /> 
-            <Route path="/PresupuestoCopy/:id" element={<PresupuestoCopy />} /> 
-            <Route path="/PresupuestoVolver" element={<PresupuestoList />} />
-            <Route path="/PresupuestoAdd" element={<PresupuestoAdd />} />
-            <Route path="/PresupuestoEdit/:id" element={<PresupuestoEdit />} />
-            <Route path="/Presupuestos" element={<PresupuestoList />} />
-            <Route path="/VencimientosEdit/:id" element={<VencimientosEdit />} /> 
-            <Route path="/VencimientosVolver" element={<VencimientosList />} />
-            <Route path="/VencimientosAdd" element={<VencimientosAdd />} />
-            <Route path="/VencimientosAddMasivo" element={<VencimientosAddMasivo />} />
-            <Route path="/VencimientosDeleteByCode" element={<VencimientosDeleteByCode />} />
-            <Route path="/Vencimientos" element={<VencimientosList />} />
-            
-            <Route path="/TareaDocumentacionList/:id" element={<TareaDocumentacionList />} />
-            <Route path="/TareaDocumentacionDelete/:id" element={<TareaDocumentacionDelete />} /> 
-            <Route path="/TareaDocumentacionVolver" element={<TareaDocumentacionList />} />
-            
-
-            <Route path="/NoConformidadAccionListar" element={<NoConformidadAccionListar />} /> 
-            <Route path="/NoConformidadAccionAdd" element={<NoConformidadAccionAdd />} /> 
-            <Route path="/NoConformidadAccionDelete/:id" element={<NoConformidadAccionDelete />} />
-            <Route path="/NoConformidadAccionEdit/:id" element={<NoConformidadAccionEdit />} />
-            <Route path="/NoConformidadAccionVolver" element={<NoConformidadAccionListar />} /> 
-            
-            <Route path="/TratamientoNoConformidadListar" element={<TratamientoNoConformidadListar />} />
-            <Route path="/TratamientoNoConformidadEdit/:id" element={<TratamientoNoConformidadEdit />} />
-            <Route path="/TratamientoNoConformidadView/:id" element={<TratamientoNoConformidadView />} />
-            <Route path="/TratamientoNoConformidadAuditor/:id" element={<TratamientoNoConformidadAuditor />} />
-            
+           
             {/* <Route path="/Prueba" element={<Prueba />} /> */}
             <Route path="/CambiarContrasenia" element={<CambiarContrasenia />} />
             {/* <Route path="/chart1" element={<Example />} /> */}
 
 
             {/* Graficos */}
-             <Route path="/GraficoClientes" element={<GraficoClientes />} />
-            <Route path="/GraficoEstadoTareas" element={<GraficoEstadoTareas />} /> 
-            <Route path="/GraficoEstadoTareas2" element={<GraficoEstadoTareas2/>} /> 
+            
             <Route path="/DashGraphs" element={<DashGraphs/>} /> 
-            {/* 
-
-
-        <Route path="/TipoTareas" element={<TareaTipoList />} />
-        <Route path="/EstadoTareas" element={<TareaEstadoList />} /> */}
+           
           </Routes>
 
           <>
@@ -707,7 +469,7 @@ const GetPermisos = async () => {
                   ? brandDark
                   : brandWhite
               }
-              brandName="Task Manager"
+              brandName="BI"
               routes={routesVisible}
               onMouseEnter={handleOnMouseEnter}
               onMouseLeave={handleOnMouseLeave}
