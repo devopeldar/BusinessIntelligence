@@ -28,7 +28,7 @@ useEffect( ()=> {
   console.log("data pie:", data);
 setSrcPieChart(data);
 
-},[]);
+},[]); 
 
 useEffect(() => {
   console.log("data pie2:", data);
