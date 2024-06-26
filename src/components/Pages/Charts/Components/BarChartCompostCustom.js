@@ -9,7 +9,7 @@ import COLORS from "../../../Utils/Colors";
 import { axisClasses } from "@mui/x-charts";
 
 export default function BarChartCompostCustom ({ data, datakey, title, namekey, mostrarfiltro, observaciones, 
-                                        nameeje, nameejevertical, datakey2, nameeje2,nameejevertical2 }) {
+                                        nameeje, nameejevertical, datakey2, nameeje2,nameejevertical2, namekey2 }) {
     
 const [srcpiechart, setSrcPieChart]= useState([]);
 const [selectedItems, setSelectedItems] = useState([]);
@@ -59,6 +59,9 @@ const chartSetting = {
       },
     },
   };
+  // Define la función para combinar los valores
+const combineLabels = (entry) => `${namekey2}-${namekey}`;
+
   return (
     <>
     <MDBox>
@@ -106,11 +109,14 @@ const chartSetting = {
         </List>
         </>
     )} 
+
+
+
     <BarChart width={600} height={300} data={srcpiechart}
     {...chartSetting}
     >
       <CartesianGrid strokeDasharray="3 3" />
-      <XAxis dataKey={namekey} style={{ fontFamily: 'Arial', fontWeight: 'bold', fontSize:'10px' }}/>
+      <XAxis dataKey={nameejevertical}  style={{ height:'50px', fontFamily: 'Arial', fontWeight: 'bold', fontSize: '7px' }} interval={0} angle={-45} textAnchor="end" />
       <YAxis style={{ fontFamily: 'Arial', fontWeight: 'bold', fontSize:'10px' }} />     
       <Tooltip display={false}
         contentStyle={{ fontFamily: 'Arial', fontWeight: 'bold', fontSize: '10px' }} // Estilo del contenido del tooltip
@@ -127,8 +133,8 @@ const chartSetting = {
         />
       <Legend />
       
-      <Bar name={nameeje}  dataKey={datakey} fill="#8884d8" />
-      <Bar name={nameeje2} dataKey={datakey2} fill="#0088FE" />
+      <Bar name={nameeje}  dataKey={datakey} fill="#0088FE" />
+      <Bar name={nameeje2} dataKey={datakey2} fill="#82ca9d" />
     </BarChart>
     </MDBox>
     <MDBox>

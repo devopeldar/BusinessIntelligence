@@ -98,7 +98,7 @@ export default function BarChartCustom({ data, datakey, title, namekey, mostrarf
                 )}
                 <BarChart width={900} height={400} data={filteredData}>
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey={namekey2} style={{ height:'50px', fontFamily: 'Arial', fontWeight: 'bold', fontSize: '7px' }} interval={0} angle={-45} textAnchor="end" />
+                    <XAxis dataKey={namekey} style={{ height:'50px', fontFamily: 'Arial', fontWeight: 'bold', fontSize: '7px' }} interval={0} angle={-45} textAnchor="end" />
                     <YAxis style={{ fontFamily: 'Arial', fontWeight: 'bold', fontSize: '10px' }} />
                     <Tooltip
                         contentStyle={{ fontFamily: 'Arial', fontWeight: 'bold', fontSize: '10px' }} // Estilo del contenido del tooltip
@@ -113,7 +113,7 @@ export default function BarChartCustom({ data, datakey, title, namekey, mostrarf
                         labelStyle={{ display: 'none' }}
                     />
                     <Legend />
-                    <Bar key={filteredData.id} name={nameeje2} dataKey={datakey} fill="#82ca9d" />
+                    <Bar key={filteredData.id} name={nameeje} dataKey={datakey} fill="#82ca9d" />
                 </BarChart>
             </MDBox>
             <MDBox>

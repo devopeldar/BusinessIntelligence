@@ -122,6 +122,7 @@ import VencimientosDeleteByCode from "./components/Pages/Vencimientos/Vencimient
 import TratamientoNoConformidadAuditor from "./components/Pages/NoConformidad/TratamientoNoConformidadAuditor";
 import TratamientoNoConformidadView from "./components/Pages/NoConformidad/TratamientoNoConformidadView";
 import GraficoEstadoTareas2 from "./components/Pages/Charts/EstadoTareas/GraficoEstadoTareas2";
+import DashGraphs from "./components/Pages/Charts/Components/Dashboard/DashGraphs";
 
 
 export default function App() {
@@ -689,6 +690,7 @@ const GetPermisos = async () => {
              <Route path="/GraficoClientes" element={<GraficoClientes />} />
             <Route path="/GraficoEstadoTareas" element={<GraficoEstadoTareas />} /> 
             <Route path="/GraficoEstadoTareas2" element={<GraficoEstadoTareas2/>} /> 
+            <Route path="/DashGraphs" element={<DashGraphs/>} /> 
             {/* 
 
 

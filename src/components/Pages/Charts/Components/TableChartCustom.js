@@ -42,7 +42,7 @@ export default function TableChartCustom({ data, title, observaciones }) {
 
     }, [data]);
 
-     const columns = data.length > 0 ? Object.keys(data[0]).filter(key => key !== 'tipodeDato' && key !== 'titulo' && key !== 'id') : [];
+     const columns = data.length > 0 ? Object.keys(data[0]).filter(key => key !== 'tipodeDato' && key !== 'titulo' && key !== 'id' && key !== 'idTipoGrafico') : [];
 
     const handleRequestSort = (property) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -188,17 +188,6 @@ export default function TableChartCustom({ data, title, observaciones }) {
                                     ))}
                                 </TableRow>
                             </TableHead>
-                            {/* <TableBody>
-                            {stableSort(srcTableData, getComparator(order, orderBy)).map((row, index) => (
-                                
-                                <TableRow key={index}>
-
-                                    {columns.map((column, colIndex) => (
-                                        <TableCell key={`${index}-${colIndex}`}>{row[column]}</TableCell>
-                                    ))}
-                                </TableRow>
-                            ))}
-                        </TableBody> */}
                             <TableBody>
                                 {stableSort(srcTableData, getComparator(order, orderBy))
                                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
